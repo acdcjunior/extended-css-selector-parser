@@ -25,16 +25,20 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: MediaListImpl.java,v 1.1.1.1 2003-12-28 21:22:55 davidsch Exp $
+ * $Id: MediaListImpl.java,v 1.2 2005-04-26 21:14:30 waldbaer Exp $
  */
 
 package com.steadystate.css.dom;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.io.StringReader;
 import java.util.*;
 import org.w3c.dom.*;
 import org.w3c.dom.stylesheets.*;
 import org.w3c.css.sac.*;
+
+import com.steadystate.css.parser.SACParser;
 
 /**
  *
@@ -44,11 +48,18 @@ import org.w3c.css.sac.*;
 public class MediaListImpl implements MediaList, Serializable {
 
     private Vector _media = new Vector();
-
-    public MediaListImpl(SACMediaList mediaList) {
-        for (int i = 0; i < mediaList.getLength(); i++) {
-            _media.addElement(mediaList.item(i));
+    
+    private void setMedia(SACMediaList mediaList)
+    {
+        for (int i = 0; i < mediaList.getLength(); i++)
+        {
+            this._media.addElement(mediaList.item(i));
         }
+    }
+
+    public MediaListImpl(SACMediaList mediaList)
+    {
+        this.setMedia(mediaList);
     }
 
     public String getMediaText() {
@@ -63,22 +74,21 @@ public class MediaListImpl implements MediaList, Serializable {
     }
 
     public void setMediaText(String mediaText) throws DOMException {
-/*
+        InputSource source = new InputSource(new StringReader(mediaText));
         try
         {
-            StringReader sr = new StringReader( mediaText );
-            CSS2Parser parser = new CSS2Parser( sr );
-            ASTMediaList ml = parser.mediaList();
-            _media = ml._media;
+            this.setMedia(new SACParser().parseMedia(source));
         }
-        catch( ParseException e )
+        catch (CSSParseException e)
         {
-            throw new DOMExceptionImpl(
-            DOMException.SYNTAX_ERR,
-            DOMExceptionImpl.SYNTAX_ERROR,
-            e.getMessage() );
+            throw new DOMException(DOMException.SYNTAX_ERR,
+                e.getLocalizedMessage());
         }
-*/
+        catch (IOException e)
+        {
+            throw new DOMException(DOMException.NOT_FOUND_ERR,
+                e.getLocalizedMessage());
+        }
     }
 
     public int getLength() {
