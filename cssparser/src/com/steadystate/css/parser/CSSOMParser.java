@@ -25,7 +25,7 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: CSSOMParser.java,v 1.1.1.1 2003-12-28 21:23:03 davidsch Exp $
+ * $Id: CSSOMParser.java,v 1.2 2005-04-26 21:16:18 waldbaer Exp $
  */
  
 package com.steadystate.css.parser;
@@ -59,6 +59,16 @@ public class CSSOMParser {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
+    }
+
+    /**
+     * Creates new CSSOMParser
+     *
+     * @param parser the SAC Parser
+     */
+    public CSSOMParser(Parser parser)
+    {
+        this._parser = parser;
     }
 
     public CSSStyleSheet parseStyleSheet(InputSource source) throws IOException {
@@ -132,7 +142,9 @@ public class CSSOMParser {
             if (_nodeStack.empty()) {
                 CSSStyleSheetImpl ss = new CSSStyleSheetImpl();
                 _parentStyleSheet = ss;
-
+                ss.setHref(source.getURI());
+                ss.setMedia(source.getMedia());
+                ss.setTitle(source.getTitle());
                 // Create the rule list
                 CSSRuleListImpl rules = new CSSRuleListImpl();
                 ss.setRuleList(rules);
