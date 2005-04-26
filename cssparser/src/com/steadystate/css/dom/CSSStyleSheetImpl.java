@@ -25,7 +25,7 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: CSSStyleSheetImpl.java,v 1.1.1.1 2003-12-28 21:22:52 davidsch Exp $
+ * $Id: CSSStyleSheetImpl.java,v 1.2 2005-04-26 21:13:28 waldbaer Exp $
  */
 
 package com.steadystate.css.dom;
@@ -218,7 +218,15 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
     }
 
     public void setMedia(String mediaText) {
-        // MediaList _media = null;
+        InputSource source = new InputSource(new StringReader(mediaText));
+        try
+        {
+            this._media = new MediaListImpl(new SACParser().parseMedia(source));
+        }
+        catch (IOException e)
+        {
+            // TODO handle exception
+        }
     }
 
     public void setOwnerRule(CSSRule ownerRule) {
@@ -231,5 +239,57 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
     
     public String toString() {
         return _rules.toString();
+    }
+    
+    /**
+     * Imports referenced CSSStyleSheets.
+     *
+     * @param recursive <code>true</code> if the import should be done
+     *   recursively, <code>false</code> otherwise
+     */
+    public void importImports(boolean recursive)
+        throws DOMException
+    {
+        for (int i = 0; i < this.getCssRules().getLength(); i++)
+        {
+            CSSRule cssRule = this.getCssRules().item(i);
+            if (cssRule.getType() == CSSRule.IMPORT_RULE)
+            {
+                CSSImportRule cssImportRule = (CSSImportRule) cssRule;
+                try
+                {
+                    java.net.URI importURI = new java.net.URI(this.getHref())
+                        .resolve(cssImportRule.getHref());
+                    CSSStyleSheetImpl importedCSS = (CSSStyleSheetImpl)
+                        new CSSOMParser().parseStyleSheet(new InputSource(
+                            importURI.toString()));
+                    if (recursive)
+                    {
+                        importedCSS.importImports(recursive);
+                    }
+                    MediaList mediaList = cssImportRule.getMedia();
+                    if (mediaList.getLength() == 0)
+                    {
+                        mediaList.appendMedium("all");
+                    }
+                    CSSMediaRuleImpl cssMediaRule =
+                        new CSSMediaRuleImpl(this, null, mediaList);
+                    cssMediaRule.setRuleList(
+                        (CSSRuleListImpl) importedCSS.getCssRules());
+                    this.deleteRule(i);
+                    ((CSSRuleListImpl) this.getCssRules()).insert(cssMediaRule, i);
+                }
+                catch (java.net.URISyntaxException e)
+                {
+                    // TODO handle exception
+                    throw new DOMException(DOMException.SYNTAX_ERR,
+                        e.getLocalizedMessage());
+                }
+                catch (IOException e)
+                {
+                    // TODO handle exception
+                }
+            }
+        }
     }
 }
