@@ -21,6 +21,29 @@ public class SACParser implements Parser, SACParserConstants {
     private ConditionFactory _conditionFactory = new ConditionFactoryImpl();
     private boolean _quiet = true;
 
+    protected DocumentHandler getDocumentHandler()
+    {
+        if (this._docHandler == null)
+        {
+            this.setDocumentHandler(new HandlerBase());
+        }
+        return this._docHandler;
+    }
+    
+    protected ErrorHandler getErrorHandler()
+    {
+        if (this._errHandler == null)
+        {
+            this.setErrorHandler(new HandlerBase());
+        }
+        return this._errHandler;
+    }
+    
+    protected InputSource getInputSource()
+    {
+        return this._source;
+    }
+
     public SACParser() {
         this((CharStream) null);
     }
@@ -50,38 +73,47 @@ public class SACParser implements Parser, SACParserConstants {
     }
 
     public void parseStyleSheet(InputSource source)
-            throws CSSException, IOException {
+            throws /*CSSException, */IOException {
         _source = source;
         ReInit(getCharStream(source));
         try {
             styleSheet();
         } catch (ParseException e) {
-            throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
+        	this.getErrorHandler().error(new CSSParseException(e.getLocalizedMessage(),
+				this.getInputSource().getURI(), e.currentToken.beginLine,
+                e.currentToken.beginColumn));
+            //throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
         }
     }
 
-    public void parseStyleSheet(String uri) throws CSSException, IOException {
+    public void parseStyleSheet(String uri) throws /*CSSException, */IOException {
         parseStyleSheet(new InputSource(uri));
     }
 
     public void parseStyleDeclaration(InputSource source)
-            throws CSSException, IOException {
+            throws /*CSSException, */IOException {
         _source = source;
         ReInit(getCharStream(source));
         try {
             styleDeclaration();
         } catch (ParseException e) {
-            throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
+        	this.getErrorHandler().error(new CSSParseException(e.getLocalizedMessage(),
+    				this.getInputSource().getURI(), e.currentToken.beginLine,
+                    e.currentToken.beginColumn));
+            //throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
         }
     }
 
-    public void parseRule(InputSource source) throws CSSException, IOException {
+    public void parseRule(InputSource source) throws /*CSSException, */IOException {
         _source = source;
         ReInit(getCharStream(source));
         try {
             styleSheetRuleSingle();
         } catch (ParseException e) {
-            throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
+        	this.getErrorHandler().error(new CSSParseException(e.getLocalizedMessage(),
+    				this.getInputSource().getURI(), e.currentToken.beginLine,
+                    e.currentToken.beginColumn));
+            //throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
         }
     }
 
@@ -90,50 +122,88 @@ public class SACParser implements Parser, SACParserConstants {
     }
 
     public SelectorList parseSelectors(InputSource source)
-            throws CSSException, IOException {
+            throws /*CSSException, */IOException {
         _source = source;
         ReInit(getCharStream(source));
         SelectorList sl = null;
         try {
             sl = selectorList();
         } catch (ParseException e) {
-            throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
+        	this.getErrorHandler().error(new CSSParseException(e.getLocalizedMessage(),
+    				this.getInputSource().getURI(), e.currentToken.beginLine,
+                    e.currentToken.beginColumn));
+            //throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
         }
         return sl;
     }
 
     public LexicalUnit parsePropertyValue(InputSource source)
-            throws CSSException, IOException {
+            throws /*CSSException, */IOException {
         _source = source;
         ReInit(getCharStream(source));
         LexicalUnit lu = null;
         try {
             lu = expr();
         } catch (ParseException e) {
-            throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
+        	this.getErrorHandler().error(new CSSParseException(e.getLocalizedMessage(),
+    				this.getInputSource().getURI(), e.currentToken.beginLine,
+                    e.currentToken.beginColumn));
+            //throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
         }
         return lu;
     }
 
     public boolean parsePriority(InputSource source)
-            throws CSSException, IOException {
+            throws /*CSSException, */IOException {
         _source = source;
         ReInit(getCharStream(source));
         boolean b = false;
         try {
             b = prio();
         } catch (ParseException e) {
-            throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
+        	this.getErrorHandler().error(new CSSParseException(e.getLocalizedMessage(),
+    				this.getInputSource().getURI(), e.currentToken.beginLine,
+                    e.currentToken.beginColumn));
+            //throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
         }
         return b;
     }
 
+    // start addition
+    public SACMediaList parseMedia(InputSource source)
+        throws IOException
+    {
+        this._source = source;
+        this.ReInit(this.getCharStream(source));
+        SACMediaListImpl ml = new SACMediaListImpl();
+        try
+        {
+            this.mediaList(ml);
+        }
+        catch (ParseException e)
+        {
+            this.getErrorHandler().error(
+                new CSSParseException(e.getLocalizedMessage(), source.getURI(),
+                e.currentToken.beginLine, e.currentToken.beginColumn));
+        }
+        return ml;
+    }
+    // end addition
+
     private CharStream getCharStream(InputSource source)
             throws CSSException, IOException {
         if (source.getCharacterStream() != null) {
-                return new ASCII_CharStream(source.getCharacterStream(), 1, 1);
-            } else {
-
+            return new ASCII_CharStream(source.getCharacterStream(), 1, 1);
+            // start addition
+        } else if (source.getByteStream() != null) {
+            Reader r = new InputStreamReader(source.getByteStream());
+            return new ASCII_CharStream(r, 1, 1);
+        } else if (source.getURI() != null) {
+            Reader r = new InputStreamReader(
+                new URL(source.getURI()).openConnection().getInputStream());
+            return new ASCII_CharStream(r, 1, 1);
+            // end addition
+        } else {
             // TODO: Handle other sources
             return null;
         }
@@ -150,16 +220,28 @@ public class SACParser implements Parser, SACParserConstants {
 //      [ [ ruleset | media | page | font_face ] [S|CDO|CDC]* ]*
 //  ;
 //
-  final public void styleSheet() throws ParseException {
-    try {
-          _docHandler.startDocument(_source);
-      styleSheetRuleList();
-      jj_consume_token(0);
-    } finally {
-        _docHandler.endDocument(_source);
+    final public void styleSheet() throws ParseException {
+        //_docHandler.startDocument(_source);
+        this.handleStartDocument(this._source);
+        try {
+            this.styleSheetRuleList();
+            this.jj_consume_token(0);
+        } finally {
+            //_docHandler.endDocument(_source);
+            this.handleEndDocument(this._source);
+        }
     }
-  }
 
+    protected void handleStartDocument(InputSource source)
+    {
+        this.getDocumentHandler().startDocument(source);
+    }
+
+    protected void handleEndDocument(InputSource source)
+    {
+        this.getDocumentHandler().endDocument(source);
+    }
+    
   final public void styleSheetRuleList() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case CHARSET_SYM:
@@ -382,13 +464,14 @@ public class SACParser implements Parser, SACParserConstants {
     jj_consume_token(SEMICOLON);
   }
 
-  final public void unknownRule() throws ParseException {
-    Token t;
-    String s;
-    t = jj_consume_token(ATKEYWORD);
-        s = skip();
-        _docHandler.ignorableAtRule(s);
-  }
+    final public void unknownRule() throws ParseException {
+        Token t;
+        String s;
+        t = this.jj_consume_token(ATKEYWORD);
+        s = this.skip();
+        //_docHandler.ignorableAtRule(s);
+        this.getDocumentHandler().ignorableAtRule(s);
+    }
 
 //
 // import
@@ -396,120 +479,140 @@ public class SACParser implements Parser, SACParserConstants {
 //     [STRING|URI] S* [ medium [ ',' S* medium]* ]? ';' S*
 //   ;
 //
-  final public void importRule() throws ParseException {
-    Token t;
-    String s;
-    SACMediaListImpl ml = new SACMediaListImpl();
-    jj_consume_token(IMPORT_SYM);
-    label_8:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case S:
-        ;
-        break;
-      default:
-        jj_la1[13] = jj_gen;
-        break label_8;
-      }
-      jj_consume_token(S);
+    final public void importRule() throws ParseException {
+        Token t;
+        String s;
+        SACMediaListImpl ml = new SACMediaListImpl();
+        this.jj_consume_token(IMPORT_SYM);
+        label_8:
+        while (true) {
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                case S:
+                    ;
+                    break;
+                default:
+                    jj_la1[13] = jj_gen;
+                    break label_8;
+            }
+            this.jj_consume_token(S);
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+            case STRING:
+                t = this.jj_consume_token(STRING);
+                break;
+            case URI:
+                t = this.jj_consume_token(URI);
+                break;
+            default:
+                jj_la1[14] = jj_gen;
+                this.jj_consume_token(-1);
+                throw new ParseException();
+        }
+        label_9:
+        while (true) {
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                case S:
+                    ;
+                    break;
+                default:
+                    jj_la1[15] = jj_gen;
+                    break label_9;
+            }
+            this.jj_consume_token(S);
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+            case IDENT:
+                this.mediaList(ml);
+                break;
+            default:
+                jj_la1[16] = jj_gen;
+                ;
+        }
+        this.jj_consume_token(SEMICOLON);
+        //_docHandler.importStyle(unescape(t.image), ml, null);
+        this.handleImportStyle(unescape(t.image), ml, null);
     }
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case STRING:
-      t = jj_consume_token(STRING);
-      break;
-    case URI:
-      t = jj_consume_token(URI);
-      break;
-    default:
-      jj_la1[14] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
+
+    protected void handleImportStyle(String uri, SACMediaList media,
+        String defaultNamespaceURI)
+    {
+        this.getDocumentHandler().importStyle(uri, media,
+            defaultNamespaceURI);
     }
-    label_9:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case S:
-        ;
-        break;
-      default:
-        jj_la1[15] = jj_gen;
-        break label_9;
-      }
-      jj_consume_token(S);
-    }
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case IDENT:
-      mediaList(ml);
-      break;
-    default:
-      jj_la1[16] = jj_gen;
-      ;
-    }
-    jj_consume_token(SEMICOLON);
-        _docHandler.importStyle(unescape(t.image), ml, null);
-  }
 
 //
 // media
 //   : MEDIA_SYM S* medium [ ',' S* medium ]* '{' S* ruleset* '}' S*
 //   ;
 //
-  final public void mediaRule() throws ParseException {
-    boolean start = false;
-    SACMediaListImpl ml = new SACMediaListImpl();
-    try {
-      jj_consume_token(MEDIA_SYM);
-      label_10:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case S:
-          ;
-          break;
-        default:
-          jj_la1[17] = jj_gen;
-          break label_10;
-        }
-        jj_consume_token(S);
-      }
-      mediaList(ml);
+    final public void mediaRule() throws ParseException {
+        boolean start = false;
+        SACMediaListImpl ml = new SACMediaListImpl();
+        try {
+            this.jj_consume_token(MEDIA_SYM);
+            label_10:
+            while (true) {
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case S:
+                        ;
+                        break;
+                    default:
+                        jj_la1[17] = jj_gen;
+                        break label_10;
+                }
+                this.jj_consume_token(S);
+            }
+            this.mediaList(ml);
             start = true;
-            _docHandler.startMedia(ml);
-      jj_consume_token(LBRACE);
-      label_11:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case S:
-          ;
-          break;
-        default:
-          jj_la1[18] = jj_gen;
-          break label_11;
-        }
-        jj_consume_token(S);
-      }
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case DOT:
-      case COLON:
-      case ASTERISK:
-      case LSQUARE:
-      case HASH:
-      case PAGE_SYM:
-      case ATKEYWORD:
-      case IDENT:
-        mediaRuleList();
-        break;
-      default:
-        jj_la1[19] = jj_gen;
-        ;
-      }
-      jj_consume_token(RBRACE);
-    } finally {
-        if (start) {
-            _docHandler.endMedia(ml);
+            //_docHandler.startMedia(ml);
+            this.handleStartMedia(ml);
+            this.jj_consume_token(LBRACE);
+            label_11:
+            while (true) {
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case S:
+                        ;
+                        break;
+                    default:
+                        jj_la1[18] = jj_gen;
+                        break label_11;
+                }
+                this.jj_consume_token(S);
+            }
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                case DOT:
+                case COLON:
+                case ASTERISK:
+                case LSQUARE:
+                case HASH:
+                case PAGE_SYM:
+                case ATKEYWORD:
+                case IDENT:
+                    this.mediaRuleList();
+                    break;
+                default:
+                    jj_la1[19] = jj_gen;
+                    ;
+            }
+            this.jj_consume_token(RBRACE);
+        } finally {
+            if (start) {
+                //_docHandler.endMedia(ml);
+                this.handleEndMedia(ml);
+            }
         }
     }
-  }
 
+    protected void handleStartMedia(SACMediaList media)
+    {
+        this.getDocumentHandler().startMedia(media);
+    }
+
+    protected void handleEndMedia(SACMediaList media)
+    {
+        this.getDocumentHandler().endMedia(media);
+    }
+    
   final public void mediaList(SACMediaListImpl ml) throws ParseException {
     String s;
     s = medium();
@@ -648,148 +751,160 @@ public class SACParser implements Parser, SACParserConstants {
 //     '{' S* declaration [ ';' S* declaration ]* '}' S*
 //   ;
 //
-  final public void pageRule() throws ParseException {
-    Token t = null;
-    String s = null;
-    boolean start = false;
-    try {
-      jj_consume_token(PAGE_SYM);
-      label_17:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case S:
-          ;
-          break;
-        default:
-          jj_la1[27] = jj_gen;
-          break label_17;
-        }
-        jj_consume_token(S);
-      }
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case COLON:
-      case IDENT:
-        if (jj_2_1(2)) {
-          t = jj_consume_token(IDENT);
-          label_18:
-          while (true) {
+    final public void pageRule() throws ParseException {
+        Token t = null;
+        String s = null;
+        boolean start = false;
+        try {
+            this.jj_consume_token(PAGE_SYM);
+            label_17:
+            while (true) {
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case S:
+                        ;
+                        break;
+                    default:
+                        jj_la1[27] = jj_gen;
+                        break label_17;
+                }
+                this.jj_consume_token(S);
+            }
             switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-            case S:
-              ;
-              break;
-            default:
-              jj_la1[28] = jj_gen;
-              break label_18;
+                case COLON:
+                case IDENT:
+                    if (jj_2_1(2)) {
+                        t = this.jj_consume_token(IDENT);
+                        label_18:
+                        while (true) {
+                            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                                case S:
+                                    ;
+                                    break;
+                                default:
+                                    jj_la1[28] = jj_gen;
+                                    break label_18;
+                            }
+                            this.jj_consume_token(S);
+                        }
+                    } else {
+                        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                            case IDENT:
+                                t = this.jj_consume_token(IDENT);
+                                s = this.pseudoPage();
+                                label_19:
+                                while (true) {
+                                    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                                        case S:
+                                            ;
+                                            break;
+                                        default:
+                                            jj_la1[29] = jj_gen;
+                                            break label_19;
+                                    }
+                                    this.jj_consume_token(S);
+                                }
+                                break;
+                            case COLON:
+                                s = this.pseudoPage();
+                                label_20:
+                                while (true) {
+                                    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                                        case S:
+                                            ;
+                                            break;
+                                        default:
+                                            jj_la1[30] = jj_gen;
+                                            break label_20;
+                                    }
+                                    this.jj_consume_token(S);
+                                }
+                                break;
+                            default:
+                                jj_la1[31] = jj_gen;
+                                this.jj_consume_token(-1);
+                                throw new ParseException();
+                        }
+                    }
+                    break;
+                default:
+                    jj_la1[32] = jj_gen;
+                    ;
             }
-            jj_consume_token(S);
-          }
-        } else {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case IDENT:
-            t = jj_consume_token(IDENT);
-            s = pseudoPage();
-            label_19:
+            this.jj_consume_token(LBRACE);
+            label_21:
             while (true) {
-              switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-              case S:
-                ;
-                break;
-              default:
-                jj_la1[29] = jj_gen;
-                break label_19;
-              }
-              jj_consume_token(S);
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case S:
+                        ;
+                        break;
+                    default:
+                        jj_la1[33] = jj_gen;
+                        break label_21;
+                }
+                this.jj_consume_token(S);
             }
-            break;
-          case COLON:
-            s = pseudoPage();
-            label_20:
-            while (true) {
-              switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-              case S:
-                ;
-                break;
-              default:
-                jj_la1[30] = jj_gen;
-                break label_20;
-              }
-              jj_consume_token(S);
-            }
-            break;
-          default:
-            jj_la1[31] = jj_gen;
-            jj_consume_token(-1);
-            throw new ParseException();
-          }
-        }
-        break;
-      default:
-        jj_la1[32] = jj_gen;
-        ;
-      }
-      jj_consume_token(LBRACE);
-      label_21:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case S:
-          ;
-          break;
-        default:
-          jj_la1[33] = jj_gen;
-          break label_21;
-        }
-        jj_consume_token(S);
-      }
             start = true;
-            _docHandler.startPage((t != null) ? unescape(t.image) : null, s);
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case IDENT:
-        declaration();
-        break;
-      default:
-        jj_la1[34] = jj_gen;
-        ;
-      }
-      label_22:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case SEMICOLON:
-          ;
-          break;
-        default:
-          jj_la1[35] = jj_gen;
-          break label_22;
-        }
-        jj_consume_token(SEMICOLON);
-        label_23:
-        while (true) {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case S:
-            ;
-            break;
-          default:
-            jj_la1[36] = jj_gen;
-            break label_23;
-          }
-          jj_consume_token(S);
-        }
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case IDENT:
-          declaration();
-          break;
-        default:
-          jj_la1[37] = jj_gen;
-          ;
-        }
-      }
-      jj_consume_token(RBRACE);
-    } finally {
-        if (start) {
-            _docHandler.endPage((t != null) ? unescape(t.image) : null, s);
+            //_docHandler.startPage((t != null) ? unescape(t.image) : null, s);
+            this.handleStartPage((t != null) ? unescape(t.image) : null, s);
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                case IDENT:
+                    this.declaration();
+                    break;
+                default:
+                    jj_la1[34] = jj_gen;
+                    ;
+            }
+            label_22:
+            while (true) {
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case SEMICOLON:
+                        ;
+                        break;
+                    default:
+                        jj_la1[35] = jj_gen;
+                        break label_22;
+                }
+                this.jj_consume_token(SEMICOLON);
+                label_23:
+                while (true) {
+                    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                        case S:
+                            ;
+                            break;
+                        default:
+                            jj_la1[36] = jj_gen;
+                            break label_23;
+                    }
+                    this.jj_consume_token(S);
+                }
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case IDENT:
+                        this.declaration();
+                        break;
+                    default:
+                        jj_la1[37] = jj_gen;
+                        ;
+                }
+            }
+            this.jj_consume_token(RBRACE);
+        } finally {
+            if (start) {
+                //_docHandler.endPage((t != null) ? unescape(t.image) : null, s);
+                this.handleEndPage((t != null) ? unescape(t.image) : null, s);
+            }
         }
     }
-  }
 
+    protected void handleStartPage(String name, String pseudo_page)
+    {
+        this.getDocumentHandler().startPage(name, pseudo_page);
+    }
+
+    protected void handleEndPage(String name, String pseudo_page)
+    {
+        this.getDocumentHandler().endPage(name, pseudo_page);
+    }
+    
 //
 // pseudoPage
 //   : ':' IDENT
@@ -809,84 +924,97 @@ public class SACParser implements Parser, SACParserConstants {
 //     '{' S* declaration [ ';' S* declaration ]* '}' S*
 //   ;
 //
-  final public void fontFaceRule() throws ParseException {
-    boolean start = false;
-    try {
-      jj_consume_token(FONT_FACE_SYM);
-      label_24:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case S:
-          ;
-          break;
-        default:
-          jj_la1[38] = jj_gen;
-          break label_24;
-        }
-        jj_consume_token(S);
-      }
-      jj_consume_token(LBRACE);
-      label_25:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case S:
-          ;
-          break;
-        default:
-          jj_la1[39] = jj_gen;
-          break label_25;
-        }
-        jj_consume_token(S);
-      }
-                            start = true; _docHandler.startFontFace();
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case IDENT:
-        declaration();
-        break;
-      default:
-        jj_la1[40] = jj_gen;
-        ;
-      }
-      label_26:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case SEMICOLON:
-          ;
-          break;
-        default:
-          jj_la1[41] = jj_gen;
-          break label_26;
-        }
-        jj_consume_token(SEMICOLON);
-        label_27:
-        while (true) {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case S:
-            ;
-            break;
-          default:
-            jj_la1[42] = jj_gen;
-            break label_27;
-          }
-          jj_consume_token(S);
-        }
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case IDENT:
-          declaration();
-          break;
-        default:
-          jj_la1[43] = jj_gen;
-          ;
-        }
-      }
-      jj_consume_token(RBRACE);
-    } finally {
-        if (start) {
-            _docHandler.endFontFace();
+    final public void fontFaceRule() throws ParseException {
+        boolean start = false;
+        try {
+            this.jj_consume_token(FONT_FACE_SYM);
+            label_24:
+            while (true) {
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case S:
+                        ;
+                        break;
+                    default:
+                        jj_la1[38] = jj_gen;
+                        break label_24;
+                }
+                this.jj_consume_token(S);
+            }
+            this.jj_consume_token(LBRACE);
+            label_25:
+            while (true) {
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case S:
+                        ;
+                        break;
+                    default:
+                        jj_la1[39] = jj_gen;
+                        break label_25;
+                }
+                this.jj_consume_token(S);
+            }
+            start = true;
+            //_docHandler.startFontFace();
+            this.handleStartFontFace();
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                case IDENT:
+                    this.declaration();
+                    break;
+                default:
+                    jj_la1[40] = jj_gen;
+                    ;
+            }
+            label_26:
+            while (true) {
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case SEMICOLON:
+                        ;
+                        break;
+                    default:
+                        jj_la1[41] = jj_gen;
+                        break label_26;
+                }
+                this.jj_consume_token(SEMICOLON);
+                label_27:
+                while (true) {
+                    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                        case S:
+                            ;
+                            break;
+                        default:
+                            jj_la1[42] = jj_gen;
+                            break label_27;
+                    }
+                    this.jj_consume_token(S);
+                }
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case IDENT:
+                        this.declaration();
+                        break;
+                    default:
+                        jj_la1[43] = jj_gen;
+                        ;
+                }
+            }
+            this.jj_consume_token(RBRACE);
+        } finally {
+            if (start) {
+                //_docHandler.endFontFace();
+                this.handleEndFontFace();
+            }
         }
     }
-  }
 
+    protected void handleStartFontFace()
+    {
+        this.getDocumentHandler().startFontFace();
+    }
+
+    protected void handleEndFontFace()
+    {
+        this.getDocumentHandler().endFontFace();
+    }
+    
 //
 // operator
 //   : '/' S* | ',' S* |
@@ -1074,157 +1202,174 @@ public class SACParser implements Parser, SACParserConstants {
 //     '{' S* declaration [ ';' S* declaration ]* '}' S*
 //   ;
 //
-  final public void styleRule() throws ParseException {
-    SelectorList selList = null;
-    boolean start = false;
-    boolean noError = true;
-    try {
-      selList = selectorList();
-      jj_consume_token(LBRACE);
-      label_34:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case S:
-          ;
-          break;
-        default:
-          jj_la1[55] = jj_gen;
-          break label_34;
-        }
-        jj_consume_token(S);
-      }
+    final public void styleRule() throws ParseException {
+        SelectorList selList = null;
+        boolean start = false;
+        boolean noError = true;
+        try {
+            selList = this.selectorList();
+            this.jj_consume_token(LBRACE);
+            label_34:
+            while (true) {
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case S:
+                        ;
+                        break;
+                    default:
+                        jj_la1[55] = jj_gen;
+                        break label_34;
+                }
+                this.jj_consume_token(S);
+            }
             start = true;
-            _docHandler.startSelector(selList);
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case IDENT:
-        declaration();
-        break;
-      default:
-        jj_la1[56] = jj_gen;
-        ;
-      }
-      label_35:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case SEMICOLON:
-          ;
-          break;
-        default:
-          jj_la1[57] = jj_gen;
-          break label_35;
-        }
-        jj_consume_token(SEMICOLON);
-        label_36:
-        while (true) {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case S:
-            ;
-            break;
-          default:
-            jj_la1[58] = jj_gen;
-            break label_36;
-          }
-          jj_consume_token(S);
-        }
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case IDENT:
-          declaration();
-          break;
-        default:
-          jj_la1[59] = jj_gen;
-          ;
-        }
-      }
-      jj_consume_token(RBRACE);
-    } catch (ParseException e) {
+            //_docHandler.startSelector(selList);
+            this.handleStartSelector(selList);
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                case IDENT:
+                    this.declaration();
+                    break;
+                default:
+                    jj_la1[56] = jj_gen;
+                    ;
+            }
+            label_35:
+            while (true) {
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case SEMICOLON:
+                        ;
+                        break;
+                    default:
+                        jj_la1[57] = jj_gen;
+                        break label_35;
+                }
+                this.jj_consume_token(SEMICOLON);
+                label_36:
+                while (true) {
+                    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                        case S:
+                            ;
+                            break;
+                        default:
+                            jj_la1[58] = jj_gen;
+                            break label_36;
+                    }
+                    this.jj_consume_token(S);
+                }
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case IDENT:
+                        this.declaration();
+                        break;
+                    default:
+                        jj_la1[59] = jj_gen;
+                        ;
+                }
+            }
+            this.jj_consume_token(RBRACE);
+        } catch (ParseException e) {
 //        System.err.println("Exception in styleRule()");
 //        System.err.println(e.getMessage());
-        noError = false;
-        error_skipblock();
-    } finally {
-        if (start) {
-            _docHandler.endSelector(selList);
+            noError = false;
+            this.error_skipblock();
+        } finally {
+            if (start) {
+                //_docHandler.endSelector(selList);
+                this.handleEndSelector(selList);
+            }
         }
     }
-  }
 
-  final public SelectorList selectorList() throws ParseException {
-    SelectorListImpl selList = new SelectorListImpl();
-    Selector sel;
-    try {
-      sel = selector();
-      label_37:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case COMMA:
-          ;
-          break;
-        default:
-          jj_la1[60] = jj_gen;
-          break label_37;
-        }
-        jj_consume_token(COMMA);
-        label_38:
-        while (true) {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case S:
-            ;
-            break;
-          default:
-            jj_la1[61] = jj_gen;
-            break label_38;
-          }
-          jj_consume_token(S);
-        }
-                             selList.add(sel);
-        sel = selector();
-      }
+    protected void handleStartSelector(SelectorList selectors)
+    {
+        this.getDocumentHandler().startSelector(selectors);
+    }
+
+    protected void handleEndSelector(SelectorList selectors)
+    {
+        this.getDocumentHandler().endSelector(selectors);
+    }
+    
+    final public SelectorList selectorList() throws ParseException {
+        SelectorListImpl selList = new SelectorListImpl();
+        Selector sel;
+        try {
+            sel = this.selector();
+            label_37:
+            while (true) {
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case COMMA:
+                        ;
+                        break;
+                    default:
+                        jj_la1[60] = jj_gen;
+                        break label_37;
+                }
+                this.jj_consume_token(COMMA);
+                label_38:
+                while (true) {
+                    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                        case S:
+                            ;
+                            break;
+                        default:
+                            jj_la1[61] = jj_gen;
+                            break label_38;
+                    }
+                    this.jj_consume_token(S);
+                }
+                selList.add(sel);
+                sel = this.selector();
+            }
             selList.add(sel);
             {if (true) return selList;}
-    } catch (ParseException e) {
-        System.err.println("Exception in selectorList()");
+        } catch (ParseException e) {
+            //System.err.println("Exception in selectorList()");
+            this.getErrorHandler().error(
+                new CSSParseException(e.getLocalizedMessage(),
+                    this.getInputSource().getURI(), e.currentToken.beginLine,
+                    e.currentToken.beginColumn));
+        }
+        throw new Error("Missing return statement in function");
     }
-    throw new Error("Missing return statement in function");
-  }
 
 //
 // selector
 //   : simple_selector [ combinator simple_selector ]*
 //   ;
 //
-  final public Selector selector() throws ParseException {
-    Selector sel;
-    char comb;
-    try {
-      sel = simpleSelector(null, ' ');
-      label_39:
-      while (true) {
-        if (jj_2_2(2)) {
-          ;
-        } else {
-          break label_39;
-        }
-        comb = combinator();
-        sel = simpleSelector(sel, comb);
-      }
-      label_40:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case S:
-          ;
-          break;
-        default:
-          jj_la1[62] = jj_gen;
-          break label_40;
-        }
-        jj_consume_token(S);
-      }
+    final public Selector selector() throws ParseException {
+        Selector sel;
+        char comb;
+        try {
+            sel = this.simpleSelector(null, ' ');
+            label_39:
+            while (true) {
+                if (jj_2_2(2)) {
+                    ;
+                } else {
+                    break label_39;
+                }
+                comb = this.combinator();
+                sel = this.simpleSelector(sel, comb);
+            }
+            label_40:
+            while (true) {
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case S:
+                        ;
+                        break;
+                    default:
+                        jj_la1[62] = jj_gen;
+                        break label_40;
+                }
+                this.jj_consume_token(S);
+            }
             {if (true) return sel;}
-    } catch (ParseException e) {
-        skipSelector();
+        } catch (ParseException e) {
+            this.skipSelector();
+            // return null?
+        }
+        throw new Error("Missing return statement in function");
     }
-    throw new Error("Missing return statement in function");
-  }
 
 //
 // simple_selector
@@ -1577,62 +1722,62 @@ public class SACParser implements Parser, SACParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public void styleDeclaration() throws ParseException {
-    jj_consume_token(LBRACE);
-    label_49:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case S:
-        ;
-        break;
-      default:
-        jj_la1[79] = jj_gen;
-        break label_49;
-      }
-      jj_consume_token(S);
-    }
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case IDENT:
-      declaration();
-      break;
-    default:
-      jj_la1[80] = jj_gen;
-      ;
-    }
-    label_50:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case SEMICOLON:
-        ;
-        break;
-      default:
-        jj_la1[81] = jj_gen;
-        break label_50;
-      }
-      jj_consume_token(SEMICOLON);
-      label_51:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case S:
-          ;
-          break;
-        default:
-          jj_la1[82] = jj_gen;
-          break label_51;
+    final public void styleDeclaration() throws ParseException {
+        //jj_consume_token(LBRACE);
+        label_49:
+        while (true) {
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                case S:
+                    ;
+                    break;
+                default:
+                    jj_la1[79] = jj_gen;
+                    break label_49;
+            }
+            this.jj_consume_token(S);
         }
-        jj_consume_token(S);
-      }
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case IDENT:
-        declaration();
-        break;
-      default:
-        jj_la1[83] = jj_gen;
-        ;
-      }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+            case IDENT:
+                this.declaration();
+                break;
+            default:
+                jj_la1[80] = jj_gen;
+                ;
+        }
+        label_50:
+        while (true) {
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                case SEMICOLON:
+                    ;
+                    break;
+                default:
+                    jj_la1[81] = jj_gen;
+                    break label_50;
+            }
+            this.jj_consume_token(SEMICOLON);
+            label_51:
+            while (true) {
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case S:
+                        ;
+                        break;
+                    default:
+                        jj_la1[82] = jj_gen;
+                        break label_51;
+                }
+                this.jj_consume_token(S);
+            }
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                case IDENT:
+                    this.declaration();
+                    break;
+                default:
+                    jj_la1[83] = jj_gen;
+                    ;
+            }
+        }
+        //jj_consume_token(RBRACE);
     }
-    jj_consume_token(RBRACE);
-  }
 
 //
 // declaration
@@ -1640,43 +1785,53 @@ public class SACParser implements Parser, SACParserConstants {
 //   |
 //   ;
 //
-  final public void declaration() throws ParseException {
-  String p;
-  LexicalUnit e;
-  boolean priority = false;
+    final public void declaration() throws ParseException {
+        String p;
+        LexicalUnit e;
+        boolean priority = false;
 //  CSSValue e;
-  boolean noError = true;
-    try {
-      p = property();
-      jj_consume_token(COLON);
-      label_52:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case S:
-          ;
-          break;
-        default:
-          jj_la1[84] = jj_gen;
-          break label_52;
+        boolean noError = true;
+        try {
+            p = this.property();
+            this.jj_consume_token(COLON);
+            label_52:
+            while (true) {
+                switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                    case S:
+                        ;
+                        break;
+                    default:
+                        jj_la1[84] = jj_gen;
+                        break label_52;
+                }
+                this.jj_consume_token(S);
+            }
+            e = this.expr();
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+                case IMPORTANT_SYM:
+                    priority = this.prio();
+                    break;
+                default:
+                    jj_la1[85] = jj_gen;
+                    ;
+            }
+            //_docHandler.property(p, e, priority);
+            this.handleProperty(p, e, priority);
+        } catch (ParseException ex) {
+            //System.err.println("Exception in declaration()");
+            this.getErrorHandler().error(
+                new CSSParseException(ex.getLocalizedMessage(),
+                    this.getInputSource().getURI(), ex.currentToken.beginLine,
+                    ex.currentToken.beginColumn));
+            noError = false;
+            this.error_skipdecl();
         }
-        jj_consume_token(S);
-      }
-      e = expr();
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case IMPORTANT_SYM:
-        priority = prio();
-        break;
-      default:
-        jj_la1[85] = jj_gen;
-        ;
-      }
-            _docHandler.property(p, e, priority);
-    } catch (ParseException ex) {
-        System.err.println("Exception in declaration()");
-        noError = false;
-        error_skipdecl();
     }
-  }
+
+    protected void handleProperty(String name, LexicalUnit value, boolean important)
+    {
+        this.getDocumentHandler().property(name, value, important);
+    }
 
 //
 // prio
@@ -2155,38 +2310,46 @@ public class SACParser implements Parser, SACParserConstants {
   return sb.toString();
   }
 
-  void error_skipblock() throws ParseException {
-  if (!_quiet) {
-    ParseException e = generateParseException();
-    System.err.println( "** error_skipblock **\n" + e.toString() );
-  }
+    void error_skipblock() throws ParseException {
+        if (!_quiet) {
+            ParseException e = this.generateParseException();
+            //System.err.println( "** error_skipblock **\n" + e.toString() );
+            this.getErrorHandler().error(
+                new CSSParseException(e.getLocalizedMessage(),
+                    this.getInputSource().getURI(), e.currentToken.beginLine,
+                    e.currentToken.beginColumn));
+        }
 
-  Token t;
-  int nesting = 0;
-  do {
-    t = getNextToken();
-    if( t.kind == LBRACE )
-      nesting++;
-    else if( t.kind == RBRACE )
-      nesting--;
-    else if( t.kind == EOF )
-      break;
-  }
-  while ((t.kind != RBRACE) || (nesting > 0));
-  }
+        Token t;
+        int nesting = 0;
+        do {
+            t = this.getNextToken();
+            if( t.kind == LBRACE )
+                nesting++;
+            else if( t.kind == RBRACE )
+                nesting--;
+            else if( t.kind == EOF )
+                break;
+        }
+        while ((t.kind != RBRACE) || (nesting > 0));
+    }
 
-  void error_skipdecl() throws ParseException {
-  if (!_quiet) {
-    ParseException e = generateParseException();
-    System.err.println("** error_skipdecl **\n" + e.toString());
-  }
+    void error_skipdecl() throws ParseException {
+        if (!_quiet) {
+            ParseException e = this.generateParseException();
+            //System.err.println("** error_skipdecl **\n" + e.toString());
+            this.getErrorHandler().error(
+                new CSSParseException(e.getLocalizedMessage(),
+                    this.getInputSource().getURI(), e.currentToken.beginLine,
+                    e.currentToken.beginColumn));
+        }
 
-  Token t = getToken(1);
-  while (t.kind != SEMICOLON && t.kind != RBRACE && t.kind != EOF ) {
-      getNextToken();
-      t = getToken(1);
-  }
-  }
+        Token t = this.getToken(1);
+        while (t.kind != SEMICOLON && t.kind != RBRACE && t.kind != EOF ) {
+            this.getNextToken();
+            t = this.getToken(1);
+        }
+    }
 
   final private boolean jj_2_1(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
