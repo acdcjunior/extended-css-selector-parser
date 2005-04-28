@@ -110,8 +110,7 @@ public final class ASCII_CharStream implements CharStream
            inputStream.close();
            throw new java.io.IOException();
         }
-        else
-           maxNextCharInd += i;
+        maxNextCharInd += i;
         return;
      }
      catch(java.io.IOException e) {
@@ -298,8 +297,7 @@ public final class ASCII_CharStream implements CharStream
   {
      if (bufpos >= tokenBegin)
         return new String(buffer, tokenBegin, bufpos - tokenBegin + 1);
-     else
-        return new String(buffer, tokenBegin, bufsize - tokenBegin) +
+     return new String(buffer, tokenBegin, bufsize - tokenBegin) +
                               new String(buffer, 0, bufpos + 1);
   }
 

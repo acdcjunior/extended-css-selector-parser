@@ -25,12 +25,11 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: CSSStyleDeclarationImpl.java,v 1.1.1.1 2003-12-28 21:22:50 davidsch Exp $
+ * $Id: CSSStyleDeclarationImpl.java,v 1.2 2005-04-28 20:57:20 waldbaer Exp $
  */
 
 package com.steadystate.css.dom;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.util.*;
@@ -111,9 +110,8 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
         Property p = getPropertyDeclaration(propertyName);
         if (p != null) {
             return p.isImportant() ? "important" : "";
-        } else {
-            return "";
         }
+        return "";
     }
 
     public void setProperty(

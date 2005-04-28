@@ -25,12 +25,11 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: CSSValueImpl.java,v 1.1.1.1 2003-12-28 21:22:54 davidsch Exp $
+ * $Id: CSSValueImpl.java,v 1.2 2005-04-28 20:57:20 waldbaer Exp $
  */
 
 package com.steadystate.css.dom;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.util.*;
@@ -125,9 +124,8 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
                 }
             }
             return sb.toString();
-        } else {
-            return _value.toString();
         }
+        return _value.toString();
     }
 
     public void setCssText(String cssText) throws DOMException {

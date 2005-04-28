@@ -25,7 +25,7 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: CSSOMParser.java,v 1.2 2005-04-26 21:16:18 waldbaer Exp $
+ * $Id: CSSOMParser.java,v 1.3 2005-04-28 20:57:19 waldbaer Exp $
  */
  
 package com.steadystate.css.parser;
@@ -48,7 +48,8 @@ public class CSSOMParser {
 
     private Parser _parser = null;
     private CSSStyleSheetImpl _parentStyleSheet = null;
-    private CSSRule _parentRule = null;
+    // TODO what is this _parentRule for? It is not read locally.
+    //private CSSRule _parentRule = null;
 
     /** Creates new CSSOMParser */
     public CSSOMParser() {
@@ -117,9 +118,12 @@ public class CSSOMParser {
         _parentStyleSheet = parentStyleSheet;
     }
 
+    // See _parentRule
+    /*
     public void setParentRule(CSSRule parentRule) {
         _parentRule = parentRule;
     }
+    */
     
     class CSSOMHandler implements DocumentHandler {
         

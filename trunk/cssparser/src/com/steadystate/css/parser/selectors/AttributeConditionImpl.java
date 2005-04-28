@@ -25,7 +25,7 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: AttributeConditionImpl.java,v 1.1.1.1 2003-12-28 21:23:39 davidsch Exp $
+ * $Id: AttributeConditionImpl.java,v 1.2 2005-04-28 20:57:20 waldbaer Exp $
  */
 
 package com.steadystate.css.parser.selectors;
@@ -66,8 +66,7 @@ public class AttributeConditionImpl implements AttributeCondition, Serializable 
     public String toString() {
         if (getValue() != null) {
             return "[" + getLocalName() + "=\"" + getValue() + "\"]";
-        } else {
-            return "[" + getLocalName() + "]";
         }
+        return "[" + getLocalName() + "]";
     }
 }

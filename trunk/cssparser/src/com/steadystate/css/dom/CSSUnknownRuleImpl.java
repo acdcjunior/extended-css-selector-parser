@@ -25,14 +25,12 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: CSSUnknownRuleImpl.java,v 1.1.1.1 2003-12-28 21:22:52 davidsch Exp $
+ * $Id: CSSUnknownRuleImpl.java,v 1.2 2005-04-28 20:57:20 waldbaer Exp $
  */
 
 package com.steadystate.css.dom;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.io.StringReader;
 import org.w3c.dom.*;
 import org.w3c.dom.css.*;
 

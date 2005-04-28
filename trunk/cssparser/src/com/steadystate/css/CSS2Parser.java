@@ -25,17 +25,17 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: CSS2Parser.java,v 1.1.1.1 2003-12-28 21:22:43 davidsch Exp $
+ * $Id: CSS2Parser.java,v 1.2 2005-04-28 20:57:17 waldbaer Exp $
  */
 
 package com.steadystate.css;
 
 import java.io.*;
 import org.w3c.dom.*;
-import org.w3c.dom.stylesheets.*;
+//import org.w3c.dom.stylesheets.*;
 import org.w3c.dom.css.*;
 import org.w3c.css.sac.InputSource;
-import com.steadystate.css.dom.*;
+//import com.steadystate.css.dom.*;
 import com.steadystate.css.parser.CSSOMParser;
 
 /**
@@ -110,35 +110,35 @@ public class CSS2Parser {
         }
     }
 
-    public CSSRuleList styleSheetRuleList() throws IOException {
+    public CSSRuleList styleSheetRuleList() /*throws IOException*/ {
         return null;
     }
 
-    public CSSCharsetRule charsetRule() throws IOException {
+    public CSSCharsetRule charsetRule() /*throws IOException*/ {
         return null;
     }
 
-    public CSSUnknownRule unknownRule() throws IOException {
+    public CSSUnknownRule unknownRule() /*throws IOException*/ {
         return null;
     }
 
-    public CSSImportRule importRule() throws IOException {
+    public CSSImportRule importRule() /*throws IOException*/ {
         return null;
     }
 
-    public CSSMediaRule mediaRule() throws IOException {
+    public CSSMediaRule mediaRule() /*throws IOException*/ {
         return null;
     }
 
-    public CSSPageRule pageRule() throws IOException {
+    public CSSPageRule pageRule() /*throws IOException*/ {
         return null;
     }
 
-    public CSSFontFaceRule fontFaceRule() throws IOException {
+    public CSSFontFaceRule fontFaceRule() /*throws IOException*/ {
         return null;
     }
 
-    public CSSStyleRule styleRule() throws IOException {
+    public CSSStyleRule styleRule() /*throws IOException*/ {
         return null;
     }
     
