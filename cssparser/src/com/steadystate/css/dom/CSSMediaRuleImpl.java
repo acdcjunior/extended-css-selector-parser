@@ -25,7 +25,7 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: CSSMediaRuleImpl.java,v 1.1.1.1 2003-12-28 21:22:49 davidsch Exp $
+ * $Id: CSSMediaRuleImpl.java,v 1.2 2005-04-28 20:57:20 waldbaer Exp $
  */
 
 package com.steadystate.css.dom;
@@ -136,7 +136,8 @@ public class CSSMediaRuleImpl implements CSSMediaRule, Serializable {
             InputSource is = new InputSource(new StringReader(rule));
             CSSOMParser parser = new CSSOMParser();
             parser.setParentStyleSheet(_parentStyleSheet);
-            parser.setParentRule(_parentRule);
+            // parser._parentRule is never read
+            //parser.setParentRule(_parentRule);
             CSSRule r = parser.parseRule(is);
 
             // Insert the rule into the list of rules

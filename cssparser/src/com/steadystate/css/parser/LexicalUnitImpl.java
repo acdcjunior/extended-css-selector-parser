@@ -25,7 +25,7 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: LexicalUnitImpl.java,v 1.1.1.1 2003-12-28 21:23:08 davidsch Exp $
+ * $Id: LexicalUnitImpl.java,v 1.2 2005-04-28 20:57:20 waldbaer Exp $
  */
 
 package com.steadystate.css.parser;
@@ -577,16 +577,18 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
         return (f - (int) f != 0) ? s : s.substring(0, s.length() - 2);
     }
 
+    // TODO what is this method for? It is not used locally.
+    /*
     private static float value(char op, String s) {
         return ((op == '-') ? -1 : 1) * Float.valueOf(s).floatValue();
     }
+    */
     
     public static LexicalUnit createNumber(LexicalUnit prev, float f) {
         if (f > (int) f) {
             return new LexicalUnitImpl(prev, LexicalUnit.SAC_REAL, f);
-        } else {
-            return new LexicalUnitImpl(prev, (int) f);
         }
+        return new LexicalUnitImpl(prev, (int) f);
     }
     
     public static LexicalUnit createPercentage(LexicalUnit prev, float f) {

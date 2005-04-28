@@ -28,8 +28,8 @@
 
 package com.steadystate.css;
 
-import org.w3c.css.sac.*;
-import org.w3c.dom.css.CSSPrimitiveValue;
+//import org.w3c.css.sac.*;
+//import org.w3c.dom.css.CSSPrimitiveValue;
 import com.steadystate.css.dom.CSSValueImpl;
 import com.steadystate.css.parser.*;
 

@@ -25,7 +25,7 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: SelectorFactoryImpl.java,v 1.1.1.1 2003-12-28 21:23:43 davidsch Exp $
+ * $Id: SelectorFactoryImpl.java,v 1.2 2005-04-28 20:57:20 waldbaer Exp $
  */
 
 package com.steadystate.css.parser.selectors;
@@ -57,9 +57,8 @@ public class SelectorFactoryImpl implements SelectorFactory {
         throws CSSException {
         if (namespaceURI != null) {
             throw new CSSException(CSSException.SAC_NOT_SUPPORTED_ERR);
-        } else {
-            return new ElementSelectorImpl(localName);
         }
+        return new ElementSelectorImpl(localName);
     }
 
     public CharacterDataSelector createTextNodeSelector(String data)
@@ -88,9 +87,8 @@ public class SelectorFactoryImpl implements SelectorFactory {
         String pseudoName) throws CSSException {
         if (namespaceURI != null) {
             throw new CSSException(CSSException.SAC_NOT_SUPPORTED_ERR);
-        } else {
-            return new PseudoElementSelectorImpl(pseudoName);
         }
+        return new PseudoElementSelectorImpl(pseudoName);
     }
 
     public DescendantSelector createDescendantSelector(

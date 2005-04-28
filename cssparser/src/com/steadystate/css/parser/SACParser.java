@@ -126,14 +126,16 @@ public class SACParser implements Parser, SACParserConstants {
         _source = source;
         ReInit(getCharStream(source));
         SelectorList sl = null;
-        try {
+        //try {
             sl = selectorList();
+        /*    
         } catch (ParseException e) {
         	this.getErrorHandler().error(new CSSParseException(e.getLocalizedMessage(),
     				this.getInputSource().getURI(), e.currentToken.beginLine,
                     e.currentToken.beginColumn));
             //throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
         }
+        */
         return sl;
     }
 
@@ -191,10 +193,9 @@ public class SACParser implements Parser, SACParserConstants {
     // end addition
 
     private CharStream getCharStream(InputSource source)
-            throws CSSException, IOException {
+            throws /*CSSException, */IOException {
         if (source.getCharacterStream() != null) {
             return new ASCII_CharStream(source.getCharacterStream(), 1, 1);
-            // start addition
         } else if (source.getByteStream() != null) {
             Reader r = new InputStreamReader(source.getByteStream());
             return new ASCII_CharStream(r, 1, 1);
@@ -202,9 +203,7 @@ public class SACParser implements Parser, SACParserConstants {
             Reader r = new InputStreamReader(
                 new URL(source.getURI()).openConnection().getInputStream());
             return new ASCII_CharStream(r, 1, 1);
-            // end addition
         } else {
-            // TODO: Handle other sources
             return null;
         }
     }
@@ -434,7 +433,7 @@ public class SACParser implements Parser, SACParserConstants {
   }
 
   final public void charsetRule() throws ParseException {
-  Token t;
+  //Token t;
     jj_consume_token(CHARSET_SYM);
     label_6:
     while (true) {
@@ -448,7 +447,7 @@ public class SACParser implements Parser, SACParserConstants {
       }
       jj_consume_token(S);
     }
-    t = jj_consume_token(STRING);
+    /*t = */jj_consume_token(STRING);
     label_7:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -465,9 +464,9 @@ public class SACParser implements Parser, SACParserConstants {
   }
 
     final public void unknownRule() throws ParseException {
-        Token t;
+        //Token t;
         String s;
-        t = this.jj_consume_token(ATKEYWORD);
+        /*t = */this.jj_consume_token(ATKEYWORD);
         s = this.skip();
         //_docHandler.ignorableAtRule(s);
         this.getDocumentHandler().ignorableAtRule(s);
@@ -481,7 +480,7 @@ public class SACParser implements Parser, SACParserConstants {
 //
     final public void importRule() throws ParseException {
         Token t;
-        String s;
+        //String s;
         SACMediaListImpl ml = new SACMediaListImpl();
         this.jj_consume_token(IMPORT_SYM);
         label_8:
@@ -727,22 +726,22 @@ public class SACParser implements Parser, SACParserConstants {
 //   ;
 //
   final public String medium() throws ParseException {
-  Token t;
+  	Token t;
     t = jj_consume_token(IDENT);
     label_16:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case S:
-        ;
-        break;
-      default:
-        jj_la1[26] = jj_gen;
-        break label_16;
-      }
-      jj_consume_token(S);
-    }
-                         {if (true) return t.image;}
-    throw new Error("Missing return statement in function");
+    	while (true) {
+    		switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    			case S:
+    				;
+    				break;
+    			default:
+    				jj_la1[26] = jj_gen;
+    				break label_16;
+    		}
+    		jj_consume_token(S);
+    	}
+        return t.image;
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -911,11 +910,11 @@ public class SACParser implements Parser, SACParserConstants {
 //   ;
 //
   final public String pseudoPage() throws ParseException {
-  Token t;
+  	Token t;
     jj_consume_token(COLON);
     t = jj_consume_token(IDENT);
-                        {if (true) return t.image;}
-    throw new Error("Missing return statement in function");
+    return t.image;
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -1021,46 +1020,44 @@ public class SACParser implements Parser, SACParserConstants {
 //   ;
 //
   final public LexicalUnit operator(LexicalUnit prev) throws ParseException {
-  Token t;
+  	//Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case SLASH:
-      t = jj_consume_token(SLASH);
-      label_28:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case S:
-          ;
-          break;
-        default:
-          jj_la1[44] = jj_gen;
-          break label_28;
-        }
-        jj_consume_token(S);
-      }
-                           {if (true) return new LexicalUnitImpl(prev, LexicalUnit.SAC_OPERATOR_SLASH);}
-      break;
-    case COMMA:
-      t = jj_consume_token(COMMA);
-      label_29:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case S:
-          ;
-          break;
-        default:
-          jj_la1[45] = jj_gen;
-          break label_29;
-        }
-        jj_consume_token(S);
-      }
-                           {if (true) return new LexicalUnitImpl(prev, LexicalUnit.SAC_OPERATOR_COMMA);}
-      break;
-    default:
-      jj_la1[46] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
+    	case SLASH:
+    		/*t = */jj_consume_token(SLASH);
+    		label_28:
+    			while (true) {
+    				switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    					case S:
+    						;
+    						break;
+    					default:
+    						jj_la1[44] = jj_gen;
+    						break label_28;
+    				}
+    				jj_consume_token(S);
+    			}
+                return new LexicalUnitImpl(prev, LexicalUnit.SAC_OPERATOR_SLASH);
+    	case COMMA:
+    		/*t = */jj_consume_token(COMMA);
+    		label_29:
+    			while (true) {
+    				switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    					case S:
+    						;
+    						break;
+    					default:
+    						jj_la1[45] = jj_gen;
+    						break label_29;
+    				}
+    				jj_consume_token(S);
+    			}
+                return new LexicalUnitImpl(prev, LexicalUnit.SAC_OPERATOR_COMMA);
+    	default:
+    		jj_la1[46] = jj_gen;
+    		jj_consume_token(-1);
+    		throw new ParseException();
     }
-    throw new Error("Missing return statement in function");
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -1145,8 +1142,8 @@ public class SACParser implements Parser, SACParserConstants {
       jj_consume_token(-1);
       throw new ParseException();
     }
-    {if (true) return c;}
-    throw new Error("Missing return statement in function");
+    return c;
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -1156,20 +1153,18 @@ public class SACParser implements Parser, SACParserConstants {
 //
   final public char unaryOperator() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case MINUS:
-      jj_consume_token(MINUS);
-              {if (true) return '-';}
-      break;
-    case PLUS:
-      jj_consume_token(PLUS);
-                                       {if (true) return '+';}
-      break;
-    default:
-      jj_la1[53] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
+    	case MINUS:
+    		jj_consume_token(MINUS);
+            return '-';
+    	case PLUS:
+    		jj_consume_token(PLUS);
+    		return '+';
+    	default:
+    		jj_la1[53] = jj_gen;
+    		jj_consume_token(-1);
+    		throw new ParseException();
     }
-    throw new Error("Missing return statement in function");
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -1192,8 +1187,8 @@ public class SACParser implements Parser, SACParserConstants {
       }
       jj_consume_token(S);
     }
-      {if (true) return unescape(t.image);}
-    throw new Error("Missing return statement in function");
+    return unescape(t.image);
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -1202,10 +1197,10 @@ public class SACParser implements Parser, SACParserConstants {
 //     '{' S* declaration [ ';' S* declaration ]* '}' S*
 //   ;
 //
-    final public void styleRule() throws ParseException {
+    final public void styleRule() /*throws ParseException */{
         SelectorList selList = null;
         boolean start = false;
-        boolean noError = true;
+        //boolean noError = true;
         try {
             selList = this.selectorList();
             this.jj_consume_token(LBRACE);
@@ -1268,7 +1263,7 @@ public class SACParser implements Parser, SACParserConstants {
         } catch (ParseException e) {
 //        System.err.println("Exception in styleRule()");
 //        System.err.println(e.getMessage());
-            noError = false;
+            //noError = false;
             this.error_skipblock();
         } finally {
             if (start) {
@@ -1288,7 +1283,7 @@ public class SACParser implements Parser, SACParserConstants {
         this.getDocumentHandler().endSelector(selectors);
     }
     
-    final public SelectorList selectorList() throws ParseException {
+    final public SelectorList selectorList() /*throws ParseException */{
         SelectorListImpl selList = new SelectorListImpl();
         Selector sel;
         try {
@@ -1316,11 +1311,17 @@ public class SACParser implements Parser, SACParserConstants {
                     }
                     this.jj_consume_token(S);
                 }
-                selList.add(sel);
+                if (sel != null)
+                {
+                    selList.add(sel);
+                }
                 sel = this.selector();
             }
-            selList.add(sel);
-            {if (true) return selList;}
+            if (sel != null)
+            {
+                selList.add(sel);
+            }
+            //{if (true) return selList;}
         } catch (ParseException e) {
             //System.err.println("Exception in selectorList()");
             this.getErrorHandler().error(
@@ -1328,7 +1329,8 @@ public class SACParser implements Parser, SACParserConstants {
                     this.getInputSource().getURI(), e.currentToken.beginLine,
                     e.currentToken.beginColumn));
         }
-        throw new Error("Missing return statement in function");
+        //throw new Error("Missing return statement in function");
+        return selList;
     }
 
 //
@@ -1336,7 +1338,7 @@ public class SACParser implements Parser, SACParserConstants {
 //   : simple_selector [ combinator simple_selector ]*
 //   ;
 //
-    final public Selector selector() throws ParseException {
+    final public Selector selector() /*throws ParseException */{
         Selector sel;
         char comb;
         try {
@@ -1363,12 +1365,12 @@ public class SACParser implements Parser, SACParserConstants {
                 }
                 this.jj_consume_token(S);
             }
-            {if (true) return sel;}
+            return sel;
         } catch (ParseException e) {
             this.skipSelector();
-            // return null?
         }
-        throw new Error("Missing return statement in function");
+        //throw new Error("Missing return statement in function");
+        return null;
     }
 
 //
@@ -1479,8 +1481,9 @@ public class SACParser implements Parser, SACParserConstants {
             sel = simpleSel;
         }
 
-        {if (true) return sel;}
-    throw new Error("Missing return statement in function");
+        //{if (true) return sel;}
+        return sel;
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -1492,9 +1495,10 @@ public class SACParser implements Parser, SACParserConstants {
     Token t;
     jj_consume_token(DOT);
     t = jj_consume_token(IDENT);
-        Condition c = _conditionFactory.createClassCondition(null, t.image);
-        {if (true) return (pred == null) ? c : _conditionFactory.createAndCondition(pred, c);}
-    throw new Error("Missing return statement in function");
+    Condition c = _conditionFactory.createClassCondition(null, t.image);
+    //{if (true) return (pred == null) ? c : _conditionFactory.createAndCondition(pred, c);}
+    return (pred == null) ? c : _conditionFactory.createAndCondition(pred, c);
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -1505,20 +1509,18 @@ public class SACParser implements Parser, SACParserConstants {
   final public SimpleSelector elementName() throws ParseException {
     Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case IDENT:
-      t = jj_consume_token(IDENT);
-    {if (true) return _selectorFactory.createElementSelector(null, unescape(t.image));}
-      break;
-    case ASTERISK:
-      jj_consume_token(ASTERISK);
-    {if (true) return _selectorFactory.createElementSelector(null, null);}
-      break;
-    default:
-      jj_la1[68] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
+    	case IDENT:
+    		t = jj_consume_token(IDENT);
+    		return _selectorFactory.createElementSelector(null, unescape(t.image));
+    	case ASTERISK:
+    		jj_consume_token(ASTERISK);
+    		return _selectorFactory.createElementSelector(null, null);
+    	default:
+    		jj_la1[68] = jj_gen;
+    		jj_consume_token(-1);
+    		throw new ParseException();
     }
-    throw new Error("Missing return statement in function");
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -1640,8 +1642,8 @@ public class SACParser implements Parser, SACParserConstants {
             c = _conditionFactory.createBeginHyphenAttributeCondition(name, null, false, value);
             break;
         }
-        {if (true) return (pred == null) ? c : _conditionFactory.createAndCondition(pred, c);}
-    throw new Error("Missing return statement in function");
+        return (pred == null) ? c : _conditionFactory.createAndCondition(pred, c);
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -1656,70 +1658,67 @@ public class SACParser implements Parser, SACParserConstants {
     String arg;
     jj_consume_token(COLON);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case IDENT:
-      t = jj_consume_token(IDENT);
+    	case IDENT:
+    		t = jj_consume_token(IDENT);
             // There appears to be an issue here regarding "first-letter" & "first-line"
             String s = unescape(t.image);
-                    c = _conditionFactory.createPseudoClassCondition(null, s);
-            {if (true) return (pred == null)
+            c = _conditionFactory.createPseudoClassCondition(null, s);
+            return (pred == null)
                 ? c
-                : _conditionFactory.createAndCondition(pred, c);}
-      break;
-    case FUNCTION:
-      t = jj_consume_token(FUNCTION);
-                             function = unescape(t.image);
-      label_47:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case S:
-          ;
-          break;
-        default:
-          jj_la1[76] = jj_gen;
-          break label_47;
-        }
-        jj_consume_token(S);
-      }
-      t = jj_consume_token(IDENT);
-                          arg = unescape(t.image);
-      label_48:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case S:
-          ;
-          break;
-        default:
-          jj_la1[77] = jj_gen;
-          break label_48;
-        }
-        jj_consume_token(S);
-      }
-      jj_consume_token(RROUND);
+                : _conditionFactory.createAndCondition(pred, c);
+    	case FUNCTION:
+    		t = jj_consume_token(FUNCTION);
+    		function = unescape(t.image);
+    		label_47:
+    			while (true) {
+    				switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    					case S:
+    						;
+    						break;
+    					default:
+    						jj_la1[76] = jj_gen;
+    						break label_47;
+    				}
+    				jj_consume_token(S);
+    			}
+    			t = jj_consume_token(IDENT);
+    			arg = unescape(t.image);
+			label_48:
+				while (true) {
+					switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+						case S:
+							;
+							break;
+						default:
+							jj_la1[77] = jj_gen;
+							break label_48;
+					}
+					jj_consume_token(S);
+				}
+    			jj_consume_token(RROUND);
                 if (function.equalsIgnoreCase("lang(")) {
                     c = _conditionFactory.createLangCondition(unescape(arg));
-                    {if (true) return (pred == null)
+                    return (pred == null)
                         ? c
-                        : _conditionFactory.createAndCondition(pred, c);}
-                } else {
-                    {if (true) throw new CSSParseException(
-                        "Invalid pseudo function name " + function,
-                        getLocator());}
+                        : _conditionFactory.createAndCondition(pred, c);
                 }
-      break;
-    default:
-      jj_la1[78] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
+                throw new CSSParseException(
+                    "Invalid pseudo function name " + function,
+                    getLocator());
+    	default:
+    		jj_la1[78] = jj_gen;
+    		jj_consume_token(-1);
+    		throw new ParseException();
     }
-    throw new Error("Missing return statement in function");
+    //throw new Error("Missing return statement in function");
   }
 
   final public Condition hash(Condition pred) throws ParseException {
     Token t;
     t = jj_consume_token(HASH);
-        Condition c = _conditionFactory.createIdCondition(t.image.substring(1));
-        {if (true) return (pred == null) ? c : _conditionFactory.createAndCondition(pred, c);}
-    throw new Error("Missing return statement in function");
+    Condition c = _conditionFactory.createIdCondition(t.image.substring(1));
+    return (pred == null) ? c : _conditionFactory.createAndCondition(pred, c);
+    //throw new Error("Missing return statement in function");
   }
 
     final public void styleDeclaration() throws ParseException {
@@ -1785,12 +1784,12 @@ public class SACParser implements Parser, SACParserConstants {
 //   |
 //   ;
 //
-    final public void declaration() throws ParseException {
+    final public void declaration() /*throws ParseException */{
         String p;
         LexicalUnit e;
         boolean priority = false;
 //  CSSValue e;
-        boolean noError = true;
+        //boolean noError = true;
         try {
             p = this.property();
             this.jj_consume_token(COLON);
@@ -1823,7 +1822,7 @@ public class SACParser implements Parser, SACParserConstants {
                 new CSSParseException(ex.getLocalizedMessage(),
                     this.getInputSource().getURI(), ex.currentToken.beginLine,
                     ex.currentToken.beginColumn));
-            noError = false;
+            //noError = false;
             this.error_skipdecl();
         }
     }
@@ -1852,8 +1851,8 @@ public class SACParser implements Parser, SACParserConstants {
       }
       jj_consume_token(S);
     }
-    {if (true) return true;}
-    throw new Error("Missing return statement in function");
+    return true;
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -1918,8 +1917,8 @@ public class SACParser implements Parser, SACParserConstants {
       }
       body = term(body);
     }
-      {if (true) return head;}
-    throw new Error("Missing return statement in function");
+    return head;
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -1933,7 +1932,7 @@ public class SACParser implements Parser, SACParserConstants {
   final public LexicalUnit term(LexicalUnit prev) throws ParseException {
   Token t;
   char op = ' ';
-  String s;
+  //String s;
   LexicalUnit value = null;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case PLUS:
@@ -2092,8 +2091,8 @@ public class SACParser implements Parser, SACParserConstants {
       }
       jj_consume_token(S);
     }
-      {if (true) return value;}
-    throw new Error("Missing return statement in function");
+    return value;
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -2128,11 +2127,11 @@ public class SACParser implements Parser, SACParserConstants {
         } else if (t.image.equalsIgnoreCase("rect(")) {
            {if (true) return LexicalUnitImpl.createRect(prev, params);}
         }
-        {if (true) return LexicalUnitImpl.createFunction(
+        return LexicalUnitImpl.createFunction(
             prev,
             t.image.substring(0, t.image.length() - 1),
-            params);}
-    throw new Error("Missing return statement in function");
+            params);
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -2141,9 +2140,9 @@ public class SACParser implements Parser, SACParserConstants {
 //   ;
 //
   final public LexicalUnit rgb(LexicalUnit prev) throws ParseException {
-    Token t;
+    //Token t;
     LexicalUnit params;
-    t = jj_consume_token(RGB);
+    /*t = */jj_consume_token(RGB);
     label_57:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -2158,8 +2157,8 @@ public class SACParser implements Parser, SACParserConstants {
     }
     params = expr();
     jj_consume_token(RROUND);
-        {if (true) return LexicalUnitImpl.createRgbColor(prev, params);}
-    throw new Error("Missing return statement in function");
+    return LexicalUnitImpl.createRgbColor(prev, params);
+    //throw new Error("Missing return statement in function");
   }
 
 //
@@ -2197,17 +2196,17 @@ public class SACParser implements Parser, SACParserConstants {
         LexicalUnit lc1 = LexicalUnitImpl.createComma(lr);
         LexicalUnit lg = LexicalUnitImpl.createNumber(lc1, g);
         LexicalUnit lc2 = LexicalUnitImpl.createComma(lg);
-        LexicalUnit lb = LexicalUnitImpl.createNumber(lc2, b);
+        /*LexicalUnit lb = */LexicalUnitImpl.createNumber(lc2, b);
 
-        {if (true) return LexicalUnitImpl.createRgbColor(prev, lr);}
-    throw new Error("Missing return statement in function");
+        return LexicalUnitImpl.createRgbColor(prev, lr);
+    //throw new Error("Missing return statement in function");
   }
 
-  float value(char op, String s) throws ParseException {
+  float value(char op, String s) /*throws ParseException */{
     return ((op == '-') ? -1 : 1) * Float.parseFloat(s);
   }
 
-  int getLastNumPos(String s) throws ParseException {
+  int getLastNumPos(String s) /*throws ParseException */{
     int i;
     for (i = 0; i < s.length(); i++) {
         if (Character.isLetter(s.charAt(i))) {
@@ -2217,7 +2216,7 @@ public class SACParser implements Parser, SACParserConstants {
     return i - 1;
   }
 
-  String unescape(String s) throws ParseException {
+  String unescape(String s) /*throws ParseException */{
     int len = s.length();
     StringBuffer buf = new StringBuffer(len);
     int index = 0;
@@ -2278,7 +2277,7 @@ public class SACParser implements Parser, SACParserConstants {
     return buf.toString();
   }
 
-  void skipSelector() throws ParseException {
+  void skipSelector() /*throws ParseException */{
     Token t = getToken(1);
     while (t.kind != COMMA && t.kind != SEMICOLON && t.kind != LBRACE && t.kind != EOF ) {
         getNextToken();
@@ -2286,7 +2285,7 @@ public class SACParser implements Parser, SACParserConstants {
     }
   }
 
-  String skip() throws ParseException {
+  String skip() /*throws ParseException */{
   StringBuffer sb = new StringBuffer();
   int nesting = 0;
   Token t = getToken(0);
@@ -2310,7 +2309,7 @@ public class SACParser implements Parser, SACParserConstants {
   return sb.toString();
   }
 
-    void error_skipblock() throws ParseException {
+    void error_skipblock() /*throws ParseException */{
         if (!_quiet) {
             ParseException e = this.generateParseException();
             //System.err.println( "** error_skipblock **\n" + e.toString() );
@@ -2334,7 +2333,7 @@ public class SACParser implements Parser, SACParserConstants {
         while ((t.kind != RBRACE) || (nesting > 0));
     }
 
-    void error_skipdecl() throws ParseException {
+    void error_skipdecl() /*throws ParseException */{
         if (!_quiet) {
             ParseException e = this.generateParseException();
             //System.err.println("** error_skipdecl **\n" + e.toString());
@@ -2597,7 +2596,7 @@ public class SACParser implements Parser, SACParserConstants {
   private Token jj_scanpos, jj_lastpos;
   private int jj_la;
   public boolean lookingAhead = false;
-  private boolean jj_semLA;
+  //private boolean jj_semLA;
   private int jj_gen;
   final private int[] jj_la1 = new int[95];
   final private int[] jj_la1_0 = {0x0,0x3000002,0x3000002,0x10000000,0x3000002,0x3000002,0xe00a0d00,0xe00a0d00,0x3000002,0x3000002,0xf00a0d00,0x2,0x2,0x2,0x900000,0x2,0x0,0x2,0x2,0x200a0d00,0x80,0x2,0x200a0d00,0x2,0x200a0d00,0x200a0d00,0x2,0x2,0x2,0x2,0x2,0x400,0x400,0x2,0x0,0x200,0x2,0x0,0x2,0x2,0x0,0x200,0x2,0x0,0x2,0x2,0x1080,0x2,0x2,0x12000,0x2,0x12000,0x12002,0x6000,0x2,0x2,0x0,0x200,0x2,0x0,0x80,0x2,0x2,0xa0500,0xa0500,0xa0500,0xa0500,0xa0d00,0x800,0x2,0x2,0xc008000,0x2,0x100000,0x2,0xc008000,0x2,0x2,0x0,0x2,0x0,0x200,0x2,0x0,0x2,0x0,0x2,0x987080,0x1080,0x6000,0x0,0x980000,0x2,0x2,0x2,};
@@ -2706,8 +2705,7 @@ public class SACParser implements Parser, SACParserConstants {
   final private int jj_ntk() {
     if ((jj_nt=token.next) == null)
       return (jj_ntk = (token.next=token_source.getNextToken()).kind);
-    else
-      return (jj_ntk = jj_nt.kind);
+    return (jj_ntk = jj_nt.kind);
   }
 
   private java.util.Vector jj_expentries = new java.util.Vector();

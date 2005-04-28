@@ -9,14 +9,14 @@
  * PURPOSE.
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  *
- * $Id: ParserFactory.java,v 1.1.1.1 2003-12-28 21:23:55 davidsch Exp $
+ * $Id: ParserFactory.java,v 1.2 2005-04-28 20:57:20 waldbaer Exp $
  */
 package org.w3c.css.sac.helpers;
 
 import org.w3c.css.sac.Parser;
 
 /**
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.2 $
  * @author  Philippe Le Hegaret
  */
 public class ParserFactory {
@@ -30,11 +30,10 @@ public class ParserFactory {
 	       InstantiationException,
  	       NullPointerException,
 	       ClassCastException {
-	String className = System.getProperty("org.w3c.css.sac.parser");
-	if (className == null) {
-	    throw new NullPointerException("No value for sac.parser property");
-	} else {
-	    return (Parser)(Class.forName(className).newInstance());
-	}
+    	String className = System.getProperty("org.w3c.css.sac.parser");
+    	if (className == null) {
+    		throw new NullPointerException("No value for sac.parser property");
+    	}
+    	return (Parser)(Class.forName(className).newInstance());
     }
 }
