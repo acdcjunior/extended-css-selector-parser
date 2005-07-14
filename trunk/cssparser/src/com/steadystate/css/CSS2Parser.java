@@ -1,9 +1,9 @@
 /*
- * CSS2Parser.java
+ * $Id: CSS2Parser.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
  *
- * Steady State CSS2 Parser
+ * CSS Parser Project
  *
- * Copyright (C) 1999, 2002 Steady State Software Ltd.  All rights reserved.
+ * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,31 +19,43 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * To contact the authors of the library, write to Steady State Software Ltd.,
- * 49 Littleworth, Wing, Buckinghamshire, LU7 0JX, England
+ * To contact the authors of the library:
  *
- * http://www.steadystate.com/css/
- * mailto:css@steadystate.co.uk
- *
- * $Id: CSS2Parser.java,v 1.2 2005-04-28 20:57:17 waldbaer Exp $
+ * http://cssparser.sourceforge.net/
+ * mailto:davidsch@users.sourceforge.net
  */
 
 package com.steadystate.css;
 
-import java.io.*;
-import org.w3c.dom.*;
-//import org.w3c.dom.stylesheets.*;
-import org.w3c.dom.css.*;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.Reader;
+
+import org.w3c.dom.Node;
+
+import org.w3c.dom.css.CSSStyleSheet;
+import org.w3c.dom.css.CSSRuleList;
+import org.w3c.dom.css.CSSCharsetRule;
+import org.w3c.dom.css.CSSUnknownRule;
+import org.w3c.dom.css.CSSImportRule;
+import org.w3c.dom.css.CSSMediaRule;
+import org.w3c.dom.css.CSSPageRule;
+import org.w3c.dom.css.CSSFontFaceRule;
+import org.w3c.dom.css.CSSStyleRule;
+import org.w3c.dom.css.CSSStyleDeclaration;
+import org.w3c.dom.css.CSSValue;
+
 import org.w3c.css.sac.InputSource;
-//import com.steadystate.css.dom.*;
+
 import com.steadystate.css.parser.CSSOMParser;
 
 /**
  *
- * @author  David Schweinsberg
- * @version $Release$
+ * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @version $Id: CSS2Parser.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
  * @deprecated As of 0.9.0, replaced by
- * {@link com.steadystate.css.parsers.CSSOMParser}
+ * {@link com.steadystate.css.parser.CSSOMParser}
  */
 public class CSS2Parser {
 
@@ -76,32 +88,7 @@ public class CSS2Parser {
     public CSS2Parser(InputStream stream) {
         this(stream, null, null, null, null);
     }
-/*
-    public CSS2Parser(
-            InputStream stream,
-            StyleSheet parentStyleSheet,
-            CSSRule ownerRule,
-            String href,
-            String title,
-            String media) {
-        _parentStyleSheet = parentStyleSheet;
-        _ownerRule = ownerRule;
-        _href = href;
-        _title = title;
-        _media = media;
-    }
 
-    public CSS2Parser(
-            Reader stream,
-            StyleSheet parentStyleSheet,
-            CSSRule ownerRule,
-            String href,
-            String title,
-            String media) {
-        _parser = new CSSOMParser();
-        _is = new InputSource(stream);
-    }
-*/    
     public CSSStyleSheet styleSheet() {
         try {
             return _parser.parseStyleSheet(_is);
@@ -110,35 +97,35 @@ public class CSS2Parser {
         }
     }
 
-    public CSSRuleList styleSheetRuleList() /*throws IOException*/ {
+    public CSSRuleList styleSheetRuleList() {
         return null;
     }
 
-    public CSSCharsetRule charsetRule() /*throws IOException*/ {
+    public CSSCharsetRule charsetRule() {
         return null;
     }
 
-    public CSSUnknownRule unknownRule() /*throws IOException*/ {
+    public CSSUnknownRule unknownRule() {
         return null;
     }
 
-    public CSSImportRule importRule() /*throws IOException*/ {
+    public CSSImportRule importRule() {
         return null;
     }
 
-    public CSSMediaRule mediaRule() /*throws IOException*/ {
+    public CSSMediaRule mediaRule() {
         return null;
     }
 
-    public CSSPageRule pageRule() /*throws IOException*/ {
+    public CSSPageRule pageRule() {
         return null;
     }
 
-    public CSSFontFaceRule fontFaceRule() /*throws IOException*/ {
+    public CSSFontFaceRule fontFaceRule() {
         return null;
     }
 
-    public CSSStyleRule styleRule() /*throws IOException*/ {
+    public CSSStyleRule styleRule() {
         return null;
     }
     
