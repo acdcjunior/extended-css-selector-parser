@@ -1,9 +1,9 @@
 /*
- * LexicalUnitImpl.java
+ * $Id: LexicalUnitImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
  *
- * Steady State CSS2 Parser
+ * CSS Parser Project
  *
- * Copyright (C) 1999, 2002 Steady State Software Ltd.  All rights reserved.
+ * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,13 +19,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * To contact the authors of the library, write to Steady State Software Ltd.,
- * 49 Littleworth, Wing, Buckinghamshire, LU7 0JX, England
+ * To contact the authors of the library:
  *
- * http://www.steadystate.com/css/
- * mailto:css@steadystate.co.uk
- *
- * $Id: LexicalUnitImpl.java,v 1.2 2005-04-28 20:57:20 waldbaer Exp $
+ * http://cssparser.sourceforge.net/
+ * mailto:davidsch@users.sourceforge.net
  */
 
 package com.steadystate.css.parser;
@@ -35,8 +32,8 @@ import org.w3c.css.sac.*;
 
 /** 
  *
- * @author  David Schweinsberg
- * @version $Release$
+ * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @version $Id: LexicalUnitImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
  */
 public class LexicalUnitImpl implements LexicalUnit, Serializable {
 

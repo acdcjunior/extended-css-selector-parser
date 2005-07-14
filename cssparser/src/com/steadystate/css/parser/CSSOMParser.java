@@ -1,9 +1,9 @@
 /*
- * CSSOMParser.java
+ * $Id: CSSOMParser.java,v 1.4 2005-07-14 00:25:05 davidsch Exp $
  *
- * Steady State CSS2 Parser
+ * CSS Parser Project
  *
- * Copyright (C) 1999, 2002 Steady State Software Ltd.  All rights reserved.
+ * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,28 +19,51 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * To contact the authors of the library, write to Steady State Software Ltd.,
- * 49 Littleworth, Wing, Buckinghamshire, LU7 0JX, England
+ * To contact the authors of the library:
  *
- * http://www.steadystate.com/css/
- * mailto:css@steadystate.co.uk
- *
- * $Id: CSSOMParser.java,v 1.3 2005-04-28 20:57:19 waldbaer Exp $
+ * http://cssparser.sourceforge.net/
+ * mailto:davidsch@users.sourceforge.net
  */
  
 package com.steadystate.css.parser;
 
-import java.io.*;
-import java.util.*;
-import org.w3c.dom.css.*;
-import org.w3c.css.sac.*;
+import java.io.IOException;
+
+import java.util.Properties;
+import java.util.Stack;
+
+import org.w3c.css.sac.CSSException;
+import org.w3c.css.sac.DocumentHandler;
+import org.w3c.css.sac.InputSource;
+import org.w3c.css.sac.LexicalUnit;
+import org.w3c.css.sac.Parser;
+import org.w3c.css.sac.SACMediaList;
+import org.w3c.css.sac.SelectorList;
+
+import org.w3c.dom.css.CSSRule;
+import org.w3c.dom.css.CSSStyleDeclaration;
+import org.w3c.dom.css.CSSStyleSheet;
+import org.w3c.dom.css.CSSValue;
+
 import org.w3c.css.sac.helpers.ParserFactory;
-import com.steadystate.css.dom.*;
+
+import com.steadystate.css.dom.CSSFontFaceRuleImpl;
+import com.steadystate.css.dom.CSSImportRuleImpl;
+import com.steadystate.css.dom.CSSMediaRuleImpl;
+import com.steadystate.css.dom.CSSPageRuleImpl;
+import com.steadystate.css.dom.CSSRuleListImpl;
+import com.steadystate.css.dom.CSSStyleDeclarationImpl;
+import com.steadystate.css.dom.CSSStyleRuleImpl;
+import com.steadystate.css.dom.CSSStyleSheetImpl;
+import com.steadystate.css.dom.CSSUnknownRuleImpl;
+import com.steadystate.css.dom.CSSValueImpl;
+import com.steadystate.css.dom.MediaListImpl;
+import com.steadystate.css.dom.Property;
 
 /** 
  *
- * @author  David Schweinsberg
- * @version $Release$
+ * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @version $Id: CSSOMParser.java,v 1.4 2005-07-14 00:25:05 davidsch Exp $
  */
 public class CSSOMParser {
     
