@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParser.java,v 1.4 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: CSSOMParser.java,v 1.5 2005-07-15 00:35:39 davidsch Exp $
  *
  * CSS Parser Project
  *
@@ -24,7 +24,7 @@
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
  */
- 
+
 package com.steadystate.css.parser;
 
 import java.io.IOException;
@@ -63,11 +63,13 @@ import com.steadystate.css.dom.Property;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParser.java,v 1.4 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: CSSOMParser.java,v 1.5 2005-07-15 00:35:39 davidsch Exp $
  */
 public class CSSOMParser {
     
     private static final String PARSER = "com.steadystate.css.parser.SACParser";
+    
+    private static boolean use_internal = false;
 
     private Parser _parser = null;
     private CSSStyleSheetImpl _parentStyleSheet = null;
@@ -77,11 +79,20 @@ public class CSSOMParser {
     /** Creates new CSSOMParser */
     public CSSOMParser() {
         try {
-            setProperty("org.w3c.css.sac.parser", PARSER);
-            ParserFactory factory = new ParserFactory();
-            _parser = factory.makeParser();
+            // use the direct method if we already failed once before
+            if(use_internal) {
+                _parser = new SACParser();
+            } else {
+                setProperty("org.w3c.css.sac.parser", PARSER);
+                ParserFactory factory = new ParserFactory();
+                _parser = factory.makeParser();
+            }
         } catch (Exception e) {
+            use_internal = true;
             System.err.println(e.getMessage());
+            e.printStackTrace();
+            System.err.println("using the default parser instead");
+            _parser = new SACParser();
         }
     }
 
