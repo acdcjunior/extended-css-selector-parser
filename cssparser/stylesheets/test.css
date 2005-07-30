@@ -186,3 +186,26 @@ SPAN { text-transform: uppercase }
 P { color: red; font-size: 12pt }
 P:first-letter { color: green; font-size: 200% }
 P:first-line { color: blue }
+
+/*
+ * Bug 1226128 (Escaping)
+ */
+P {
+	content: "This it the first line\
+	And this is a continuation of the line"
+}
+
+/*
+ * Bug 1219753 (underscores)
+ */
+.infohome{
+background-image: url(footer_info_home.gif);
+height: 53px;
+background-repeat: no-repeat;
+}
+
+.info_home{
+background-image: url(footer_info_home.gif);
+height: 53px;
+background-repeat: no-repeat;
+}
