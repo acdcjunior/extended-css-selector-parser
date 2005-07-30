@@ -1,5 +1,5 @@
 /*
- * $Id: ParseTest.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: ParseTest.java,v 1.3 2005-07-30 22:48:31 davidsch Exp $
  *
  * CSS Parser Project
  *
@@ -34,7 +34,7 @@ import org.w3c.css.sac.helpers.ParserFactory;
 /** 
  * TODO Move this to a test suite
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: ParseTest.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: ParseTest.java,v 1.3 2005-07-30 22:48:31 davidsch Exp $
  */
 public class ParseTest extends HandlerBase {
 
@@ -48,21 +48,11 @@ public class ParseTest extends HandlerBase {
             CSSOMParser.setProperty("org.w3c.css.sac.parser", PARSER);
             ParserFactory factory = new ParserFactory();
             Parser parser = factory.makeParser();
-//            Parser parser = new SACParser();
             parser.setDocumentHandler(this);
 
-//            Reader r = new FileReader("d:\\working\\CSS2Parser\\primary.css");
-//            Reader r = new FileReader("d:\\project\\css2\\html40.css");
-//            Reader r = new FileReader("d:\\project\\css2\\test.css");
-//            BufferedReader r = new BufferedReader(new InputStreamReader(
-//                    new FileInputStream("c:\\working\\CSS2Parser\\stylesheets\\test-unicode.css"),
-//                    "UTF-16"));
-//            Reader r = new FileReader("d:\\project\\css2\\single-color.css");
-            Reader r = new FileReader("c:\\working\\css2parser\\stylesheets\\page_test.css");
+            Reader r = new FileReader("stylesheets/test.css");
             
             InputSource is = new InputSource(r);
-//            InputSource is = new InputSource("file:///d:/project/css2/test-unicode.css");
-//            InputSource is = new InputSource("file:///d:/project/css2/test.css");
             parser.parseStyleSheet(is);
 
         } catch (Exception e) {
