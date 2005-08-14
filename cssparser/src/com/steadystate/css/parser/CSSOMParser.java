@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParser.java,v 1.5 2005-07-15 00:35:39 davidsch Exp $
+ * $Id: CSSOMParser.java,v 1.6 2005-08-14 21:50:31 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -63,7 +63,7 @@ import com.steadystate.css.dom.Property;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParser.java,v 1.5 2005-07-15 00:35:39 davidsch Exp $
+ * @version $Id: CSSOMParser.java,v 1.6 2005-08-14 21:50:31 waldbaer Exp $
  */
 public class CSSOMParser {
     
@@ -81,18 +81,18 @@ public class CSSOMParser {
         try {
             // use the direct method if we already failed once before
             if(use_internal) {
-                _parser = new SACParser();
+                this._parser = new SACParser();
             } else {
                 setProperty("org.w3c.css.sac.parser", PARSER);
                 ParserFactory factory = new ParserFactory();
-                _parser = factory.makeParser();
+                this._parser = factory.makeParser();
             }
         } catch (Exception e) {
             use_internal = true;
             System.err.println(e.getMessage());
             e.printStackTrace();
             System.err.println("using the default parser instead");
-            _parser = new SACParser();
+            this._parser = new SACParser();
         }
     }
 
@@ -108,8 +108,8 @@ public class CSSOMParser {
 
     public CSSStyleSheet parseStyleSheet(InputSource source) throws IOException {
         CSSOMHandler handler = new CSSOMHandler();
-        _parser.setDocumentHandler(handler);
-        _parser.parseStyleSheet(source);
+        this._parser.setDocumentHandler(handler);
+        this._parser.parseStyleSheet(source);
         return (CSSStyleSheet) handler.getRoot();
     }
     
@@ -125,31 +125,36 @@ public class CSSOMParser {
         Stack nodeStack = new Stack();
         nodeStack.push(sd);
         CSSOMHandler handler = new CSSOMHandler(nodeStack);
-        _parser.setDocumentHandler(handler);
-        _parser.parseStyleDeclaration(source);
+        this._parser.setDocumentHandler(handler);
+        this._parser.parseStyleDeclaration(source);
     }
     
     public CSSValue parsePropertyValue(InputSource source) throws IOException {
         CSSOMHandler handler = new CSSOMHandler();
-        _parser.setDocumentHandler(handler);
-        return new CSSValueImpl(_parser.parsePropertyValue(source));
+        this._parser.setDocumentHandler(handler);
+        return new CSSValueImpl(this._parser.parsePropertyValue(source));
     }
     
     public CSSRule parseRule(InputSource source) throws IOException {
         CSSOMHandler handler = new CSSOMHandler();
-        _parser.setDocumentHandler(handler);
-        _parser.parseRule(source);
+        this._parser.setDocumentHandler(handler);
+        this._parser.parseRule(source);
         return (CSSRule) handler.getRoot();
     }
     
     public SelectorList parseSelectors(InputSource source) throws IOException {
         HandlerBase handler = new HandlerBase();
-        _parser.setDocumentHandler(handler);
-        return _parser.parseSelectors(source);
+        this._parser.setDocumentHandler(handler);
+        return this._parser.parseSelectors(source);
     }
 
     public void setParentStyleSheet(CSSStyleSheetImpl parentStyleSheet) {
-        _parentStyleSheet = parentStyleSheet;
+        this._parentStyleSheet = parentStyleSheet;
+    }
+    
+    protected CSSStyleSheetImpl getParentStyleSheet()
+    {
+        return this._parentStyleSheet;
     }
 
     // See _parentRule
@@ -165,29 +170,29 @@ public class CSSOMParser {
         private Object _root = null;
 
         public CSSOMHandler(Stack nodeStack) {
-            _nodeStack = nodeStack;
+            this._nodeStack = nodeStack;
         }
         
         public CSSOMHandler() {
-            _nodeStack = new Stack();
+            this._nodeStack = new Stack();
         }
         
         public Object getRoot() {
-            return _root;
+            return this._root;
         }
         
         public void startDocument(InputSource source) throws CSSException {
-            if (_nodeStack.empty()) {
+            if (this._nodeStack.empty()) {
                 CSSStyleSheetImpl ss = new CSSStyleSheetImpl();
-                _parentStyleSheet = ss;
+                CSSOMParser.this.setParentStyleSheet(ss);
                 ss.setHref(source.getURI());
                 ss.setMedia(source.getMedia());
                 ss.setTitle(source.getTitle());
                 // Create the rule list
                 CSSRuleListImpl rules = new CSSRuleListImpl();
                 ss.setRuleList(rules);
-                _nodeStack.push(ss);
-                _nodeStack.push(rules);
+                this._nodeStack.push(ss);
+                this._nodeStack.push(rules);
             } else {
                 // Error
             }
@@ -196,8 +201,8 @@ public class CSSOMParser {
         public void endDocument(InputSource source) throws CSSException {
 
             // Pop the rule list and style sheet nodes
-            _nodeStack.pop();
-            _root = _nodeStack.pop();
+            this._nodeStack.pop();
+            this._root = this._nodeStack.pop();
         }
 
         public void comment(String text) throws CSSException {
@@ -207,14 +212,14 @@ public class CSSOMParser {
 
             // Create the unknown rule and add it to the rule list
             CSSUnknownRuleImpl ir = new CSSUnknownRuleImpl(
-                _parentStyleSheet,
-                null,
+                CSSOMParser.this.getParentStyleSheet(),
+                this.getParentRule(),
                 atRule);
-            if (!_nodeStack.empty()) {
-                ((CSSRuleListImpl)_nodeStack.peek()).add(ir);
+            if (!this._nodeStack.empty()) {
+                ((CSSRuleListImpl)this._nodeStack.peek()).add(ir);
             } else {
 //                _nodeStack.push(ir);
-                _root = ir;
+                this._root = ir;
             }
         }
 
@@ -226,18 +231,17 @@ public class CSSOMParser {
                 String uri,
                 SACMediaList media, 
                 String defaultNamespaceURI) throws CSSException {
-
             // Create the import rule and add it to the rule list
             CSSImportRuleImpl ir = new CSSImportRuleImpl(
-                _parentStyleSheet,
-                null,
+                CSSOMParser.this.getParentStyleSheet(),
+                this.getParentRule(),
                 uri,
                 new MediaListImpl(media));
-            if (!_nodeStack.empty()) {
-                ((CSSRuleListImpl)_nodeStack.peek()).add(ir);
+            if (!this._nodeStack.empty()) {
+                ((CSSRuleListImpl)this._nodeStack.peek()).add(ir);
             } else {
 //                _nodeStack.push(ir);
-                _root = ir;
+                this._root = ir;
             }
         }
 
@@ -245,99 +249,118 @@ public class CSSOMParser {
 
             // Create the media rule and add it to the rule list
             CSSMediaRuleImpl mr = new CSSMediaRuleImpl(
-                _parentStyleSheet,
-                null,
+                CSSOMParser.this.getParentStyleSheet(),
+                this.getParentRule(),
                 new MediaListImpl(media));
-            if (!_nodeStack.empty()) {
-                ((CSSRuleListImpl)_nodeStack.peek()).add(mr);
+            if (!this._nodeStack.empty()) {
+                ((CSSRuleListImpl)this._nodeStack.peek()).add(mr);
             }
 
             // Create the rule list
             CSSRuleListImpl rules = new CSSRuleListImpl();
             mr.setRuleList(rules);
-            _nodeStack.push(mr);
-            _nodeStack.push(rules);
+            this._nodeStack.push(mr);
+            this._nodeStack.push(rules);
         }
 
         public void endMedia(SACMediaList media) throws CSSException {
 
             // Pop the rule list and media rule nodes
-            _nodeStack.pop();
-            _root = _nodeStack.pop();
+            this._nodeStack.pop();
+            this._root = this._nodeStack.pop();
         }
 
         public void startPage(String name, String pseudo_page) throws CSSException {
 
             // Create the page rule and add it to the rule list
-            CSSPageRuleImpl pr = new CSSPageRuleImpl(_parentStyleSheet, null, name, pseudo_page);
-            if (!_nodeStack.empty()) {
-                ((CSSRuleListImpl)_nodeStack.peek()).add(pr);
+            CSSPageRuleImpl pr = new CSSPageRuleImpl(
+                CSSOMParser.this.getParentStyleSheet(),
+                this.getParentRule(), name, pseudo_page);
+            if (!this._nodeStack.empty()) {
+                ((CSSRuleListImpl)this._nodeStack.peek()).add(pr);
             }
 
             // Create the style declaration
             CSSStyleDeclarationImpl decl = new CSSStyleDeclarationImpl(pr);
             pr.setStyle(decl);
-            _nodeStack.push(pr);
-            _nodeStack.push(decl);
+            this._nodeStack.push(pr);
+            this._nodeStack.push(decl);
         }
 
         public void endPage(String name, String pseudo_page) throws CSSException {
 
             // Pop both the style declaration and the page rule nodes
-            _nodeStack.pop();
-            _root = _nodeStack.pop();
+            this._nodeStack.pop();
+            this._root = this._nodeStack.pop();
         }
 
         public void startFontFace() throws CSSException {
 
             // Create the font face rule and add it to the rule list
-            CSSFontFaceRuleImpl ffr = new CSSFontFaceRuleImpl(_parentStyleSheet, null);
-            if (!_nodeStack.empty()) {
-                ((CSSRuleListImpl)_nodeStack.peek()).add(ffr);
+            CSSFontFaceRuleImpl ffr = new CSSFontFaceRuleImpl(
+                CSSOMParser.this.getParentStyleSheet(),
+                this.getParentRule());
+            if (!this._nodeStack.empty()) {
+                ((CSSRuleListImpl)this._nodeStack.peek()).add(ffr);
             }
 
             // Create the style declaration
             CSSStyleDeclarationImpl decl = new CSSStyleDeclarationImpl(ffr);
             ffr.setStyle(decl);
-            _nodeStack.push(ffr);
-            _nodeStack.push(decl);
+            this._nodeStack.push(ffr);
+            this._nodeStack.push(decl);
         }
 
         public void endFontFace() throws CSSException {
 
             // Pop both the style declaration and the font face rule nodes
-            _nodeStack.pop();
-            _root = _nodeStack.pop();
+            this._nodeStack.pop();
+            this._root = this._nodeStack.pop();
         }
 
         public void startSelector(SelectorList selectors) throws CSSException {
 
             // Create the style rule and add it to the rule list
-            CSSStyleRuleImpl sr = new CSSStyleRuleImpl(_parentStyleSheet, null, selectors);
-            if (!_nodeStack.empty()) {
-                ((CSSRuleListImpl)_nodeStack.peek()).add(sr);
+            CSSStyleRuleImpl sr = new CSSStyleRuleImpl(
+                CSSOMParser.this.getParentStyleSheet(),
+                this.getParentRule(), selectors);
+            if (!this._nodeStack.empty()) {
+                ((CSSRuleListImpl)this._nodeStack.peek()).add(sr);
             }
             
             // Create the style declaration
             CSSStyleDeclarationImpl decl = new CSSStyleDeclarationImpl(sr);
             sr.setStyle(decl);
-            _nodeStack.push(sr);
-            _nodeStack.push(decl);
+            this._nodeStack.push(sr);
+            this._nodeStack.push(decl);
         }
 
         public void endSelector(SelectorList selectors) throws CSSException {
 
             // Pop both the style declaration and the style rule nodes
-            _nodeStack.pop();
-            _root = _nodeStack.pop();
+            this._nodeStack.pop();
+            this._root = this._nodeStack.pop();
         }
 
         public void property(String name, LexicalUnit value, boolean important)
                 throws CSSException {
             CSSStyleDeclarationImpl decl =
-                (CSSStyleDeclarationImpl) _nodeStack.peek();
+                (CSSStyleDeclarationImpl) this._nodeStack.peek();
             decl.addProperty(
                 new Property(name, new CSSValueImpl(value), important));
+        }
+        
+        private CSSRule getParentRule()
+        {
+            if (!this._nodeStack.empty() && this._nodeStack.size() > 1)
+            {
+                Object node = this._nodeStack.get(this._nodeStack.size() - 2);
+                if (node instanceof CSSRule)
+                {
+                    return (CSSRule) node;
+                }
+            }
+            return null;
         }
     }
 
