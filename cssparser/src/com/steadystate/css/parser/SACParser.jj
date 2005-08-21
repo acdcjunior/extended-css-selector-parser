@@ -1,5 +1,5 @@
 /*
- * $Id: SACParser.jj,v 1.3 2005-08-13 22:15:27 waldbaer Exp $
+ * $Id: SACParser.jj,v 1.4 2005-08-21 19:36:44 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -40,218 +40,27 @@ package com.steadystate.css.parser;
 
 import java.io.*;
 import java.net.*;
+import java.text.MessageFormat;
 import java.util.*;
 import org.w3c.css.sac.*;
 import com.steadystate.css.parser.selectors.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParser.jj,v 1.3 2005-08-13 22:15:27 waldbaer Exp $
+ * @version $Id: SACParser.jj,v 1.4 2005-08-21 19:36:44 waldbaer Exp $
  */
-public class SACParser implements Parser {
+public class SACParser extends AbstractSACParser implements Parser {
 
-    private InputSource _source = null;
-    private Locale _locale = null;
-    private DocumentHandler _docHandler = null;
-    private ErrorHandler _errHandler = null;
-    private SelectorFactory _selectorFactory = new SelectorFactoryImpl();
-    private ConditionFactory _conditionFactory = new ConditionFactoryImpl();
     private boolean _quiet = true;
-
-    protected DocumentHandler getDocumentHandler()
-    {
-        if (this._docHandler == null)
-        {
-            this.setDocumentHandler(new HandlerBase());
-        }
-        return this._docHandler;
-    }
-    
-    protected ErrorHandler getErrorHandler()
-    {
-        if (this._errHandler == null)
-        {
-            this.setErrorHandler(new HandlerBase());
-        }
-        return this._errHandler;
-    }
-    
-    protected InputSource getInputSource()
-    {
-        return this._source;
-    }
 
     public SACParser() {
         this((CharStream) null);
     }
 
-    public void setLocale(Locale locale) throws CSSException {
-        _locale = locale;
-
-        // TODO: Search for requested locale
-
-        throw new CSSException(CSSException.SAC_NOT_SUPPORTED_ERR);
-    }
-
-    public void setDocumentHandler(DocumentHandler handler) {
-        _docHandler = handler;
-    }
-
-    public void setSelectorFactory(SelectorFactory selectorFactory) {
-        _selectorFactory = selectorFactory;
-    }
-
-    public void setConditionFactory(ConditionFactory conditionFactory) {
-        _conditionFactory = conditionFactory;
-    }
-    
-    public void setErrorHandler(ErrorHandler handler) {
-        _errHandler = handler;
-    }
-    
-    public void parseStyleSheet(InputSource source)
-            throws /*CSSException, */IOException {
-        _source = source;
-        ReInit(getCharStream(source));
-        try {
-            styleSheet();
-        } catch (ParseException e) {
-        	this.getErrorHandler().error(new CSSParseException(e.getLocalizedMessage(),
-				this.getInputSource().getURI(), e.currentToken.beginLine,
-                e.currentToken.beginColumn));
-            //throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
-        }
-    }
-
-    public void parseStyleSheet(String uri) throws /*CSSException, */IOException {
-        parseStyleSheet(new InputSource(uri));
-    }
-
-    public void parseStyleDeclaration(InputSource source)
-            throws /*CSSException, */IOException {
-        _source = source;
-        ReInit(getCharStream(source));
-        try {
-            styleDeclaration();
-        } catch (ParseException e) {
-        	this.getErrorHandler().error(new CSSParseException(e.getLocalizedMessage(),
-    				this.getInputSource().getURI(), e.currentToken.beginLine,
-                    e.currentToken.beginColumn));
-            //throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
-        }
-    }
-
-    public void parseRule(InputSource source) throws /*CSSException, */IOException {
-        _source = source;
-        ReInit(getCharStream(source));
-        try {
-            styleSheetRuleSingle();
-        } catch (ParseException e) {
-        	this.getErrorHandler().error(new CSSParseException(e.getLocalizedMessage(),
-    				this.getInputSource().getURI(), e.currentToken.beginLine,
-                    e.currentToken.beginColumn));
-            //throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
-        }
-    }
-
     public String getParserVersion() {
-        return "http://www.w3.org/TR/REC-CSS2";
+        return "http://www.w3.org/TR/REC-CSS2/";
     }
 
-    public SelectorList parseSelectors(InputSource source)
-            throws /*CSSException, */IOException {
-        _source = source;
-        ReInit(getCharStream(source));
-        SelectorList sl = null;
-        try {
-            sl = selectorList();
-        } catch (ParseException e) {
-        	this.getErrorHandler().error(new CSSParseException(e.getLocalizedMessage(),
-    				this.getInputSource().getURI(), e.currentToken.beginLine,
-                    e.currentToken.beginColumn));
-            //throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
-        }
-        return sl;
-    }
-
-    public LexicalUnit parsePropertyValue(InputSource source)
-            throws /*CSSException, */IOException {
-        _source = source;
-        ReInit(getCharStream(source));
-        LexicalUnit lu = null;
-        try {
-            lu = expr();
-        } catch (ParseException e) {
-        	this.getErrorHandler().error(new CSSParseException(e.getLocalizedMessage(),
-    				this.getInputSource().getURI(), e.currentToken.beginLine,
-                    e.currentToken.beginColumn));
-            //throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
-        }
-        return lu;
-    }
-
-    public boolean parsePriority(InputSource source)
-            throws /*CSSException, */IOException {
-        _source = source;
-        ReInit(getCharStream(source));
-        boolean b = false;
-        try {
-            b = prio();
-        } catch (ParseException e) {
-        	this.getErrorHandler().error(new CSSParseException(e.getLocalizedMessage(),
-    				this.getInputSource().getURI(), e.currentToken.beginLine,
-                    e.currentToken.beginColumn));
-            //throw new CSSException(CSSException.SAC_SYNTAX_ERR, e.getMessage(), e);
-        }
-        return b;
-    }
-
-    // start addition
-    public SACMediaList parseMedia(InputSource source)
-        throws IOException
-    {
-        this._source = source;
-        this.ReInit(this.getCharStream(source));
-        SACMediaListImpl ml = new SACMediaListImpl();
-        try
-        {
-            this.mediaList(ml);
-        }
-        catch (ParseException e)
-        {
-            this.getErrorHandler().error(
-                new CSSParseException(e.getLocalizedMessage(), source.getURI(),
-                e.currentToken.beginLine, e.currentToken.beginColumn));
-        }
-        return ml;
-    }
-    // end addition
-
-    private CharStream getCharStream(InputSource source)
-            throws CSSException, IOException {
-        if (source.getCharacterStream() != null)
-        {
-            return new ASCII_CharStream(
-                source.getCharacterStream(), 1, 1);
-        }
-        else if (source.getCharacterStream() != null)
-        {
-            return new ASCII_CharStream(
-                new InputStreamReader(
-                    source.getByteStream()), 1, 1);
-        }
-        else if (source.getURI() != null)
-        {
-            return new ASCII_CharStream(
-                new InputStreamReader(
-                    new URL(source.getURI()).openStream()), 1, 1);
-        }
-        return null;
-    }
-
-    private Locator getLocator() {
-        return null;
-    }
 }
 
 PARSER_END(SACParser)
@@ -259,6 +68,7 @@ PARSER_END(SACParser)
 TOKEN_MGR_DECLS :
 {
     private boolean _quiet = true;
+    private ErrorHandler errorHandler;
 /*
   private int getLastNumPos(StringBuffer sb) {
     int i;
@@ -422,12 +232,15 @@ void styleSheet() :
 {
 }
 {
-    try {
-        { _docHandler.startDocument(_source); }
+    try
+    {
+        { this.getDocumentHandler().startDocument(getInputSource()); }
         styleSheetRuleList()
         <EOF>
-    } finally {
-    	_docHandler.endDocument(_source);
+    }
+    finally
+    {
+    	this.getDocumentHandler().endDocument(getInputSource());
     }
 }
 
@@ -435,10 +248,17 @@ void styleSheetRuleList() :
 {
 }
 {
-  ( charsetRule() )?
-  ( <S> | <CDO> | <CDC> )*
-  ( importRule() ( <S> | <CDO> | <CDC> )* )*
-  ( ( styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule() ) ( <S> | <CDO> | <CDC> )* )*
+    ( charsetRule() )?
+    ( <S> | <CDO> | <CDC> )*
+    ( importRule() ( <S> | <CDO> | <CDC> )* )*
+    (
+     ( styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule() )
+     ( <S> | <CDO> | <CDC> )*
+    )
+    (
+     ( styleRule() | mediaRule() | pageRule() | fontFaceRule() | importRuleIgnored() | unknownRule() )
+     ( <S> | <CDO> | <CDC> )*
+    )*
 }
 
 //
@@ -470,7 +290,7 @@ void unknownRule() :
     t = <ATKEYWORD>
     {
         s = skip();
-        _docHandler.ignorableAtRule(s);
+        this.getDocumentHandler().ignorableAtRule(s);
     }
 }
 
@@ -483,7 +303,7 @@ void unknownRule() :
 void importRule() :
 {
     Token t;
-    String s;
+//    String s;
     SACMediaListImpl ml = new SACMediaListImpl();
 }
 {
@@ -493,7 +313,29 @@ void importRule() :
     ( mediaList(ml) )?
     <SEMICOLON>
     {
-        _docHandler.importStyle(unescape(t.image), ml, null);
+        this.getDocumentHandler().importStyle(unescape(t.image), ml, null);
+    }
+}
+
+void importRuleIgnored() :
+{
+    Token t;
+    SACMediaListImpl ml = new SACMediaListImpl();
+}
+{
+    { ParseException e = generateParseException(); }
+    try
+    {
+        <IMPORT_SYM>
+        ( <S> )*
+        ( t = <STRING>
+        | t = <URI> ) ( <S> )*
+        ( mediaList(ml) )?
+        <SEMICOLON>
+    }
+    finally
+    {
+        this.getErrorHandler().error(this.toCSSParseException(e));
     }
 }
 
@@ -505,22 +347,32 @@ void importRule() :
 void mediaRule() :
 {
     boolean start = false;
+    //boolean noError = true;
     SACMediaListImpl ml = new SACMediaListImpl();
 }
 {
-    try {
+    try
+    {
         <MEDIA_SYM> ( <S> )*
         mediaList(ml)
         {
             start = true;
-            _docHandler.startMedia(ml);
+            this.getDocumentHandler().startMedia(ml);
         }
         <LBRACE> ( <S> )*
         ( mediaRuleList() )?
         <RBRACE>
-    } finally {
+    }
+    catch(ParseException e)
+    {
+        this.getErrorHandler().error(this.toCSSParseException(e));
+        //noError = false;
+        error_skipblock();
+    }
+    finally
+    {
         if (start) {
-            _docHandler.endMedia(ml);
+            this.getDocumentHandler().endMedia(ml);
         }
     }
 }
@@ -588,7 +440,7 @@ void pageRule() :
         <LBRACE> ( <S> )*
         {
             start = true;
-            _docHandler.startPage((t != null) ? unescape(t.image) : null, s);
+            this.getDocumentHandler().startPage((t != null) ? unescape(t.image) : null, s);
         }
 
         ( declaration() )?
@@ -596,7 +448,7 @@ void pageRule() :
         <RBRACE>
     } finally {
         if (start) {
-            _docHandler.endPage((t != null) ? unescape(t.image) : null, s);
+            this.getDocumentHandler().endPage((t != null) ? unescape(t.image) : null, s);
         }
     }
 }
@@ -627,13 +479,13 @@ void fontFaceRule() :
 {
     try {
         <FONT_FACE_SYM> ( <S> )*
-        <LBRACE> ( <S> )* { start = true; _docHandler.startFontFace(); }
+        <LBRACE> ( <S> )* { start = true; this.getDocumentHandler().startFontFace(); }
         ( declaration() )?
         ( <SEMICOLON> ( <S> )* ( declaration() )? )*
         <RBRACE>
     } finally {
         if (start) {
-            _docHandler.endFontFace();
+            this.getDocumentHandler().endFontFace();
         }
     }
 }
@@ -701,7 +553,7 @@ String property() :
 //     '{' S* declaration [ ';' S* declaration ]* '}' S*
 //   ;
 //
-void styleRule() :
+void styleRule() throws ParseException :
 {
     SelectorList selList = null;
     boolean start = false;
@@ -713,30 +565,33 @@ void styleRule() :
         <LBRACE> ( <S> )*
         {
             start = true;
-            _docHandler.startSelector(selList);
+            this.getDocumentHandler().startSelector(selList);
         }
         ( declaration() )?
         ( <SEMICOLON> ( <S> )* ( declaration() )? )*
         <RBRACE>
-    } catch(ParseException e) {
-//        System.err.println("Exception in styleRule()");
-//        System.err.println(e.getMessage());
+    }
+    catch(ParseException e)
+    {
+        this.getErrorHandler().error(this.toCSSParseException(e));
         noError = false;
-        error_skipblock();
-    } finally {
+        this.error_skipblock();
+    }
+    finally {
         if (start) {
-            _docHandler.endSelector(selList);
+            this.getDocumentHandler().endSelector(selList);
         }
     }
 }
 
-SelectorList selectorList() :
+SelectorList selectorList() throws ParseException:
 {
     SelectorListImpl selList = new SelectorListImpl();
     Selector sel;
 }
 {
-    try {
+    //try
+    //{
         sel = selector()
         ( <COMMA> ( <S> )* { selList.add(sel); } sel = selector() )*
 
@@ -744,9 +599,14 @@ SelectorList selectorList() :
             selList.add(sel);
             return selList;
         }
-    } catch (ParseException e) {
-        System.err.println("Exception in selectorList()");
+    /*
     }
+    catch (ParseException e)
+    {
+        this.getErrorHandler().error(this.toCSSParseException(e));
+        //error_skipdecl();
+    }
+    */
 }
 
 //
@@ -791,7 +651,7 @@ Selector simpleSelector(Selector sel, char comb) :
             )*
         )
         |
-        ( { simpleSel = _selectorFactory.createElementSelector(null, null); }
+        ( { simpleSel = this.getSelectorFactory().createElementSelector(null, null); }
             ( c = hash(c)
             | c = _class(c)
             | c = attrib(c)
@@ -802,19 +662,19 @@ Selector simpleSelector(Selector sel, char comb) :
 
     {
         if (c != null) {
-            simpleSel = _selectorFactory.createConditionalSelector(simpleSel, c);
+            simpleSel = this.getSelectorFactory().createConditionalSelector(simpleSel, c);
         }
 
         if (sel != null) {
             switch (comb) {
             case ' ':
-                sel = _selectorFactory.createDescendantSelector(sel, simpleSel);
+                sel = this.getSelectorFactory().createDescendantSelector(sel, simpleSel);
                 break;
             case '+':
-                sel = _selectorFactory.createDirectAdjacentSelector(sel.getSelectorType(), sel, simpleSel);
+                sel = this.getSelectorFactory().createDirectAdjacentSelector(sel.getSelectorType(), sel, simpleSel);
                 break;
             case '>':
-                sel = _selectorFactory.createChildSelector(sel, simpleSel);
+                sel = this.getSelectorFactory().createChildSelector(sel, simpleSel);
                 break;
             }
         } else {
@@ -837,8 +697,8 @@ Condition _class(Condition pred) :
 {
     <DOT> t = <IDENT>
     {
-        Condition c = _conditionFactory.createClassCondition(null, t.image);
-        return (pred == null) ? c : _conditionFactory.createAndCondition(pred, c);
+        Condition c = this.getConditionFactory().createClassCondition(null, t.image);
+        return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
     }
 }
 
@@ -853,9 +713,9 @@ SimpleSelector elementName() :
 }
 {
   t=<IDENT>
-  { return _selectorFactory.createElementSelector(null, unescape(t.image)); }
+  { return this.getSelectorFactory().createElementSelector(null, unescape(t.image)); }
   | <ASTERISK>
-  { return _selectorFactory.createElementSelector(null, null); }
+  { return this.getSelectorFactory().createElementSelector(null, null); }
 }
 
 //
@@ -896,19 +756,19 @@ Condition attrib(Condition pred) :
         Condition c = null;
         switch (type) {
         case 0:
-            c = _conditionFactory.createAttributeCondition(name, null, false, null);
+            c = this.getConditionFactory().createAttributeCondition(name, null, false, null);
             break;
         case 1:
-            c = _conditionFactory.createAttributeCondition(name, null, false, value);
+            c = this.getConditionFactory().createAttributeCondition(name, null, false, value);
             break;
         case 2:
-            c = _conditionFactory.createOneOfAttributeCondition(name, null, false, value);
+            c = this.getConditionFactory().createOneOfAttributeCondition(name, null, false, value);
             break;
         case 3:
-            c = _conditionFactory.createBeginHyphenAttributeCondition(name, null, false, value);
+            c = this.getConditionFactory().createBeginHyphenAttributeCondition(name, null, false, value);
             break;
         }
-        return (pred == null) ? c : _conditionFactory.createAndCondition(pred, c);
+        return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
     }
 }
 
@@ -931,10 +791,10 @@ Condition pseudo(Condition pred) :
         {
             // There appears to be an issue here regarding "first-letter" & "first-line"
             String s = unescape(t.image);
-		    c = _conditionFactory.createPseudoClassCondition(null, s);
+		    c = this.getConditionFactory().createPseudoClassCondition(null, s);
             return (pred == null)
                 ? c
-                : _conditionFactory.createAndCondition(pred, c);
+                : this.getConditionFactory().createAndCondition(pred, c);
         }
         |
         (
@@ -943,10 +803,10 @@ Condition pseudo(Condition pred) :
             <RROUND>
             {
                 if (function.equalsIgnoreCase("lang(")) {
-                    c = _conditionFactory.createLangCondition(unescape(arg));
+                    c = this.getConditionFactory().createLangCondition(unescape(arg));
                     return (pred == null)
                         ? c
-                        : _conditionFactory.createAndCondition(pred, c);
+                        : this.getConditionFactory().createAndCondition(pred, c);
                 } else {
                     throw new CSSParseException(
                         "Invalid pseudo function name " + function,
@@ -964,8 +824,8 @@ Condition hash(Condition pred) :
 {
     t = <HASH>
     {
-        Condition c = _conditionFactory.createIdCondition(t.image.substring(1));
-        return (pred == null) ? c : _conditionFactory.createAndCondition(pred, c);
+        Condition c = this.getConditionFactory().createIdCondition(t.image.substring(1));
+        return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
     }
 }
 
@@ -985,26 +845,28 @@ void styleDeclaration()  :
 //   |
 //   ;
 //
-void declaration() :
+void declaration() throws ParseException :
 {
   String p;
   LexicalUnit e;
   boolean priority = false;
-//  CSSValue e;
-  boolean noError = true;
+  //boolean noError = true;
 }
 {
-    try {
+    try
+    {
         p = property()
         <COLON> ( <S> )*
         e = expr()
         ( priority = prio() )?
         {
-            _docHandler.property(p, e, priority);
+            this.getDocumentHandler().property(p, e, priority);
         }
-    } catch (ParseException ex) {
-        System.err.println("Exception in declaration()");
-        noError = false;
+    }
+    catch (ParseException ex)
+    {
+        this.getErrorHandler().error(this.toCSSParseException(ex));
+        //noError = false;
         error_skipdecl();
     }
 }
@@ -1339,36 +1201,55 @@ String skip() {
 }
 
 JAVACODE
-void error_skipblock() {
-  if (!_quiet) {
-    ParseException e = generateParseException();
-    System.err.println( "** error_skipblock **\n" + e.toString() );
-  }
-
-  Token t;
-  int nesting = 0;
-  do {
-    t = getNextToken();
-    if( t.kind == LBRACE )
-      nesting++;
-    else if( t.kind == RBRACE )
-      nesting--;
-    else if( t.kind == EOF )
-      break;
-  }
-  while ((t.kind != RBRACE) || (nesting > 0));
+void error_skipblock()
+{
+    Token t;
+    int nesting = 0;
+    do
+    {
+        t = getNextToken();
+        if (t.kind == LBRACE)
+        {
+            nesting++;
+        }
+        else if (t.kind == RBRACE)
+        {
+            nesting--;
+        }
+        else if (t.kind == EOF)
+        {
+            break;
+        }
+    }
+    while ((t.kind != RBRACE) || (nesting > 0));
 }
 
 JAVACODE
-void error_skipdecl() {
-  if (!_quiet) {
-    ParseException e = generateParseException();
-    System.err.println("** error_skipdecl **\n" + e.toString());
-  }
+void error_skipdecl()
+{
+    int nesting = 0;
+    Token t = getToken(1);
+    if (t.kind == LBRACE)
+    {
+        error_skipblock();
+    }
+    else
+    {
+        while (t.kind != SEMICOLON && t.kind != RBRACE && t.kind != EOF )
+        {
+            getNextToken();
+            t = getToken(1);
+        }
+    }
+}
 
-  Token t = getToken(1);
-  while (t.kind != SEMICOLON && t.kind != RBRACE && t.kind != EOF ) {
-      getNextToken();
-      t = getToken(1);
-  }
+JAVACODE
+void error_skipAtRule()
+{
+    Token t = null;
+    do
+    {
+        t = getNextToken();
+    }
+    while (t.kind != SEMICOLON);
 }

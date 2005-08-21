@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParser.java,v 1.6 2005-08-14 21:50:31 waldbaer Exp $
+ * $Id: CSSOMParser.java,v 1.7 2005-08-21 19:36:44 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -63,7 +63,7 @@ import com.steadystate.css.dom.Property;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParser.java,v 1.6 2005-08-14 21:50:31 waldbaer Exp $
+ * @version $Id: CSSOMParser.java,v 1.7 2005-08-21 19:36:44 waldbaer Exp $
  */
 public class CSSOMParser {
     
@@ -110,7 +110,12 @@ public class CSSOMParser {
         CSSOMHandler handler = new CSSOMHandler();
         this._parser.setDocumentHandler(handler);
         this._parser.parseStyleSheet(source);
-        return (CSSStyleSheet) handler.getRoot();
+        Object o = handler.getRoot();
+        if (o instanceof CSSStyleSheet)
+        {
+            return (CSSStyleSheet) handler.getRoot();
+        }
+        return null;
     }
     
     public CSSStyleDeclaration parseStyleDeclaration(InputSource source)
