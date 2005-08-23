@@ -83,6 +83,7 @@ abstract class AbstractSACParser implements Parser
             this.sacParserMessages = null;
         }
         this.locale = locale;
+System.out.println(this.locale);
     }
 
     private Locale getLocale()
@@ -128,7 +129,7 @@ abstract class AbstractSACParser implements Parser
         {
             this.sacParserMessages =
                 ResourceBundle.getBundle(this.getClass().getPackage().getName()
-                    + "/SACParserMessages", this.getLocale());
+                    + ".SACParserMessages", this.getLocale());
         }
         return this.sacParserMessages;
     }
