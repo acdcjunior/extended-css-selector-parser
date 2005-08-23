@@ -1,5 +1,5 @@
 /*
- * $Id: SACParser.jj,v 1.4 2005-08-21 19:36:44 waldbaer Exp $
+ * $Id: SACParser.jj,v 1.5 2005-08-23 10:53:44 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -47,7 +47,7 @@ import com.steadystate.css.parser.selectors.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParser.jj,v 1.4 2005-08-21 19:36:44 waldbaer Exp $
+ * @version $Id: SACParser.jj,v 1.5 2005-08-23 10:53:44 waldbaer Exp $
  */
 public class SACParser extends AbstractSACParser implements Parser {
 
@@ -863,6 +863,11 @@ void declaration() throws ParseException :
             this.getDocumentHandler().property(p, e, priority);
         }
     }
+    catch (CSSParseException ex)
+    {
+        this.getErrorHandler().error(ex);
+        error_skipdecl();
+    }
     catch (ParseException ex)
     {
         this.getErrorHandler().error(this.toCSSParseException(ex));
@@ -954,23 +959,33 @@ LexicalUnit term(LexicalUnit prev) :
 */
     ( op = unaryOperator() )?
     (
-        ( t = <NUMBER>      { value = LexicalUnitImpl.createNumber(prev, value(op, t.image)); }
-        | t = <PERCENTAGE>  { value = LexicalUnitImpl.createPercentage(prev, value(op, t.image)); }
-        | t = <LENGTH_PX>   { value = LexicalUnitImpl.createPixel(prev, value(op, t.image)); }
-        | t = <LENGTH_CM>   { value = LexicalUnitImpl.createCentimeter(prev, value(op, t.image)); }
-        | t = <LENGTH_MM>   { value = LexicalUnitImpl.createMillimeter(prev, value(op, t.image)); }
-        | t = <LENGTH_IN>   { value = LexicalUnitImpl.createInch(prev, value(op, t.image)); }
-        | t = <LENGTH_PT>   { value = LexicalUnitImpl.createPoint(prev, value(op, t.image)); }
-        | t = <LENGTH_PC>   { value = LexicalUnitImpl.createPica(prev, value(op, t.image)); }
-        | t = <EMS>         { value = LexicalUnitImpl.createEm(prev, value(op, t.image)); }
-        | t = <EXS>         { value = LexicalUnitImpl.createEx(prev, value(op, t.image)); }
-        | t = <ANGLE_DEG>   { value = LexicalUnitImpl.createDegree(prev, value(op, t.image)); }
-        | t = <ANGLE_RAD>   { value = LexicalUnitImpl.createRadian(prev, value(op, t.image)); }
-        | t = <ANGLE_GRAD>  { value = LexicalUnitImpl.createGradian(prev, value(op, t.image)); }
-        | t = <TIME_MS>     { value = LexicalUnitImpl.createMillisecond(prev, value(op, t.image)); }
-        | t = <TIME_S>      { value = LexicalUnitImpl.createSecond(prev, value(op, t.image)); }
-        | t = <FREQ_HZ>     { value = LexicalUnitImpl.createHertz(prev, value(op, t.image)); }
-        | t = <FREQ_KHZ>    { value = LexicalUnitImpl.createKiloHertz(prev, value(op, t.image)); }
+        ( t = <NUMBER>
+        {
+            try
+            {
+                value = LexicalUnitImpl.createNumber(prev, intValue(op, t.image));
+            }
+            catch (NumberFormatException e)
+            {
+                value = LexicalUnitImpl.createNumber(prev, floatValue(op, t.image));
+            }
+        }
+        | t = <PERCENTAGE>  { value = LexicalUnitImpl.createPercentage(prev, floatValue(op, t.image)); }
+        | t = <LENGTH_PX>   { value = LexicalUnitImpl.createPixel(prev, floatValue(op, t.image)); }
+        | t = <LENGTH_CM>   { value = LexicalUnitImpl.createCentimeter(prev, floatValue(op, t.image)); }
+        | t = <LENGTH_MM>   { value = LexicalUnitImpl.createMillimeter(prev, floatValue(op, t.image)); }
+        | t = <LENGTH_IN>   { value = LexicalUnitImpl.createInch(prev, floatValue(op, t.image)); }
+        | t = <LENGTH_PT>   { value = LexicalUnitImpl.createPoint(prev, floatValue(op, t.image)); }
+        | t = <LENGTH_PC>   { value = LexicalUnitImpl.createPica(prev, floatValue(op, t.image)); }
+        | t = <EMS>         { value = LexicalUnitImpl.createEm(prev, floatValue(op, t.image)); }
+        | t = <EXS>         { value = LexicalUnitImpl.createEx(prev, floatValue(op, t.image)); }
+        | t = <ANGLE_DEG>   { value = LexicalUnitImpl.createDegree(prev, floatValue(op, t.image)); }
+        | t = <ANGLE_RAD>   { value = LexicalUnitImpl.createRadian(prev, floatValue(op, t.image)); }
+        | t = <ANGLE_GRAD>  { value = LexicalUnitImpl.createGradian(prev, floatValue(op, t.image)); }
+        | t = <TIME_MS>     { value = LexicalUnitImpl.createMillisecond(prev, floatValue(op, t.image)); }
+        | t = <TIME_S>      { value = LexicalUnitImpl.createSecond(prev, floatValue(op, t.image)); }
+        | t = <FREQ_HZ>     { value = LexicalUnitImpl.createHertz(prev, floatValue(op, t.image)); }
+        | t = <FREQ_KHZ>    { value = LexicalUnitImpl.createKiloHertz(prev, floatValue(op, t.image)); }
         | value = function(prev)
         )
     | t = <STRING>          { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_STRING_VALUE, t.image); }
@@ -984,7 +999,7 @@ LexicalUnit term(LexicalUnit prev) :
         int n = getLastNumPos(t.image);
         value = LexicalUnitImpl.createDimension(
             prev,
-            value(op, t.image.substring(0, n+1)),
+            floatValue(op, t.image.substring(0, n+1)),
             t.image.substring(n+1));
     }
     | t = <INHERIT>         { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_INHERIT, t.image); }
@@ -1061,35 +1076,54 @@ LexicalUnit hexcolor(LexicalUnit prev) :
         int g = 0;
         int b = 0;
         int len = t.image.length() - 1;
+        String pattern = this.getSACParserMessages().getString("invalidColor");
+        try
+        {
+            if (len == 3) {
+                r = Integer.parseInt(t.image.substring(i + 0, i + 1), 16);
+                g = Integer.parseInt(t.image.substring(i + 1, i + 2), 16);
+                b = Integer.parseInt(t.image.substring(i + 2, i + 3), 16);
+                r = (r << 4) | r;
+                g = (g << 4) | g;
+                b = (b << 4) | b;
+            } else if (len == 6) {
+                r = Integer.parseInt(t.image.substring(i + 0, i + 2), 16);
+                g = Integer.parseInt(t.image.substring(i + 2, i + 4), 16);
+                b = Integer.parseInt(t.image.substring(i + 4, i + 6), 16);
+            } else {
+                throw new CSSParseException(MessageFormat.format(
+                    pattern, new Object[] {this.token}),
+                    this.getInputSource().getURI(), this.token.beginLine,
+                    this.token.beginColumn);
+            }
 
-        if (len == 3) {
-            r = Integer.parseInt(t.image.substring(i + 0, i + 1), 16);
-            g = Integer.parseInt(t.image.substring(i + 1, i + 2), 16);
-            b = Integer.parseInt(t.image.substring(i + 2, i + 3), 16);
-            r = (r << 4) | r;
-            g = (g << 4) | g;
-            b = (b << 4) | b;
-        } else if (len == 6) {
-            r = Integer.parseInt(t.image.substring(i + 0, i + 2), 16);
-            g = Integer.parseInt(t.image.substring(i + 2, i + 4), 16);
-            b = Integer.parseInt(t.image.substring(i + 4, i + 6), 16);
-        } else {
-            // Error
+            // Turn into an "rgb()"
+            LexicalUnit lr = LexicalUnitImpl.createNumber(null, r);
+            LexicalUnit lc1 = LexicalUnitImpl.createComma(lr);
+            LexicalUnit lg = LexicalUnitImpl.createNumber(lc1, g);
+            LexicalUnit lc2 = LexicalUnitImpl.createComma(lg);
+            LexicalUnit lb = LexicalUnitImpl.createNumber(lc2, b);
+
+            return LexicalUnitImpl.createRgbColor(prev, lr);
         }
-
-        // Turn into an "rgb()"
-        LexicalUnit lr = LexicalUnitImpl.createNumber(null, r);
-        LexicalUnit lc1 = LexicalUnitImpl.createComma(lr);
-        LexicalUnit lg = LexicalUnitImpl.createNumber(lc1, g);
-        LexicalUnit lc2 = LexicalUnitImpl.createComma(lg);
-        LexicalUnit lb = LexicalUnitImpl.createNumber(lc2, b);
-
-        return LexicalUnitImpl.createRgbColor(prev, lr);
+        catch (NumberFormatException ex)
+        {
+            throw new CSSParseException(MessageFormat.format(
+                pattern, new Object[] {this.token}),
+            	this.getInputSource().getURI(), this.token.beginLine,
+                this.token.beginColumn, ex);
+        }
     }
 }
 
 JAVACODE
-float value(char op, String s) {
+int intValue(char op, String s)
+{
+    return ((op == '-') ? -1 : 1) * Integer.parseInt(s);
+}
+
+JAVACODE
+float floatValue(char op, String s) {
     return ((op == '-') ? -1 : 1) * Float.parseFloat(s);
 }
 

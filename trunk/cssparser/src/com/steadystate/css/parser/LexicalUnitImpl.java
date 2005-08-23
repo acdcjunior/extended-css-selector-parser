@@ -1,5 +1,5 @@
 /*
- * $Id: LexicalUnitImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: LexicalUnitImpl.java,v 1.4 2005-08-23 10:53:44 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,7 +33,7 @@ import org.w3c.css.sac.*;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LexicalUnitImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: LexicalUnitImpl.java,v 1.4 2005-08-23 10:53:44 waldbaer Exp $
  */
 public class LexicalUnitImpl implements LexicalUnit, Serializable {
 
@@ -581,11 +581,12 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
     }
     */
     
+    public static LexicalUnit createNumber(LexicalUnit prev, int i) {
+        return new LexicalUnitImpl(prev, i);
+    }
+    
     public static LexicalUnit createNumber(LexicalUnit prev, float f) {
-        if (f > (int) f) {
-            return new LexicalUnitImpl(prev, LexicalUnit.SAC_REAL, f);
-        }
-        return new LexicalUnitImpl(prev, (int) f);
+        return new LexicalUnitImpl(prev, LexicalUnit.SAC_REAL, f);
     }
     
     public static LexicalUnit createPercentage(LexicalUnit prev, float f) {

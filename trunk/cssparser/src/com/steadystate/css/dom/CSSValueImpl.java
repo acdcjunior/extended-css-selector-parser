@@ -1,5 +1,5 @@
 /*
- * $Id: CSSValueImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: CSSValueImpl.java,v 1.4 2005-08-23 10:53:44 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -58,7 +58,7 @@ import com.steadystate.css.parser.LexicalUnitImpl;
  * A means of checking valid primitive types for properties
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSValueImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: CSSValueImpl.java,v 1.4 2005-08-23 10:53:44 waldbaer Exp $
  */
 public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializable {
 
@@ -68,7 +68,11 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
      * Constructor
      */
     public CSSValueImpl(LexicalUnit value, boolean forcePrimitive) {
-        if (value.getParameters() != null) {
+        if (!forcePrimitive && (value.getNextLexicalUnit() != null))
+        {
+            _value = this.getValues(value);
+        }
+        else if (value.getParameters() != null) {
             if (value.getLexicalUnitType() == LexicalUnit.SAC_RECT_FUNCTION) {
                 // Rect
                 _value = new RectImpl(value.getParameters());
@@ -84,26 +88,27 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
             } else {
                 _value = value;
             }
-        } else if (forcePrimitive || (value.getNextLexicalUnit() == null)) {
-            
+        } else {
             // We need to be a CSSPrimitiveValue
             _value = value;
-        } else {
-            
-            // We need to be a CSSValueList
-            // Values in an "expr" can be seperated by "operator"s, which are
-            // either '/' or ',' - ignore these operators
-            Vector v = new Vector();
-            LexicalUnit lu = value;
-            while (lu != null) {
-                if ((lu.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
-                    && (lu.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_SLASH)) {
-                    v.addElement(new CSSValueImpl(lu, true));
-                }
-                lu = lu.getNextLexicalUnit();
-            }
-            _value = v;
         }
+    }
+    
+    private Vector getValues(LexicalUnit value)
+    {
+        // We need to be a CSSValueList
+        // Values in an "expr" can be seperated by "operator"s, which are
+        // either '/' or ',' - ignore these operators
+        Vector v = new Vector();
+        LexicalUnit lu = value;
+        while (lu != null) {
+            if ((lu.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
+                && (lu.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_SLASH)) {
+                v.addElement(new CSSValueImpl(lu, true));
+            }
+            lu = lu.getNextLexicalUnit();
+        }
+        return v;
     }
 
     public CSSValueImpl(LexicalUnit value) {
@@ -152,7 +157,16 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
     }
 
     public short getCssValueType() {
-        return (_value instanceof Vector) ? CSS_VALUE_LIST : CSS_PRIMITIVE_VALUE;
+        if (_value instanceof Vector)
+        {
+            return CSS_VALUE_LIST;
+        }
+        else if ((_value instanceof LexicalUnit) &&
+            (((LexicalUnit) _value).getLexicalUnitType() == LexicalUnit.SAC_INHERIT))
+        {
+            return CSS_INHERIT;
+        }
+        return CSS_PRIMITIVE_VALUE;
     }
 
     public short getPrimitiveType() {
@@ -278,8 +292,12 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
             if ((lu.getLexicalUnitType() == LexicalUnit.SAC_IDENT)
                 || (lu.getLexicalUnitType() == LexicalUnit.SAC_STRING_VALUE)
                 || (lu.getLexicalUnitType() == LexicalUnit.SAC_URI)
-                || (lu.getLexicalUnitType() == LexicalUnit.SAC_ATTR)) {
+                || (lu.getLexicalUnitType() == LexicalUnit.SAC_INHERIT)) {
                 return lu.getStringValue();
+            }
+            else if (lu.getLexicalUnitType() == LexicalUnit.SAC_ATTR)
+            {
+                return lu.getParameters().getStringValue();
             }
         } else if (_value instanceof Vector) {
             return null;
