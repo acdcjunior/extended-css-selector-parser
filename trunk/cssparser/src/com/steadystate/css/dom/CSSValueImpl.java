@@ -1,5 +1,5 @@
 /*
- * $Id: CSSValueImpl.java,v 1.4 2005-08-23 10:53:44 waldbaer Exp $
+ * $Id: CSSValueImpl.java,v 1.5 2005-08-23 14:47:30 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -58,7 +58,7 @@ import com.steadystate.css.parser.LexicalUnitImpl;
  * A means of checking valid primitive types for properties
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSValueImpl.java,v 1.4 2005-08-23 10:53:44 waldbaer Exp $
+ * @version $Id: CSSValueImpl.java,v 1.5 2005-08-23 14:47:30 waldbaer Exp $
  */
 public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializable {
 
@@ -121,25 +121,41 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
             // Create the string from the LexicalUnits so we include the correct
             // operators in the string
             StringBuffer sb = new StringBuffer();
-            Vector v = (Vector) _value;
-            LexicalUnit lu = (LexicalUnit) ((CSSValueImpl) v.elementAt(0))._value;
-            while (lu != null) {
-                sb.append(lu.toString());
-                
-                // Step to the next lexical unit, determining what spacing we
-                // need to put around the operators
-                LexicalUnit prev = lu;
-                lu = lu.getNextLexicalUnit();
-                if ((lu != null)
-                    && (lu.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
-                    && (lu.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_SLASH)
-                    && (prev.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_SLASH)) {
+            Vector v = (Vector) this._value;
+            java.util.Iterator it = v.iterator();
+            while (it.hasNext())
+            {
+                Object o = it.next();
+                if (o instanceof LexicalUnit)
+                {
+                    LexicalUnit lu = (LexicalUnit) ((CSSValueImpl) v.elementAt(0))._value;
+                    while (lu != null) {
+                        sb.append(lu.toString());
+                        
+                        // Step to the next lexical unit, determining what spacing we
+                        // need to put around the operators
+                        LexicalUnit prev = lu;
+                        lu = lu.getNextLexicalUnit();
+                        if ((lu != null)
+                            && (lu.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
+                            && (lu.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_SLASH)
+                            && (prev.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_SLASH)) {
+                            sb.append(" ");
+                        }
+                    }
+                }
+                else
+                {
+                    sb.append(o);
+                }
+                if (it.hasNext())
+                {
                     sb.append(" ");
                 }
             }
             return sb.toString();
         }
-        return _value.toString();
+        return this._value.toString();
     }
 
     public void setCssText(String cssText) throws DOMException {

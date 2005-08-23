@@ -1,5 +1,5 @@
 /*
- * $Id: CounterImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: CounterImpl.java,v 1.3 2005-08-23 14:47:30 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -36,7 +36,7 @@ import org.w3c.css.sac.LexicalUnit;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CounterImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: CounterImpl.java,v 1.3 2005-08-23 14:47:30 waldbaer Exp $
  */
 public class CounterImpl implements Counter, Serializable {
 
@@ -47,16 +47,22 @@ public class CounterImpl implements Counter, Serializable {
     /** Creates new CounterImpl */
     public CounterImpl(boolean separatorSpecified, LexicalUnit lu) {
         LexicalUnit next = lu;
-        _identifier = next.getStringValue();
-        next = next.getNextLexicalUnit();
-        if (separatorSpecified && (next != null)) {
+        this._identifier = next.getStringValue();
+        next = next.getNextLexicalUnit();   // ','
+        if (next != null)
+        {
             next = next.getNextLexicalUnit();
-            _separator = next.getStringValue();
-            next = next.getNextLexicalUnit();
-        }
-        if (next != null) {
-            _listStyle = next.getStringValue();
-            next = next.getNextLexicalUnit();
+            if (separatorSpecified && (next != null)) {
+                this._separator = next.getStringValue();
+                next = next.getNextLexicalUnit();   // ','
+                if (next != null)
+                {
+                    next = next.getNextLexicalUnit();
+                }
+            }
+            if (next != null) {
+                this._listStyle = next.getStringValue();
+            }
         }
     }
 
