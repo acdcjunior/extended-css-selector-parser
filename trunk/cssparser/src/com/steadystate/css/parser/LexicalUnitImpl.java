@@ -1,5 +1,5 @@
 /*
- * $Id: LexicalUnitImpl.java,v 1.4 2005-08-23 10:53:44 waldbaer Exp $
+ * $Id: LexicalUnitImpl.java,v 1.5 2005-08-23 12:50:35 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,7 +33,7 @@ import org.w3c.css.sac.*;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LexicalUnitImpl.java,v 1.4 2005-08-23 10:53:44 waldbaer Exp $
+ * @version $Id: LexicalUnitImpl.java,v 1.5 2005-08-23 12:50:35 waldbaer Exp $
  */
 public class LexicalUnitImpl implements LexicalUnit, Serializable {
 
@@ -338,7 +338,7 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
             sb.append(getStringValue());
             break;
         case SAC_FUNCTION:
-            sb.append(getFunctionName());
+            sb.append(getFunctionName()).append('(');
             appendParams(sb, _params);
             sb.append(")");
             break;
