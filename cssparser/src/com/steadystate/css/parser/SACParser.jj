@@ -1,5 +1,5 @@
 /*
- * $Id: SACParser.jj,v 1.5 2005-08-23 10:53:44 waldbaer Exp $
+ * $Id: SACParser.jj,v 1.6 2005-08-23 12:16:06 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -47,7 +47,7 @@ import com.steadystate.css.parser.selectors.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParser.jj,v 1.5 2005-08-23 10:53:44 waldbaer Exp $
+ * @version $Id: SACParser.jj,v 1.6 2005-08-23 12:16:06 waldbaer Exp $
  */
 public class SACParser extends AbstractSACParser implements Parser {
 
@@ -69,29 +69,21 @@ TOKEN_MGR_DECLS :
 {
     private boolean _quiet = true;
     private ErrorHandler errorHandler;
-/*
-  private int getLastNumPos(StringBuffer sb) {
-    int i;
-    for( i = 0; i < sb.length(); i++ )
-      if( Character.isLetter( sb.charAt( i ) ) )
-        break;
-    return i - 1;
-  }
-*/
-  private String trimBy(StringBuffer s, int left, int right) {
-    int end = s.length();
-    return s.toString().substring(left, end-right);
-  }
 
-  private String trimUrl(StringBuffer s) {
-    StringBuffer s1 = new StringBuffer( trimBy(s, 4, 1).trim() );
-    int end = s1.length() - 1;
-    if ((s1.charAt(0) == '"' && s1.charAt(end) == '"')
-      || (s1.charAt(0) == '\'' && s1.charAt(end) == '\''))
-      return trimBy(s1, 1, 1);
-    else
-      return s1.toString();
-  }
+    private String trimBy(StringBuffer s, int left, int right) {
+        int end = s.length();
+        return s.toString().substring(left, end-right);
+    }
+
+    private String trimUrl(StringBuffer s) {
+        StringBuffer s1 = new StringBuffer( trimBy(s, 4, 1).trim() );
+        int end = s1.length() - 1;
+        if ((s1.charAt(0) == '"' && s1.charAt(end) == '"')
+            || (s1.charAt(0) == '\'' && s1.charAt(end) == '\''))
+            return trimBy(s1, 1, 1);
+        else
+           return s1.toString();
+    }
 }
 
 <DEFAULT> TOKEN :
@@ -234,13 +226,13 @@ void styleSheet() :
 {
     try
     {
-        { this.getDocumentHandler().startDocument(getInputSource()); }
+        { this.handleStartDocument(); }
         styleSheetRuleList()
         <EOF>
     }
     finally
     {
-    	this.getDocumentHandler().endDocument(getInputSource());
+    	this.handleEndDocument();
     }
 }
 
@@ -290,7 +282,7 @@ void unknownRule() :
     t = <ATKEYWORD>
     {
         s = skip();
-        this.getDocumentHandler().ignorableAtRule(s);
+        this.handleIgnorableAtRule(s);
     }
 }
 
@@ -313,7 +305,7 @@ void importRule() :
     ( mediaList(ml) )?
     <SEMICOLON>
     {
-        this.getDocumentHandler().importStyle(unescape(t.image), ml, null);
+        this.handleImportStyle(unescape(t.image), ml, null);
     }
 }
 
@@ -347,7 +339,6 @@ void importRuleIgnored() :
 void mediaRule() :
 {
     boolean start = false;
-    //boolean noError = true;
     SACMediaListImpl ml = new SACMediaListImpl();
 }
 {
@@ -357,7 +348,7 @@ void mediaRule() :
         mediaList(ml)
         {
             start = true;
-            this.getDocumentHandler().startMedia(ml);
+            this.handleStartMedia(ml);
         }
         <LBRACE> ( <S> )*
         ( mediaRuleList() )?
@@ -366,13 +357,12 @@ void mediaRule() :
     catch(ParseException e)
     {
         this.getErrorHandler().error(this.toCSSParseException(e));
-        //noError = false;
         error_skipblock();
     }
     finally
     {
         if (start) {
-            this.getDocumentHandler().endMedia(ml);
+            this.handleEndMedia(ml);
         }
     }
 }
@@ -440,7 +430,7 @@ void pageRule() :
         <LBRACE> ( <S> )*
         {
             start = true;
-            this.getDocumentHandler().startPage((t != null) ? unescape(t.image) : null, s);
+            this.handleStartPage((t != null) ? unescape(t.image) : null, s);
         }
 
         ( declaration() )?
@@ -448,7 +438,7 @@ void pageRule() :
         <RBRACE>
     } finally {
         if (start) {
-            this.getDocumentHandler().endPage((t != null) ? unescape(t.image) : null, s);
+            this.handleEndPage((t != null) ? unescape(t.image) : null, s);
         }
     }
 }
@@ -479,13 +469,13 @@ void fontFaceRule() :
 {
     try {
         <FONT_FACE_SYM> ( <S> )*
-        <LBRACE> ( <S> )* { start = true; this.getDocumentHandler().startFontFace(); }
+        <LBRACE> ( <S> )* { start = true; this.handleStartFontFace(); }
         ( declaration() )?
         ( <SEMICOLON> ( <S> )* ( declaration() )? )*
         <RBRACE>
     } finally {
         if (start) {
-            this.getDocumentHandler().endFontFace();
+            this.handleEndFontFace();
         }
     }
 }
@@ -565,7 +555,7 @@ void styleRule() throws ParseException :
         <LBRACE> ( <S> )*
         {
             start = true;
-            this.getDocumentHandler().startSelector(selList);
+            this.handleStartSelector(selList);
         }
         ( declaration() )?
         ( <SEMICOLON> ( <S> )* ( declaration() )? )*
@@ -579,7 +569,7 @@ void styleRule() throws ParseException :
     }
     finally {
         if (start) {
-            this.getDocumentHandler().endSelector(selList);
+            this.handleEndSelector(selList);
         }
     }
 }
@@ -590,23 +580,12 @@ SelectorList selectorList() throws ParseException:
     Selector sel;
 }
 {
-    //try
-    //{
-        sel = selector()
-        ( <COMMA> ( <S> )* { selList.add(sel); } sel = selector() )*
-
-        {
-            selList.add(sel);
-            return selList;
-        }
-    /*
-    }
-    catch (ParseException e)
+    sel = selector()
+    ( <COMMA> ( <S> )* { selList.add(sel); } sel = selector() )*
     {
-        this.getErrorHandler().error(this.toCSSParseException(e));
-        //error_skipdecl();
+        selList.add(sel);
+        return selList;
     }
-    */
 }
 
 //
@@ -850,7 +829,6 @@ void declaration() throws ParseException :
   String p;
   LexicalUnit e;
   boolean priority = false;
-  //boolean noError = true;
 }
 {
     try
@@ -860,7 +838,7 @@ void declaration() throws ParseException :
         e = expr()
         ( priority = prio() )?
         {
-            this.getDocumentHandler().property(p, e, priority);
+            this.handleProperty(p, e, priority);
         }
     }
     catch (CSSParseException ex)
@@ -871,7 +849,6 @@ void declaration() throws ParseException :
     catch (ParseException ex)
     {
         this.getErrorHandler().error(this.toCSSParseException(ex));
-        //noError = false;
         error_skipdecl();
     }
 }
@@ -1023,19 +1000,7 @@ LexicalUnit function(LexicalUnit prev) :
     params = expr()
     <RROUND>
     {
-        if (t.image.equalsIgnoreCase("counter(")) {
-           return LexicalUnitImpl.createCounter(prev, params);
-        } else if (t.image.equalsIgnoreCase("counters(")) {
-           return LexicalUnitImpl.createCounters(prev, params);
-        } else if (t.image.equalsIgnoreCase("attr(")) {
-           return LexicalUnitImpl.createAttr(prev, params);
-        } else if (t.image.equalsIgnoreCase("rect(")) {
-           return LexicalUnitImpl.createRect(prev, params);
-        }
-        return LexicalUnitImpl.createFunction(
-            prev,
-            t.image.substring(0, t.image.length() - 1),
-            params);
+        return this.functionInternal(prev, t, params);
     }
 }
 
@@ -1070,134 +1035,8 @@ LexicalUnit hexcolor(LexicalUnit prev) :
 {
     t = <HASH>
     {
-        // Step past the hash at the beginning
-        int i = 1;
-        int r = 0;
-        int g = 0;
-        int b = 0;
-        int len = t.image.length() - 1;
-        String pattern = this.getSACParserMessages().getString("invalidColor");
-        try
-        {
-            if (len == 3) {
-                r = Integer.parseInt(t.image.substring(i + 0, i + 1), 16);
-                g = Integer.parseInt(t.image.substring(i + 1, i + 2), 16);
-                b = Integer.parseInt(t.image.substring(i + 2, i + 3), 16);
-                r = (r << 4) | r;
-                g = (g << 4) | g;
-                b = (b << 4) | b;
-            } else if (len == 6) {
-                r = Integer.parseInt(t.image.substring(i + 0, i + 2), 16);
-                g = Integer.parseInt(t.image.substring(i + 2, i + 4), 16);
-                b = Integer.parseInt(t.image.substring(i + 4, i + 6), 16);
-            } else {
-                throw new CSSParseException(MessageFormat.format(
-                    pattern, new Object[] {this.token}),
-                    this.getInputSource().getURI(), this.token.beginLine,
-                    this.token.beginColumn);
-            }
-
-            // Turn into an "rgb()"
-            LexicalUnit lr = LexicalUnitImpl.createNumber(null, r);
-            LexicalUnit lc1 = LexicalUnitImpl.createComma(lr);
-            LexicalUnit lg = LexicalUnitImpl.createNumber(lc1, g);
-            LexicalUnit lc2 = LexicalUnitImpl.createComma(lg);
-            LexicalUnit lb = LexicalUnitImpl.createNumber(lc2, b);
-
-            return LexicalUnitImpl.createRgbColor(prev, lr);
-        }
-        catch (NumberFormatException ex)
-        {
-            throw new CSSParseException(MessageFormat.format(
-                pattern, new Object[] {this.token}),
-            	this.getInputSource().getURI(), this.token.beginLine,
-                this.token.beginColumn, ex);
-        }
+        return this.hexcolorInternal(prev, t);
     }
-}
-
-JAVACODE
-int intValue(char op, String s)
-{
-    return ((op == '-') ? -1 : 1) * Integer.parseInt(s);
-}
-
-JAVACODE
-float floatValue(char op, String s) {
-    return ((op == '-') ? -1 : 1) * Float.parseFloat(s);
-}
-
-JAVACODE
-int getLastNumPos(String s) {
-    int i;
-    for (i = 0; i < s.length(); i++) {
-        if (Character.isLetter(s.charAt(i))) {
-            break;
-        }
-    }
-    return i - 1;
-}
-
-JAVACODE
-String unescape(String s) {
-    int len = s.length();
-    StringBuffer buf = new StringBuffer(len);
-    int index = 0;
-
-    while (index < len) {
-        char c = s.charAt(index);
-        if (c == '\\') {
-            if (++index < len) {
-                c = s.charAt(index);
-                switch (c) {
-                case '0': case '1': case '2': case '3': case '4':
-                case '5': case '6': case '7': case '8': case '9':
-                case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
-                case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
-                    int numValue = Character.digit(c, 16);
-                    int count = 0;
-                    int p = 16;
-
-                    while (index + 1 < len && count < 6) {
-                        c = s.charAt(index+1);
-
-                        if (Character.digit(c, 16) != -1) {
-                            numValue = (numValue * 16) + Character.digit(c, 16);
-                            p *= 16;
-                            index++;
-                        } else {
-                            if (c == ' ') {
-                                // skip the latest white space
-                                index++;
-                            }
-                            break;
-                        }
-                    }
-                    buf.append((char) numValue);
-                    break;
-                    case '\n':
-                    case '\f':
-                    break;
-                    case '\r':
-                    if (index + 1 < len) {
-                        if (s.charAt(index + 1) == '\n') {
-                            index ++;
-                        }
-                    }
-                    break;
-                default:
-                    buf.append(c);
-                }
-            } else {
-                throw new CSSParseException("invalid string " + s, getLocator());
-            }
-        } else {
-            buf.append(c);
-        }
-        index++;
-    }
-
-    return buf.toString();
 }
 
 JAVACODE
