@@ -1,5 +1,5 @@
 /*
- * $Id: SACParser.jj,v 1.7 2005-08-26 14:21:02 waldbaer Exp $
+ * $Id: SACParser.jj,v 1.8 2005-08-26 18:11:30 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -47,7 +47,7 @@ import com.steadystate.css.parser.selectors.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParser.jj,v 1.7 2005-08-26 14:21:02 waldbaer Exp $
+ * @version $Id: SACParser.jj,v 1.8 2005-08-26 18:11:30 waldbaer Exp $
  */
 public class SACParser extends AbstractSACParser implements Parser {
 
@@ -268,9 +268,17 @@ void charsetRule() :
   Token t;
 }
 {
-  <CHARSET_SYM> ( <S> )*
-  t = <STRING> ( <S> )*
-  <SEMICOLON>
+    try
+    {
+        <CHARSET_SYM> ( <S> )*
+        t = <STRING> ( <S> )*
+        <SEMICOLON>
+    }
+    catch (ParseException e)
+    {
+        this.getErrorHandler().error(
+            this.toCSSParseException("invalidCharsetRule", e));
+    }
 }
 
 void unknownRule() :
@@ -279,10 +287,18 @@ void unknownRule() :
     String s;
 }
 {
-    t = <ATKEYWORD>
+    try
     {
-        s = skip();
-        this.handleIgnorableAtRule(s);
+        t = <ATKEYWORD>
+        {
+            s = skip();
+            this.handleIgnorableAtRule(s);
+        }
+    }
+    catch (ParseException e)
+    {
+        this.getErrorHandler().error(
+            this.toCSSParseException("invalidUnknownRule", e));
     }
 }
 
@@ -299,13 +315,27 @@ void importRule() :
     SACMediaListImpl ml = new SACMediaListImpl();
 }
 {
-    <IMPORT_SYM> ( <S> )*
-    ( t = <STRING>
-    | t = <URI> ) ( <S> )*
-    ( mediaList(ml) )?
-    <SEMICOLON>
+    try
     {
-        this.handleImportStyle(unescape(t.image), ml, null);
+        <IMPORT_SYM> ( <S> )*
+        ( t = <STRING>
+        | t = <URI> ) ( <S> )*
+        ( mediaList(ml) )?
+        <SEMICOLON>
+        {
+            this.handleImportStyle(unescape(t.image), ml, null);
+        }
+    }
+    catch (CSSParseException e)
+    {
+        this.getErrorHandler().error(e);
+        this.error_skipAtRule();
+    }
+    catch (ParseException e)
+    {
+        this.getErrorHandler().error(
+            this.toCSSParseException("invalidImportRule", e));
+        this.error_skipAtRule();
     }
 }
 
@@ -327,7 +357,7 @@ void importRuleIgnored() :
     }
     finally
     {
-        this.getErrorHandler().error(this.toCSSParseException(e));
+        this.getErrorHandler().error(this.toCSSParseException("invalidImportRuleIgnored", e));
     }
 }
 
@@ -354,10 +384,15 @@ void mediaRule() :
         ( mediaRuleList() )?
         <RBRACE>
     }
+    catch (CSSParseException e)
+    {
+        this.getErrorHandler().error(e);
+        this.error_skipblock();
+    }
     catch(ParseException e)
     {
-        this.getErrorHandler().error(this.toCSSParseException(e));
-        error_skipblock();
+        this.getErrorHandler().error(this.toCSSParseException("invalidMediaRule", e));
+        this.error_skipblock();
     }
     finally
     {
@@ -372,9 +407,16 @@ void mediaList(SACMediaListImpl ml) :
     String s;
 }
 {
-    s = medium()
-    ( <COMMA> ( <S> )* { ml.add(s); } s = medium() )*
-    { ml.add(s); }
+    try
+    {
+        s = medium()
+        ( <COMMA> ( <S> )* { ml.add(s); } s = medium() )*
+        { ml.add(s); }
+    }
+    catch(ParseException e)
+    {
+        throw this.toCSSParseException("invalidMediaList", e);
+    }
 }
 
 void mediaRuleList() :
@@ -436,7 +478,12 @@ void pageRule() :
         ( declaration() )?
         ( <SEMICOLON> ( <S> )* ( declaration() )? )*
         <RBRACE>
-    } finally {
+    }
+    catch(ParseException e)
+    {
+        throw this.toCSSParseException("invalidPageRule", e);
+    }
+    finally {
         if (start) {
             this.handleEndPage((t != null) ? unescape(t.image) : null, s);
         }
@@ -473,7 +520,12 @@ void fontFaceRule() :
         ( declaration() )?
         ( <SEMICOLON> ( <S> )* ( declaration() )? )*
         <RBRACE>
-    } finally {
+    }
+    catch(ParseException e)
+    {
+        throw this.toCSSParseException("invalidFontFaceRule", e);
+    }
+    finally {
         if (start) {
             this.handleEndFontFace();
         }
@@ -543,7 +595,7 @@ String property() :
 //     '{' S* declaration [ ';' S* declaration ]* '}' S*
 //   ;
 //
-void styleRule() throws ParseException :
+void styleRule() :
 {
     SelectorList selList = null;
     boolean start = false;
@@ -561,9 +613,15 @@ void styleRule() throws ParseException :
         ( <SEMICOLON> ( <S> )* ( declaration() )? )*
         <RBRACE>
     }
+    catch(CSSParseException e)
+    {
+        this.getErrorHandler().error(e);
+        noError = false;
+        this.error_skipblock();
+    }
     catch(ParseException e)
     {
-        this.getErrorHandler().error(this.toCSSParseException(e));
+        this.getErrorHandler().error(this.toCSSParseException("invalidStyleRule", e));
         noError = false;
         this.error_skipblock();
     }
@@ -574,7 +632,7 @@ void styleRule() throws ParseException :
     }
 }
 
-SelectorList selectorList() throws ParseException:
+SelectorList selectorList() :
 {
     SelectorListImpl selList = new SelectorListImpl();
     Selector sel;
@@ -599,18 +657,16 @@ Selector selector() :
     char comb;
 }
 {
-    // throw exception when error occurs in selector
-    //try {
+    try {
         sel = simpleSelector(null, ' ')
         ( LOOKAHEAD(2) comb = combinator() sel = simpleSelector(sel, comb) )* ( <S> )*
         {
             return sel;
         }
-    /*
     } catch (ParseException e) {
-        skipSelector();
+        throw this.toCSSParseException("invalidSelector", e);
+        //skipSelector();
     }
-    */
 }
 
 //
@@ -624,46 +680,53 @@ Selector simpleSelector(Selector sel, char comb) :
     Condition c = null;
 }
 {
-    (
-        ( simpleSel = elementName()
-            ( c = hash(c)
-            | c = _class(c)
-            | c = attrib(c)
-            | c = pseudo(c)
-            )*
-        )
-        |
-        ( { simpleSel = this.getSelectorFactory().createElementSelector(null, null); }
-            ( c = hash(c)
-            | c = _class(c)
-            | c = attrib(c)
-            | c = pseudo(c)
-            )+
-        )
-    )
-
+    try
     {
-        if (c != null) {
-            simpleSel = this.getSelectorFactory().createConditionalSelector(simpleSel, c);
-        }
+        (
+            ( simpleSel = elementName()
+                ( c = hash(c)
+                | c = _class(c)
+                | c = attrib(c)
+                | c = pseudo(c)
+                )*
+            )
+            |
+            ( { simpleSel = this.getSelectorFactory().createElementSelector(null, null); }
+                ( c = hash(c)
+                | c = _class(c)
+                | c = attrib(c)
+                | c = pseudo(c)
+                )+
+            )
+        )
 
-        if (sel != null) {
-            switch (comb) {
-            case ' ':
-                sel = this.getSelectorFactory().createDescendantSelector(sel, simpleSel);
-                break;
-            case '+':
-                sel = this.getSelectorFactory().createDirectAdjacentSelector(sel.getSelectorType(), sel, simpleSel);
-                break;
-            case '>':
-                sel = this.getSelectorFactory().createChildSelector(sel, simpleSel);
-                break;
+        {
+            if (c != null) {
+                simpleSel = this.getSelectorFactory().createConditionalSelector(simpleSel, c);
             }
-        } else {
-            sel = simpleSel;
-        }
 
-        return sel;
+            if (sel != null) {
+                switch (comb) {
+                case ' ':
+                    sel = this.getSelectorFactory().createDescendantSelector(sel, simpleSel);
+                    break;
+                case '+':
+                    sel = this.getSelectorFactory().createDirectAdjacentSelector(sel.getSelectorType(), sel, simpleSel);
+                    break;
+                case '>':
+                    sel = this.getSelectorFactory().createChildSelector(sel, simpleSel);
+                    break;
+                }
+            } else {
+                sel = simpleSel;
+            }
+
+            return sel;
+        }
+    }
+    catch (ParseException e)
+    {
+        throw this.toCSSParseException("invalidSimpleSelector", e);
     }
 }
 
@@ -677,10 +740,17 @@ Condition _class(Condition pred) :
     Token t;
 }
 {
-    <DOT> t = <IDENT>
+    try
     {
-        Condition c = this.getConditionFactory().createClassCondition(null, t.image);
-        return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
+        <DOT> t = <IDENT>
+        {
+            Condition c = this.getConditionFactory().createClassCondition(null, t.image);
+            return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
+        }
+    }
+    catch (ParseException e)
+    {
+        throw this.toCSSParseException("invalidClassSelector", e);
     }
 }
 
@@ -694,10 +764,17 @@ SimpleSelector elementName() :
     Token t;
 }
 {
-  t=<IDENT>
-  { return this.getSelectorFactory().createElementSelector(null, unescape(t.image)); }
-  | <ASTERISK>
-  { return this.getSelectorFactory().createElementSelector(null, null); }
+    try
+    {
+        t=<IDENT>
+        { return this.getSelectorFactory().createElementSelector(null, unescape(t.image)); }
+        | <ASTERISK>
+        { return this.getSelectorFactory().createElementSelector(null, null); }
+    }
+    catch (ParseException e)
+    {
+        throw this.toCSSParseException("invalidElementName", e);
+    }
 }
 
 //
@@ -714,43 +791,50 @@ Condition attrib(Condition pred) :
     int type = 0;
 }
 {
-    <LSQUARE> ( <S> )*
-    t = <IDENT> { name = unescape(t.image); } ( <S> )*
-    (
-        (
-            <EQUALS> { type = 1; }
-            |
-            <INCLUDES> { type = 2; }
-            |
-            <DASHMATCH> { type = 3; }
-        )
-        ( <S> )*
-        (
-            t = <IDENT> { value = t.image; }
-            |
-            t = <STRING> { value = unescape(t.image); }
-        )
-        ( <S> )*
-    )?
-    <RSQUARE>
-
+    try
     {
-        Condition c = null;
-        switch (type) {
-        case 0:
-            c = this.getConditionFactory().createAttributeCondition(name, null, false, null);
-            break;
-        case 1:
-            c = this.getConditionFactory().createAttributeCondition(name, null, false, value);
-            break;
-        case 2:
-            c = this.getConditionFactory().createOneOfAttributeCondition(name, null, false, value);
-            break;
-        case 3:
-            c = this.getConditionFactory().createBeginHyphenAttributeCondition(name, null, false, value);
-            break;
+        <LSQUARE> ( <S> )*
+        t = <IDENT> { name = unescape(t.image); } ( <S> )*
+        (
+            (
+                <EQUALS> { type = 1; }
+                |
+                <INCLUDES> { type = 2; }
+                |
+                <DASHMATCH> { type = 3; }
+            )
+            ( <S> )*
+            (
+                t = <IDENT> { value = t.image; }
+                |
+                t = <STRING> { value = unescape(t.image); }
+            )
+            ( <S> )*
+        )?
+        <RSQUARE>
+
+        {
+            Condition c = null;
+            switch (type) {
+            case 0:
+                c = this.getConditionFactory().createAttributeCondition(name, null, false, null);
+                break;
+            case 1:
+                c = this.getConditionFactory().createAttributeCondition(name, null, false, value);
+                break;
+            case 2:
+                c = this.getConditionFactory().createOneOfAttributeCondition(name, null, false, value);
+                break;
+            case 3:
+                c = this.getConditionFactory().createBeginHyphenAttributeCondition(name, null, false, value);
+                break;
+            }
+            return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
         }
-        return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
+    }
+    catch (ParseException e)
+    {
+        throw this.toCSSParseException("invalidAttrib", e);
     }
 }
 
@@ -767,36 +851,44 @@ Condition pseudo(Condition pred) :
     String arg;
 }
 {
-    <COLON>
-    (
-        t = <IDENT>
-        {
-            // There appears to be an issue here regarding "first-letter" & "first-line"
-            String s = unescape(t.image);
-		    c = this.getConditionFactory().createPseudoClassCondition(null, s);
-            return (pred == null)
-                ? c
-                : this.getConditionFactory().createAndCondition(pred, c);
-        }
-        |
+    try
+    {
+        <COLON>
         (
-            t = <FUNCTION> { function = unescape(t.image); } ( <S> )*
-            t = <IDENT> { arg = unescape(t.image); } ( <S> )*
-            <RROUND>
+            t = <IDENT>
             {
-                if (function.equalsIgnoreCase("lang(")) {
-                    c = this.getConditionFactory().createLangCondition(unescape(arg));
-                    return (pred == null)
-                        ? c
-                        : this.getConditionFactory().createAndCondition(pred, c);
-                } else {
-                    throw new CSSParseException(
-                        "Invalid pseudo function name " + function,
-                        getLocator());
-                }
+                // There appears to be an issue here regarding "first-letter" & "first-line"
+                //String s = unescape(t.image);
+                String s = t.image;
+    		    c = this.getConditionFactory().createPseudoClassCondition(null, s);
+                return (pred == null)
+                    ? c
+                    : this.getConditionFactory().createAndCondition(pred, c);
             }
+            |
+            (
+                t = <FUNCTION> { function = unescape(t.image); } ( <S> )*
+                t = <IDENT> { arg = unescape(t.image); } ( <S> )*
+                <RROUND>
+                {
+                    if (function.equalsIgnoreCase("lang(")) {
+                        c = this.getConditionFactory().createLangCondition(unescape(arg));
+                        return (pred == null)
+                            ? c
+                            : this.getConditionFactory().createAndCondition(pred, c);
+                    } else {
+                        throw new CSSParseException(
+                            "Invalid pseudo function name " + function,
+                            getLocator());
+                    }
+                }
+            )
         )
-    )
+    }
+    catch (ParseException e)
+    {
+        throw this.toCSSParseException("invalidPseudo", e);
+    }
 }
 
 Condition hash(Condition pred) :
@@ -804,10 +896,17 @@ Condition hash(Condition pred) :
     Token t;
 }
 {
-    t = <HASH>
+    try
     {
-        Condition c = this.getConditionFactory().createIdCondition(t.image.substring(1));
-        return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
+        t = <HASH>
+        {
+            Condition c = this.getConditionFactory().createIdCondition(t.image.substring(1));
+            return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
+        }
+    }
+    catch (ParseException e)
+    {
+        throw this.toCSSParseException("invalidHash", e);
     }
 }
 
@@ -827,7 +926,7 @@ void styleDeclaration()  :
 //   |
 //   ;
 //
-void declaration() throws ParseException :
+void declaration() :
 {
   String p;
   LexicalUnit e;
@@ -851,7 +950,7 @@ void declaration() throws ParseException :
     }
     catch (ParseException ex)
     {
-        this.getErrorHandler().error(this.toCSSParseException(ex));
+        this.getErrorHandler().error(this.toCSSParseException("invalidDeclaration", ex));
         error_skipdecl();
     }
 }
@@ -882,9 +981,16 @@ LexicalUnit expr() :
     LexicalUnit body;
 }
 {
-    head = term(null) { body = head; }
-    ( ( body = operator(body) )? body = term(body) )*
-    { return head; }
+    try
+    {
+        head = term(null) { body = head; }
+        ( ( body = operator(body) )? body = term(body) )*
+        { return head; }
+    }
+    catch (ParseException ex)
+    {
+        throw this.toCSSParseException("invalidExpr", ex);
+    }
 }
 
 //

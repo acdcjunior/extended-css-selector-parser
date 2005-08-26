@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.w3c.css.sac.CSSParseException;
@@ -194,7 +195,7 @@ abstract class AbstractSACParser implements Parser
         return retval.toString();
     }
 
-    protected CSSParseException toCSSParseException(ParseException e)
+    protected CSSParseException toCSSParseException(String key, ParseException e)
     {
         String messagePattern1 =
             this.getSACParserMessages().getString("invalidExpectingOne");
@@ -234,7 +235,17 @@ abstract class AbstractSACParser implements Parser
             invalid.append(this.add_escapes(tok.image));
             tok = tok.next;
         }
-        StringBuffer message = new StringBuffer();
+        String s = null;
+        try
+        {
+            s = this.getSACParserMessages().getString(key);
+        }
+        catch (MissingResourceException ex)
+        {
+            s = key;
+        }
+        StringBuffer message = new StringBuffer(s != null ? s : "");
+        message.append(' ');
         if (e.expectedTokenSequences.length == 1)
         {
             message.append(MessageFormat.format(
@@ -261,7 +272,12 @@ abstract class AbstractSACParser implements Parser
         }
         catch (ParseException e)
         {
-            this.getErrorHandler().error(this.toCSSParseException(e));
+            this.getErrorHandler().error(
+                this.toCSSParseException("invalidStyleSheet", e));
+        }
+        catch (CSSParseException e)
+        {
+            this.getErrorHandler().error(e);
         }
     }
     
@@ -281,7 +297,8 @@ abstract class AbstractSACParser implements Parser
         }
         catch (ParseException e)
         {
-            this.getErrorHandler().error(this.toCSSParseException(e));
+            this.getErrorHandler().error(
+                this.toCSSParseException("invalidStyleDeclaration", e));
         }
     }
     
@@ -295,7 +312,8 @@ abstract class AbstractSACParser implements Parser
         }
         catch (ParseException e)
         {
-            this.getErrorHandler().error(this.toCSSParseException(e));
+            this.getErrorHandler().error(
+                this.toCSSParseException("invalidStyleRuleSingle", e));
         }
     }
     
@@ -311,7 +329,8 @@ abstract class AbstractSACParser implements Parser
         }
         catch (ParseException e)
         {
-            this.getErrorHandler().error(this.toCSSParseException(e));
+            this.getErrorHandler().error(
+                this.toCSSParseException("invalidSelectorList", e));
         }
         return sl;
     }
@@ -328,7 +347,8 @@ abstract class AbstractSACParser implements Parser
         }
         catch (ParseException e)
         {
-            this.getErrorHandler().error(this.toCSSParseException(e));
+            this.getErrorHandler().error(
+                this.toCSSParseException("invalidExpr", e));
         }
         return lu;
     }
@@ -345,7 +365,8 @@ abstract class AbstractSACParser implements Parser
         }
         catch (ParseException e)
         {
-            this.getErrorHandler().error(this.toCSSParseException(e));
+            this.getErrorHandler().error(
+                this.toCSSParseException("invalidPrio", e));
         }
         return b;
     }
@@ -361,7 +382,8 @@ abstract class AbstractSACParser implements Parser
         }
         catch (ParseException e)
         {
-            this.getErrorHandler().error(this.toCSSParseException(e));
+            this.getErrorHandler().error(
+                this.toCSSParseException("invalidMediaList", e));
         }
         return ml;
     }
@@ -389,7 +411,7 @@ abstract class AbstractSACParser implements Parser
 
     public abstract String getParserVersion();
     protected abstract void ReInit(CharStream charStream);
-    protected abstract void styleSheet() throws ParseException;
+    protected abstract void styleSheet() throws CSSParseException, ParseException;
     protected abstract void styleDeclaration() throws ParseException;
     protected abstract void styleSheetRuleSingle() throws ParseException;
     protected abstract SelectorList selectorList() throws ParseException;
