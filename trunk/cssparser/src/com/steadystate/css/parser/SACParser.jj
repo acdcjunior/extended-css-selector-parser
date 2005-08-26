@@ -1,5 +1,5 @@
 /*
- * $Id: SACParser.jj,v 1.6 2005-08-23 12:16:06 waldbaer Exp $
+ * $Id: SACParser.jj,v 1.7 2005-08-26 14:21:02 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -47,7 +47,7 @@ import com.steadystate.css.parser.selectors.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParser.jj,v 1.6 2005-08-23 12:16:06 waldbaer Exp $
+ * @version $Id: SACParser.jj,v 1.7 2005-08-26 14:21:02 waldbaer Exp $
  */
 public class SACParser extends AbstractSACParser implements Parser {
 
@@ -599,15 +599,18 @@ Selector selector() :
     char comb;
 }
 {
-    try {
+    // throw exception when error occurs in selector
+    //try {
         sel = simpleSelector(null, ' ')
         ( LOOKAHEAD(2) comb = combinator() sel = simpleSelector(sel, comb) )* ( <S> )*
         {
             return sel;
         }
+    /*
     } catch (ParseException e) {
         skipSelector();
     }
+    */
 }
 
 //
