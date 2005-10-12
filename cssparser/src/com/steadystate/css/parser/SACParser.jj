@@ -1,5 +1,5 @@
 /*
- * $Id: SACParser.jj,v 1.8 2005-08-26 18:11:30 waldbaer Exp $
+ * $Id: SACParser.jj,v 1.9 2005-10-12 08:47:13 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -47,7 +47,7 @@ import com.steadystate.css.parser.selectors.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParser.jj,v 1.8 2005-08-26 18:11:30 waldbaer Exp $
+ * @version $Id: SACParser.jj,v 1.9 2005-10-12 08:47:13 waldbaer Exp $
  */
 public class SACParser extends AbstractSACParser implements Parser {
 
@@ -246,7 +246,7 @@ void styleSheetRuleList() :
     (
      ( styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule() )
      ( <S> | <CDO> | <CDC> )*
-    )
+    )*
     (
      ( styleRule() | mediaRule() | pageRule() | fontFaceRule() | importRuleIgnored() | unknownRule() )
      ( <S> | <CDO> | <CDC> )*
@@ -391,7 +391,9 @@ void mediaRule() :
     }
     catch(ParseException e)
     {
-        this.getErrorHandler().error(this.toCSSParseException("invalidMediaRule", e));
+        CSSParseException cpe = this.toCSSParseException("invalidMediaRule", e);
+        this.getErrorHandler().error(cpe);
+        this.getErrorHandler().warning(this.createSkipWarning("ignoringRule", cpe));
         this.error_skipblock();
     }
     finally
@@ -462,8 +464,8 @@ void pageRule() :
     try {
         <PAGE_SYM> ( <S> )*
 
-        ( LOOKAHEAD(2) ( t = <IDENT> ( <S> )* ) |
-        ( t = <IDENT> s = pseudoPage() ( <S> )* ) |
+        ( LOOKAHEAD(2) ( t = <IDENT> s = pseudoPage() ( <S> )* ) |
+        ( t = <IDENT> ( <S> )* ) |
         ( s = pseudoPage() ( <S> )* ) )?
 
         //  ( t = <IDENT> { jjtThis.setIdent( t.image ); } )?
@@ -599,7 +601,6 @@ void styleRule() :
 {
     SelectorList selList = null;
     boolean start = false;
-    boolean noError = true;
 }
 {
     try {
@@ -609,20 +610,24 @@ void styleRule() :
             start = true;
             this.handleStartSelector(selList);
         }
+        styleDeclaration()
+        /*
         ( declaration() )?
         ( <SEMICOLON> ( <S> )* ( declaration() )? )*
+        */
         <RBRACE>
     }
     catch(CSSParseException e)
     {
         this.getErrorHandler().error(e);
-        noError = false;
+        this.getErrorHandler().warning(this.createSkipWarning("ignoringRule", e));
         this.error_skipblock();
     }
     catch(ParseException e)
     {
-        this.getErrorHandler().error(this.toCSSParseException("invalidStyleRule", e));
-        noError = false;
+        CSSParseException cpe = this.toCSSParseException("invalidStyleRule", e);
+        this.getErrorHandler().error(cpe);
+        this.getErrorHandler().warning(this.createSkipWarning("ignoringFollowingDeclarations", cpe));
         this.error_skipblock();
     }
     finally {
@@ -914,10 +919,18 @@ void styleDeclaration()  :
 {
 }
 {
-	<LBRACE> ( <S> )*
-	( declaration() )?
-	( <SEMICOLON> ( <S> )* ( declaration() )? )*
-	<RBRACE>
+	//<LBRACE> ( <S> )*
+	try
+	{
+        ( declaration() )?
+        ( <SEMICOLON> ( <S> )* ( declaration() )? )*
+    }
+    catch (ParseException ex)
+    {
+        this.getErrorHandler().error(this.toCSSParseException("invalidDeclaration", ex));
+        error_skipdecl();
+    }
+	//<RBRACE>
 }
 
 //
@@ -1219,8 +1232,7 @@ void error_skipdecl()
     {
         while (t.kind != SEMICOLON && t.kind != RBRACE && t.kind != EOF )
         {
-            getNextToken();
-            t = getToken(1);
+            t = getNextToken();
         }
     }
 }
