@@ -244,7 +244,7 @@ abstract class AbstractSACParser implements Parser
         {
             s = key;
         }
-        StringBuffer message = new StringBuffer(s != null ? s : "");
+        StringBuffer message = new StringBuffer(s);
         message.append(' ');
         if (e.expectedTokenSequences.length == 1)
         {
@@ -259,6 +259,20 @@ abstract class AbstractSACParser implements Parser
         return new CSSParseException(message.toString(),
             this.getInputSource().getURI(), e.currentToken.next.beginLine,
             e.currentToken.next.beginColumn);
+    }
+    
+    protected CSSParseException createSkipWarning(String key, CSSParseException e)
+    {
+        String s = null;
+        try
+        {
+            s = this.getSACParserMessages().getString(key);
+        }
+        catch (MissingResourceException ex)
+        {
+            s = key;
+        }
+        return new CSSParseException(s, e.getURI(), e.getLineNumber(), e.getColumnNumber());
     }
 
     public void parseStyleSheet(InputSource source)
@@ -313,7 +327,7 @@ abstract class AbstractSACParser implements Parser
         catch (ParseException e)
         {
             this.getErrorHandler().error(
-                this.toCSSParseException("invalidStyleRuleSingle", e));
+                this.toCSSParseException("invalidRule", e));
         }
     }
     

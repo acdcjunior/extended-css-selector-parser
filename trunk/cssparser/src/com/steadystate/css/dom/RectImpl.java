@@ -1,5 +1,5 @@
 /*
- * $Id: RectImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: RectImpl.java,v 1.3 2005-10-12 08:47:13 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -29,6 +29,7 @@ package com.steadystate.css.dom;
 
 import java.io.Serializable;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.Rect;
 
@@ -37,7 +38,7 @@ import org.w3c.css.sac.LexicalUnit;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: RectImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: RectImpl.java,v 1.3 2005-10-12 08:47:13 waldbaer Exp $
  */
 public class RectImpl implements Rect, Serializable {
     
@@ -47,47 +48,83 @@ public class RectImpl implements Rect, Serializable {
     private CSSPrimitiveValue _bottom;
 
     /** Creates new RectImpl */
-    public RectImpl(LexicalUnit lu) {
+    public RectImpl(LexicalUnit lu) throws DOMException {
         LexicalUnit next = lu;
-        _left = new CSSValueImpl(next, true);
-        next = next.getNextLexicalUnit();
-        next = next.getNextLexicalUnit();
-        _top = new CSSValueImpl(next, true);
-        next = next.getNextLexicalUnit();
-        next = next.getNextLexicalUnit();
-        _right = new CSSValueImpl(next, true);
-        next = next.getNextLexicalUnit();
-        next = next.getNextLexicalUnit();
-        _bottom = new CSSValueImpl(next, true);
+        this._left = new CSSValueImpl(next, true);
+        next = next.getNextLexicalUnit();  // ,
+        if (next != null)
+        {
+            if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
+            {
+                // error
+                throw new DOMException(DOMException.SYNTAX_ERR,
+                    "Rect parameters must be separated by ','.");
+            }
+            next = next.getNextLexicalUnit();
+            if (next != null)
+            {
+                this._top = new CSSValueImpl(next, true);
+                next = next.getNextLexicalUnit();   // ,
+                if (next != null)
+                {
+                    if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
+                    {
+                        // error
+                        throw new DOMException(DOMException.SYNTAX_ERR,
+                            "Rect parameters must be separated by ','.");
+                    }
+                    next = next.getNextLexicalUnit();
+                    if (next != null)
+                    {
+                        this._right = new CSSValueImpl(next, true);
+                        next = next.getNextLexicalUnit();   // ,
+                        if (next != null)
+                        {
+                            if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
+                            {
+                                // error
+                                throw new DOMException(DOMException.SYNTAX_ERR,
+                                    "Rect parameters must be separated by ','.");
+                            }
+                            next = next.getNextLexicalUnit();
+                            if (next != null)
+                            {
+                                this._bottom = new CSSValueImpl(next, true);
+                                if ((next = next.getNextLexicalUnit()) != null)
+                                {
+                                    // error
+                                    throw new DOMException(DOMException.SYNTAX_ERR,
+                                        "Too many parameters for rect function.");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
   
     public CSSPrimitiveValue getTop() {
-        return _top;
+        return this._top;
     }
 
     public CSSPrimitiveValue getRight() {
-        return _right;
+        return this._right;
     }
 
     public CSSPrimitiveValue getBottom() {
-        return _bottom;
+        return this._bottom;
     }
 
     public CSSPrimitiveValue getLeft() {
-        return _left;
+        return this._left;
     }
     
     public String toString() {
-        return new StringBuffer()
-            .append("rect(")
-            .append(_left.toString())
-            .append(", ")
-            .append(_top.toString())
-            .append(", ")
-            .append(_right.toString())
-            .append(", ")
-            .append(_bottom.toString())
-            .append(")")
-            .toString();
+        return new StringBuffer("rect(")
+            .append(this._left).append(", ")
+            .append(this._top).append(", ")
+            .append(this._right).append(", ")
+            .append(this._bottom).append(")").toString();
     }
 }

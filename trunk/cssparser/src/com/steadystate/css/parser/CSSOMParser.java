@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParser.java,v 1.7 2005-08-21 19:36:44 waldbaer Exp $
+ * $Id: CSSOMParser.java,v 1.8 2005-10-12 08:47:13 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -40,6 +40,7 @@ import org.w3c.css.sac.Parser;
 import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSStyleSheet;
@@ -63,7 +64,7 @@ import com.steadystate.css.dom.Property;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParser.java,v 1.7 2005-08-21 19:36:44 waldbaer Exp $
+ * @version $Id: CSSOMParser.java,v 1.8 2005-10-12 08:47:13 waldbaer Exp $
  */
 public class CSSOMParser {
     
@@ -351,8 +352,15 @@ public class CSSOMParser {
                 throws CSSException {
             CSSStyleDeclarationImpl decl =
                 (CSSStyleDeclarationImpl) this._nodeStack.peek();
-            decl.addProperty(
-                new Property(name, new CSSValueImpl(value), important));
+            try
+            {
+                decl.addProperty(
+                    new Property(name, new CSSValueImpl(value), important));
+            }
+            catch (DOMException e)
+            {
+                // call ErrorHandler?
+            }
         }
         
         private CSSRule getParentRule()

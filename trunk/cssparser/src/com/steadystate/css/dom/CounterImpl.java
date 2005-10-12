@@ -1,5 +1,5 @@
 /*
- * $Id: CounterImpl.java,v 1.3 2005-08-23 14:47:30 waldbaer Exp $
+ * $Id: CounterImpl.java,v 1.4 2005-10-12 08:47:13 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -29,6 +29,7 @@ package com.steadystate.css.dom;
 
 import java.io.Serializable;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.css.Counter;
 
 import org.w3c.css.sac.LexicalUnit;
@@ -36,7 +37,7 @@ import org.w3c.css.sac.LexicalUnit;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CounterImpl.java,v 1.3 2005-08-23 14:47:30 waldbaer Exp $
+ * @version $Id: CounterImpl.java,v 1.4 2005-10-12 08:47:13 waldbaer Exp $
  */
 public class CounterImpl implements Counter, Serializable {
 
@@ -45,54 +46,74 @@ public class CounterImpl implements Counter, Serializable {
     private String _separator;
     
     /** Creates new CounterImpl */
-    public CounterImpl(boolean separatorSpecified, LexicalUnit lu) {
+    public CounterImpl(boolean separatorSpecified, LexicalUnit lu)
+        throws DOMException
+    {
         LexicalUnit next = lu;
         this._identifier = next.getStringValue();
         next = next.getNextLexicalUnit();   // ','
         if (next != null)
         {
+            if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
+            {
+                // error
+                throw new DOMException(DOMException.SYNTAX_ERR,
+                    "Counter parameters must be separated by ','.");
+            }
             next = next.getNextLexicalUnit();
             if (separatorSpecified && (next != null)) {
                 this._separator = next.getStringValue();
                 next = next.getNextLexicalUnit();   // ','
                 if (next != null)
                 {
+                    if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
+                    {
+                        // error
+                        throw new DOMException(DOMException.SYNTAX_ERR,
+                            "Counter parameters must be separated by ','.");
+                    }
                     next = next.getNextLexicalUnit();
                 }
             }
             if (next != null) {
                 this._listStyle = next.getStringValue();
+                if ((next = next.getNextLexicalUnit()) != null)
+                {
+                    // error
+                    throw new DOMException(DOMException.SYNTAX_ERR,
+                        "Too many parameters for counter function.");
+                }
             }
         }
     }
 
     public String getIdentifier() {
-        return _identifier;
+        return this._identifier;
     }
 
     public String getListStyle() {
-        return _listStyle;
+        return this._listStyle;
     }
 
     public String getSeparator() {
-        return _separator;
+        return this._separator;
     }
     
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        if (_separator == null) {
+        if (this._separator == null) {
             // This is a 'counter()' function
             sb.append("counter(");
         } else {
             // This is a 'counters()' function
             sb.append("counters(");
         }
-        sb.append(_identifier);
-        if (_separator != null) {
-            sb.append(", \"").append(_separator).append("\"");
+        sb.append(this._identifier);
+        if (this._separator != null) {
+            sb.append(", \"").append(this._separator).append("\"");
         }
-        if (_listStyle != null) {
-            sb.append(", ").append(_listStyle);
+        if (this._listStyle != null) {
+            sb.append(", ").append(this._listStyle);
         }
         sb.append(")");
         return sb.toString();

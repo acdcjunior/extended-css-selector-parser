@@ -1,5 +1,5 @@
 /*
- * $Id: RGBColorImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: RGBColorImpl.java,v 1.3 2005-10-12 08:47:13 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -31,13 +31,14 @@ import java.io.Serializable;
 
 import org.w3c.css.sac.LexicalUnit;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.RGBColor;
 
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: RGBColorImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: RGBColorImpl.java,v 1.3 2005-10-12 08:47:13 waldbaer Exp $
  */
 public class RGBColorImpl implements RGBColor, Serializable {
 
@@ -45,49 +46,75 @@ public class RGBColorImpl implements RGBColor, Serializable {
     private CSSPrimitiveValue _green = null;
     private CSSPrimitiveValue _blue = null;
 
-    protected RGBColorImpl(LexicalUnit lu) {
+    protected RGBColorImpl(LexicalUnit lu) throws DOMException {
         LexicalUnit next = lu;
-        _red = new CSSValueImpl(next, true);
-        next = next.getNextLexicalUnit();
-        next = next.getNextLexicalUnit();
-        _green = new CSSValueImpl(next, true);
-        next = next.getNextLexicalUnit();
-        next = next.getNextLexicalUnit();
-        _blue = new CSSValueImpl(next, true);
+        this._red = new CSSValueImpl(next, true);
+        next = next.getNextLexicalUnit();   // ,
+        if (next != null)
+        {
+            if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
+            {
+                // error
+                throw new DOMException(DOMException.SYNTAX_ERR,
+                    "rgb parameters must be separated by ','.");
+            }
+            next = next.getNextLexicalUnit();
+            if (next != null)
+            {
+                this._green = new CSSValueImpl(next, true);
+                next = next.getNextLexicalUnit();   // ,
+                if (next != null)
+                {
+                    if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
+                    {
+                        // error
+                        throw new DOMException(DOMException.SYNTAX_ERR,
+                            "rgb parameters must be separated by ','.");
+                    }
+                    next = next.getNextLexicalUnit();
+                    this._blue = new CSSValueImpl(next, true);
+                    if ((next = next.getNextLexicalUnit()) != null)
+                    {
+                        // error
+                        throw new DOMException(DOMException.SYNTAX_ERR,
+                            "Too many parameters for rgb function.");
+                    }
+                }
+            }
+        }
     }
 
     protected RGBColorImpl() {
     }
     
     public CSSPrimitiveValue getRed() {
-        return _red;
+        return this._red;
     }
 
     public void setRed(CSSPrimitiveValue red) {
-        _red = red;
+        this._red = red;
     }
 
     public CSSPrimitiveValue getGreen() {
-        return _green;
+        return this._green;
     }
 
     public void setGreen(CSSPrimitiveValue green) {
-        _green = green;
+        this._green = green;
     }
 
     public CSSPrimitiveValue getBlue() {
-        return _blue;
+        return this._blue;
     }
 
     public void setBlue(CSSPrimitiveValue blue) {
-        _blue = blue;
+        this._blue = blue;
     }
 
     public String toString() {
-        return
-            "rgb(" +
-            _red.toString() + ", " +
-            _green.toString() + ", " +
-            _blue.toString() + ")";
+        return new StringBuffer("rgb(")
+            .append(this._red.toString()).append(", ")
+            .append(this._green.toString()).append(", ")
+            .append(this._blue.toString()).append(")").toString();
     }
 }
