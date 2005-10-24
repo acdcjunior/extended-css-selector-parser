@@ -27,7 +27,11 @@
             <src path="${build}/src"/>
             <src path="${src}"/>
         </javac>
-        <jar destfile="${dist}/cssparser.jar" basedir="${build}/classes"/>
+        <jar destfile="${dist}/cssparser.jar" basedir="${build}/classes">
+			<fileset dir="${src}">
+				<include name="**/*.properties"/>
+			</fileset>
+		</jar>
     </target>
     
     <target name="test" depends="compile">
