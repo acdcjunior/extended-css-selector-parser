@@ -1,5 +1,5 @@
 /*
- * $Id: ParseTest.java,v 1.3 2005-07-30 22:48:31 davidsch Exp $
+ * $Id: ParseTest.java,v 1.4 2006-04-11 08:19:32 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -34,7 +34,7 @@ import org.w3c.css.sac.helpers.ParserFactory;
 /** 
  * TODO Move this to a test suite
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: ParseTest.java,v 1.3 2005-07-30 22:48:31 davidsch Exp $
+ * @version $Id: ParseTest.java,v 1.4 2006-04-11 08:19:32 waldbaer Exp $
  */
 public class ParseTest extends HandlerBase {
 
@@ -114,7 +114,7 @@ public class ParseTest extends HandlerBase {
             System.out.println(" " + pseudo_page);
         }
         System.out.println(" {");
-        _propertyCounter = 0;
+        this._propertyCounter = 0;
         incIndent();
     }
 
@@ -126,7 +126,7 @@ public class ParseTest extends HandlerBase {
 
     public void startFontFace() throws CSSException {
         System.out.println(indent() + "@font-face {");
-        _propertyCounter = 0;
+        this._propertyCounter = 0;
         incIndent();
     }
 
@@ -138,7 +138,7 @@ public class ParseTest extends HandlerBase {
 
     public void startSelector(SelectorList selectors) throws CSSException {
         System.out.println(indent() + selectors.toString() + " {");
-        _propertyCounter = 0;
+        this._propertyCounter = 0;
         incIndent();
     }
 
@@ -150,7 +150,7 @@ public class ParseTest extends HandlerBase {
 
     public void property(String name, LexicalUnit value, boolean important)
             throws CSSException {
-        if (_propertyCounter++ > 0) {
+        if (this._propertyCounter++ > 0) {
             System.out.println(";");
         }
         System.out.print(indent() + name + ":");
@@ -171,17 +171,17 @@ public class ParseTest extends HandlerBase {
     
     private String indent() {
         StringBuffer sb = new StringBuffer(16);
-        for (int i = 0; i < _indentSize; i++) {
+        for (int i = 0; i < this._indentSize; i++) {
             sb.append(" ");
         }
         return sb.toString();
     }
     
     private void incIndent() {
-        _indentSize += 4;
+        this._indentSize += 4;
     }
 
     private void decIndent() {
-        _indentSize -= 4;
+        this._indentSize -= 4;
     }
 }
