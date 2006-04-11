@@ -1,5 +1,5 @@
 /*
- * $Id: MediaListImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: MediaListImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -41,12 +41,12 @@ import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.CSSParseException;
 import org.w3c.css.sac.SACMediaList;
 
-import com.steadystate.css.parser.SACParser;
+import com.steadystate.css.parser.SACParserCSS2;
 
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: MediaListImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: MediaListImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
  */
 public class MediaListImpl implements MediaList, Serializable {
 
@@ -67,9 +67,9 @@ public class MediaListImpl implements MediaList, Serializable {
 
     public String getMediaText() {
         StringBuffer sb = new StringBuffer("");
-        for (int i = 0; i < _media.size(); i++) {
-            sb.append(_media.elementAt(i).toString());
-            if (i < _media.size() - 1) {
+        for (int i = 0; i < this._media.size(); i++) {
+            sb.append(this._media.elementAt(i).toString());
+            if (i < this._media.size() - 1) {
                 sb.append( ", " );
             }
         }
@@ -80,7 +80,9 @@ public class MediaListImpl implements MediaList, Serializable {
         InputSource source = new InputSource(new StringReader(mediaText));
         try
         {
-            this.setMedia(new SACParser().parseMedia(source));
+            // TODO get SAC Parser version from System property?
+            SACMediaList sml = new SACParserCSS2().parseMedia(source);
+            this.setMedia(sml);
         }
         catch (CSSParseException e)
         {
@@ -95,18 +97,18 @@ public class MediaListImpl implements MediaList, Serializable {
     }
 
     public int getLength() {
-        return _media.size();
+        return this._media.size();
     }
 
     public String item(int index) {
-        return (index < _media.size()) ? (String) _media.elementAt(index) : null;
+        return (index < this._media.size()) ? (String) this._media.elementAt(index) : null;
     }
 
     public void deleteMedium(String oldMedium) throws DOMException {
-        for (int i = 0; i < _media.size(); i++) {
-            String str = (String) _media.elementAt(i);
+        for (int i = 0; i < this._media.size(); i++) {
+            String str = (String) this._media.elementAt(i);
             if (str.equalsIgnoreCase(oldMedium)) {
-                _media.removeElementAt(i);
+                this._media.removeElementAt(i);
                 return;
             }
         }
@@ -116,10 +118,10 @@ public class MediaListImpl implements MediaList, Serializable {
     }
 
     public void appendMedium(String newMedium) throws DOMException {
-        _media.addElement(newMedium);
+        this._media.addElement(newMedium);
     }
 
     public String toString() {
-        return getMediaText();
+        return this.getMediaText();
     }
 }

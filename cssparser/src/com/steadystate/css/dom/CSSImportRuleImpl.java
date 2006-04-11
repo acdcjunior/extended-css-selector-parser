@@ -1,5 +1,5 @@
 /*
- * $Id: CSSImportRuleImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: CSSImportRuleImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,12 +48,10 @@ import com.steadystate.css.parser.CSSOMParser;
  * TODO: Implement getStyleSheet()
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSImportRuleImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: CSSImportRuleImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
  */
-public class CSSImportRuleImpl implements CSSImportRule, Serializable {
+public class CSSImportRuleImpl extends AbstractCSSRuleImpl implements CSSImportRule, Serializable {
 
-    CSSStyleSheetImpl _parentStyleSheet = null;
-    CSSRule _parentRule = null;
     String _href = null;
     MediaList _media = null;
 
@@ -62,10 +60,9 @@ public class CSSImportRuleImpl implements CSSImportRule, Serializable {
             CSSRule parentRule,
             String href,
             MediaList media) {
-        _parentStyleSheet = parentStyleSheet;
-        _parentRule = parentRule;
-        _href = href;
-        _media = media;
+        super(parentStyleSheet, parentRule);
+        this._href = href;
+        this._media = media;
     }
 
     public short getType() {
@@ -85,7 +82,7 @@ public class CSSImportRuleImpl implements CSSImportRule, Serializable {
     }
 
     public void setCssText(String cssText) throws DOMException {
-        if (_parentStyleSheet != null && _parentStyleSheet.isReadOnly()) {
+        if (this._parentStyleSheet != null && this._parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -98,8 +95,8 @@ public class CSSImportRuleImpl implements CSSImportRule, Serializable {
 
             // The rule must be an import rule
             if (r.getType() == CSSRule.IMPORT_RULE) {
-                _href = ((CSSImportRuleImpl)r)._href;
-                _media = ((CSSImportRuleImpl)r)._media;
+                this._href = ((CSSImportRuleImpl)r)._href;
+                this._media = ((CSSImportRuleImpl)r)._media;
             } else {
                 throw new DOMExceptionImpl(
                     DOMException.INVALID_MODIFICATION_ERR,
@@ -118,20 +115,12 @@ public class CSSImportRuleImpl implements CSSImportRule, Serializable {
         }
     }
 
-    public CSSStyleSheet getParentStyleSheet() {
-        return _parentStyleSheet;
-    }
-
-    public CSSRule getParentRule() {
-        return _parentRule;
-    }
-
     public String getHref() {
-        return _href;
+        return this._href;
     }
 
     public MediaList getMedia() {
-        return _media;
+        return this._media;
     }
 
     public CSSStyleSheet getStyleSheet() {
@@ -139,6 +128,6 @@ public class CSSImportRuleImpl implements CSSImportRule, Serializable {
     }
     
     public String toString() {
-        return getCssText();
+        return this.getCssText();
     }
 }

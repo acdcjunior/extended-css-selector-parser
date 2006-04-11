@@ -1,5 +1,5 @@
 /*
- * $Id: CSSUnknownRuleImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: CSSUnknownRuleImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -40,21 +40,18 @@ import org.w3c.dom.css.CSSUnknownRule;
 /*
  * TODO: Reinstate setCssText
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSUnknownRuleImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: CSSUnknownRuleImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
  */
-public class CSSUnknownRuleImpl implements CSSUnknownRule, Serializable {
+public class CSSUnknownRuleImpl extends AbstractCSSRuleImpl implements CSSUnknownRule, Serializable {
 
-    CSSStyleSheetImpl _parentStyleSheet = null;
-    CSSRule _parentRule = null;
     String _text = null;
 
     public CSSUnknownRuleImpl(
             CSSStyleSheetImpl parentStyleSheet,
             CSSRule parentRule,
             String text) {
-        _parentStyleSheet = parentStyleSheet;
-        _parentRule = parentRule;
-        _text = text;
+        super(parentStyleSheet, parentRule);
+        this._text = text;
     }
 
     public short getType() {
@@ -62,7 +59,7 @@ public class CSSUnknownRuleImpl implements CSSUnknownRule, Serializable {
     }
 
     public String getCssText() {
-        return _text;
+        return this._text;
     }
 
     public void setCssText(String cssText) throws DOMException {
@@ -108,14 +105,14 @@ public class CSSUnknownRuleImpl implements CSSUnknownRule, Serializable {
     }
 
     public CSSStyleSheet getParentStyleSheet() {
-        return _parentStyleSheet;
+        return this._parentStyleSheet;
     }
 
     public CSSRule getParentRule() {
-        return _parentRule;
+        return this._parentRule;
     }
     
     public String toString() {
-        return getCssText();
+        return this.getCssText();
     }
 }
