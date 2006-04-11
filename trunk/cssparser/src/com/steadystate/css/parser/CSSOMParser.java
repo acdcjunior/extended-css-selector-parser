@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParser.java,v 1.8 2005-10-12 08:47:13 waldbaer Exp $
+ * $Id: CSSOMParser.java,v 1.9 2006-04-11 08:22:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -34,6 +34,7 @@ import java.util.Stack;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.DocumentHandler;
+import org.w3c.css.sac.ErrorHandler;
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.LexicalUnit;
 import org.w3c.css.sac.Parser;
@@ -51,6 +52,7 @@ import org.w3c.css.sac.helpers.ParserFactory;
 import com.steadystate.css.dom.CSSFontFaceRuleImpl;
 import com.steadystate.css.dom.CSSImportRuleImpl;
 import com.steadystate.css.dom.CSSMediaRuleImpl;
+import com.steadystate.css.dom.CSSOMObject;
 import com.steadystate.css.dom.CSSPageRuleImpl;
 import com.steadystate.css.dom.CSSRuleListImpl;
 import com.steadystate.css.dom.CSSStyleDeclarationImpl;
@@ -64,11 +66,11 @@ import com.steadystate.css.dom.Property;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParser.java,v 1.8 2005-10-12 08:47:13 waldbaer Exp $
+ * @version $Id: CSSOMParser.java,v 1.9 2006-04-11 08:22:05 waldbaer Exp $
  */
 public class CSSOMParser {
     
-    private static final String PARSER = "com.steadystate.css.parser.SACParser";
+    private static final String PARSER = "com.steadystate.css.parser.SACParserCSS2_0";
     
     private static boolean use_internal = false;
 
@@ -82,7 +84,7 @@ public class CSSOMParser {
         try {
             // use the direct method if we already failed once before
             if(use_internal) {
-                this._parser = new SACParser();
+                this._parser = new SACParserCSS2();
             } else {
                 setProperty("org.w3c.css.sac.parser", PARSER);
                 ParserFactory factory = new ParserFactory();
@@ -93,7 +95,7 @@ public class CSSOMParser {
             System.err.println(e.getMessage());
             e.printStackTrace();
             System.err.println("using the default parser instead");
-            this._parser = new SACParser();
+            this._parser = new SACParserCSS2();
         }
     }
 
@@ -105,6 +107,12 @@ public class CSSOMParser {
     public CSSOMParser(Parser parser)
     {
         this._parser = parser;
+    }
+    
+
+    public void setErrorHandler(ErrorHandler eh)
+    {
+        this._parser.setErrorHandler(eh);
     }
 
     public CSSStyleSheet parseStyleSheet(InputSource source) throws IOException {
@@ -221,6 +229,7 @@ public class CSSOMParser {
                 CSSOMParser.this.getParentStyleSheet(),
                 this.getParentRule(),
                 atRule);
+            this.addLocator(ir);
             if (!this._nodeStack.empty()) {
                 ((CSSRuleListImpl)this._nodeStack.peek()).add(ir);
             } else {
@@ -243,6 +252,7 @@ public class CSSOMParser {
                 this.getParentRule(),
                 uri,
                 new MediaListImpl(media));
+            this.addLocator(ir);
             if (!this._nodeStack.empty()) {
                 ((CSSRuleListImpl)this._nodeStack.peek()).add(ir);
             } else {
@@ -258,6 +268,7 @@ public class CSSOMParser {
                 CSSOMParser.this.getParentStyleSheet(),
                 this.getParentRule(),
                 new MediaListImpl(media));
+            this.addLocator(mr);
             if (!this._nodeStack.empty()) {
                 ((CSSRuleListImpl)this._nodeStack.peek()).add(mr);
             }
@@ -282,6 +293,7 @@ public class CSSOMParser {
             CSSPageRuleImpl pr = new CSSPageRuleImpl(
                 CSSOMParser.this.getParentStyleSheet(),
                 this.getParentRule(), name, pseudo_page);
+            this.addLocator(pr);
             if (!this._nodeStack.empty()) {
                 ((CSSRuleListImpl)this._nodeStack.peek()).add(pr);
             }
@@ -306,6 +318,7 @@ public class CSSOMParser {
             CSSFontFaceRuleImpl ffr = new CSSFontFaceRuleImpl(
                 CSSOMParser.this.getParentStyleSheet(),
                 this.getParentRule());
+            this.addLocator(ffr);
             if (!this._nodeStack.empty()) {
                 ((CSSRuleListImpl)this._nodeStack.peek()).add(ffr);
             }
@@ -330,6 +343,7 @@ public class CSSOMParser {
             CSSStyleRuleImpl sr = new CSSStyleRuleImpl(
                 CSSOMParser.this.getParentStyleSheet(),
                 this.getParentRule(), selectors);
+            this.addLocator(sr);
             if (!this._nodeStack.empty()) {
                 ((CSSRuleListImpl)this._nodeStack.peek()).add(sr);
             }
@@ -354,8 +368,10 @@ public class CSSOMParser {
                 (CSSStyleDeclarationImpl) this._nodeStack.peek();
             try
             {
-                decl.addProperty(
-                    new Property(name, new CSSValueImpl(value), important));
+                Property property = 
+                    new Property(name, new CSSValueImpl(value), important);
+                this.addLocator(property);
+                decl.addProperty(property);
             }
             catch (DOMException e)
             {
@@ -374,6 +390,12 @@ public class CSSOMParser {
                 }
             }
             return null;
+        }
+        
+        private void addLocator(CSSOMObject cssomObject)
+        {
+            cssomObject.setUserData("Locator",
+                ((AbstractSACParser) CSSOMParser.this._parser).getLocator());
         }
     }
 
