@@ -1,5 +1,5 @@
 /*
- * $Id: SACParser.jj,v 1.9 2005-10-12 08:47:13 waldbaer Exp $
+ * $Id: SACParserCSS2.jj,v 1.1 2006-04-11 08:15:57 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -34,7 +34,7 @@ options {
 //    DEBUG_PARSER = true;
 }
 
-PARSER_BEGIN(SACParser)
+PARSER_BEGIN(SACParserCSS2)
 
 package com.steadystate.css.parser;
 
@@ -47,23 +47,28 @@ import com.steadystate.css.parser.selectors.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParser.jj,v 1.9 2005-10-12 08:47:13 waldbaer Exp $
+ * @version $Id: SACParserCSS2.jj,v 1.1 2006-04-11 08:15:57 waldbaer Exp $
  */
-public class SACParser extends AbstractSACParser implements Parser {
+public class SACParserCSS2 extends AbstractSACParser implements Parser {
 
     private boolean _quiet = true;
 
-    public SACParser() {
+    public SACParserCSS2() {
         this((CharStream) null);
     }
 
     public String getParserVersion() {
         return "http://www.w3.org/TR/REC-CSS2/";
     }
+    
+    protected Token getToken()
+    {
+        return this.token;
+    }
 
 }
 
-PARSER_END(SACParser)
+PARSER_END(SACParserCSS2)
 
 TOKEN_MGR_DECLS :
 {
@@ -77,6 +82,10 @@ TOKEN_MGR_DECLS :
 
     private String trimUrl(StringBuffer s) {
         StringBuffer s1 = new StringBuffer( trimBy(s, 4, 1).trim() );
+        if (s1.length() == 0)
+        {
+            return s1.toString();
+        }
         int end = s1.length() - 1;
         if ((s1.charAt(0) == '"' && s1.charAt(end) == '"')
             || (s1.charAt(0) == '\'' && s1.charAt(end) == '\''))
