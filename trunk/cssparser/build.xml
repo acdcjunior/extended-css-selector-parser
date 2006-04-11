@@ -20,14 +20,17 @@
     </target>
 
     <target name="compile" depends="init">
-        <javacc target="${src}/com/steadystate/css/parser/SACParser.jj"
+        <javacc target="${src}/com/steadystate/css/parser/SACParserCSS2.jj"
+                outputdirectory="${build}/src/com/steadystate/css/parser/"
+                javacchome="${javacchome}"/>
+        <javacc target="${src}/com/steadystate/css/parser/SACParserCSS1.jj"
                 outputdirectory="${build}/src/com/steadystate/css/parser/"
                 javacchome="${javacchome}"/>
         <javac destdir="${build}/classes">
             <src path="${build}/src"/>
             <src path="${src}"/>
         </javac>
-        <jar destfile="${dist}/cssparser.jar" basedir="${build}/classes">
+        <jar destfile="${dist}/cssparser.jar" basedir="${build}/classes" includes="com/**/*.class">
 			<fileset dir="${src}">
 				<include name="**/*.properties"/>
 			</fileset>
