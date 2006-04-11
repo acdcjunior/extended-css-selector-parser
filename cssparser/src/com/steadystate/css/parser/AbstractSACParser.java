@@ -26,6 +26,7 @@ import org.w3c.css.sac.SelectorList;
 
 import com.steadystate.css.parser.selectors.ConditionFactoryImpl;
 import com.steadystate.css.parser.selectors.SelectorFactoryImpl;
+import com.steadystate.css.sac.TestCSSParseException;
 
 /**
  * @author koch
@@ -41,8 +42,7 @@ abstract class AbstractSACParser implements Parser
     private SelectorFactory selectorFactory = null;
     private ConditionFactory conditionFactory = null;
     private ResourceBundle sacParserMessages;
-    private Locator locator;
-
+    protected abstract Token getToken();
 
     protected DocumentHandler getDocumentHandler()
     {
@@ -136,14 +136,11 @@ abstract class AbstractSACParser implements Parser
 
     public Locator getLocator()
     {
-        return this.locator;
+        return new LocatorImpl(this.getInputSource().getURI(),
+            this.getToken() == null ? 0 : this.getToken().beginLine,
+            this.getToken() == null ? 0 : this.getToken().beginColumn);//this.locator;
     }
-    
-    protected void setLocator(Locator locator)
-    {
-        this.locator = locator;
-    }
-    
+
     protected String add_escapes(String str)
     {
         StringBuffer retval = new StringBuffer();
@@ -256,9 +253,9 @@ abstract class AbstractSACParser implements Parser
             message.append(MessageFormat.format(
                 messagePattern2, new Object[] {invalid, expected}));
         }
-        return new CSSParseException(message.toString(),
+        return new TestCSSParseException(message.toString(),
             this.getInputSource().getURI(), e.currentToken.next.beginLine,
-            e.currentToken.next.beginColumn);
+            e.currentToken.next.beginColumn, this.getParserVersion());
     }
     
     protected CSSParseException createSkipWarning(String key, CSSParseException e)
@@ -398,6 +395,10 @@ abstract class AbstractSACParser implements Parser
         {
             this.getErrorHandler().error(
                 this.toCSSParseException("invalidMediaList", e));
+        }
+        catch (CSSParseException e)
+        {
+            this.getErrorHandler().error(e);
         }
         return ml;
     }
