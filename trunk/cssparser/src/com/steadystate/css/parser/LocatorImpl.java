@@ -1,5 +1,5 @@
 /*
- * $Id: LocatorImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: LocatorImpl.java,v 1.3 2006-04-11 08:19:12 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -32,7 +32,7 @@ import org.w3c.css.sac.Locator;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LocatorImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: LocatorImpl.java,v 1.3 2006-04-11 08:19:12 waldbaer Exp $
  */
 public class LocatorImpl implements Locator {
 
@@ -41,7 +41,10 @@ public class LocatorImpl implements Locator {
     private int _column;
 
     /** Creates new LocatorImpl */
-    public LocatorImpl() {
+    public LocatorImpl(String uri, int line, int column) {
+        this._uri = uri;
+        this._line = line;
+        this._column = column;
     }
 
     /**
@@ -52,7 +55,7 @@ public class LocatorImpl implements Locator {
      * @see #getColumnNumber
      */
     public int getLineNumber() {
-        return _line;
+        return this._line;
     }
     
     /**
@@ -65,7 +68,7 @@ public class LocatorImpl implements Locator {
      *        if none is available.
      */
     public String getURI() {
-        return _uri;
+        return this._uri;
     }
     
     /**
@@ -77,7 +80,7 @@ public class LocatorImpl implements Locator {
      * @see #getLineNumber
      */
     public int getColumnNumber() {
-        return _column;
+        return this._column;
     }
     
 }
