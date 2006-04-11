@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleRuleImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: CSSStyleRuleImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -36,7 +36,6 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSStyleRule;
-import org.w3c.dom.css.CSSStyleSheet;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
@@ -47,19 +46,17 @@ import com.steadystate.css.parser.CSSOMParser;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleRuleImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: CSSStyleRuleImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
  */
-public class CSSStyleRuleImpl implements CSSStyleRule, Serializable {
+public class CSSStyleRuleImpl extends AbstractCSSRuleImpl implements CSSStyleRule, Serializable {
 
-    private CSSStyleSheetImpl _parentStyleSheet = null;
-    private CSSRule _parentRule = null;
     private SelectorList _selectors = null;
     private CSSStyleDeclaration _style = null;
 
-    public CSSStyleRuleImpl(CSSStyleSheetImpl parentStyleSheet, CSSRule parentRule, SelectorList selectors) {
-        _parentStyleSheet = parentStyleSheet;
-        _parentRule = parentRule;
-        _selectors = selectors;
+    public CSSStyleRuleImpl(CSSStyleSheetImpl parentStyleSheet,
+        CSSRule parentRule, SelectorList selectors) {
+        super(parentStyleSheet, parentRule);
+        this._selectors = selectors;
     }
 
     public short getType() {
@@ -67,11 +64,11 @@ public class CSSStyleRuleImpl implements CSSStyleRule, Serializable {
     }
 
     public String getCssText() {
-        return getSelectorText() + " " + getStyle().toString();
+        return this.getSelectorText() + " " + this.getStyle().toString();
     }
 
     public void setCssText(String cssText) throws DOMException {
-        if (_parentStyleSheet != null && _parentStyleSheet.isReadOnly()) {
+        if (this._parentStyleSheet != null && this._parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -84,8 +81,8 @@ public class CSSStyleRuleImpl implements CSSStyleRule, Serializable {
 
             // The rule must be a style rule
             if (r.getType() == CSSRule.STYLE_RULE) {
-                _selectors = ((CSSStyleRuleImpl)r)._selectors;
-                _style = ((CSSStyleRuleImpl)r)._style;
+                this._selectors = ((CSSStyleRuleImpl)r)._selectors;
+                this._style = ((CSSStyleRuleImpl)r)._style;
             } else {
                 throw new DOMExceptionImpl(
                     DOMException.INVALID_MODIFICATION_ERR,
@@ -104,20 +101,12 @@ public class CSSStyleRuleImpl implements CSSStyleRule, Serializable {
         }
     }
 
-    public CSSStyleSheet getParentStyleSheet() {
-        return _parentStyleSheet;
-    }
-
-    public CSSRule getParentRule() {
-        return _parentRule;
-    }
-
     public String getSelectorText() {
-        return _selectors.toString();
+        return this._selectors.toString();
     }
 
     public void setSelectorText(String selectorText) throws DOMException {
-        if (_parentStyleSheet != null && _parentStyleSheet.isReadOnly()) {
+        if (this._parentStyleSheet != null && this._parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET );
@@ -126,7 +115,7 @@ public class CSSStyleRuleImpl implements CSSStyleRule, Serializable {
         try {
             InputSource is = new InputSource(new StringReader(selectorText));
             CSSOMParser parser = new CSSOMParser();
-            _selectors = parser.parseSelectors(is);
+            this._selectors = parser.parseSelectors(is);
         } catch (CSSException e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
@@ -141,14 +130,14 @@ public class CSSStyleRuleImpl implements CSSStyleRule, Serializable {
     }
 
     public CSSStyleDeclaration getStyle() {
-        return _style;
+        return this._style;
     }
 
     public void setStyle(CSSStyleDeclarationImpl style) {
-        _style = style;
+        this._style = style;
     }
     
     public String toString() {
-        return getCssText();
+        return this.getCssText();
     }
 }

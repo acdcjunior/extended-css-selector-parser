@@ -1,5 +1,5 @@
 /*
- * $Id: CSSFontFaceRuleImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: CSSFontFaceRuleImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -36,7 +36,6 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSFontFaceRule;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleDeclaration;
-import org.w3c.dom.css.CSSStyleSheet;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
@@ -46,17 +45,14 @@ import com.steadystate.css.parser.CSSOMParser;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSFontFaceRuleImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: CSSFontFaceRuleImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
  */
-public class CSSFontFaceRuleImpl implements CSSFontFaceRule, Serializable {
+public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontFaceRule, Serializable {
 
-    private CSSStyleSheetImpl _parentStyleSheet = null;
-    private CSSRule _parentRule = null;
     private CSSStyleDeclarationImpl _style = null;
 
     public CSSFontFaceRuleImpl(CSSStyleSheetImpl parentStyleSheet, CSSRule parentRule) {
-        _parentStyleSheet = parentStyleSheet;
-        _parentRule = parentRule;
+        super(parentStyleSheet, parentRule);
     }
 
     public short getType() {
@@ -68,7 +64,7 @@ public class CSSFontFaceRuleImpl implements CSSFontFaceRule, Serializable {
     }
 
     public void setCssText(String cssText) throws DOMException {
-        if (_parentStyleSheet != null && _parentStyleSheet.isReadOnly()) {
+        if (this._parentStyleSheet != null && this._parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -81,7 +77,7 @@ public class CSSFontFaceRuleImpl implements CSSFontFaceRule, Serializable {
 
             // The rule must be a font face rule
             if (r.getType() == CSSRule.FONT_FACE_RULE) {
-                _style = ((CSSFontFaceRuleImpl)r)._style;
+                this._style = ((CSSFontFaceRuleImpl)r)._style;
             } else {
                 throw new DOMExceptionImpl(
                     DOMException.INVALID_MODIFICATION_ERR,
@@ -100,19 +96,11 @@ public class CSSFontFaceRuleImpl implements CSSFontFaceRule, Serializable {
         }
     }
 
-    public CSSStyleSheet getParentStyleSheet() {
-        return _parentStyleSheet;
-    }
-
-    public CSSRule getParentRule() {
-        return _parentRule;
-    }
-
     public CSSStyleDeclaration getStyle() {
-        return _style;
+        return this._style;
     }
 
     public void setStyle(CSSStyleDeclarationImpl style) {
-        _style = style;
+        this._style = style;
     }
 }

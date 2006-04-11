@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleSheetImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: CSSStyleSheetImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -44,14 +44,15 @@ import org.w3c.dom.css.CSSStyleSheet;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
+import org.w3c.css.sac.SACMediaList;
 
 import com.steadystate.css.parser.CSSOMParser;
-import com.steadystate.css.parser.SACParser;
+import com.steadystate.css.parser.SACParserCSS2;
 
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleSheetImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: CSSStyleSheetImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
  */
 public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
 
@@ -73,7 +74,7 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
     }
 
     public boolean getDisabled() {
-        return _disabled;
+        return this._disabled;
     }
 
     /**
@@ -81,39 +82,43 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
      * by generating an event for the main application.
      */
     public void setDisabled(boolean disabled) {
-        _disabled = disabled;
+        this._disabled = disabled;
     }
 
     public Node getOwnerNode() {
-        return _ownerNode;
+        return this._ownerNode;
     }
 
     public StyleSheet getParentStyleSheet() {
-        return _parentStyleSheet;
+        return this._parentStyleSheet;
     }
 
     public String getHref() {
-        return _href;
+        return this._href;
     }
 
     public String getTitle() {
-        return _title;
+        return this._title;
     }
 
     public MediaList getMedia() {
-        return _media;
+        return this._media;
     }
 
     public CSSRule getOwnerRule() {
-        return _ownerRule;
+        return this._ownerRule;
     }
 
     public CSSRuleList getCssRules() {
-        return _rules;
+        if (this._rules == null)
+        {
+            this._rules = new CSSRuleListImpl();
+        }
+        return this._rules;
     }
 
     public int insertRule(String rule, int index) throws DOMException {
-        if (_readOnly) {
+        if (this._readOnly) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -185,7 +190,7 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
     }
 
     public void deleteRule(int index) throws DOMException {
-        if (_readOnly) {
+        if (this._readOnly) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -202,34 +207,36 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
     }
 
     public boolean isReadOnly() {
-        return _readOnly;
+        return this._readOnly;
     }
 
     public void setReadOnly(boolean b) {
-        _readOnly = b;
+        this._readOnly = b;
     }
 
     public void setOwnerNode(Node ownerNode) {
-        _ownerNode = ownerNode;
+        this._ownerNode = ownerNode;
     }
 
     public void setParentStyleSheet(StyleSheet parentStyleSheet) {
-        _parentStyleSheet = parentStyleSheet;
+        this._parentStyleSheet = parentStyleSheet;
     }
 
     public void setHref(String href) {
-        _href = href;
+        this._href = href;
     }
 
     public void setTitle(String title) {
-        _title = title;
+        this._title = title;
     }
 
     public void setMedia(String mediaText) {
         InputSource source = new InputSource(new StringReader(mediaText));
         try
         {
-            this._media = new MediaListImpl(new SACParser().parseMedia(source));
+            // TODO get SAC Parser version from System property?
+            SACMediaList sml = new SACParserCSS2().parseMedia(source);
+            this._media = new MediaListImpl(sml);
         }
         catch (IOException e)
         {
@@ -238,15 +245,15 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
     }
 
     public void setOwnerRule(CSSRule ownerRule) {
-        _ownerRule = ownerRule;
+        this._ownerRule = ownerRule;
     }
     
     public void setRuleList(CSSRuleListImpl rules) {
-        _rules = rules;
+        this._rules = rules;
     }
     
     public String toString() {
-        return _rules.toString();
+        return this.getCssRules().toString();
     }
     
     /**

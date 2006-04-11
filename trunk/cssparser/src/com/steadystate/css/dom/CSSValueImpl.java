@@ -1,5 +1,5 @@
 /*
- * $Id: CSSValueImpl.java,v 1.5 2005-08-23 14:47:30 waldbaer Exp $
+ * $Id: CSSValueImpl.java,v 1.6 2006-04-11 08:15:19 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -27,7 +27,6 @@
 
 package com.steadystate.css.dom;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 
@@ -58,7 +57,7 @@ import com.steadystate.css.parser.LexicalUnitImpl;
  * A means of checking valid primitive types for properties
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSValueImpl.java,v 1.5 2005-08-23 14:47:30 waldbaer Exp $
+ * @version $Id: CSSValueImpl.java,v 1.6 2006-04-11 08:15:19 waldbaer Exp $
  */
 public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializable {
 
@@ -70,27 +69,27 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
     public CSSValueImpl(LexicalUnit value, boolean forcePrimitive) {
         if (!forcePrimitive && (value.getNextLexicalUnit() != null))
         {
-            _value = this.getValues(value);
+            this._value = this.getValues(value);
         }
         else if (value.getParameters() != null) {
             if (value.getLexicalUnitType() == LexicalUnit.SAC_RECT_FUNCTION) {
                 // Rect
-                _value = new RectImpl(value.getParameters());
+                this._value = new RectImpl(value.getParameters());
             } else if (value.getLexicalUnitType() == LexicalUnit.SAC_RGBCOLOR) {
                 // RGBColor
-                _value = new RGBColorImpl(value.getParameters());
+                this._value = new RGBColorImpl(value.getParameters());
             } else if (value.getLexicalUnitType() == LexicalUnit.SAC_COUNTER_FUNCTION) {
                 // Counter
-                _value = new CounterImpl(false, value.getParameters());
+                this._value = new CounterImpl(false, value.getParameters());
             } else if (value.getLexicalUnitType() == LexicalUnit.SAC_COUNTERS_FUNCTION) {
                 // Counter
-                _value = new CounterImpl(true, value.getParameters());
+                this._value = new CounterImpl(true, value.getParameters());
             } else {
-                _value = value;
+                this._value = value;
             }
         } else {
             // We need to be a CSSPrimitiveValue
-            _value = value;
+            this._value = value;
         }
     }
     
@@ -163,7 +162,7 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
             InputSource is = new InputSource(new StringReader(cssText));
             CSSOMParser parser = new CSSOMParser();
             CSSValueImpl v2 = (CSSValueImpl) parser.parsePropertyValue(is);
-            _value = v2._value;
+            this._value = v2._value;
         } catch (Exception e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
@@ -173,12 +172,12 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
     }
 
     public short getCssValueType() {
-        if (_value instanceof Vector)
+        if (this._value instanceof Vector)
         {
             return CSS_VALUE_LIST;
         }
-        else if ((_value instanceof LexicalUnit) &&
-            (((LexicalUnit) _value).getLexicalUnitType() == LexicalUnit.SAC_INHERIT))
+        else if ((this._value instanceof LexicalUnit) &&
+            (((LexicalUnit) this._value).getLexicalUnitType() == LexicalUnit.SAC_INHERIT))
         {
             return CSS_INHERIT;
         }
@@ -186,8 +185,8 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
     }
 
     public short getPrimitiveType() {
-        if (_value instanceof LexicalUnit) {
-            LexicalUnit lu = (LexicalUnit) _value;
+        if (this._value instanceof LexicalUnit) {
+            LexicalUnit lu = (LexicalUnit) this._value;
             switch (lu.getLexicalUnitType()) {
             case LexicalUnit.SAC_INHERIT:
                 return CSS_IDENT;
@@ -248,23 +247,23 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
             case LexicalUnit.SAC_DIMENSION:
                 return CSS_DIMENSION;
             }
-        } else if (_value instanceof RectImpl) {
+        } else if (this._value instanceof RectImpl) {
             return CSS_RECT;
-        } else if (_value instanceof RGBColorImpl) {
+        } else if (this._value instanceof RGBColorImpl) {
             return CSS_RGBCOLOR;
-        } else if (_value instanceof CounterImpl) {
+        } else if (this._value instanceof CounterImpl) {
             return CSS_COUNTER;
         }
         return CSS_UNKNOWN;
     }
 
     public void setFloatValue(short unitType, float floatValue) throws DOMException {
-        _value = LexicalUnitImpl.createNumber(null, floatValue);
+        this._value = LexicalUnitImpl.createNumber(null, floatValue);
     }
 
     public float getFloatValue(short unitType) throws DOMException {
-        if (_value instanceof LexicalUnit) {
-            LexicalUnit lu = (LexicalUnit) _value;
+        if (this._value instanceof LexicalUnit) {
+            LexicalUnit lu = (LexicalUnit) this._value;
             return lu.getFloatValue();
         }
         throw new DOMExceptionImpl(
@@ -278,16 +277,16 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
     public void setStringValue(short stringType, String stringValue) throws DOMException {
         switch (stringType) {
         case CSS_STRING:
-            _value = LexicalUnitImpl.createString(null, stringValue);
+            this._value = LexicalUnitImpl.createString(null, stringValue);
             break;
         case CSS_URI:
-            _value = LexicalUnitImpl.createURI(null, stringValue);
+            this._value = LexicalUnitImpl.createURI(null, stringValue);
             break;
         case CSS_IDENT:
-            _value = LexicalUnitImpl.createIdent(null, stringValue);
+            this._value = LexicalUnitImpl.createIdent(null, stringValue);
             break;
         case CSS_ATTR:
-//           _value = LexicalUnitImpl.createAttr(null, stringValue);
+//            this._value = LexicalUnitImpl.createAttr(null, stringValue);
 //            break;
             throw new DOMExceptionImpl(
                 DOMException.NOT_SUPPORTED_ERR,
@@ -303,8 +302,8 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
      * TODO: return a value for a list type
      */
     public String getStringValue() throws DOMException {
-        if (_value instanceof LexicalUnit) {
-            LexicalUnit lu = (LexicalUnit) _value;
+        if (this._value instanceof LexicalUnit) {
+            LexicalUnit lu = (LexicalUnit) this._value;
             if ((lu.getLexicalUnitType() == LexicalUnit.SAC_IDENT)
                 || (lu.getLexicalUnitType() == LexicalUnit.SAC_STRING_VALUE)
                 || (lu.getLexicalUnitType() == LexicalUnit.SAC_URI)
@@ -315,7 +314,7 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
             {
                 return lu.getParameters().getStringValue();
             }
-        } else if (_value instanceof Vector) {
+        } else if (this._value instanceof Vector) {
             return null;
         }
 
@@ -325,39 +324,39 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
     }
 
     public Counter getCounterValue() throws DOMException {
-        if ((_value instanceof Counter) == false) {
+        if ((this._value instanceof Counter) == false) {
             throw new DOMExceptionImpl(
                 DOMException.INVALID_ACCESS_ERR,
                 DOMExceptionImpl.COUNTER_ERROR);
         }
-        return (Counter) _value;
+        return (Counter) this._value;
     }
 
     public Rect getRectValue() throws DOMException {
-        if ((_value instanceof Rect) == false) {
+        if ((this._value instanceof Rect) == false) {
             throw new DOMExceptionImpl(
                 DOMException.INVALID_ACCESS_ERR,
                 DOMExceptionImpl.RECT_ERROR);
         }
-        return (Rect) _value;
+        return (Rect) this._value;
     }
 
     public RGBColor getRGBColorValue() throws DOMException {
-        if ((_value instanceof RGBColor) == false) {
+        if ((this._value instanceof RGBColor) == false) {
             throw new DOMExceptionImpl(
                 DOMException.INVALID_ACCESS_ERR,
                 DOMExceptionImpl.RGBCOLOR_ERROR);
         }
-        return (RGBColor) _value;
+        return (RGBColor) this._value;
     }
 
     public int getLength() {
-        return (_value instanceof Vector) ? ((Vector)_value).size() : 0;
+        return (this._value instanceof Vector) ? ((Vector)this._value).size() : 0;
     }
 
     public CSSValue item(int index) {
-        return (_value instanceof Vector)
-            ? ((CSSValue)((Vector)_value).elementAt(index))
+        return (this._value instanceof Vector)
+            ? ((CSSValue)((Vector)this._value).elementAt(index))
             : null;
     }
 

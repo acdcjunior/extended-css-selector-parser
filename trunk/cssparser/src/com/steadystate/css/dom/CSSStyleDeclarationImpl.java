@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleDeclarationImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: CSSStyleDeclarationImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -27,7 +27,6 @@
 
 package com.steadystate.css.dom;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 
@@ -45,15 +44,16 @@ import com.steadystate.css.parser.CSSOMParser;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleDeclarationImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: CSSStyleDeclarationImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
  */
-public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializable {
+public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializable
+{
 
     private CSSRule _parentRule;
     private Vector _properties = new Vector();
     
     public CSSStyleDeclarationImpl(CSSRule parentRule) {
-        _parentRule = parentRule;
+        this._parentRule = parentRule;
     }
 
     public String getCssText() {
@@ -61,12 +61,12 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
         sb.append("{");
         //if newlines requested in text
         //sb.append("\n");
-        for (int i = 0; i < _properties.size(); ++i) {
-            Property p = (Property) _properties.elementAt(i);
+        for (int i = 0; i < this._properties.size(); ++i) {
+            Property p = (Property) this._properties.elementAt(i);
             if (p != null) {
                 sb.append(p.toString());
             }
-            if (i < _properties.size() - 1) {
+            if (i < this._properties.size() - 1) {
                 sb.append("; ");
             }
             //if newlines requested in text
@@ -80,7 +80,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
         try {
             InputSource is = new InputSource(new StringReader(cssText));
             CSSOMParser parser = new CSSOMParser();
-            _properties.removeAllElements();
+            this._properties.removeAllElements();
             parser.parseStyleDeclaration(this, is);
         } catch (Exception e) {
             throw new DOMExceptionImpl(
@@ -91,20 +91,20 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
     }
 
     public String getPropertyValue(String propertyName) {
-        Property p = getPropertyDeclaration(propertyName);
+        Property p = this.getPropertyDeclaration(propertyName);
         return (p != null) ? p.getValue().toString() : "";
     }
 
     public CSSValue getPropertyCSSValue(String propertyName) {
-        Property p = getPropertyDeclaration(propertyName);
+        Property p = this.getPropertyDeclaration(propertyName);
         return (p != null) ? p.getValue() : null;
     }
 
     public String removeProperty(String propertyName) throws DOMException {
-        for (int i = 0; i < _properties.size(); i++) {
-            Property p = (Property) _properties.elementAt(i);
+        for (int i = 0; i < this._properties.size(); i++) {
+            Property p = (Property) this._properties.elementAt(i);
             if (p.getName().equalsIgnoreCase(propertyName)) {
-                _properties.removeElementAt(i);
+                this._properties.removeElementAt(i);
                 return p.getValue().toString();
             }
         }
@@ -112,7 +112,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
     }
 
     public String getPropertyPriority(String propertyName) {
-        Property p = getPropertyDeclaration(propertyName);
+        Property p = this.getPropertyDeclaration(propertyName);
         if (p != null) {
             return p.isImportant() ? "important" : "";
         }
@@ -127,7 +127,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
             InputSource is = new InputSource(new StringReader(value));
             CSSOMParser parser = new CSSOMParser();
             CSSValue expr = parser.parsePropertyValue(is);
-            Property p = getPropertyDeclaration(propertyName);
+            Property p = this.getPropertyDeclaration(propertyName);
             boolean important = (priority != null)
                 ? priority.equalsIgnoreCase("important")
                 : false;
@@ -147,25 +147,25 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
     }
     
     public int getLength() {
-        return _properties.size();
+        return this._properties.size();
     }
 
     public String item(int index) {
-        Property p = (Property) _properties.elementAt(index);
+        Property p = (Property) this._properties.elementAt(index);
         return (p != null) ? p.getName() : "";
     }
 
     public CSSRule getParentRule() {
-        return _parentRule;
+        return this._parentRule;
     }
 
     public void addProperty(Property p) {
-        _properties.addElement(p);
+        this._properties.addElement(p);
     }
 
-    private Property getPropertyDeclaration(String name) {
-        for (int i = 0; i < _properties.size(); i++) {
-            Property p = (Property) _properties.elementAt(i);
+    public Property getPropertyDeclaration(String name) {
+        for (int i = 0; i < this._properties.size(); i++) {
+            Property p = (Property) this._properties.elementAt(i);
             if (p.getName().equalsIgnoreCase(name)) {
                 return p;
             }
@@ -174,6 +174,6 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
     }
 
     public String toString() {
-        return getCssText();
+        return this.getCssText();
     }
 }

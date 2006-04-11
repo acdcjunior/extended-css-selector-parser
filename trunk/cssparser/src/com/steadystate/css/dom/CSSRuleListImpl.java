@@ -1,5 +1,5 @@
 /*
- * $Id: CSSRuleListImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: CSSRuleListImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -37,48 +37,48 @@ import org.w3c.dom.css.CSSRuleList;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSRuleListImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: CSSRuleListImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
  */
 public class CSSRuleListImpl implements CSSRuleList, Serializable {
     
     private Vector _rules = null;
+    
+    private Vector getRules()
+    {
+        if (this._rules == null)
+        {
+            this._rules = new Vector();
+        }
+        return this._rules;
+    }
 
     public CSSRuleListImpl() {
     }
 
     public int getLength() {
-        return (_rules != null) ? _rules.size() : 0;
+        return this.getRules().size();
     }
 
     public CSSRule item(int index) {
-        return (_rules != null) ? (CSSRule) _rules.elementAt(index) : null;
+        return (CSSRule) this.getRules().elementAt(index);
     }
 
     public void add(CSSRule rule) {
-        if (_rules == null) {
-            _rules = new Vector();
-        }
-        _rules.addElement(rule);
+        this.getRules().addElement(rule);
     }
     
     public void insert(CSSRule rule, int index) {
-        if (_rules == null) {
-            _rules = new Vector();
-        }
-        _rules.insertElementAt(rule, index);
+        this.getRules().insertElementAt(rule, index);
     }
     
     public void delete(int index) {
-        if (_rules == null) {
-            _rules = new Vector();
-        }
-        _rules.removeElementAt(index);
+        this.getRules().removeElementAt(index);
     }
     
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < getLength(); i++ ) {
-            sb.append(item(i).toString()).append("\r\n");
+        for (int i = 0; i < this.getLength(); i++ ) {
+            sb.append(this.item(i).toString()).append("\r\n");
         }
         return sb.toString();
     }
