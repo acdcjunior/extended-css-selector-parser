@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSS1.jj,v 1.1 2006-04-11 08:16:25 waldbaer Exp $
+ * $Id: SACParserCSS1.jj,v 1.2 2006-04-12 12:49:27 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.parser.selectors.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSS1.jj,v 1.1 2006-04-11 08:16:25 waldbaer Exp $
+ * @version $Id: SACParserCSS1.jj,v 1.2 2006-04-12 12:49:27 waldbaer Exp $
  */
 public class SACParserCSS1 extends AbstractSACParser implements Parser {
 
@@ -59,7 +59,12 @@ public class SACParserCSS1 extends AbstractSACParser implements Parser {
     }
 
     public String getParserVersion() {
-        return "http://www.w3.org/TR/CSS1/";
+        return "http://www.w3.org/TR/REC-CSS1";
+    }
+
+    protected String getGrammarUri()
+    {
+        return "http://www.w3.org/TR/REC-CSS1#appendix-b";
     }
 
     protected Token getToken()
@@ -961,10 +966,15 @@ void error_skipdecl()
     }
     else
     {
+        Token oldToken = t;
         while (t.kind != SEMICOLON && t.kind != RBRACE && t.kind != EOF )
         {
-            getNextToken();
-            t = getToken(1);
+            oldToken = t;
+            t = getNextToken();
+        }
+        if (t.kind == RBRACE)
+        {
+            token = oldToken;
         }
     }
 }
