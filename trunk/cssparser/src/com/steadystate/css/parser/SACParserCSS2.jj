@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSS2.jj,v 1.1 2006-04-11 08:15:57 waldbaer Exp $
+ * $Id: SACParserCSS2.jj,v 1.2 2006-04-12 12:49:27 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -44,10 +44,11 @@ import java.text.MessageFormat;
 import java.util.*;
 import org.w3c.css.sac.*;
 import com.steadystate.css.parser.selectors.*;
+import com.steadystate.css.sac.TestCSSParseException;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSS2.jj,v 1.1 2006-04-11 08:15:57 waldbaer Exp $
+ * @version $Id: SACParserCSS2.jj,v 1.2 2006-04-12 12:49:27 waldbaer Exp $
  */
 public class SACParserCSS2 extends AbstractSACParser implements Parser {
 
@@ -61,6 +62,11 @@ public class SACParserCSS2 extends AbstractSACParser implements Parser {
         return "http://www.w3.org/TR/REC-CSS2/";
     }
     
+    protected String getGrammarUri()
+    {
+        return "http://www.w3.org/TR/REC-CSS2/grammar.html";
+    }
+
     protected Token getToken()
     {
         return this.token;
@@ -891,9 +897,9 @@ Condition pseudo(Condition pred) :
                             ? c
                             : this.getConditionFactory().createAndCondition(pred, c);
                     } else {
-                        throw new CSSParseException(
+                        throw new TestCSSParseException(
                             "Invalid pseudo function name " + function,
-                            getLocator());
+                            getLocator(), this.getGrammarUri());
                     }
                 }
             )
@@ -1239,9 +1245,15 @@ void error_skipdecl()
     }
     else
     {
+        Token oldToken = t;
         while (t.kind != SEMICOLON && t.kind != RBRACE && t.kind != EOF )
         {
+            oldToken = t;
             t = getNextToken();
+        }
+        if (t.kind == RBRACE)
+        {
+            token = oldToken;
         }
     }
 }

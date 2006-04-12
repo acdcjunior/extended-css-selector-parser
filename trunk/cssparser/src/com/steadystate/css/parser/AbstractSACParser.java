@@ -127,9 +127,9 @@ abstract class AbstractSACParser implements Parser
     {
         if (this.sacParserMessages == null)
         {
-            this.sacParserMessages =
-                ResourceBundle.getBundle(this.getClass().getPackage().getName()
-                    + ".SACParserMessages", this.getLocale());
+            this.sacParserMessages = ResourceBundle.getBundle(
+                "com.steadystate.css.parser.SACParserMessages",
+                this.getLocale());
         }
         return this.sacParserMessages;
     }
@@ -255,7 +255,7 @@ abstract class AbstractSACParser implements Parser
         }
         return new TestCSSParseException(message.toString(),
             this.getInputSource().getURI(), e.currentToken.next.beginLine,
-            e.currentToken.next.beginColumn, this.getParserVersion());
+            e.currentToken.next.beginColumn, this.getGrammarUri());
     }
     
     protected CSSParseException createSkipWarning(String key, CSSParseException e)
@@ -269,7 +269,8 @@ abstract class AbstractSACParser implements Parser
         {
             s = key;
         }
-        return new CSSParseException(s, e.getURI(), e.getLineNumber(), e.getColumnNumber());
+        return new TestCSSParseException(s, e.getURI(), e.getLineNumber(),
+            e.getColumnNumber(), this.getGrammarUri());
     }
 
     public void parseStyleSheet(InputSource source)
@@ -425,6 +426,7 @@ abstract class AbstractSACParser implements Parser
     }
 
     public abstract String getParserVersion();
+    protected abstract String getGrammarUri();
     protected abstract void ReInit(CharStream charStream);
     protected abstract void styleSheet() throws CSSParseException, ParseException;
     protected abstract void styleDeclaration() throws ParseException;
@@ -543,10 +545,10 @@ abstract class AbstractSACParser implements Parser
                 g = Integer.parseInt(t.image.substring(i + 2, i + 4), 16);
                 b = Integer.parseInt(t.image.substring(i + 4, i + 6), 16);
             } else {
-                throw new CSSParseException(MessageFormat.format(
+                throw new TestCSSParseException(MessageFormat.format(
                     pattern, new Object[] {t}),
                     this.getInputSource().getURI(), t.beginLine,
-                    t.beginColumn);
+                    t.beginColumn, this.getGrammarUri());
             }
 
             // Turn into an "rgb()"
@@ -560,10 +562,10 @@ abstract class AbstractSACParser implements Parser
         }
         catch (NumberFormatException ex)
         {
-            throw new CSSParseException(MessageFormat.format(
+            throw new TestCSSParseException(MessageFormat.format(
                 pattern, new Object[] {t}),
                 this.getInputSource().getURI(), t.beginLine,
-                t.beginColumn, ex);
+                t.beginColumn, ex, this.getGrammarUri());
         }
     }
 
@@ -636,7 +638,8 @@ abstract class AbstractSACParser implements Parser
                         buf.append(c);
                     }
                 } else {
-                    throw new CSSParseException("invalid string " + s, getLocator());
+                    throw new TestCSSParseException("invalid string " + s,
+                        getLocator(), this.getGrammarUri());
                 }
             } else {
                 buf.append(c);
