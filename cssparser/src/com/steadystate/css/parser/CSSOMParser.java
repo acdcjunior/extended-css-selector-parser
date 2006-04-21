@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParser.java,v 1.9 2006-04-11 08:22:05 waldbaer Exp $
+ * $Id: CSSOMParser.java,v 1.10 2006-04-21 11:25:56 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -62,15 +62,16 @@ import com.steadystate.css.dom.CSSUnknownRuleImpl;
 import com.steadystate.css.dom.CSSValueImpl;
 import com.steadystate.css.dom.MediaListImpl;
 import com.steadystate.css.dom.Property;
+import com.steadystate.css.userdata.UserDataConstants;
 
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParser.java,v 1.9 2006-04-11 08:22:05 waldbaer Exp $
+ * @version $Id: CSSOMParser.java,v 1.10 2006-04-21 11:25:56 waldbaer Exp $
  */
 public class CSSOMParser {
     
-    private static final String PARSER = "com.steadystate.css.parser.SACParserCSS2_0";
+    private static final String PARSER = "com.steadystate.css.parser.SACParserCSS2";
     
     private static boolean use_internal = false;
 
@@ -263,11 +264,13 @@ public class CSSOMParser {
 
         public void startMedia(SACMediaList media) throws CSSException {
 
+            MediaListImpl ml = new MediaListImpl(media);
+            this.addLocator(ml);
             // Create the media rule and add it to the rule list
             CSSMediaRuleImpl mr = new CSSMediaRuleImpl(
                 CSSOMParser.this.getParentStyleSheet(),
                 this.getParentRule(),
-                new MediaListImpl(media));
+                ml);
             this.addLocator(mr);
             if (!this._nodeStack.empty()) {
                 ((CSSRuleListImpl)this._nodeStack.peek()).add(mr);
@@ -394,7 +397,7 @@ public class CSSOMParser {
         
         private void addLocator(CSSOMObject cssomObject)
         {
-            cssomObject.setUserData("Locator",
+            cssomObject.setUserData(UserDataConstants.KEY_LOCATOR,
                 ((AbstractSACParser) CSSOMParser.this._parser).getLocator());
         }
     }
