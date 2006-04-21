@@ -1,5 +1,5 @@
 /*
- * $Id: CSSMediaRuleImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
+ * $Id: CSSMediaRuleImpl.java,v 1.5 2006-04-21 11:25:00 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -47,7 +47,7 @@ import com.steadystate.css.parser.CSSOMParser;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSMediaRuleImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
+ * @version $Id: CSSMediaRuleImpl.java,v 1.5 2006-04-21 11:25:00 waldbaer Exp $
  */
 public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRule, Serializable {
 
@@ -116,6 +116,10 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
     }
 
     public CSSRuleList getCssRules() {
+        if (this._rules == null)
+        {
+            this._rules = new CSSRuleListImpl();
+        }
         return this._rules;
     }
 
