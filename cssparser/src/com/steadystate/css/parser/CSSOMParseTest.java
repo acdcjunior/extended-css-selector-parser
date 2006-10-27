@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParseTest.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: CSSOMParseTest.java,v 1.3 2006-10-27 13:28:47 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -28,24 +28,27 @@
 package com.steadystate.css.parser;
 
 import java.io.*;
+import java.net.URI;
+
 import org.w3c.css.sac.*;
 import org.w3c.dom.css.*;
 
 /** 
  * TODO Move this to a test suite
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParseTest.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: CSSOMParseTest.java,v 1.3 2006-10-27 13:28:47 waldbaer Exp $
  */
 public class CSSOMParseTest extends Object {
 
     /** Creates new CSSOMParseTest */
     public CSSOMParseTest() {
         try {
-            Reader r = new FileReader("c:\\working\\css2parser\\stylesheets\\page_test.css");
+            URI uri = new URI("file://localhost/c:/working/css2parser/stylesheets/page_test.css");
+            Reader r = new FileReader(uri.getPath());
 //            Reader r = new StringReader("FOO { color: rgb(1,2,3) }");
             InputSource is = new InputSource(r);
             CSSOMParser parser = new CSSOMParser();
-            CSSStyleSheet ss = parser.parseStyleSheet(is);
+            CSSStyleSheet ss = parser.parseStyleSheet(is, null, uri.toString());
             System.out.println(ss.toString());
             
             CSSRuleList rl = ss.getCssRules();
