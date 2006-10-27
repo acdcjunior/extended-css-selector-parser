@@ -1,5 +1,5 @@
 /*
- * $Id: CSS2Parser.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: CSS2Parser.java,v 1.4 2006-10-27 13:12:38 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -53,7 +53,7 @@ import com.steadystate.css.parser.CSSOMParser;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSS2Parser.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: CSS2Parser.java,v 1.4 2006-10-27 13:12:38 waldbaer Exp $
  * @deprecated As of 0.9.0, replaced by
  * {@link com.steadystate.css.parser.CSSOMParser}
  */
@@ -61,6 +61,8 @@ public class CSS2Parser {
 
     private CSSOMParser _parser = null;
     private InputSource _is = null;
+    private Node ownerNode;
+    private String href;
     
     public CSS2Parser(
             Reader stream,
@@ -70,6 +72,8 @@ public class CSS2Parser {
             String media) {
         _parser = new CSSOMParser();
         _is = new InputSource(stream);
+        this.ownerNode = ownerNode;
+        this.href = href;
     }
 
     public CSS2Parser(
@@ -91,7 +95,7 @@ public class CSS2Parser {
 
     public CSSStyleSheet styleSheet() {
         try {
-            return _parser.parseStyleSheet(_is);
+            return _parser.parseStyleSheet(_is, this.ownerNode, this.href);
         } catch (IOException e) {
             return null;
         }
