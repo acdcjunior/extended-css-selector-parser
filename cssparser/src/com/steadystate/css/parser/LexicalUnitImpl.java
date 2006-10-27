@@ -1,5 +1,5 @@
 /*
- * $Id: LexicalUnitImpl.java,v 1.6 2006-04-11 08:18:51 waldbaer Exp $
+ * $Id: LexicalUnitImpl.java,v 1.7 2006-10-27 13:21:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,7 +33,7 @@ import org.w3c.css.sac.*;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LexicalUnitImpl.java,v 1.6 2006-04-11 08:18:51 waldbaer Exp $
+ * @version $Id: LexicalUnitImpl.java,v 1.7 2006-10-27 13:21:05 waldbaer Exp $
  */
 public class LexicalUnitImpl implements LexicalUnit, Serializable {
 
@@ -83,21 +83,67 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
     public static final short SAC_DIMENSION		= 42;
 */
 
-    private short _type;
-    private LexicalUnit _next;
-    private LexicalUnit _prev;
+    private short lexicalUnitType;
+    private LexicalUnit nextLexicalUnit;
+    private LexicalUnit previousLexicalUnit;
 //    private int _intVal;
-    private float _floatVal;
-    private String _dimension;
-    private String _function;
-    private LexicalUnit _params;
-    private String _stringVal;
+    private float floatValue;
+    private String dimension;
+    private String functionName;
+    private LexicalUnit parameters;
+    private String stringValue;
+
+    public void setLexicalUnitType(short type)
+    {
+        this.lexicalUnitType = type;
+    }
+
+    public void setNextLexicalUnit(LexicalUnit next)
+    {
+        this.nextLexicalUnit = next;
+    }
+
+    public void setPreviousLexicalUnit(LexicalUnit prev)
+    {
+        this.previousLexicalUnit = prev;
+    }
+
+    public void setFloatValue(float floatVal)
+    {
+        this.floatValue = floatVal;
+    }
+
+    public String getDimension()
+    {
+        return this.dimension;
+    }
+
+    public void setDimension(String dimension)
+    {
+        this.dimension = dimension;
+    }
+
+    public void setFunctionName(String function)
+    {
+        this.functionName = function;
+    }
+
+    public void setParameters(LexicalUnit params)
+    {
+        this.parameters = params;
+    }
+
+    public void setStringValue(String stringVal)
+    {
+        this.stringValue = stringVal;
+    }
+
 
     protected LexicalUnitImpl(LexicalUnit previous, short type) {
-        this._type = type;
-        this._prev = previous;
-        if (this._prev != null) {
-            ((LexicalUnitImpl)this._prev)._next = this;
+        this.lexicalUnitType = type;
+        this.previousLexicalUnit = previous;
+        if (this.previousLexicalUnit != null) {
+            ((LexicalUnitImpl)this.previousLexicalUnit).nextLexicalUnit = this;
         }
     }
 
@@ -107,7 +153,7 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
     protected LexicalUnitImpl(LexicalUnit previous, int value) {
         this(previous, SAC_INTEGER);
 //        _intVal = value;
-        this._floatVal = value;
+        this.floatValue = value;
     }
 
     /**
@@ -115,7 +161,7 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
      */
     protected LexicalUnitImpl(LexicalUnit previous, short type, float value) {
         this(previous, type);
-        this._floatVal = value;
+        this.floatValue = value;
     }
 
     /**
@@ -127,8 +173,8 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
             String dimension,
             float value) {
         this(previous, type);
-        this._dimension = dimension;
-        this._floatVal = value;
+        this.dimension = dimension;
+        this.floatValue = value;
     }
 
     /**
@@ -136,7 +182,7 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
      */
     protected LexicalUnitImpl(LexicalUnit previous, short type, String value) {
         this(previous, type);
-        this._stringVal = value;
+        this.stringValue = value;
     }
 
     /**
@@ -148,33 +194,38 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
             String name,
             LexicalUnit params) {
         this(previous, type);
-        this._function = name;
-        this._params = params;
+        this.functionName = name;
+        this.parameters = params;
     }
 
+    public LexicalUnitImpl()
+    {
+    }
+
+
     public short getLexicalUnitType() {
-        return this._type;
+        return this.lexicalUnitType;
     }
     
     public LexicalUnit getNextLexicalUnit() {
-        return this._next;
+        return this.nextLexicalUnit;
     }
     
     public LexicalUnit getPreviousLexicalUnit() {
-        return this._prev;
+        return this.previousLexicalUnit;
     }
     
     public int getIntegerValue() {
 //        return _intVal;
-        return (int) this._floatVal;
+        return (int) this.floatValue;
     }
     
     public float getFloatValue() {
-        return this._floatVal;
+        return this.floatValue;
     }
     
     public String getDimensionUnitText() {
-        switch (this._type) {
+        switch (this.lexicalUnitType) {
         case SAC_EM:
             return "em";
         case SAC_EX:
@@ -208,30 +259,30 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
         case SAC_KILOHERTZ:
             return "kHz";
         case SAC_DIMENSION:
-            return this._dimension;
+            return this.dimension;
         }
         return "";
     }
     
     public String getFunctionName() {
-        return this._function;
+        return this.functionName;
     }
     
     public LexicalUnit getParameters() {
-        return this._params;
+        return this.parameters;
     }
 
     public String getStringValue() {
-        return this._stringVal;
+        return this.stringValue;
     }
 
     public LexicalUnit getSubValues() {
-        return this._params;
+        return this.parameters;
     }
     
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        switch (this._type) {
+        switch (this.lexicalUnitType) {
         case SAC_OPERATOR_COMMA:
             sb.append(",");
             break;
@@ -302,17 +353,17 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
             break;
         case SAC_COUNTER_FUNCTION:
             sb.append("counter(");
-            appendParams(sb, this._params);
+            appendParams(sb, this.parameters);
             sb.append(")");
             break;
         case SAC_COUNTERS_FUNCTION:
             sb.append("counters(");
-            appendParams(sb, this._params);
+            appendParams(sb, this.parameters);
             sb.append(")");
             break;
         case SAC_RGBCOLOR:
             sb.append("rgb(");
-            appendParams(sb, this._params);
+            appendParams(sb, this.parameters);
             sb.append(")");
             break;
         case SAC_IDENT:
@@ -323,12 +374,12 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
             break;
         case SAC_ATTR:
             sb.append("attr(");
-            appendParams(sb, this._params);
+            appendParams(sb, this.parameters);
             sb.append(")");
             break;
         case SAC_RECT_FUNCTION:
             sb.append("rect(");
-            appendParams(sb,this. _params);
+            appendParams(sb,this. parameters);
             sb.append(")");
             break;
         case SAC_UNICODERANGE:
@@ -339,7 +390,7 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
             break;
         case SAC_FUNCTION:
             sb.append(this.getFunctionName()).append('(');
-            appendParams(sb, this._params);
+            appendParams(sb, this.parameters);
             sb.append(")");
             break;
         }
@@ -348,7 +399,7 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
 
     public String toDebugString() {
         StringBuffer sb = new StringBuffer();
-        switch (this._type) {
+        switch (this.lexicalUnitType) {
         case SAC_OPERATOR_COMMA:
             sb.append("SAC_OPERATOR_COMMA");
             break;
@@ -507,17 +558,17 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
             break;
         case SAC_COUNTER_FUNCTION:
             sb.append("SAC_COUNTER_FUNCTION(counter(");
-            appendParams(sb, this._params);
+            appendParams(sb, this.parameters);
             sb.append("))");
             break;
         case SAC_COUNTERS_FUNCTION:
             sb.append("SAC_COUNTERS_FUNCTION(counters(");
-            appendParams(sb, this._params);
+            appendParams(sb, this.parameters);
             sb.append("))");
             break;
         case SAC_RGBCOLOR:
             sb.append("SAC_RGBCOLOR(rgb(");
-            appendParams(sb, this._params);
+            appendParams(sb, this.parameters);
             sb.append("))");
             break;
         case SAC_IDENT:
@@ -532,12 +583,12 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
             break;
         case SAC_ATTR:
             sb.append("SAC_ATTR(attr(");
-            appendParams(sb, this._params);
+            appendParams(sb, this.parameters);
             sb.append("))");
             break;
         case SAC_RECT_FUNCTION:
             sb.append("SAC_RECT_FUNCTION(rect(");
-            appendParams(sb, this._params);
+            appendParams(sb, this.parameters);
             sb.append("))");
             break;
         case SAC_UNICODERANGE:
@@ -554,7 +605,7 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
             sb.append("SAC_FUNCTION(")
                 .append(this.getFunctionName())
                 .append("(");
-            appendParams(sb, this._params);
+            appendParams(sb, this.parameters);
             sb.append("))");
             break;
         }

@@ -1,5 +1,5 @@
 /*
- * $Id: LocatorImpl.java,v 1.3 2006-04-11 08:19:12 waldbaer Exp $
+ * $Id: LocatorImpl.java,v 1.4 2006-10-27 13:21:37 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -27,24 +27,51 @@
 
 package com.steadystate.css.parser;
 
+import java.io.Serializable;
+
 import org.w3c.css.sac.Locator;
 
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LocatorImpl.java,v 1.3 2006-04-11 08:19:12 waldbaer Exp $
+ * @version $Id: LocatorImpl.java,v 1.4 2006-10-27 13:21:37 waldbaer Exp $
  */
-public class LocatorImpl implements Locator {
+public class LocatorImpl implements Locator, Serializable {
 
-    private String _uri;
-    private int _line;
-    private int _column;
+    private String uri;
+    private int lineNumber;
+    private int columnNumber;
+
+    public String getUri()
+    {
+        return this.uri;
+    }
+
+    public void setUri(String uri)
+    {
+        this.uri = uri;
+    }
+
+    public void setLineNumber(int line)
+    {
+        this.lineNumber = line;
+    }
+
+    public void setColumnNumber(int column)
+    {
+        this.columnNumber = column;
+    }
+
 
     /** Creates new LocatorImpl */
     public LocatorImpl(String uri, int line, int column) {
-        this._uri = uri;
-        this._line = line;
-        this._column = column;
+        this.uri = uri;
+        this.lineNumber = line;
+        this.columnNumber = column;
+    }
+
+    public LocatorImpl()
+    {
     }
 
     /**
@@ -55,7 +82,7 @@ public class LocatorImpl implements Locator {
      * @see #getColumnNumber
      */
     public int getLineNumber() {
-        return this._line;
+        return this.lineNumber;
     }
     
     /**
@@ -68,7 +95,7 @@ public class LocatorImpl implements Locator {
      *        if none is available.
      */
     public String getURI() {
-        return this._uri;
+        return this.uri;
     }
     
     /**
@@ -80,7 +107,7 @@ public class LocatorImpl implements Locator {
      * @see #getLineNumber
      */
     public int getColumnNumber() {
-        return this._column;
+        return this.columnNumber;
     }
     
 }
