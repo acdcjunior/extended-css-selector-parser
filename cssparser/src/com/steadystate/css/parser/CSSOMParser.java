@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParser.java,v 1.10 2006-04-21 11:25:56 waldbaer Exp $
+ * $Id: CSSOMParser.java,v 1.11 2006-10-27 13:19:49 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -42,6 +42,7 @@ import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
 
 import org.w3c.dom.DOMException;
+import org.w3c.dom.Node;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSStyleSheet;
@@ -67,7 +68,7 @@ import com.steadystate.css.userdata.UserDataConstants;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParser.java,v 1.10 2006-04-21 11:25:56 waldbaer Exp $
+ * @version $Id: CSSOMParser.java,v 1.11 2006-10-27 13:19:49 waldbaer Exp $
  */
 public class CSSOMParser {
     
@@ -116,8 +117,22 @@ public class CSSOMParser {
         this._parser.setErrorHandler(eh);
     }
 
-    public CSSStyleSheet parseStyleSheet(InputSource source) throws IOException {
+    /**
+     * Parses a SAC input source into a CSSOM style sheet.
+     * 
+     * @param source the SAC input source
+     * @param ownerNode the owner node (see the definition of
+     *   <code>ownerNode</code> in org.w3c.dom.css.StyleSheet)
+     * @param href the href (see the definition of <code>href</code> in
+     *   org.w3c.dom.css.StyleSheet)
+     * @return the CSSOM style sheet
+     * @throws IOException if the underlying SAC parser throws an IOException
+     */
+    public CSSStyleSheet parseStyleSheet(InputSource source, Node ownerNode,
+        String href) throws IOException {
         CSSOMHandler handler = new CSSOMHandler();
+        handler.setOwnerNode(ownerNode);
+        handler.setHref(href);
         this._parser.setDocumentHandler(handler);
         this._parser.parseStyleSheet(source);
         Object o = handler.getRoot();
@@ -128,6 +143,13 @@ public class CSSOMParser {
         return null;
     }
     
+    /**
+     * Parses a SAC input source into a CSSOM style declaration.
+     * 
+     * @param source the SAC input source
+     * @return the CSSOM style declaration
+     * @throws IOException if the underlying SAC parser throws an IOException
+     */
     public CSSStyleDeclaration parseStyleDeclaration(InputSource source)
             throws IOException {
         CSSStyleDeclarationImpl sd = new CSSStyleDeclarationImpl(null);
@@ -171,7 +193,6 @@ public class CSSOMParser {
     {
         return this._parentStyleSheet;
     }
-
     // See _parentRule
     /*
     public void setParentRule(CSSRule parentRule) {
@@ -183,6 +204,28 @@ public class CSSOMParser {
         
         private Stack _nodeStack;
         private Object _root = null;
+        private Node ownerNode;
+        private String href;
+
+        private Node getOwnerNode()
+        {
+            return this.ownerNode;
+        }
+
+        private void setOwnerNode(Node ownerNode)
+        {
+            this.ownerNode = ownerNode;
+        }
+
+        private String getHref()
+        {
+            return this.href;
+        }
+
+        private void setHref(String href)
+        {
+            this.href = href;
+        }
 
         public CSSOMHandler(Stack nodeStack) {
             this._nodeStack = nodeStack;
@@ -200,12 +243,14 @@ public class CSSOMParser {
             if (this._nodeStack.empty()) {
                 CSSStyleSheetImpl ss = new CSSStyleSheetImpl();
                 CSSOMParser.this.setParentStyleSheet(ss);
-                ss.setHref(source.getURI());
-                ss.setMedia(source.getMedia());
+                ss.setOwnerNode(this.getOwnerNode());
+                ss.setBaseUri(source.getURI());
+                ss.setHref(this.getHref());
+                ss.setMediaText(source.getMedia());
                 ss.setTitle(source.getTitle());
                 // Create the rule list
                 CSSRuleListImpl rules = new CSSRuleListImpl();
-                ss.setRuleList(rules);
+                ss.setCssRules(rules);
                 this._nodeStack.push(ss);
                 this._nodeStack.push(rules);
             } else {
@@ -348,7 +393,8 @@ public class CSSOMParser {
                 this.getParentRule(), selectors);
             this.addLocator(sr);
             if (!this._nodeStack.empty()) {
-                ((CSSRuleListImpl)this._nodeStack.peek()).add(sr);
+                Object o = this._nodeStack.peek();
+                ((CSSRuleListImpl)/*this._nodeStack.peek()*/o).add(sr);
             }
             
             // Create the style declaration
