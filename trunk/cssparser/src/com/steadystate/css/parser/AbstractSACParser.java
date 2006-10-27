@@ -21,6 +21,7 @@ import org.w3c.css.sac.LexicalUnit;
 import org.w3c.css.sac.Locator;
 import org.w3c.css.sac.Parser;
 import org.w3c.css.sac.SACMediaList;
+import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SelectorFactory;
 import org.w3c.css.sac.SelectorList;
 
@@ -257,7 +258,15 @@ abstract class AbstractSACParser implements Parser
             this.getInputSource().getURI(), e.currentToken.next.beginLine,
             e.currentToken.next.beginColumn, this.getGrammarUri());
     }
-    
+
+    protected CSSParseException toCSSParseException(TokenMgrError e)
+    {
+        String messagePattern =
+            this.getSACParserMessages().getString("tokenMgrError");
+        return new TestCSSParseException(messagePattern,
+            this.getInputSource().getURI(), 1, 1, this.getGrammarUri());
+    }
+
     protected CSSParseException createSkipWarning(String key, CSSParseException e)
     {
         String s = null;
@@ -286,6 +295,11 @@ abstract class AbstractSACParser implements Parser
         {
             this.getErrorHandler().error(
                 this.toCSSParseException("invalidStyleSheet", e));
+        }
+        catch (TokenMgrError e)
+        {
+            this.getErrorHandler().error(
+                this.toCSSParseException(e));
         }
         catch (CSSParseException e)
         {
@@ -440,70 +454,77 @@ abstract class AbstractSACParser implements Parser
     {
         this.getDocumentHandler().startDocument(this.getInputSource());
     }
-    
+
     protected void handleEndDocument()
     {
         this.getDocumentHandler().endDocument(getInputSource());
     }
-    
+
     protected void handleIgnorableAtRule(String s)
     {
         this.getDocumentHandler().ignorableAtRule(s);
     }
-    
+
     protected void handleImportStyle(String uri, SACMediaList media,
         String defaultNamespaceURI)
     {
         this.getDocumentHandler().importStyle(uri, media, defaultNamespaceURI);
     }
-    
+
     protected void handleStartMedia(SACMediaList media)
     {
         this.getDocumentHandler().startMedia(media);
     }
-    
+
+    protected void handleMedium(String medium)
+    {
+    }
+
     protected void handleEndMedia(SACMediaList media)
     {
         this.getDocumentHandler().endMedia(media);
     }
-    
+
     protected void handleStartPage(String name, String pseudo_page)
     {
         this.getDocumentHandler().startPage(name, pseudo_page);
     }
-    
+
     protected void handleEndPage(String name, String pseudo_page)
     {
         this.getDocumentHandler().endPage(name, pseudo_page);
     }
-    
+
     protected void handleStartFontFace()
     {
         this.getDocumentHandler().startFontFace();
     }
-    
+
     protected void handleEndFontFace()
     {
         this.getDocumentHandler().endFontFace();
     }
-    
+
+    protected void handleSelector(Selector selector)
+    {
+    }
+
     protected void handleStartSelector(SelectorList selectors)
     {
         this.getDocumentHandler().startSelector(selectors);
     }
-    
+
     protected void handleEndSelector(SelectorList selectors)
     {
         this.getDocumentHandler().endSelector(selectors);
     }
-    
+
     protected void handleProperty(String name, LexicalUnit value,
         boolean important)
     {
         this.getDocumentHandler().property(name, value, important);
     }
-    
-    
+
     protected LexicalUnit functionInternal(LexicalUnit prev, Token t,
         LexicalUnit params)
     {
@@ -521,7 +542,7 @@ abstract class AbstractSACParser implements Parser
              t.image.substring(0, t.image.length() - 1),
              params);
     }
-    
+
     protected LexicalUnit hexcolorInternal(LexicalUnit prev, Token t)
     {
         // Step past the hash at the beginning
@@ -573,7 +594,7 @@ abstract class AbstractSACParser implements Parser
     {
         return ((op == '-') ? -1 : 1) * Integer.parseInt(s);
     }
-    
+
     float floatValue(char op, String s) {
         return ((op == '-') ? -1 : 1) * Float.parseFloat(s);
     }
