@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSS1.jj,v 1.2 2006-04-12 12:49:27 waldbaer Exp $
+ * $Id: SACParserCSS1.jj,v 1.3 2006-10-27 13:27:38 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.parser.selectors.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSS1.jj,v 1.2 2006-04-12 12:49:27 waldbaer Exp $
+ * @version $Id: SACParserCSS1.jj,v 1.3 2006-10-27 13:27:38 waldbaer Exp $
  */
 public class SACParserCSS1 extends AbstractSACParser implements Parser {
 
@@ -368,7 +368,11 @@ String medium() :
   Token t;
 }
 {
-  t = <IDENT> ( <S> )* { return t.image; }
+    t = <IDENT> ( <S> )*
+    {
+        this.handleMedium(t.image);
+        return t.image;
+    }
 }
 
 //
@@ -483,6 +487,7 @@ Selector selector() :
         sel = simpleSelector(null, ' ') 
         ( LOOKAHEAD(2) <S> sel = simpleSelector(sel, ' ') )*
         {
+            this.handleSelector(sel);
             return sel;
         }
     } catch (ParseException e) {
