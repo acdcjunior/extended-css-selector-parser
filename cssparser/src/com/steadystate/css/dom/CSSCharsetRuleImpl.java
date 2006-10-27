@@ -1,5 +1,5 @@
 /*
- * $Id: CSSCharsetRuleImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
+ * $Id: CSSCharsetRuleImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -44,19 +44,24 @@ import com.steadystate.css.parser.CSSOMParser;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSCharsetRuleImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
+ * @version $Id: CSSCharsetRuleImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class CSSCharsetRuleImpl extends AbstractCSSRuleImpl implements CSSCharsetRule, Serializable {
 
-    String _encoding = null;
+    String encoding = null;
 
     public CSSCharsetRuleImpl(
             CSSStyleSheetImpl parentStyleSheet,
             CSSRule parentRule,
             String encoding) {
         super(parentStyleSheet, parentRule);
-        this._encoding = encoding;
+        this.encoding = encoding;
     }
+
+    public CSSCharsetRuleImpl()
+    {
+    }
+
 
     public short getType() {
         return CHARSET_RULE;
@@ -67,7 +72,7 @@ public class CSSCharsetRuleImpl extends AbstractCSSRuleImpl implements CSSCharse
     }
 
     public void setCssText(String cssText) throws DOMException {
-        if (this._parentStyleSheet != null && this._parentStyleSheet.isReadOnly()) {
+        if (this.parentStyleSheet != null && this.parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -80,7 +85,7 @@ public class CSSCharsetRuleImpl extends AbstractCSSRuleImpl implements CSSCharse
 
             // The rule must be a charset rule
             if (r.getType() == CSSRule.CHARSET_RULE) {
-                this._encoding = ((CSSCharsetRuleImpl)r)._encoding;
+                this.encoding = ((CSSCharsetRuleImpl)r).encoding;
             } else {
                 throw new DOMExceptionImpl(
                     DOMException.INVALID_MODIFICATION_ERR,
@@ -100,10 +105,10 @@ public class CSSCharsetRuleImpl extends AbstractCSSRuleImpl implements CSSCharse
     }
 
     public String getEncoding() {
-        return this._encoding;
+        return this.encoding;
     }
 
     public void setEncoding(String encoding) throws DOMException {
-        this._encoding = encoding;
+        this.encoding = encoding;
     }
 }

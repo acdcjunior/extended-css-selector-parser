@@ -1,5 +1,5 @@
 /*
- * $Id: RGBColorImpl.java,v 1.3 2005-10-12 08:47:13 waldbaer Exp $
+ * $Id: RGBColorImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -38,17 +38,17 @@ import org.w3c.dom.css.RGBColor;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: RGBColorImpl.java,v 1.3 2005-10-12 08:47:13 waldbaer Exp $
+ * @version $Id: RGBColorImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class RGBColorImpl implements RGBColor, Serializable {
 
-    private CSSPrimitiveValue _red = null;
-    private CSSPrimitiveValue _green = null;
-    private CSSPrimitiveValue _blue = null;
+    private CSSPrimitiveValue red = null;
+    private CSSPrimitiveValue green = null;
+    private CSSPrimitiveValue blue = null;
 
     protected RGBColorImpl(LexicalUnit lu) throws DOMException {
         LexicalUnit next = lu;
-        this._red = new CSSValueImpl(next, true);
+        this.red = new CSSValueImpl(next, true);
         next = next.getNextLexicalUnit();   // ,
         if (next != null)
         {
@@ -61,7 +61,7 @@ public class RGBColorImpl implements RGBColor, Serializable {
             next = next.getNextLexicalUnit();
             if (next != null)
             {
-                this._green = new CSSValueImpl(next, true);
+                this.green = new CSSValueImpl(next, true);
                 next = next.getNextLexicalUnit();   // ,
                 if (next != null)
                 {
@@ -72,7 +72,7 @@ public class RGBColorImpl implements RGBColor, Serializable {
                             "rgb parameters must be separated by ','.");
                     }
                     next = next.getNextLexicalUnit();
-                    this._blue = new CSSValueImpl(next, true);
+                    this.blue = new CSSValueImpl(next, true);
                     if ((next = next.getNextLexicalUnit()) != null)
                     {
                         // error
@@ -84,37 +84,37 @@ public class RGBColorImpl implements RGBColor, Serializable {
         }
     }
 
-    protected RGBColorImpl() {
+    public RGBColorImpl() {
     }
     
     public CSSPrimitiveValue getRed() {
-        return this._red;
+        return this.red;
     }
 
     public void setRed(CSSPrimitiveValue red) {
-        this._red = red;
+        this.red = red;
     }
 
     public CSSPrimitiveValue getGreen() {
-        return this._green;
+        return this.green;
     }
 
     public void setGreen(CSSPrimitiveValue green) {
-        this._green = green;
+        this.green = green;
     }
 
     public CSSPrimitiveValue getBlue() {
-        return this._blue;
+        return this.blue;
     }
 
     public void setBlue(CSSPrimitiveValue blue) {
-        this._blue = blue;
+        this.blue = blue;
     }
 
     public String toString() {
         return new StringBuffer("rgb(")
-            .append(this._red.toString()).append(", ")
-            .append(this._green.toString()).append(", ")
-            .append(this._blue.toString()).append(")").toString();
+            .append(this.red.toString()).append(", ")
+            .append(this.green.toString()).append(", ")
+            .append(this.blue.toString()).append(")").toString();
     }
 }

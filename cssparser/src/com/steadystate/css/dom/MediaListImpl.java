@@ -1,5 +1,5 @@
 /*
- * $Id: MediaListImpl.java,v 1.5 2006-04-21 11:24:46 waldbaer Exp $
+ * $Id: MediaListImpl.java,v 1.6 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -46,30 +46,40 @@ import com.steadystate.css.parser.SACParserCSS2;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: MediaListImpl.java,v 1.5 2006-04-21 11:24:46 waldbaer Exp $
+ * @version $Id: MediaListImpl.java,v 1.6 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Serializable {
 
-    private Vector _media = new Vector();
-    
-    private void setMedia(SACMediaList mediaList)
+    private Vector media = new Vector();
+
+    public void setMedia(Vector media)
+    {
+        this.media = media;
+    }
+
+    private void setMediaList(SACMediaList mediaList)
     {
         for (int i = 0; i < mediaList.getLength(); i++)
         {
-            this._media.addElement(mediaList.item(i));
+            this.media.addElement(mediaList.item(i));
         }
     }
 
     public MediaListImpl(SACMediaList mediaList)
     {
-        this.setMedia(mediaList);
+        this.setMediaList(mediaList);
     }
+
+    public MediaListImpl()
+    {
+    }
+
 
     public String getMediaText() {
         StringBuffer sb = new StringBuffer("");
-        for (int i = 0; i < this._media.size(); i++) {
-            sb.append(this._media.elementAt(i).toString());
-            if (i < this._media.size() - 1) {
+        for (int i = 0; i < this.media.size(); i++) {
+            sb.append(this.media.elementAt(i).toString());
+            if (i < this.media.size() - 1) {
                 sb.append( ", " );
             }
         }
@@ -82,7 +92,7 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
         {
             // TODO get SAC Parser version from System property?
             SACMediaList sml = new SACParserCSS2().parseMedia(source);
-            this.setMedia(sml);
+            this.setMediaList(sml);
         }
         catch (CSSParseException e)
         {
@@ -97,18 +107,18 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
     }
 
     public int getLength() {
-        return this._media.size();
+        return this.media.size();
     }
 
     public String item(int index) {
-        return (index < this._media.size()) ? (String) this._media.elementAt(index) : null;
+        return (index < this.media.size()) ? (String) this.media.elementAt(index) : null;
     }
 
     public void deleteMedium(String oldMedium) throws DOMException {
-        for (int i = 0; i < this._media.size(); i++) {
-            String str = (String) this._media.elementAt(i);
+        for (int i = 0; i < this.media.size(); i++) {
+            String str = (String) this.media.elementAt(i);
             if (str.equalsIgnoreCase(oldMedium)) {
-                this._media.removeElementAt(i);
+                this.media.removeElementAt(i);
                 return;
             }
         }
@@ -118,7 +128,7 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
     }
 
     public void appendMedium(String newMedium) throws DOMException {
-        this._media.addElement(newMedium);
+        this.media.addElement(newMedium);
     }
 
     public String toString() {

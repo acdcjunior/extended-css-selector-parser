@@ -15,8 +15,8 @@ public class CSSOMObjectImpl implements CSSOMObject
 {
 
     private Map userDataMap;
-    
-    private Map getUserDataMap()
+
+    public Map getUserDataMap()
     {
         if (this.userDataMap == null)
         {
@@ -24,7 +24,12 @@ public class CSSOMObjectImpl implements CSSOMObject
         }
         return this.userDataMap;
     }
-    
+
+    public void setUserDataMap(Map userDataMap)
+    {
+        this.userDataMap = userDataMap;
+    }
+
 
     public CSSOMObjectImpl()
     {

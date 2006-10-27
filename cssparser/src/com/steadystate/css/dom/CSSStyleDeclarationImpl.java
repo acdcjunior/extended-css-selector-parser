@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleDeclarationImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
+ * $Id: CSSStyleDeclarationImpl.java,v 1.5 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -44,29 +44,50 @@ import com.steadystate.css.parser.CSSOMParser;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleDeclarationImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
+ * @version $Id: CSSStyleDeclarationImpl.java,v 1.5 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializable
 {
 
-    private CSSRule _parentRule;
-    private Vector _properties = new Vector();
-    
-    public CSSStyleDeclarationImpl(CSSRule parentRule) {
-        this._parentRule = parentRule;
+    private CSSRule parentRule;
+    private Vector properties = new Vector();
+
+    public void setParentRule(CSSRule parentRule)
+    {
+        this.parentRule = parentRule;
     }
+
+    public Vector getProperties()
+    {
+        return this.properties;
+    }
+
+    public void setProperties(Vector properties)
+    {
+        this.properties = properties;
+    }
+
+
+    public CSSStyleDeclarationImpl(CSSRule parentRule) {
+        this.parentRule = parentRule;
+    }
+
+    public CSSStyleDeclarationImpl()
+    {
+    }
+
 
     public String getCssText() {
         StringBuffer sb = new StringBuffer();
         sb.append("{");
         //if newlines requested in text
         //sb.append("\n");
-        for (int i = 0; i < this._properties.size(); ++i) {
-            Property p = (Property) this._properties.elementAt(i);
+        for (int i = 0; i < this.properties.size(); ++i) {
+            Property p = (Property) this.properties.elementAt(i);
             if (p != null) {
                 sb.append(p.toString());
             }
-            if (i < this._properties.size() - 1) {
+            if (i < this.properties.size() - 1) {
                 sb.append("; ");
             }
             //if newlines requested in text
@@ -80,7 +101,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
         try {
             InputSource is = new InputSource(new StringReader(cssText));
             CSSOMParser parser = new CSSOMParser();
-            this._properties.removeAllElements();
+            this.properties.removeAllElements();
             parser.parseStyleDeclaration(this, is);
         } catch (Exception e) {
             throw new DOMExceptionImpl(
@@ -101,10 +122,10 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
     }
 
     public String removeProperty(String propertyName) throws DOMException {
-        for (int i = 0; i < this._properties.size(); i++) {
-            Property p = (Property) this._properties.elementAt(i);
+        for (int i = 0; i < this.properties.size(); i++) {
+            Property p = (Property) this.properties.elementAt(i);
             if (p.getName().equalsIgnoreCase(propertyName)) {
-                this._properties.removeElementAt(i);
+                this.properties.removeElementAt(i);
                 return p.getValue().toString();
             }
         }
@@ -147,25 +168,25 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
     }
     
     public int getLength() {
-        return this._properties.size();
+        return this.properties.size();
     }
 
     public String item(int index) {
-        Property p = (Property) this._properties.elementAt(index);
+        Property p = (Property) this.properties.elementAt(index);
         return (p != null) ? p.getName() : "";
     }
 
     public CSSRule getParentRule() {
-        return this._parentRule;
+        return this.parentRule;
     }
 
     public void addProperty(Property p) {
-        this._properties.addElement(p);
+        this.properties.addElement(p);
     }
 
     public Property getPropertyDeclaration(String name) {
-        for (int i = 0; i < this._properties.size(); i++) {
-            Property p = (Property) this._properties.elementAt(i);
+        for (int i = 0; i < this.properties.size(); i++) {
+            Property p = (Property) this.properties.elementAt(i);
             if (p.getName().equalsIgnoreCase(name)) {
                 return p;
             }

@@ -1,5 +1,5 @@
 /*
- * $Id: CSSMediaRuleImpl.java,v 1.5 2006-04-21 11:25:00 waldbaer Exp $
+ * $Id: CSSMediaRuleImpl.java,v 1.6 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -47,20 +47,36 @@ import com.steadystate.css.parser.CSSOMParser;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSMediaRuleImpl.java,v 1.5 2006-04-21 11:25:00 waldbaer Exp $
+ * @version $Id: CSSMediaRuleImpl.java,v 1.6 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRule, Serializable {
 
-    private MediaList _media = null;
-    private CSSRuleList _rules = null;
+    private MediaList media = null;
+    private CSSRuleList cssRules = null;
+
+    public void setMedia(MediaList media)
+    {
+        this.media = media;
+    }
+
+    public void setCssRules(CSSRuleList cssRules)
+    {
+        this.cssRules = cssRules;
+    }
+
 
     public CSSMediaRuleImpl(
             CSSStyleSheetImpl parentStyleSheet,
             CSSRule parentRule,
             MediaList media) {
         super(parentStyleSheet, parentRule);
-        this._media = media;
+        this.media = media;
     }
+
+    public CSSMediaRuleImpl()
+    {
+    }
+
 
     public short getType() {
         return MEDIA_RULE;
@@ -78,7 +94,7 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
     }
 
     public void setCssText(String cssText) throws DOMException {
-        if (this._parentStyleSheet != null && this._parentStyleSheet.isReadOnly()) {
+        if (this.parentStyleSheet != null && this.parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -91,8 +107,8 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
 
             // The rule must be a media rule
             if (r.getType() == CSSRule.MEDIA_RULE) {
-                this._media = ((CSSMediaRuleImpl)r)._media;
-                this._rules = ((CSSMediaRuleImpl)r)._rules;
+                this.media = ((CSSMediaRuleImpl)r).media;
+                this.cssRules = ((CSSMediaRuleImpl)r).cssRules;
             } else {
                 throw new DOMExceptionImpl(
                     DOMException.INVALID_MODIFICATION_ERR,
@@ -112,19 +128,19 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
     }
 
     public MediaList getMedia() {
-        return this._media;
+        return this.media;
     }
 
     public CSSRuleList getCssRules() {
-        if (this._rules == null)
+        if (this.cssRules == null)
         {
-            this._rules = new CSSRuleListImpl();
+            this.cssRules = new CSSRuleListImpl();
         }
-        return this._rules;
+        return this.cssRules;
     }
 
     public int insertRule(String rule, int index) throws DOMException {
-        if (this._parentStyleSheet != null && this._parentStyleSheet.isReadOnly()) {
+        if (this.parentStyleSheet != null && this.parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -133,7 +149,7 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
         try {
             InputSource is = new InputSource(new StringReader(rule));
             CSSOMParser parser = new CSSOMParser();
-            parser.setParentStyleSheet(this._parentStyleSheet);
+            parser.setParentStyleSheet(this.parentStyleSheet);
             // parser._parentRule is never read
             //parser.setParentRule(_parentRule);
             CSSRule r = parser.parseRule(is);
@@ -161,7 +177,7 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
     }
 
     public void deleteRule(int index) throws DOMException {
-        if (this._parentStyleSheet != null && this._parentStyleSheet.isReadOnly()) {
+        if (this.parentStyleSheet != null && this.parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -177,7 +193,7 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
     }
 
     public void setRuleList(CSSRuleListImpl rules) {
-        this._rules = rules;
+        this.cssRules = rules;
     }
     
     public String toString() {

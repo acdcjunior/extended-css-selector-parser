@@ -1,5 +1,5 @@
 /*
- * $Id: CSSRuleListImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
+ * $Id: CSSRuleListImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -37,20 +37,26 @@ import org.w3c.dom.css.CSSRuleList;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSRuleListImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
+ * @version $Id: CSSRuleListImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class CSSRuleListImpl implements CSSRuleList, Serializable {
     
-    private Vector _rules = null;
-    
-    private Vector getRules()
+    private Vector rules = null;
+
+    public Vector getRules()
     {
-        if (this._rules == null)
+        if (this.rules == null)
         {
-            this._rules = new Vector();
+            this.rules = new Vector();
         }
-        return this._rules;
+        return this.rules;
     }
+
+    public void setRules(Vector rules)
+    {
+        this.rules = rules;
+    }
+
 
     public CSSRuleListImpl() {
     }

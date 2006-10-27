@@ -11,26 +11,42 @@ import org.w3c.dom.css.CSSStyleSheet;
  * @author koch
  *
  */
-public class AbstractCSSRuleImpl extends CSSOMObjectImpl
+public abstract class AbstractCSSRuleImpl extends CSSOMObjectImpl
 {
 
-    protected CSSStyleSheetImpl _parentStyleSheet = null;
-    protected CSSRule _parentRule = null;
-    
+    protected CSSStyleSheetImpl parentStyleSheet = null;
+    protected CSSRule parentRule = null;
+
+    public void setParentStyleSheet(CSSStyleSheetImpl parentStyleSheet)
+    {
+        this.parentStyleSheet = parentStyleSheet;
+    }
+
+    public void setParentRule(CSSRule parentRule)
+    {
+        this.parentRule = parentRule;
+    }
+
+
     public AbstractCSSRuleImpl(CSSStyleSheetImpl parentStyleSheet,
         CSSRule parentRule)
     {
         super();
-        this._parentStyleSheet = parentStyleSheet;
-        this._parentRule = parentRule;
+        this.parentStyleSheet = parentStyleSheet;
+        this.parentRule = parentRule;
     }
 
+    public AbstractCSSRuleImpl()
+    {
+    }
+
+
     public CSSStyleSheet getParentStyleSheet() {
-        return this._parentStyleSheet;
+        return this.parentStyleSheet;
     }
 
     public CSSRule getParentRule() {
-        return this._parentRule;
+        return this.parentRule;
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleSheetListImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: CSSStyleSheetListImpl.java,v 1.3 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -39,14 +39,14 @@ import org.w3c.dom.stylesheets.StyleSheetList;
 /**
  *
  * @author <a href="mailto:waldbaer@users.sourceforge.net">Johannes Koch</a>
- * @version $Id: CSSStyleSheetListImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: CSSStyleSheetListImpl.java,v 1.3 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class CSSStyleSheetListImpl implements StyleSheetList
 {
     
     private List cssStyleSheets;    // List of CSSStyleSheet
-    
-    private List getCSSStyleSheets()
+
+    public List getCSSStyleSheets()
     {
         if (this.cssStyleSheets == null)
         {
@@ -54,13 +54,18 @@ public class CSSStyleSheetListImpl implements StyleSheetList
         }
         return this.cssStyleSheets;
     }
-    
+
+    public void setCSSStyleSheets(List cssStyleSheets)
+    {
+        this.cssStyleSheets = cssStyleSheets;
+    }
+
 
     /** Creates a new instance of CSSStyleSheetListImpl */
     public CSSStyleSheetListImpl()
     {
     }
-    
+
 
     // start StyleSheetList
     public int getLength()
@@ -103,8 +108,8 @@ public class CSSStyleSheetListImpl implements StyleSheetList
                 (CSSRuleListImpl) cssStyleSheet.getCssRules());
             cssRuleList.add(cssMediaRule);
         }
-        merged.setRuleList(cssRuleList);
-        merged.setMedia("all");
+        merged.setCssRules(cssRuleList);
+        merged.setMediaText("all");
         return merged;
     }
     

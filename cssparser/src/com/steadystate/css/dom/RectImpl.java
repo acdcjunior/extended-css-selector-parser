@@ -1,5 +1,5 @@
 /*
- * $Id: RectImpl.java,v 1.3 2005-10-12 08:47:13 waldbaer Exp $
+ * $Id: RectImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -38,19 +38,40 @@ import org.w3c.css.sac.LexicalUnit;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: RectImpl.java,v 1.3 2005-10-12 08:47:13 waldbaer Exp $
+ * @version $Id: RectImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class RectImpl implements Rect, Serializable {
     
-    private CSSPrimitiveValue _left;
-    private CSSPrimitiveValue _top;
-    private CSSPrimitiveValue _right;
-    private CSSPrimitiveValue _bottom;
+    private CSSPrimitiveValue left;
+    private CSSPrimitiveValue top;
+    private CSSPrimitiveValue right;
+    private CSSPrimitiveValue bottom;
+
+    public void setLeft(CSSPrimitiveValue left)
+    {
+        this.left = left;
+    }
+
+    public void setTop(CSSPrimitiveValue top)
+    {
+        this.top = top;
+    }
+
+    public void setRight(CSSPrimitiveValue right)
+    {
+        this.right = right;
+    }
+
+    public void setBottom(CSSPrimitiveValue bottom)
+    {
+        this.bottom = bottom;
+    }
+
 
     /** Creates new RectImpl */
     public RectImpl(LexicalUnit lu) throws DOMException {
         LexicalUnit next = lu;
-        this._left = new CSSValueImpl(next, true);
+        this.left = new CSSValueImpl(next, true);
         next = next.getNextLexicalUnit();  // ,
         if (next != null)
         {
@@ -63,7 +84,7 @@ public class RectImpl implements Rect, Serializable {
             next = next.getNextLexicalUnit();
             if (next != null)
             {
-                this._top = new CSSValueImpl(next, true);
+                this.top = new CSSValueImpl(next, true);
                 next = next.getNextLexicalUnit();   // ,
                 if (next != null)
                 {
@@ -76,7 +97,7 @@ public class RectImpl implements Rect, Serializable {
                     next = next.getNextLexicalUnit();
                     if (next != null)
                     {
-                        this._right = new CSSValueImpl(next, true);
+                        this.right = new CSSValueImpl(next, true);
                         next = next.getNextLexicalUnit();   // ,
                         if (next != null)
                         {
@@ -89,7 +110,7 @@ public class RectImpl implements Rect, Serializable {
                             next = next.getNextLexicalUnit();
                             if (next != null)
                             {
-                                this._bottom = new CSSValueImpl(next, true);
+                                this.bottom = new CSSValueImpl(next, true);
                                 if ((next = next.getNextLexicalUnit()) != null)
                                 {
                                     // error
@@ -103,28 +124,33 @@ public class RectImpl implements Rect, Serializable {
             }
         }
     }
-  
+
+    public RectImpl()
+    {
+    }
+
+
     public CSSPrimitiveValue getTop() {
-        return this._top;
+        return this.top;
     }
 
     public CSSPrimitiveValue getRight() {
-        return this._right;
+        return this.right;
     }
 
     public CSSPrimitiveValue getBottom() {
-        return this._bottom;
+        return this.bottom;
     }
 
     public CSSPrimitiveValue getLeft() {
-        return this._left;
+        return this.left;
     }
     
     public String toString() {
         return new StringBuffer("rect(")
-            .append(this._left).append(", ")
-            .append(this._top).append(", ")
-            .append(this._right).append(", ")
-            .append(this._bottom).append(")").toString();
+            .append(this.left).append(", ")
+            .append(this.top).append(", ")
+            .append(this.right).append(", ")
+            .append(this.bottom).append(")").toString();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CounterImpl.java,v 1.4 2005-10-12 08:47:13 waldbaer Exp $
+ * $Id: CounterImpl.java,v 1.5 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -37,20 +37,36 @@ import org.w3c.css.sac.LexicalUnit;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CounterImpl.java,v 1.4 2005-10-12 08:47:13 waldbaer Exp $
+ * @version $Id: CounterImpl.java,v 1.5 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class CounterImpl implements Counter, Serializable {
 
-    private String _identifier;
-    private String _listStyle;
-    private String _separator;
-    
+    private String identifier;
+    private String listStyle;
+    private String separator;
+
+    public void setIdentifier(String identifier)
+    {
+        this.identifier = identifier;
+    }
+
+    public void setListStyle(String listStyle)
+    {
+        this.listStyle = listStyle;
+    }
+
+    public void setSeparator(String separator)
+    {
+        this.separator = separator;
+    }
+
+
     /** Creates new CounterImpl */
     public CounterImpl(boolean separatorSpecified, LexicalUnit lu)
         throws DOMException
     {
         LexicalUnit next = lu;
-        this._identifier = next.getStringValue();
+        this.identifier = next.getStringValue();
         next = next.getNextLexicalUnit();   // ','
         if (next != null)
         {
@@ -62,7 +78,7 @@ public class CounterImpl implements Counter, Serializable {
             }
             next = next.getNextLexicalUnit();
             if (separatorSpecified && (next != null)) {
-                this._separator = next.getStringValue();
+                this.separator = next.getStringValue();
                 next = next.getNextLexicalUnit();   // ','
                 if (next != null)
                 {
@@ -76,7 +92,7 @@ public class CounterImpl implements Counter, Serializable {
                 }
             }
             if (next != null) {
-                this._listStyle = next.getStringValue();
+                this.listStyle = next.getStringValue();
                 if ((next = next.getNextLexicalUnit()) != null)
                 {
                     // error
@@ -87,33 +103,38 @@ public class CounterImpl implements Counter, Serializable {
         }
     }
 
+    public CounterImpl()
+    {
+    }
+
+
     public String getIdentifier() {
-        return this._identifier;
+        return this.identifier;
     }
 
     public String getListStyle() {
-        return this._listStyle;
+        return this.listStyle;
     }
 
     public String getSeparator() {
-        return this._separator;
+        return this.separator;
     }
     
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        if (this._separator == null) {
+        if (this.separator == null) {
             // This is a 'counter()' function
             sb.append("counter(");
         } else {
             // This is a 'counters()' function
             sb.append("counters(");
         }
-        sb.append(this._identifier);
-        if (this._separator != null) {
-            sb.append(", \"").append(this._separator).append("\"");
+        sb.append(this.identifier);
+        if (this.separator != null) {
+            sb.append(", \"").append(this.separator).append("\"");
         }
-        if (this._listStyle != null) {
-            sb.append(", ").append(this._listStyle);
+        if (this.listStyle != null) {
+            sb.append(", ").append(this.listStyle);
         }
         sb.append(")");
         return sb.toString();

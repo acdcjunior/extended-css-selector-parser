@@ -1,5 +1,5 @@
 /*
- * $Id: Property.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
+ * $Id: Property.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -34,44 +34,54 @@ import org.w3c.dom.css.CSSValue;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: Property.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
+ * @version $Id: Property.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class Property extends CSSOMObjectImpl implements Serializable {
 
-    private String _name;
-    private CSSValue _value;
-    private boolean _important;
+    private String name;
+    private CSSValue value;
+    private boolean important;
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 
     /** Creates new Property */
     public Property(String name, CSSValue value, boolean important) {
-        this._name = name;
-        this._value = value;
-        this._important = important;
+        this.name = name;
+        this.value = value;
+        this.important = important;
     }
 
+    public Property()
+    {
+    }
+
+
     public String getName() {
-        return this._name;
+        return this.name;
     }
 
     public CSSValue getValue() {
-        return this._value;
+        return this.value;
     }
 
     public boolean isImportant() {
-        return this._important;
+        return this.important;
     }
 
     public void setValue(CSSValue value) {
-        this._value = value;
+        this.value = value;
     }
     
     public void setImportant(boolean important) {
-        this._important = important;
+        this.important = important;
     }
     
     public String toString() {
-        return this._name + ": "
-            + this._value.toString()
-            + (this._important ? " !important" : "");
+        return this.name + ": "
+            + this.value.toString()
+            + (this.important ? " !important" : "");
     }
 }

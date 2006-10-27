@@ -1,5 +1,5 @@
 /*
- * $Id: AndConditionImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: AndConditionImpl.java,v 1.3 2006-10-27 13:29:16 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,31 +33,47 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: AndConditionImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: AndConditionImpl.java,v 1.3 2006-10-27 13:29:16 waldbaer Exp $
  */
 public class AndConditionImpl implements CombinatorCondition, Serializable {
 
-    private Condition _c1;
-    private Condition _c2;
+    private Condition firstCondition;
+    private Condition secondCondition;
+
+    public void setFirstCondition(Condition c1)
+    {
+        this.firstCondition = c1;
+    }
+
+    public void setSecondCondition(Condition c2)
+    {
+        this.secondCondition = c2;
+    }
+
 
     public AndConditionImpl(Condition c1, Condition c2) {
-        _c1 = c1;
-        _c2 = c2;
+        this.firstCondition = c1;
+        this.secondCondition = c2;
     }
-    
+
+    public AndConditionImpl()
+    {
+    }
+
+
     public short getConditionType() {
         return Condition.SAC_AND_CONDITION;
     }
 
     public Condition getFirstCondition() {
-        return _c1;
+        return this.firstCondition;
     }
 
     public Condition getSecondCondition() {
-        return _c2;
+        return this.secondCondition;
     }
     
     public String toString() {
-        return getFirstCondition().toString() + getSecondCondition().toString();
+        return this.getFirstCondition().toString() + this.getSecondCondition().toString();
     }
 }

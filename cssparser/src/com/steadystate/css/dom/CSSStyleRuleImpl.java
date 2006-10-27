@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleRuleImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
+ * $Id: CSSStyleRuleImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -46,18 +46,35 @@ import com.steadystate.css.parser.CSSOMParser;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleRuleImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
+ * @version $Id: CSSStyleRuleImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  */
-public class CSSStyleRuleImpl extends AbstractCSSRuleImpl implements CSSStyleRule, Serializable {
+public class CSSStyleRuleImpl extends AbstractCSSRuleImpl
+    implements CSSStyleRule, Serializable {
 
-    private SelectorList _selectors = null;
-    private CSSStyleDeclaration _style = null;
+    private SelectorList selectors = null;
+    private CSSStyleDeclaration style = null;
+
+    public SelectorList getSelectors()
+    {
+        return this.selectors;
+    }
+
+    public void setSelectors(SelectorList selectors)
+    {
+        this.selectors = selectors;
+    }
+
 
     public CSSStyleRuleImpl(CSSStyleSheetImpl parentStyleSheet,
         CSSRule parentRule, SelectorList selectors) {
         super(parentStyleSheet, parentRule);
-        this._selectors = selectors;
+        this.selectors = selectors;
     }
+
+    public CSSStyleRuleImpl()
+    {
+    }
+
 
     public short getType() {
         return STYLE_RULE;
@@ -68,7 +85,7 @@ public class CSSStyleRuleImpl extends AbstractCSSRuleImpl implements CSSStyleRul
     }
 
     public void setCssText(String cssText) throws DOMException {
-        if (this._parentStyleSheet != null && this._parentStyleSheet.isReadOnly()) {
+        if (this.parentStyleSheet != null && this.parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -81,8 +98,8 @@ public class CSSStyleRuleImpl extends AbstractCSSRuleImpl implements CSSStyleRul
 
             // The rule must be a style rule
             if (r.getType() == CSSRule.STYLE_RULE) {
-                this._selectors = ((CSSStyleRuleImpl)r)._selectors;
-                this._style = ((CSSStyleRuleImpl)r)._style;
+                this.selectors = ((CSSStyleRuleImpl)r).selectors;
+                this.style = ((CSSStyleRuleImpl)r).style;
             } else {
                 throw new DOMExceptionImpl(
                     DOMException.INVALID_MODIFICATION_ERR,
@@ -102,11 +119,11 @@ public class CSSStyleRuleImpl extends AbstractCSSRuleImpl implements CSSStyleRul
     }
 
     public String getSelectorText() {
-        return this._selectors.toString();
+        return this.selectors.toString();
     }
 
     public void setSelectorText(String selectorText) throws DOMException {
-        if (this._parentStyleSheet != null && this._parentStyleSheet.isReadOnly()) {
+        if (this.parentStyleSheet != null && this.parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET );
@@ -115,7 +132,7 @@ public class CSSStyleRuleImpl extends AbstractCSSRuleImpl implements CSSStyleRul
         try {
             InputSource is = new InputSource(new StringReader(selectorText));
             CSSOMParser parser = new CSSOMParser();
-            this._selectors = parser.parseSelectors(is);
+            this.selectors = parser.parseSelectors(is);
         } catch (CSSException e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
@@ -130,11 +147,11 @@ public class CSSStyleRuleImpl extends AbstractCSSRuleImpl implements CSSStyleRul
     }
 
     public CSSStyleDeclaration getStyle() {
-        return this._style;
+        return this.style;
     }
 
-    public void setStyle(CSSStyleDeclarationImpl style) {
-        this._style = style;
+    public void setStyle(CSSStyleDeclaration style) {
+        this.style = style;
     }
     
     public String toString() {

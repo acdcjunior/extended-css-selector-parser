@@ -1,5 +1,5 @@
 /*
- * $Id: BeginHyphenAttributeConditionImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: BeginHyphenAttributeConditionImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,18 +33,34 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: BeginHyphenAttributeConditionImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: BeginHyphenAttributeConditionImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  */
 public class BeginHyphenAttributeConditionImpl implements AttributeCondition, Serializable {
 
-    private String _localName;
-    private String _value;
+    private String localName;
+    private String value;
+
+    public void setLocaleName(String localName)
+    {
+        this.localName = localName;
+    }
+
+    public void setValue(String value)
+    {
+        this.value = value;
+    }
+
 
     public BeginHyphenAttributeConditionImpl(String localName, String value) {
-        _localName = localName;
-        _value = value;
+        this.localName = localName;
+        this.value = value;
     }
-  
+
+    public BeginHyphenAttributeConditionImpl()
+    {
+    }
+
+
     public short getConditionType() {
         return Condition.SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION;
     }
@@ -54,7 +70,7 @@ public class BeginHyphenAttributeConditionImpl implements AttributeCondition, Se
     }
 
     public String getLocalName() {
-        return _localName;
+        return this.localName;
     }
 
     public boolean getSpecified() {
@@ -62,11 +78,11 @@ public class BeginHyphenAttributeConditionImpl implements AttributeCondition, Se
     }
 
     public String getValue() {
-        return _value;
+        return this.value;
     }
     
     public String toString() {
-        return "[" + getLocalName() + "|=\"" + getValue() + "\"]";
+        return "[" + this.getLocalName() + "|=\"" + this.getValue() + "\"]";
     }
 }
 

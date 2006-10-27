@@ -1,5 +1,5 @@
 /*
- * $Id: ClassConditionImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * $Id: ClassConditionImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,16 +33,27 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: ClassConditionImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * @version $Id: ClassConditionImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  */
 public class ClassConditionImpl implements AttributeCondition, Serializable {
 
-    private String _value;
-    
-    public ClassConditionImpl(String value) {
-        _value = value;
+    private String value;
+
+    public void setValue(String value)
+    {
+        this.value = value;
     }
-    
+
+
+    public ClassConditionImpl(String value) {
+        this.value = value;
+    }
+
+    public ClassConditionImpl()
+    {
+    }
+
+
     public short getConditionType() {
         return Condition.SAC_CLASS_CONDITION;
     }
@@ -60,10 +71,10 @@ public class ClassConditionImpl implements AttributeCondition, Serializable {
     }
 
     public String getValue() {
-        return _value;
+        return this.value;
     }
     
     public String toString() {
-        return "." + getValue();
+        return "." + this.getValue();
     }
 }

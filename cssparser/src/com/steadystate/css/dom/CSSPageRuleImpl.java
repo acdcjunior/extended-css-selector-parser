@@ -1,5 +1,5 @@
 /*
- * $Id: CSSPageRuleImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
+ * $Id: CSSPageRuleImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -46,13 +46,13 @@ import com.steadystate.css.parser.CSSOMParser;
  * TO DO: Implement setSelectorText()
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSPageRuleImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
+ * @version $Id: CSSPageRuleImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule, Serializable {
 
-    private String _ident = null;
-    private String _pseudoPage = null;
-    private CSSStyleDeclaration _style = null;
+    private String ident = null;
+    private String pseudoPage = null;
+    private CSSStyleDeclaration style = null;
 
     public CSSPageRuleImpl(
             CSSStyleSheetImpl parentStyleSheet,
@@ -60,9 +60,14 @@ public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule,
             String ident,
             String pseudoPage) {
         super(parentStyleSheet, parentRule);
-        this._ident = ident;
-        this._pseudoPage = pseudoPage;
+        this.ident = ident;
+        this.pseudoPage = pseudoPage;
     }
+
+    public CSSPageRuleImpl()
+    {
+    }
+
 
     public short getType() {
         return PAGE_RULE;
@@ -76,7 +81,7 @@ public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule,
     }
 
     public void setCssText(String cssText) throws DOMException {
-        if (this._parentStyleSheet != null && this._parentStyleSheet.isReadOnly()) {
+        if (this.parentStyleSheet != null && this.parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -89,9 +94,9 @@ public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule,
 
             // The rule must be a page rule
             if (r.getType() == CSSRule.PAGE_RULE) {
-                this._ident = ((CSSPageRuleImpl)r)._ident;
-                this._pseudoPage = ((CSSPageRuleImpl)r)._pseudoPage;
-                this._style = ((CSSPageRuleImpl)r)._style;
+                this.ident = ((CSSPageRuleImpl)r).ident;
+                this.pseudoPage = ((CSSPageRuleImpl)r).pseudoPage;
+                this.style = ((CSSPageRuleImpl)r).style;
             } else {
                 throw new DOMExceptionImpl(
                     DOMException.INVALID_MODIFICATION_ERR,
@@ -111,26 +116,26 @@ public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule,
     }
 
     public String getSelectorText() {
-        return ((this._ident != null) ? this._ident : "")
-            + ((this._pseudoPage != null) ? ":" + this._pseudoPage : "");
+        return ((this.ident != null) ? this.ident : "")
+            + ((this.pseudoPage != null) ? ":" + this.pseudoPage : "");
     }
 
     public void setSelectorText(String selectorText) throws DOMException {
     }
 
     public CSSStyleDeclaration getStyle() {
-        return this._style;
+        return this.style;
     }
 
-    protected void setIdent(String ident) {
-        this._ident = ident;
+    public void setIdent(String ident) {
+        this.ident = ident;
     }
 
-    protected void setPseudoPage(String pseudoPage) {
-        this._pseudoPage = pseudoPage;
+    public void setPseudoPage(String pseudoPage) {
+        this.pseudoPage = pseudoPage;
     }
 
     public void setStyle(CSSStyleDeclarationImpl style) {
-        this._style = style;
+        this.style = style;
     }
 }

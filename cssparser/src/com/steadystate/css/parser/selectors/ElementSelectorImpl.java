@@ -1,5 +1,5 @@
 /*
- * $Id: ElementSelectorImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * $Id: ElementSelectorImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,16 +33,25 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: ElementSelectorImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * @version $Id: ElementSelectorImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  */
 public class ElementSelectorImpl implements ElementSelector, Serializable {
 
-    private String _localName;
+    private String localName;
+
+    public void setLocalName(String localName)
+    {
+        this.localName = localName;
+    }
 
     public ElementSelectorImpl(String localName) {
-        _localName = localName;
+       this. localName = localName;
     }
-    
+
+    public ElementSelectorImpl()
+    {
+    }
+
     public short getSelectorType() {
         return Selector.SAC_ELEMENT_NODE_SELECTOR;
     }
@@ -52,10 +61,10 @@ public class ElementSelectorImpl implements ElementSelector, Serializable {
     }
 
     public String getLocalName() {
-        return _localName;
+        return this.localName;
     }
     
     public String toString() {
-        return (getLocalName() != null) ? getLocalName() : "*";
+        return (this.getLocalName() != null) ? this.getLocalName() : "*";
     }
 }

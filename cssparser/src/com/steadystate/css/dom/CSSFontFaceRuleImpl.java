@@ -1,5 +1,5 @@
 /*
- * $Id: CSSFontFaceRuleImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
+ * $Id: CSSFontFaceRuleImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -45,15 +45,20 @@ import com.steadystate.css.parser.CSSOMParser;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSFontFaceRuleImpl.java,v 1.3 2006-04-11 08:15:19 waldbaer Exp $
+ * @version $Id: CSSFontFaceRuleImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontFaceRule, Serializable {
 
-    private CSSStyleDeclarationImpl _style = null;
+    private CSSStyleDeclarationImpl style = null;
 
     public CSSFontFaceRuleImpl(CSSStyleSheetImpl parentStyleSheet, CSSRule parentRule) {
         super(parentStyleSheet, parentRule);
     }
+
+    public CSSFontFaceRuleImpl()
+    {
+    }
+
 
     public short getType() {
         return FONT_FACE_RULE;
@@ -64,7 +69,7 @@ public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontF
     }
 
     public void setCssText(String cssText) throws DOMException {
-        if (this._parentStyleSheet != null && this._parentStyleSheet.isReadOnly()) {
+        if (this.parentStyleSheet != null && this.parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -77,7 +82,7 @@ public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontF
 
             // The rule must be a font face rule
             if (r.getType() == CSSRule.FONT_FACE_RULE) {
-                this._style = ((CSSFontFaceRuleImpl)r)._style;
+                this.style = ((CSSFontFaceRuleImpl)r).style;
             } else {
                 throw new DOMExceptionImpl(
                     DOMException.INVALID_MODIFICATION_ERR,
@@ -97,10 +102,10 @@ public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontF
     }
 
     public CSSStyleDeclaration getStyle() {
-        return this._style;
+        return this.style;
     }
 
     public void setStyle(CSSStyleDeclarationImpl style) {
-        this._style = style;
+        this.style = style;
     }
 }
