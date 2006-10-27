@@ -1,5 +1,5 @@
 /*
- * $Id: ChildSelectorImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * $Id: ChildSelectorImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,31 +33,47 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: ChildSelectorImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * @version $Id: ChildSelectorImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  */
 public class ChildSelectorImpl implements DescendantSelector, Serializable {
 
-    private Selector _parent;
-    private SimpleSelector _simpleSelector;
+    private Selector ancestorSelector;
+    private SimpleSelector simpleSelector;
+
+    public void setAncestorSelector(Selector ancestorSelector)
+    {
+        this.ancestorSelector = ancestorSelector;
+    }
+
+    public void setSimpleSelector(SimpleSelector simpleSelector)
+    {
+        this.simpleSelector = simpleSelector;
+    }
+
 
     public ChildSelectorImpl(Selector parent, SimpleSelector simpleSelector) {
-        _parent = parent;
-        _simpleSelector = simpleSelector;
+        this.ancestorSelector = parent;
+        this.simpleSelector = simpleSelector;
     }
-    
+
+    public ChildSelectorImpl()
+    {
+    }
+
+
     public short getSelectorType() {
         return Selector.SAC_CHILD_SELECTOR;
     }
 
     public Selector getAncestorSelector() {
-        return _parent;
+        return this.ancestorSelector;
     }
 
     public SimpleSelector getSimpleSelector() {
-        return _simpleSelector;
+        return this.simpleSelector;
     }
     
     public String toString() {
-        return _parent.toString() + " > " + _simpleSelector.toString();
+        return this.ancestorSelector.toString() + " > " + this.simpleSelector.toString();
     }
 }

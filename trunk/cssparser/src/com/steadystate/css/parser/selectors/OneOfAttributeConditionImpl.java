@@ -1,5 +1,5 @@
 /*
- * $Id: OneOfAttributeConditionImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * $Id: OneOfAttributeConditionImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,18 +33,34 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: OneOfAttributeConditionImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * @version $Id: OneOfAttributeConditionImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  */
 public class OneOfAttributeConditionImpl implements AttributeCondition, Serializable {
 
-    private String _localName;
-    private String _value;
-    
-    public OneOfAttributeConditionImpl(String localName, String value) {
-        _localName = localName;
-        _value = value;
+    private String localName;
+    private String value;
+
+    public void setLocalName(String localName)
+    {
+        this.localName = localName;
     }
-    
+
+    public void setValue(String value)
+    {
+        this.value = value;
+    }
+
+
+    public OneOfAttributeConditionImpl(String localName, String value) {
+        this.localName = localName;
+        this.value = value;
+    }
+
+    public OneOfAttributeConditionImpl()
+    {
+    }
+
+
     public short getConditionType() {
         return Condition.SAC_ONE_OF_ATTRIBUTE_CONDITION;
     }
@@ -54,7 +70,7 @@ public class OneOfAttributeConditionImpl implements AttributeCondition, Serializ
     }
 
     public String getLocalName() {
-        return _localName;
+        return this.localName;
     }
 
     public boolean getSpecified() {
@@ -62,10 +78,10 @@ public class OneOfAttributeConditionImpl implements AttributeCondition, Serializ
     }
 
     public String getValue() {
-        return _value;
+        return this.value;
     }
     
     public String toString() {
-        return "[" + getLocalName() + "~=\"" + getValue() + "\"]";
+        return "[" + this.getLocalName() + "~=\"" + this.getValue() + "\"]";
     }
 }

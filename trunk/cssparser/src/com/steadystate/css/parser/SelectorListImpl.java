@@ -1,5 +1,5 @@
 /*
- * $Id: SelectorListImpl.java,v 1.3 2006-04-11 08:20:06 waldbaer Exp $
+ * $Id: SelectorListImpl.java,v 1.4 2006-10-27 13:27:03 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -34,22 +34,32 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SelectorListImpl.java,v 1.3 2006-04-11 08:20:06 waldbaer Exp $
+ * @version $Id: SelectorListImpl.java,v 1.4 2006-10-27 13:27:03 waldbaer Exp $
  */
 public class SelectorListImpl implements SelectorList, Serializable {
 
-    private Vector _selectors = new Vector(10, 10);
+    private Vector selectors = new Vector(10, 10);
+
+    public Vector getSelectors()
+    {
+        return this.selectors;
+    }
+
+    public void setSelectors(Vector selectors)
+    {
+        this.selectors = selectors;
+    }
 
     public int getLength() {
-        return this._selectors.size();
+        return this.selectors.size();
     }
 
     public Selector item(int index) {
-        return (Selector) this._selectors.elementAt(index);
+        return (Selector) this.selectors.elementAt(index);
     }
 
     public void add(Selector sel) {
-        this._selectors.addElement(sel);
+        this.selectors.addElement(sel);
     }
     
     public String toString() {

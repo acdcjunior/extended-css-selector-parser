@@ -1,5 +1,5 @@
 /*
- * $Id: DirectAdjacentSelectorImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * $Id: DirectAdjacentSelectorImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,22 +33,43 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: DirectAdjacentSelectorImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * @version $Id: DirectAdjacentSelectorImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  */
 public class DirectAdjacentSelectorImpl implements SiblingSelector, Serializable {
 
-    private short _nodeType;
-    private Selector _child;
-    private SimpleSelector _directAdjacent;
+    private short nodeType;
+    private Selector selector;  // child
+    private SimpleSelector siblingSelector; // direct adjacent
 
-    public DirectAdjacentSelectorImpl(short nodeType, Selector child, SimpleSelector directAdjacent) {
-        _nodeType = nodeType;
-        _child = child;
-        _directAdjacent = directAdjacent;
+    public void setNodeType(short nodeType)
+    {
+        this.nodeType = nodeType;
     }
 
+    public void setSelector(Selector child)
+    {
+        this.selector = child;
+    }
+
+    public void setSiblingSelector(SimpleSelector directAdjacent)
+    {
+        this.siblingSelector = directAdjacent;
+    }
+
+
+    public DirectAdjacentSelectorImpl(short nodeType, Selector child, SimpleSelector directAdjacent) {
+        this.nodeType = nodeType;
+        this.selector = child;
+        this.siblingSelector = directAdjacent;
+    }
+
+    public DirectAdjacentSelectorImpl()
+    {
+    }
+
+
     public short getNodeType() {
-        return _nodeType;
+        return this.nodeType;
     }
     
     public short getSelectorType() {
@@ -56,14 +77,14 @@ public class DirectAdjacentSelectorImpl implements SiblingSelector, Serializable
     }
 
     public Selector getSelector() {
-        return _child;
+        return this.selector;
     }
 
     public SimpleSelector getSiblingSelector() {
-        return _directAdjacent;
+        return this.siblingSelector;
     }
     
     public String toString() {
-        return _child.toString() + " + " + _directAdjacent.toString();
+        return this.selector.toString() + " + " + this.siblingSelector.toString();
     }
 }

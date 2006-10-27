@@ -1,5 +1,5 @@
 /*
- * $Id: PseudoElementSelectorImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * $Id: PseudoElementSelectorImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,16 +33,27 @@ import java.io.Serializable;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: PseudoElementSelectorImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * @version $Id: PseudoElementSelectorImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  */
 public class PseudoElementSelectorImpl implements ElementSelector, Serializable {
 
-    private String _localName;
+    private String localName;
+
+    public void setLocaleName(String localName)
+    {
+        this.localName = localName;
+    }
+
 
     public PseudoElementSelectorImpl(String localName) {
-        _localName = localName;
+        this.localName = localName;
     }
-    
+
+    public PseudoElementSelectorImpl()
+    {
+    }
+
+
     public short getSelectorType() {
         return Selector.SAC_PSEUDO_ELEMENT_SELECTOR;
     }
@@ -52,6 +63,6 @@ public class PseudoElementSelectorImpl implements ElementSelector, Serializable 
     }
 
     public String getLocalName() {
-        return _localName;
+        return this.localName;
     }
 }

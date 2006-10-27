@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleSheetImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
+ * $Id: CSSStyleSheetImpl.java,v 1.5 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -52,29 +52,46 @@ import com.steadystate.css.parser.SACParserCSS2;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleSheetImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
+ * @version $Id: CSSStyleSheetImpl.java,v 1.5 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
 
-    private boolean _disabled = false;
-    private Node _ownerNode = null;
-    private StyleSheet _parentStyleSheet = null;
-    private String _href = null;
-    private String _title = null;
-    private MediaList _media = null;
-    private CSSRule _ownerRule = null;
-    private boolean _readOnly = false;
-    private CSSRuleListImpl _rules = null;
+    private boolean disabled = false;
+    private Node ownerNode = null;
+    private StyleSheet parentStyleSheet = null;
+    private String href = null;
+    private String title = null;
+    private MediaList media = null;
+    private CSSRule ownerRule = null;
+    private boolean readOnly = false;
+    private CSSRuleList cssRules = null;
+    private String baseUri;
+
+    public void setMedia(MediaList media)
+    {
+        this.media = media;
+    }
+
+    private String getBaseUri()
+    {
+        return this.baseUri;
+    }
+
+    public void setBaseUri(String baseUri)
+    {
+        this.baseUri = baseUri;
+    }
 
     public CSSStyleSheetImpl() {
     }
+
 
     public String getType() {
         return "text/css";
     }
 
     public boolean getDisabled() {
-        return this._disabled;
+        return this.disabled;
     }
 
     /**
@@ -82,43 +99,43 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
      * by generating an event for the main application.
      */
     public void setDisabled(boolean disabled) {
-        this._disabled = disabled;
+        this.disabled = disabled;
     }
 
     public Node getOwnerNode() {
-        return this._ownerNode;
+        return this.ownerNode;
     }
 
     public StyleSheet getParentStyleSheet() {
-        return this._parentStyleSheet;
+        return this.parentStyleSheet;
     }
 
     public String getHref() {
-        return this._href;
+        return this.href;
     }
 
     public String getTitle() {
-        return this._title;
+        return this.title;
     }
 
     public MediaList getMedia() {
-        return this._media;
+        return this.media;
     }
 
     public CSSRule getOwnerRule() {
-        return this._ownerRule;
+        return this.ownerRule;
     }
 
     public CSSRuleList getCssRules() {
-        if (this._rules == null)
+        if (this.cssRules == null)
         {
-            this._rules = new CSSRuleListImpl();
+            this.cssRules = new CSSRuleListImpl();
         }
-        return this._rules;
+        return this.cssRules;
     }
 
     public int insertRule(String rule, int index) throws DOMException {
-        if (this._readOnly) {
+        if (this.readOnly) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -190,7 +207,7 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
     }
 
     public void deleteRule(int index) throws DOMException {
-        if (this._readOnly) {
+        if (this.readOnly) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -207,36 +224,36 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
     }
 
     public boolean isReadOnly() {
-        return this._readOnly;
+        return this.readOnly;
     }
 
     public void setReadOnly(boolean b) {
-        this._readOnly = b;
+        this.readOnly = b;
     }
 
     public void setOwnerNode(Node ownerNode) {
-        this._ownerNode = ownerNode;
+        this.ownerNode = ownerNode;
     }
 
     public void setParentStyleSheet(StyleSheet parentStyleSheet) {
-        this._parentStyleSheet = parentStyleSheet;
+        this.parentStyleSheet = parentStyleSheet;
     }
 
     public void setHref(String href) {
-        this._href = href;
+        this.href = href;
     }
 
     public void setTitle(String title) {
-        this._title = title;
+        this.title = title;
     }
 
-    public void setMedia(String mediaText) {
+    public void setMediaText(String mediaText) {
         InputSource source = new InputSource(new StringReader(mediaText));
         try
         {
             // TODO get SAC Parser version from System property?
             SACMediaList sml = new SACParserCSS2().parseMedia(source);
-            this._media = new MediaListImpl(sml);
+            this.media = new MediaListImpl(sml);
         }
         catch (IOException e)
         {
@@ -245,11 +262,11 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
     }
 
     public void setOwnerRule(CSSRule ownerRule) {
-        this._ownerRule = ownerRule;
+        this.ownerRule = ownerRule;
     }
     
-    public void setRuleList(CSSRuleListImpl rules) {
-        this._rules = rules;
+    public void setCssRules(CSSRuleList rules) {
+        this.cssRules = rules;
     }
     
     public String toString() {
@@ -273,11 +290,11 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
                 CSSImportRule cssImportRule = (CSSImportRule) cssRule;
                 try
                 {
-                    java.net.URI importURI = new java.net.URI(this.getHref())
+                    java.net.URI importURI = new java.net.URI(this.getBaseUri())
                         .resolve(cssImportRule.getHref());
                     CSSStyleSheetImpl importedCSS = (CSSStyleSheetImpl)
                         new CSSOMParser().parseStyleSheet(new InputSource(
-                            importURI.toString()));
+                            importURI.toString()), null, importURI.toString());
                     if (recursive)
                     {
                         importedCSS.importImports(recursive);

@@ -1,5 +1,5 @@
 /*
- * $Id: LangConditionImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * $Id: LangConditionImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,25 +33,36 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LangConditionImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * @version $Id: LangConditionImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  */
 public class LangConditionImpl implements LangCondition, Serializable {
 
-    private String _lang;
+    private String lang;
+
+    public void setLang(String lang)
+    {
+        this.lang = lang;
+    }
+
 
     public LangConditionImpl(String lang) {
-        _lang = lang;
+        this.lang = lang;
     }
+
+    public LangConditionImpl()
+    {
+    }
+
 
     public short getConditionType() {
         return Condition.SAC_LANG_CONDITION;
     }
 
     public String getLang() {
-        return _lang;
+        return this.lang;
     }
     
     public String toString() {
-        return ":lang(" + getLang() + ")";
+        return ":lang(" + this.getLang() + ")";
     }
 }

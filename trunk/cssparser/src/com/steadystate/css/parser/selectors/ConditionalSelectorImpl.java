@@ -1,5 +1,5 @@
 /*
- * $Id: ConditionalSelectorImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * $Id: ConditionalSelectorImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,33 +33,49 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: ConditionalSelectorImpl.java,v 1.2 2005-07-14 00:25:06 davidsch Exp $
+ * @version $Id: ConditionalSelectorImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
  */
 public class ConditionalSelectorImpl implements ConditionalSelector, Serializable {
 
-    private SimpleSelector _simpleSelector;
-    private Condition _condition;
+    private SimpleSelector simpleSelector;
+    private Condition condition;
+
+    public void setSimpleSelector(SimpleSelector simpleSelector)
+    {
+        this.simpleSelector = simpleSelector;
+    }
+
+    public void setCondition(Condition condition)
+    {
+        this.condition = condition;
+    }
+
 
     public ConditionalSelectorImpl(
         SimpleSelector simpleSelector,
         Condition condition) {
-        _simpleSelector = simpleSelector;
-        _condition = condition;
+        this.simpleSelector = simpleSelector;
+        this.condition = condition;
     }
+
+    public ConditionalSelectorImpl()
+    {
+    }
+
 
     public short getSelectorType() {
         return Selector.SAC_CONDITIONAL_SELECTOR;
     }
 
     public SimpleSelector getSimpleSelector() {
-        return _simpleSelector;
+        return this.simpleSelector;
     }
 
     public Condition getCondition() {
-        return _condition;
+        return this.condition;
     }
     
     public String toString() {
-        return _simpleSelector.toString() + _condition.toString();
+        return this.simpleSelector.toString() + this.condition.toString();
     }
 }

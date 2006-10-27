@@ -1,5 +1,5 @@
 /*
- * $Id: CSSUnknownRuleImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
+ * $Id: CSSUnknownRuleImpl.java,v 1.5 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -27,9 +27,7 @@
 
 package com.steadystate.css.dom;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.io.StringReader;
 
 import org.w3c.dom.DOMException;
 
@@ -40,26 +38,42 @@ import org.w3c.dom.css.CSSUnknownRule;
 /*
  * TODO: Reinstate setCssText
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSUnknownRuleImpl.java,v 1.4 2006-04-11 08:15:19 waldbaer Exp $
+ * @version $Id: CSSUnknownRuleImpl.java,v 1.5 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class CSSUnknownRuleImpl extends AbstractCSSRuleImpl implements CSSUnknownRule, Serializable {
 
-    String _text = null;
+    String text = null;
+
+    public String getText()
+    {
+        return this.text;
+    }
+
+    public void setText(String text)
+    {
+        this.text = text;
+    }
+
 
     public CSSUnknownRuleImpl(
             CSSStyleSheetImpl parentStyleSheet,
             CSSRule parentRule,
             String text) {
         super(parentStyleSheet, parentRule);
-        this._text = text;
+        this.text = text;
     }
+
+    public CSSUnknownRuleImpl()
+    {
+    }
+
 
     public short getType() {
         return UNKNOWN_RULE;
     }
 
     public String getCssText() {
-        return this._text;
+        return this.text;
     }
 
     public void setCssText(String cssText) throws DOMException {
@@ -105,11 +119,11 @@ public class CSSUnknownRuleImpl extends AbstractCSSRuleImpl implements CSSUnknow
     }
 
     public CSSStyleSheet getParentStyleSheet() {
-        return this._parentStyleSheet;
+        return this.parentStyleSheet;
     }
 
     public CSSRule getParentRule() {
-        return this._parentRule;
+        return this.parentRule;
     }
     
     public String toString() {

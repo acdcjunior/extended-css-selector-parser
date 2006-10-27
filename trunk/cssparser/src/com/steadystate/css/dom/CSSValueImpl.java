@@ -1,5 +1,5 @@
 /*
- * $Id: CSSValueImpl.java,v 1.6 2006-04-11 08:15:19 waldbaer Exp $
+ * $Id: CSSValueImpl.java,v 1.7 2006-10-27 13:31:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -57,12 +57,21 @@ import com.steadystate.css.parser.LexicalUnitImpl;
  * A means of checking valid primitive types for properties
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSValueImpl.java,v 1.6 2006-04-11 08:15:19 waldbaer Exp $
+ * @version $Id: CSSValueImpl.java,v 1.7 2006-10-27 13:31:05 waldbaer Exp $
  */
 public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializable {
 
     private Object _value = null;
 
+    public Object getValue()
+    {
+        return this._value;
+    }
+
+    public void setValue(Object value)
+    {
+        this._value = value;
+    }
     /**
      * Constructor
      */
@@ -92,7 +101,12 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
             this._value = value;
         }
     }
-    
+
+    public CSSValueImpl()
+    {
+    }
+
+
     private Vector getValues(LexicalUnit value)
     {
         // We need to be a CSSValueList

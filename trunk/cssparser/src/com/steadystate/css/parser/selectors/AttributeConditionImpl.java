@@ -1,5 +1,5 @@
 /*
- * $Id: AttributeConditionImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: AttributeConditionImpl.java,v 1.4 2006-10-27 13:30:04 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,18 +33,34 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: AttributeConditionImpl.java,v 1.3 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: AttributeConditionImpl.java,v 1.4 2006-10-27 13:30:04 waldbaer Exp $
  */
 public class AttributeConditionImpl implements AttributeCondition, Serializable {
 
-    private String _localName;
-    private String _value;
-    
-    public AttributeConditionImpl(String localName, String value) {
-        _localName = localName;
-        _value = value;
+    private String localName;
+    private String value;
+
+    public void setLocaleName(String localName)
+    {
+        this.localName = localName;
     }
-    
+
+    public void setValue(String value)
+    {
+        this.value = value;
+    }
+
+
+    public AttributeConditionImpl(String localName, String value) {
+        this.localName = localName;
+        this.value = value;
+    }
+
+    public AttributeConditionImpl()
+    {
+    }
+
+
     public short getConditionType() {
         return Condition.SAC_ATTRIBUTE_CONDITION;
     }
@@ -54,7 +70,7 @@ public class AttributeConditionImpl implements AttributeCondition, Serializable 
     }
 
     public String getLocalName() {
-        return _localName;
+        return this.localName;
     }
 
     public boolean getSpecified() {
@@ -62,13 +78,13 @@ public class AttributeConditionImpl implements AttributeCondition, Serializable 
     }
 
     public String getValue() {
-        return _value;
+        return this.value;
     }
     
     public String toString() {
-        if (getValue() != null) {
-            return "[" + getLocalName() + "=\"" + getValue() + "\"]";
+        if (this.getValue() != null) {
+            return "[" + this.getLocalName() + "=\"" + this.getValue() + "\"]";
         }
-        return "[" + getLocalName() + "]";
+        return "[" + this.getLocalName() + "]";
     }
 }
