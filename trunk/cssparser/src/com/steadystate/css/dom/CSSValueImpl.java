@@ -1,5 +1,5 @@
 /*
- * $Id: CSSValueImpl.java,v 1.7 2006-10-27 13:31:05 waldbaer Exp $
+ * $Id: CSSValueImpl.java,v 1.8 2006-12-05 14:57:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -34,6 +34,7 @@ import java.util.Vector;
 
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.LexicalUnit;
+import org.w3c.css.sac.Locator;
 
 import org.w3c.dom.DOMException;
 
@@ -46,6 +47,7 @@ import org.w3c.dom.css.RGBColor;
 
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.parser.LexicalUnitImpl;
+import com.steadystate.css.userdata.UserDataConstants;
 
 /**
  * The <code>CSSValueImpl</code> class can represent either a
@@ -57,9 +59,9 @@ import com.steadystate.css.parser.LexicalUnitImpl;
  * A means of checking valid primitive types for properties
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSValueImpl.java,v 1.7 2006-10-27 13:31:05 waldbaer Exp $
+ * @version $Id: CSSValueImpl.java,v 1.8 2006-12-05 14:57:55 waldbaer Exp $
  */
-public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializable {
+public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, CSSValueList, Serializable {
 
     private Object _value = null;
 
@@ -99,6 +101,14 @@ public class CSSValueImpl implements CSSPrimitiveValue, CSSValueList, Serializab
         } else {
             // We need to be a CSSPrimitiveValue
             this._value = value;
+        }
+        if (value instanceof LexicalUnitImpl)
+        {
+            Locator locator = ((LexicalUnitImpl) value).getLocator();
+            if (locator != null)
+            {
+                this.setUserData(UserDataConstants.KEY_LOCATOR, locator);
+            }
         }
     }
 
