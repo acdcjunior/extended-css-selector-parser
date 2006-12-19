@@ -87,7 +87,7 @@ abstract class AbstractSACParser implements Parser
         this.locale = locale;
     }
 
-    private Locale getLocale()
+    protected Locale getLocale()
     {
         if (this.locale == null)
         {
