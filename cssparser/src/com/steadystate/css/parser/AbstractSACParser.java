@@ -426,7 +426,7 @@ abstract class AbstractSACParser implements Parser
             return new ASCII_CharStream(
                 source.getCharacterStream(), 1, 1);
         }
-        else if (source.getCharacterStream() != null)
+        else if (source.getByteStream() != null)
         {
             return new ASCII_CharStream(new InputStreamReader(
                 source.getByteStream()), 1, 1);
