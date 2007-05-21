@@ -26,6 +26,9 @@
         <javacc target="${src}/com/steadystate/css/parser/SACParserCSS1.jj"
                 outputdirectory="${build}/src/com/steadystate/css/parser/"
                 javacchome="${javacchome}"/>
+        <javacc target="${src}/com/steadystate/css/parser/SACParserCSS21.jj"
+                outputdirectory="${build}/src/com/steadystate/css/parser/"
+                javacchome="${javacchome}"/>
         <javac destdir="${build}/classes">
             <src path="${build}/src"/>
             <src path="${src}"/>
