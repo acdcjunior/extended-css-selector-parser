@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSS2.jj,v 1.4 2006-12-05 14:57:22 waldbaer Exp $
+ * $Id: SACParserCSS2.jj,v 1.5 2007-05-21 14:26:50 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.sac.TestCSSParseException;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSS2.jj,v 1.4 2006-12-05 14:57:22 waldbaer Exp $
+ * @version $Id: SACParserCSS2.jj,v 1.5 2007-05-21 14:26:50 waldbaer Exp $
  */
 public class SACParserCSS2 extends AbstractSACParser implements Parser {
 
@@ -902,10 +902,18 @@ Condition pseudo(Condition pred) :
                             ? c
                             : this.getConditionFactory().createAndCondition(pred, c);
                     } else {
+                    	c = this.getConditionFactory().createPseudoClassCondition(null, function + arg + ")");
+						return (pred == null)
+                            ? c
+                            : this.getConditionFactory().createAndCondition(pred, c);
+                    }
+                    /*
+                    else {
                         throw new TestCSSParseException(
                             "Invalid pseudo function name " + function,
                             getLocator(), this.getGrammarUri());
                     }
+                    */
                 }
             )
         )
