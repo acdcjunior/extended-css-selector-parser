@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSS21.jj,v 1.1 2007-05-21 14:25:34 waldbaer Exp $
+ * $Id: SACParserCSS21.jj,v 1.2 2007-05-24 14:46:07 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.sac.TestCSSParseException;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSS21.jj,v 1.1 2007-05-21 14:25:34 waldbaer Exp $
+ * @version $Id: SACParserCSS21.jj,v 1.2 2007-05-24 14:46:07 waldbaer Exp $
  */
 public class SACParserCSS21 extends AbstractSACParser implements Parser {
 
@@ -193,7 +193,7 @@ TOKEN_MGR_DECLS :
 | < DIMENSION: <NUM> <IDENT> >
 | < PERCENTAGE: <NUM> "%" > { matchedToken.image = splitNumber(image); }
 | < NUMBER: <NUM> >
-| < RGB: "rgb(" >
+// handled by FUNCTION in CSS 2.1 | < RGB: "rgb(" >
 | < FUNCTION: <IDENT> "(" >
 | < IDENT: (<MINUS>)? <NMSTART> ( <NMCHAR> )* >
 | < #NAME: ( <NMCHAR> )+ >
