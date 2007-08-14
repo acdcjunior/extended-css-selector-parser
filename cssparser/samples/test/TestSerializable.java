@@ -25,7 +25,7 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: TestSerializable.java,v 1.1.1.1 2003-12-28 21:22:42 davidsch Exp $
+ * $Id: TestSerializable.java,v 1.2 2007-08-14 09:43:30 waldbaer Exp $
  */
 
 package test;
@@ -61,7 +61,7 @@ public class TestSerializable {
             CSSOMParser parser = new CSSOMParser();
             InputSource is = new InputSource(r);
 
-            CSSStyleSheet stylesheet = parser.parseStyleSheet(is);
+            CSSStyleSheet stylesheet = parser.parseStyleSheet(is, null, null);
             
             // Serialize the style sheet
             FileOutputStream fo = new FileOutputStream("c:\\working\\css2parser\\stylesheets\\tmp");

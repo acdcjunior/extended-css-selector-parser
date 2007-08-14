@@ -25,13 +25,12 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: TestDOM_1.java,v 1.1.1.1 2003-12-28 21:22:41 davidsch Exp $
+ * $Id: TestDOM_1.java,v 1.2 2007-08-14 09:43:30 waldbaer Exp $
  */
 
 package test;
 
 import java.io.*;
-import org.w3c.dom.*;
 import org.w3c.dom.css.*;
 import org.w3c.css.sac.*;
 import com.steadystate.css.parser.*;
@@ -45,13 +44,13 @@ import com.steadystate.css.parser.*;
  */
 public class TestDOM_1 {
 
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) {
         try {
             Reader r = new FileReader("c:\\working\\css2parser\\stylesheets\\test.css");
             CSSOMParser parser = new CSSOMParser();
             InputSource is = new InputSource(r);
 
-            CSSStyleSheet stylesheet = parser.parseStyleSheet(is);
+            CSSStyleSheet stylesheet = parser.parseStyleSheet(is, null, null);
             CSSRuleList rules = stylesheet.getCssRules();
 
             for (int i = 0; i < rules.getLength(); i++) {
