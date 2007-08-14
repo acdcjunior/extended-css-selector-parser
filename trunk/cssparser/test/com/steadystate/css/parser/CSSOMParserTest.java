@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParserTest.java,v 1.1 2005-07-14 00:23:42 davidsch Exp $
+ * $Id: CSSOMParserTest.java,v 1.2 2007-08-14 09:43:30 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -69,7 +69,7 @@ import com.steadystate.css.dom.Property;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParserTest.java,v 1.1 2005-07-14 00:23:42 davidsch Exp $
+ * @version $Id: CSSOMParserTest.java,v 1.2 2007-08-14 09:43:30 waldbaer Exp $
  */
 public class CSSOMParserTest extends TestCase {
 
@@ -103,7 +103,7 @@ public class CSSOMParserTest extends TestCase {
         
         Reader r = new StringReader(_testString);
         InputSource is = new InputSource(r);
-        CSSStyleSheet ss = _parser.parseStyleSheet(is);
+        CSSStyleSheet ss = _parser.parseStyleSheet(is, null, null);
         CSSRuleList rl = ss.getCssRules();
         CSSRule rule = rl.item(0);
         if (rule.getType() == CSSRule.STYLE_RULE) {
