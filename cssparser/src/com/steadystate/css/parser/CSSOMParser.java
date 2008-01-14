@@ -1,9 +1,9 @@
 /*
- * $Id: CSSOMParser.java,v 1.11 2006-10-27 13:19:49 waldbaer Exp $
+ * $Id: CSSOMParser.java,v 1.12 2008-01-14 11:46:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2008 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -50,6 +50,7 @@ import org.w3c.dom.css.CSSValue;
 
 import org.w3c.css.sac.helpers.ParserFactory;
 
+import com.steadystate.css.dom.CSSCharsetRuleImpl;
 import com.steadystate.css.dom.CSSFontFaceRuleImpl;
 import com.steadystate.css.dom.CSSImportRuleImpl;
 import com.steadystate.css.dom.CSSMediaRuleImpl;
@@ -63,12 +64,13 @@ import com.steadystate.css.dom.CSSUnknownRuleImpl;
 import com.steadystate.css.dom.CSSValueImpl;
 import com.steadystate.css.dom.MediaListImpl;
 import com.steadystate.css.dom.Property;
+import com.steadystate.css.sac.DocumentHandlerExt;
 import com.steadystate.css.userdata.UserDataConstants;
 
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParser.java,v 1.11 2006-10-27 13:19:49 waldbaer Exp $
+ * @version $Id: CSSOMParser.java,v 1.12 2008-01-14 11:46:24 waldbaer Exp $
  */
 public class CSSOMParser {
     
@@ -200,7 +202,7 @@ public class CSSOMParser {
     }
     */
     
-    class CSSOMHandler implements DocumentHandler {
+    class CSSOMHandler implements DocumentHandlerExt {
         
         private Stack _nodeStack;
         private Object _root = null;
@@ -286,6 +288,22 @@ public class CSSOMParser {
 
         public void namespaceDeclaration(String prefix, String uri)
                 throws CSSException {
+        }
+
+        public void charset(String characterEncoding) throws CSSException
+        {
+            CSSCharsetRuleImpl cr = new CSSCharsetRuleImpl(CSSOMParser.this.getParentStyleSheet(),
+                this.getParentRule(),
+                characterEncoding);
+            this.addLocator(cr);
+            if (!this._nodeStack.empty())
+            {
+                ((CSSRuleListImpl)this._nodeStack.peek()).add(cr);
+            }
+            else
+            {
+                this._root = cr;
+            }
         }
 
         public void importStyle(

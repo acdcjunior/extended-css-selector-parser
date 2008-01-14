@@ -1,6 +1,28 @@
 /*
- * Created on 20.08.2005
+ * $Id: AbstractSACParser.java,v 1.12 2008-01-14 11:46:24 waldbaer Exp $
  *
+ * CSS Parser Project
+ *
+ * Copyright (C) 2005-2008 David Schweinsberg.  All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * To contact the authors of the library:
+ *
+ * http://cssparser.sourceforge.net/
+ * mailto:davidsch@users.sourceforge.net
  */
 package com.steadystate.css.parser;
 
@@ -27,6 +49,7 @@ import org.w3c.css.sac.SelectorList;
 
 import com.steadystate.css.parser.selectors.ConditionFactoryImpl;
 import com.steadystate.css.parser.selectors.SelectorFactoryImpl;
+import com.steadystate.css.sac.DocumentHandlerExt;
 import com.steadystate.css.sac.TestCSSParseException;
 
 /**
@@ -36,7 +59,7 @@ import com.steadystate.css.sac.TestCSSParseException;
 abstract class AbstractSACParser implements Parser
 {
 
-    private DocumentHandler documentHandler = null;
+    private DocumentHandlerExt documentHandler = null;
     private ErrorHandler errorHandler = null;
     private InputSource source = null;
     private Locale locale = null;
@@ -45,7 +68,7 @@ abstract class AbstractSACParser implements Parser
     private ResourceBundle sacParserMessages;
     protected abstract Token getToken();
 
-    protected DocumentHandler getDocumentHandler()
+    protected DocumentHandlerExt getDocumentHandler()
     {
         if (this.documentHandler == null)
         {
@@ -56,7 +79,10 @@ abstract class AbstractSACParser implements Parser
 
     public void setDocumentHandler(DocumentHandler handler)
     {
-        this.documentHandler = handler;
+        if (handler instanceof DocumentHandlerExt)
+        {
+            this.documentHandler = (DocumentHandlerExt) handler;
+        }
     }
 
     protected ErrorHandler getErrorHandler()
@@ -463,6 +489,11 @@ abstract class AbstractSACParser implements Parser
     protected void handleIgnorableAtRule(String s)
     {
         this.getDocumentHandler().ignorableAtRule(s);
+    }
+
+    protected void handleCharset(String characterEncoding)
+    {
+        this.getDocumentHandler().charset(characterEncoding);
     }
 
     protected void handleImportStyle(String uri, SACMediaList media,
