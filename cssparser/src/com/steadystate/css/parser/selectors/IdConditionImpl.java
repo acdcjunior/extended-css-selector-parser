@@ -1,5 +1,5 @@
 /*
- * $Id: IdConditionImpl.java,v 1.3 2006-10-27 13:30:03 waldbaer Exp $
+ * $Id: IdConditionImpl.java,v 1.4 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,9 +33,11 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: IdConditionImpl.java,v 1.3 2006-10-27 13:30:03 waldbaer Exp $
+ * @version $Id: IdConditionImpl.java,v 1.4 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class IdConditionImpl implements AttributeCondition, Serializable {
+
+    private static final long serialVersionUID = 5955662524656167683L;
 
     private String value;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CSSUnknownRuleImpl.java,v 1.5 2006-10-27 13:31:05 waldbaer Exp $
+ * $Id: CSSUnknownRuleImpl.java,v 1.6 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -38,9 +38,11 @@ import org.w3c.dom.css.CSSUnknownRule;
 /*
  * TODO: Reinstate setCssText
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSUnknownRuleImpl.java,v 1.5 2006-10-27 13:31:05 waldbaer Exp $
+ * @version $Id: CSSUnknownRuleImpl.java,v 1.6 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class CSSUnknownRuleImpl extends AbstractCSSRuleImpl implements CSSUnknownRule, Serializable {
+
+    private static final long serialVersionUID = -268104019127675990L;
 
     String text = null;
 

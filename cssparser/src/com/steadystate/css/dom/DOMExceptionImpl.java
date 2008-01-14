@@ -1,5 +1,5 @@
 /*
- * $Id: DOMExceptionImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: DOMExceptionImpl.java,v 1.3 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -35,9 +35,11 @@ import org.w3c.dom.DOMException;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: DOMExceptionImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: DOMExceptionImpl.java,v 1.3 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class DOMExceptionImpl extends DOMException {
+
+    private static final long serialVersionUID = 7365733663951145145L;
 
     public static final int SYNTAX_ERROR = 0;
     public static final int ARRAY_OUT_OF_BOUNDS = 1;

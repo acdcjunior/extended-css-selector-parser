@@ -1,5 +1,5 @@
 /*
- * $Id: OneOfAttributeConditionImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
+ * $Id: OneOfAttributeConditionImpl.java,v 1.4 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,9 +33,11 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: OneOfAttributeConditionImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
+ * @version $Id: OneOfAttributeConditionImpl.java,v 1.4 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class OneOfAttributeConditionImpl implements AttributeCondition, Serializable {
+
+    private static final long serialVersionUID = -1371164446179830634L;
 
     private String localName;
     private String value;

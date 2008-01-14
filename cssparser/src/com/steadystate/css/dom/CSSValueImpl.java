@@ -1,5 +1,5 @@
 /*
- * $Id: CSSValueImpl.java,v 1.8 2006-12-05 14:57:55 waldbaer Exp $
+ * $Id: CSSValueImpl.java,v 1.9 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -59,9 +59,11 @@ import com.steadystate.css.userdata.UserDataConstants;
  * A means of checking valid primitive types for properties
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSValueImpl.java,v 1.8 2006-12-05 14:57:55 waldbaer Exp $
+ * @version $Id: CSSValueImpl.java,v 1.9 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, CSSValueList, Serializable {
+
+    private static final long serialVersionUID = 406281136418322579L;
 
     private Object _value = null;
 

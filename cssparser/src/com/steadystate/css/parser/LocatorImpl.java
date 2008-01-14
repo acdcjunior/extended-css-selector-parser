@@ -1,5 +1,5 @@
 /*
- * $Id: LocatorImpl.java,v 1.4 2006-10-27 13:21:37 waldbaer Exp $
+ * $Id: LocatorImpl.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -34,9 +34,11 @@ import org.w3c.css.sac.Locator;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LocatorImpl.java,v 1.4 2006-10-27 13:21:37 waldbaer Exp $
+ * @version $Id: LocatorImpl.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class LocatorImpl implements Locator, Serializable {
+
+    private static final long serialVersionUID = 2240824537064705530L;
 
     private String uri;
     private int lineNumber;

@@ -1,5 +1,5 @@
 /*
- * $Id: RectImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
+ * $Id: RectImpl.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -38,10 +38,12 @@ import org.w3c.css.sac.LexicalUnit;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: RectImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
+ * @version $Id: RectImpl.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class RectImpl implements Rect, Serializable {
     
+    private static final long serialVersionUID = -7031248513917920621L;
+
     private CSSPrimitiveValue left;
     private CSSPrimitiveValue top;
     private CSSPrimitiveValue right;

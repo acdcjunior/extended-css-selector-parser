@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleDeclarationImpl.java,v 1.5 2006-10-27 13:31:05 waldbaer Exp $
+ * $Id: CSSStyleDeclarationImpl.java,v 1.6 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -44,10 +44,12 @@ import com.steadystate.css.parser.CSSOMParser;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleDeclarationImpl.java,v 1.5 2006-10-27 13:31:05 waldbaer Exp $
+ * @version $Id: CSSStyleDeclarationImpl.java,v 1.6 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializable
 {
+
+    private static final long serialVersionUID = -2373755821317100189L;
 
     private CSSRule parentRule;
     private Vector properties = new Vector();

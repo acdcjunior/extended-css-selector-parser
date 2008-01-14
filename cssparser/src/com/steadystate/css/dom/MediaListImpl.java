@@ -1,5 +1,5 @@
 /*
- * $Id: MediaListImpl.java,v 1.6 2006-10-27 13:31:05 waldbaer Exp $
+ * $Id: MediaListImpl.java,v 1.7 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -46,9 +46,11 @@ import com.steadystate.css.parser.SACParserCSS2;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: MediaListImpl.java,v 1.6 2006-10-27 13:31:05 waldbaer Exp $
+ * @version $Id: MediaListImpl.java,v 1.7 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Serializable {
+
+    private static final long serialVersionUID = 6662784733573034870L;
 
     private Vector media = new Vector();
 
