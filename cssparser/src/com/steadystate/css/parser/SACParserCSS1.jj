@@ -1,9 +1,9 @@
 /*
- * $Id: SACParserCSS1.jj,v 1.4 2006-12-05 14:57:22 waldbaer Exp $
+ * $Id: SACParserCSS1.jj,v 1.5 2008-01-14 11:45:25 waldbaer Exp $
  *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2008 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -48,7 +48,7 @@ import com.steadystate.css.parser.selectors.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSS1.jj,v 1.4 2006-12-05 14:57:22 waldbaer Exp $
+ * @version $Id: SACParserCSS1.jj,v 1.5 2008-01-14 11:45:25 waldbaer Exp $
  */
 public class SACParserCSS1 extends AbstractSACParser implements Parser {
 
@@ -234,9 +234,8 @@ TOKEN_MGR_DECLS :
 
 //
 // stylesheet
-//  : [ STRING S* ';' ]?
-//      [S|CDO|CDC]* [ import [S|CDO|CDC]* ]*
-//      [ [ ruleset | media | page | font_face ] [S|CDO|CDC]* ]*
+//  : [S|CDO|CDC]* [ import [S|CDO|CDC]* ]*
+//      [ ruleset [S|CDO|CDC]* ]*
 //  ;
 //
 void styleSheet() :
@@ -255,6 +254,8 @@ void styleSheet() :
     }
 }
 
+// Although the grammar does not include [S|CDO|CDC] but [CDO|CDC], white space
+// should be allowed
 void styleSheetRuleList() :
 {
 }
