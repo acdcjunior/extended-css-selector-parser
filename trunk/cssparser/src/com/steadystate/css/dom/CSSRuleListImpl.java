@@ -1,5 +1,5 @@
 /*
- * $Id: CSSRuleListImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
+ * $Id: CSSRuleListImpl.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -37,10 +37,12 @@ import org.w3c.dom.css.CSSRuleList;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSRuleListImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
+ * @version $Id: CSSRuleListImpl.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class CSSRuleListImpl implements CSSRuleList, Serializable {
     
+    private static final long serialVersionUID = -1269068897476453290L;
+
     private Vector rules = null;
 
     public Vector getRules()

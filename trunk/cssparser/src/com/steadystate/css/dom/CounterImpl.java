@@ -1,5 +1,5 @@
 /*
- * $Id: CounterImpl.java,v 1.5 2006-10-27 13:31:05 waldbaer Exp $
+ * $Id: CounterImpl.java,v 1.6 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -37,9 +37,11 @@ import org.w3c.css.sac.LexicalUnit;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CounterImpl.java,v 1.5 2006-10-27 13:31:05 waldbaer Exp $
+ * @version $Id: CounterImpl.java,v 1.6 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class CounterImpl implements Counter, Serializable {
+
+    private static final long serialVersionUID = 7996279151817598904L;
 
     private String identifier;
     private String listStyle;

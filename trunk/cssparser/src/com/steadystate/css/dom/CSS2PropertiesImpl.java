@@ -1,5 +1,5 @@
 /*
- * $Id: CSS2PropertiesImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: CSS2PropertiesImpl.java,v 1.3 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -36,9 +36,11 @@ import org.w3c.dom.css.CSS2Properties;
 /**
  * TODO: Implement
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSS2PropertiesImpl.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * @version $Id: CSS2PropertiesImpl.java,v 1.3 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class CSS2PropertiesImpl implements CSS2Properties, Serializable {
+
+    private static final long serialVersionUID = 6769757755750030077L;
 
     /** Creates new CSS2PropertiesImpl */
     public CSS2PropertiesImpl() {

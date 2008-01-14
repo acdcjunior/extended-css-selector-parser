@@ -1,5 +1,5 @@
 /*
- * $Id: Property.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
+ * $Id: Property.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -34,10 +34,11 @@ import org.w3c.dom.css.CSSValue;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: Property.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
+ * @version $Id: Property.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class Property extends CSSOMObjectImpl implements Serializable {
 
+    private static final long serialVersionUID = 8720637891949104989L;
     private String name;
     private CSSValue value;
     private boolean important;

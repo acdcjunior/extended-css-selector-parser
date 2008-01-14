@@ -1,5 +1,5 @@
 /*
- * $Id: AndConditionImpl.java,v 1.3 2006-10-27 13:29:16 waldbaer Exp $
+ * $Id: AndConditionImpl.java,v 1.4 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,9 +33,11 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: AndConditionImpl.java,v 1.3 2006-10-27 13:29:16 waldbaer Exp $
+ * @version $Id: AndConditionImpl.java,v 1.4 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class AndConditionImpl implements CombinatorCondition, Serializable {
+
+    private static final long serialVersionUID = -3180583860092672742L;
 
     private Condition firstCondition;
     private Condition secondCondition;

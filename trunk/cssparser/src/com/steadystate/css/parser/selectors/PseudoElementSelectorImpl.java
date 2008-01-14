@@ -1,5 +1,5 @@
 /*
- * $Id: PseudoElementSelectorImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
+ * $Id: PseudoElementSelectorImpl.java,v 1.4 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,9 +33,11 @@ import java.io.Serializable;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: PseudoElementSelectorImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
+ * @version $Id: PseudoElementSelectorImpl.java,v 1.4 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class PseudoElementSelectorImpl implements ElementSelector, Serializable {
+
+    private static final long serialVersionUID = 2913936296006875268L;
 
     private String localName;
 

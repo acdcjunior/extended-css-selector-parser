@@ -1,5 +1,5 @@
 /*
- * $Id: CSSPageRuleImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
+ * $Id: CSSPageRuleImpl.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -46,9 +46,11 @@ import com.steadystate.css.parser.CSSOMParser;
  * TO DO: Implement setSelectorText()
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSPageRuleImpl.java,v 1.4 2006-10-27 13:31:05 waldbaer Exp $
+ * @version $Id: CSSPageRuleImpl.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule, Serializable {
+
+    private static final long serialVersionUID = -6007519872104320812L;
 
     private String ident = null;
     private String pseudoPage = null;

@@ -10,6 +10,8 @@ import org.w3c.css.sac.Locator;
 public class TestCSSParseException extends CSSParseException
 {
 
+    private static final long serialVersionUID = -4892920039949256795L;
+
     private String testCaseUri;
 
     public void setTestCaseUri(String testCaseUri)

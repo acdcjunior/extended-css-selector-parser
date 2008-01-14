@@ -1,5 +1,5 @@
 /*
- * $Id: BeginHyphenAttributeConditionImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
+ * $Id: BeginHyphenAttributeConditionImpl.java,v 1.4 2008-01-14 11:14:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -33,9 +33,11 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: BeginHyphenAttributeConditionImpl.java,v 1.3 2006-10-27 13:30:04 waldbaer Exp $
+ * @version $Id: BeginHyphenAttributeConditionImpl.java,v 1.4 2008-01-14 11:14:24 waldbaer Exp $
  */
 public class BeginHyphenAttributeConditionImpl implements AttributeCondition, Serializable {
+
+    private static final long serialVersionUID = 6552118983276681650L;
 
     private String localName;
     private String value;
