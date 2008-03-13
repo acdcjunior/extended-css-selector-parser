@@ -1,5 +1,5 @@
 /*
- * $Id: HandlerBase.java,v 1.2 2005-07-14 00:25:05 davidsch Exp $
+ * $Id: HandlerBase.java,v 1.3 2008-03-13 12:38:38 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -29,7 +29,9 @@ package com.steadystate.css.parser;
 
 import org.w3c.css.sac.*;
 
-public class HandlerBase implements DocumentHandler, ErrorHandler {
+import com.steadystate.css.sac.DocumentHandlerExt;
+
+public class HandlerBase implements DocumentHandlerExt, ErrorHandler {
 
     public void startDocument(InputSource source)
         throws CSSException {
@@ -81,6 +83,10 @@ public class HandlerBase implements DocumentHandler, ErrorHandler {
         throws CSSException {
     }
 
+    public void charset(String characterEncoding) throws CSSException
+    {
+    }
+
     public void warning(CSSParseException exception) throws CSSException {
         StringBuffer sb = new StringBuffer();
         sb.append(exception.getURI())
@@ -116,4 +122,5 @@ public class HandlerBase implements DocumentHandler, ErrorHandler {
             .append(exception.getMessage());
         System.err.println(sb.toString());
     }
+
 }
