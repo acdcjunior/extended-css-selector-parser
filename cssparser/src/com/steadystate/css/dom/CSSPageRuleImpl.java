@@ -1,5 +1,5 @@
 /*
- * $Id: CSSPageRuleImpl.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
+ * $Id: CSSPageRuleImpl.java,v 1.6 2008-03-13 12:40:54 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -46,7 +46,7 @@ import com.steadystate.css.parser.CSSOMParser;
  * TO DO: Implement setSelectorText()
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSPageRuleImpl.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
+ * @version $Id: CSSPageRuleImpl.java,v 1.6 2008-03-13 12:40:54 waldbaer Exp $
  */
 public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule, Serializable {
 
@@ -77,9 +77,10 @@ public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule,
 
     public String getCssText() {
         String sel = getSelectorText();
-        return "@page "
+        return "@page {"
             + sel + ((sel.length() > 0) ? " " : "")
-            + getStyle().getCssText();
+            + getStyle().getCssText()
+            + "}";
     }
 
     public void setCssText(String cssText) throws DOMException {
