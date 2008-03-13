@@ -1,5 +1,5 @@
 /*
- * $Id: CSSFontFaceRuleImpl.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
+ * $Id: CSSFontFaceRuleImpl.java,v 1.6 2008-03-13 12:40:53 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -45,7 +45,7 @@ import com.steadystate.css.parser.CSSOMParser;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSFontFaceRuleImpl.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
+ * @version $Id: CSSFontFaceRuleImpl.java,v 1.6 2008-03-13 12:40:53 waldbaer Exp $
  */
 public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontFaceRule, Serializable {
 
@@ -67,7 +67,7 @@ public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontF
     }
 
     public String getCssText() {
-        return "@font-face " + getStyle().getCssText();
+        return "@font-face {" + getStyle().getCssText() + "}";
     }
 
     public void setCssText(String cssText) throws DOMException {

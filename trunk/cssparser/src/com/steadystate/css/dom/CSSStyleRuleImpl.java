@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleRuleImpl.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
+ * $Id: CSSStyleRuleImpl.java,v 1.6 2008-03-13 12:40:53 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -46,7 +46,7 @@ import com.steadystate.css.parser.CSSOMParser;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleRuleImpl.java,v 1.5 2008-01-14 11:14:24 waldbaer Exp $
+ * @version $Id: CSSStyleRuleImpl.java,v 1.6 2008-03-13 12:40:53 waldbaer Exp $
  */
 public class CSSStyleRuleImpl extends AbstractCSSRuleImpl
     implements CSSStyleRule, Serializable {
@@ -83,7 +83,7 @@ public class CSSStyleRuleImpl extends AbstractCSSRuleImpl
     }
 
     public String getCssText() {
-        return this.getSelectorText() + " " + this.getStyle().toString();
+        return this.getSelectorText() + " { " + this.getStyle().getCssText() + " }";
     }
 
     public void setCssText(String cssText) throws DOMException {
