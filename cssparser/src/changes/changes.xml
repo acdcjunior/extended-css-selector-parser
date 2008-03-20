@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>Changes</title>
+		<author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
+	</properties>
+	<body>
+		<release version="0.9.5">
+			<action type="update">
+				Move build system to Maven 2.
+			</action>
+			<action type="add">
+				Added parseMedia() to SACParser.
+			</action>
+			<action type="update">
+				CSSOMParser modified to allow parser creation within the sandbox.
+			</action>
+			<action type="remove">
+				JavaCC-generated files removed from the repository.
+			</action>
+			<action type="update">
+				css2.jj renamed to SACParser.jj.
+			</action>
+			<action type="add">
+				Initial JUnit tests added.
+			</action>
+		</release>
+		<release version="0.9.4">
+			<action type="add">
+				Ant buildfile added.
+			</action>
+		</release>
+		<release version="0.9.3">
+			<action type="fix">
+				Fixed a bug in the '@page' rule where a space after an identifier or a pseudo page caused a parser exception.
+			</action>
+		</release>
+		<release version="0.9.2">
+			<action type="update">
+				Made several modifications to provide JDK 1.1 compatability.
+			</action>
+			<action type="fix">
+				Fixed a bug that caused negative floating-point values to be excessively trimmed.
+			</action>
+		</release>
+		<release version="0.9.1">
+			<action type="update">
+				Updated the SAC to version 1.2.
+			</action>
+			<action type="update">
+				Updated the CSSOM to comply with the W3C recommendation.
+			</action>
+			<action type="update">
+				Made the CSSOM serializable.
+			</action>
+		</release>
+		<release version="0.9.0">
+			<action type="update">
+				Implemented the SAC (Simple API for CSS).
+			</action>
+			<action type="update">
+				Converted the CSS DOM to be implemented on top of the SAC.
+			</action>
+		</release>
+		<release version="0.1.4">
+			<action type="fix">
+				Fixed case-sensitivity bug in ASTStyleDeclaration.
+			</action>
+			<action type="update">
+				Renamed methods in ASTMediaList to bring it into line with CR-DOM-Level-2-20000510.
+			</action>
+			<action type="update">
+				Reduced the number of states in the lexer to simplify matters and to aid with improved handling of invalid statements.
+			</action>
+		</release>
+	</body>
+</document>
