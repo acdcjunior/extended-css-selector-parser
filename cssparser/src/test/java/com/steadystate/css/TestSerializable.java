@@ -25,70 +25,67 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: TestSerializable.java,v 1.1 2008-03-20 01:24:39 sdanig Exp $
+ * $Id: TestSerializable.java,v 1.2 2008-03-20 02:49:41 sdanig Exp $
  */
 
 package com.steadystate.css;
 
-import com.steadystate.css.parser.CSSOMParser;
-import java.io.FileReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
+
+import junit.framework.TestCase;
+
 import org.w3c.css.sac.InputSource;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
 import org.w3c.dom.css.CSSStyleSheet;
-import junit.framework.*;
+
+import com.steadystate.css.parser.CSSOMParser;
 
 /**
- *
- * @author  David Schweinsberg
+ * @author David Schweinsberg
  * @version $Release$
  */
 public class TestSerializable extends TestCase {
 
-    public void test() {
-        // TODO: test something!
-    }
+    public void test() throws Exception {
 
-    /**
-    * @param args the command line arguments
-    */
-    public static void main (String args[]) {
-        try {
-//            Reader r = new FileReader("c:\\working\\css2parser\\stylesheets\\test.css");
-            Reader r = new FileReader("c:\\working\\css2parser\\stylesheets\\html40.css");
-            CSSOMParser parser = new CSSOMParser();
-            InputSource is = new InputSource(r);
+        InputStream is = getClass().getClassLoader().getResourceAsStream("html40.css");
+        assertNotNull(is);
 
-            CSSStyleSheet stylesheet = parser.parseStyleSheet(is, null, null);
-            
-            // Serialize the style sheet
-            FileOutputStream fo = new FileOutputStream("c:\\working\\css2parser\\stylesheets\\tmp");
-            ObjectOutput oo = new ObjectOutputStream(fo);
-            oo.writeObject(stylesheet);
-            oo.flush();
-            
-            // Read it back in
-            FileInputStream fi = new FileInputStream("c:\\working\\css2parser\\stylesheets\\tmp");
-            ObjectInput oi = new ObjectInputStream(fi);
-            CSSStyleSheet stylesheet2 = (CSSStyleSheet) oi.readObject();
-            
-            CSSRuleList rules = stylesheet2.getCssRules();
+        CSSOMParser parser = new CSSOMParser();
 
-            for (int i = 0; i < rules.getLength(); i++) {
-                CSSRule rule = rules.item(i);
-                System.out.println(rule.getCssText());
-            }
-        } catch (Exception e) {
-            System.out.println("Error.");
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+        Reader r = new InputStreamReader(is);
+        InputSource source = new InputSource(r);
+
+        CSSStyleSheet stylesheet = parser.parseStyleSheet(source, null, null);
+
+        // Serialize the style sheet
+        File temp = File.createTempFile("temp", "css");
+        temp.deleteOnExit();
+        FileOutputStream fo = new FileOutputStream(temp);
+        ObjectOutput oo = new ObjectOutputStream(fo);
+        oo.writeObject(stylesheet);
+        oo.flush();
+
+        // Read it back in
+        FileInputStream fi = new FileInputStream(temp);
+        ObjectInput oi = new ObjectInputStream(fi);
+        CSSStyleSheet stylesheet2 = (CSSStyleSheet) oi.readObject();
+
+        CSSRuleList rules = stylesheet2.getCssRules();
+
+        for (int i = 0; i < rules.getLength(); i++) {
+            CSSRule rule = rules.item(i);
+            System.out.println(rule.getCssText());
         }
     }
 

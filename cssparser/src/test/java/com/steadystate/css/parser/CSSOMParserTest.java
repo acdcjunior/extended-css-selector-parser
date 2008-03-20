@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParserTest.java,v 1.1 2008-03-20 01:20:18 sdanig Exp $
+ * $Id: CSSOMParserTest.java,v 1.2 2008-03-20 02:49:41 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -27,23 +27,14 @@
 
 package com.steadystate.css.parser;
 
-import junit.framework.*;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import java.util.Properties;
-import java.util.Stack;
+import junit.framework.TestCase;
 
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.DocumentHandler;
 import org.w3c.css.sac.InputSource;
-import org.w3c.css.sac.LexicalUnit;
-import org.w3c.css.sac.Parser;
-import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
-
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
 import org.w3c.dom.css.CSSStyleDeclaration;
@@ -51,65 +42,30 @@ import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
 import org.w3c.dom.css.CSSValue;
 
-import org.w3c.css.sac.helpers.ParserFactory;
-
-import com.steadystate.css.dom.CSSFontFaceRuleImpl;
-import com.steadystate.css.dom.CSSImportRuleImpl;
-import com.steadystate.css.dom.CSSMediaRuleImpl;
-import com.steadystate.css.dom.CSSPageRuleImpl;
-import com.steadystate.css.dom.CSSRuleListImpl;
-import com.steadystate.css.dom.CSSStyleDeclarationImpl;
-import com.steadystate.css.dom.CSSStyleRuleImpl;
-import com.steadystate.css.dom.CSSStyleSheetImpl;
-import com.steadystate.css.dom.CSSUnknownRuleImpl;
-import com.steadystate.css.dom.CSSValueImpl;
-import com.steadystate.css.dom.MediaListImpl;
-import com.steadystate.css.dom.Property;
-
 /**
- *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParserTest.java,v 1.1 2008-03-20 01:20:18 sdanig Exp $
+ * @version $Id: CSSOMParserTest.java,v 1.2 2008-03-20 02:49:41 sdanig Exp $
  */
 public class CSSOMParserTest extends TestCase {
 
-    String _testSelector = "FOO";
-    String _testItem = "color";
-    String _testValue = "rgb(1, 2, 3)";
-    String _testString = _testSelector + "{ " + _testItem + ": " + _testValue + " }";
-    CSSOMParser _parser = new CSSOMParser();
-    
-    public CSSOMParserTest(String testName) {
-        super(testName);
-    }
+    private String _testSelector = "FOO";
+    private String _testItem = "color";
+    private String _testValue = "rgb(1, 2, 3)";
+    private String _testString = _testSelector + "{ " + _testItem + ": " + _testValue + " }";
+    private CSSOMParser _parser = new CSSOMParser();
 
-    protected void setUp() throws Exception {
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(CSSOMParserTest.class);
-        
-        return suite;
-    }
-
-    /**
-     * Test of parseStyleSheet method, of class com.steadystate.css.parser.CSSOMParser.
-     */
     public void testParseStyleSheet() throws IOException {
-        System.out.println("testParseStyleSheet");
-        
+
         Reader r = new StringReader(_testString);
         InputSource is = new InputSource(r);
         CSSStyleSheet ss = _parser.parseStyleSheet(is, null, null);
+
         CSSRuleList rl = ss.getCssRules();
         CSSRule rule = rl.item(0);
         if (rule.getType() == CSSRule.STYLE_RULE) {
             CSSStyleRule sr = (CSSStyleRule) rule;
             assertEquals(sr.getSelectorText(), _testSelector);
-            
+
             CSSStyleDeclaration style = sr.getStyle();
             assertEquals(style.item(0), _testItem);
 
@@ -120,45 +76,11 @@ public class CSSOMParserTest extends TestCase {
         }
     }
 
-    /**
-     * Test of parseStyleDeclaration method, of class com.steadystate.css.parser.CSSOMParser.
-     */
-//    public void testParseStyleDeclaration() {
-//        System.out.println("testParseStyleDeclaration");
-        
-        // TODO add your test code below by replacing the default call to fail.
-//        fail("The test case is empty.");
-//    }
-
-    /**
-     * Test of parsePropertyValue method, of class com.steadystate.css.parser.CSSOMParser.
-     */
-//    public void testParsePropertyValue() {
-//        System.out.println("testParsePropertyValue");
-        
-        // TODO add your test code below by replacing the default call to fail.
-//        fail("The test case is empty.");
-//    }
-
-    /**
-     * Test of parseRule method, of class com.steadystate.css.parser.CSSOMParser.
-     */
-//    public void testParseRule() {
-//        System.out.println("testParseRule");
-        
-        // TODO add your test code below by replacing the default call to fail.
-//        fail("The test case is empty.");
-//    }
-
-    /**
-     * Test of parseSelectors method, of class com.steadystate.css.parser.CSSOMParser.
-     */
-    public void testParseSelectors() throws IOException {
-        System.out.println("testParseSelectors");
-        
+    public void testParseSelectors() throws Exception {
         Reader r = new StringReader(_testSelector);
         InputSource is = new InputSource(r);
         SelectorList sl = _parser.parseSelectors(is);
         assertEquals(sl.item(0).toString(), _testSelector);
     }
+
 }

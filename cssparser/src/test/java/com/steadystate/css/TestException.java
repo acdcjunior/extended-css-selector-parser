@@ -25,67 +25,66 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: TestException.java,v 1.1 2008-03-20 01:24:39 sdanig Exp $
+ * $Id: TestException.java,v 1.2 2008-03-20 02:49:41 sdanig Exp $
  */
 
 package com.steadystate.css;
 
-import java.io.*;
-import com.steadystate.css.*;
-import org.w3c.dom.*;
-import org.w3c.dom.css.*;
-import junit.framework.*;
+import java.io.Reader;
+import java.io.StringReader;
+
+import junit.framework.TestCase;
+
+import org.w3c.css.sac.InputSource;
+import org.w3c.dom.css.CSSMediaRule;
+import org.w3c.dom.css.CSSRule;
+import org.w3c.dom.css.CSSRuleList;
+import org.w3c.dom.css.CSSStyleSheet;
+
+import com.steadystate.css.parser.CSSOMParser;
 
 /**
- * Attempts to perform some illegal operations to ensure the correct exceptions
- * are thrown.
- *
+ * Attempts to perform some illegal operations to ensure the correct exceptions are thrown.
+ * 
  * @author David Schweinsberg
  * @version $Release$
  */
 public class TestException extends TestCase {
 
-    public void test() {
-        // TODO: test something!
-    }
+    public void test() throws Exception {
 
-    public static void main(String[] args) throws ParseException {
-        CSS2Parser parser = new CSS2Parser(System.in);
+        CSSOMParser parser = new CSSOMParser();
 
-        try {
-            CSSStyleSheet stylesheet = parser.styleSheet();
+        Reader r = new StringReader("");
+        InputSource source = new InputSource(r);
+        CSSStyleSheet stylesheet = parser.parseStyleSheet(source, null, null);
 
-            stylesheet.insertRule("P { color: blue }", 1);
-            stylesheet.insertRule("@import url(http://www.steadystate.com/primary.css);", 0);
-            stylesheet.insertRule("@charset \"US-ASCII\";", 0);
-            stylesheet.deleteRule(1);
+        stylesheet.insertRule("P { color: blue }", 0);
+        stylesheet.insertRule("@import url(http://www.steadystate.com/primary.css);", 0);
+        stylesheet.insertRule("@charset \"US-ASCII\";", 0);
+        stylesheet.deleteRule(1);
 
-            CSSRuleList rules = stylesheet.getCssRules();
-            CSSRule rule = rules.item(1);
-            //      rule.setCssText("@import url(bogus.css);");
-            rule.setCssText("H2 { smell: strong }");
+        CSSRuleList rules = stylesheet.getCssRules();
+        CSSRule rule = rules.item(1);
+        // rule.setCssText("@import url(bogus.css);");
+        rule.setCssText("H2 { smell: strong }");
 
-            int n = stylesheet.insertRule("@media speech { H1 { voice: male } }", 1);
-            rule = rules.item(n);
-            ((CSSMediaRule)rule).insertRule("P { voice: female }", 1);
+        int n = stylesheet.insertRule("@media speech { H1 { voice: male } }", 1);
+        rule = rules.item(n);
+        ((CSSMediaRule) rule).insertRule("P { voice: female }", 1);
 
-            System.out.println(((CSSMediaRule)rule).getMedia().getMediaText());
-            ((CSSMediaRule)rule).getMedia().setMediaText("speech, signlanguage");
-            System.out.println(((CSSMediaRule)rule).getMedia().getMediaText());
-            ((CSSMediaRule)rule).getMedia().deleteMedium("signlanguage");
-            System.out.println(((CSSMediaRule)rule).getMedia().getMediaText());
-            ((CSSMediaRule)rule).getMedia().appendMedium("semaphore");
-            //      ((CSSMediaRule)rule).getMedia().delete("signlanguage");
+        System.out.println(((CSSMediaRule) rule).getMedia().getMediaText());
+        ((CSSMediaRule) rule).getMedia().setMediaText("speech, signlanguage");
+        System.out.println(((CSSMediaRule) rule).getMedia().getMediaText());
+        ((CSSMediaRule) rule).getMedia().deleteMedium("signlanguage");
+        System.out.println(((CSSMediaRule) rule).getMedia().getMediaText());
+        ((CSSMediaRule) rule).getMedia().appendMedium("semaphore");
+        // ((CSSMediaRule)rule).getMedia().delete("signlanguage");
 
-            // Print it out
-            for (int i = 0; i < rules.getLength(); i++) {
-                rule = rules.item(i);
-                System.out.println(rule.getCssText());
-            }
-        } catch(Exception e) {
-            System.out.println("Error.");
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+        // Print it out
+        for (int i = 0; i < rules.getLength(); i++) {
+            rule = rules.item(i);
+            System.out.println(rule.getCssText());
         }
     }
 }
