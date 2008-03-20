@@ -25,15 +25,16 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: TestDOM_1.java,v 1.2 2007-08-14 09:43:30 waldbaer Exp $
+ * $Id: TestDOM2.java,v 1.1 2008-03-20 01:24:39 sdanig Exp $
  */
 
-package test;
+package com.steadystate.css;
 
 import java.io.*;
 import org.w3c.dom.css.*;
 import org.w3c.css.sac.*;
 import com.steadystate.css.parser.*;
+import junit.framework.*;
 
 /**
  * Tests the CSS DOM implementation by loading a stylesheet and performing a
@@ -42,7 +43,11 @@ import com.steadystate.css.parser.*;
  * @author David Schweinsberg
  * @version $Release$
  */
-public class TestDOM_1 {
+public class TestDOM2 extends TestCase {
+
+    public void test() {
+        // TODO: test something!
+    }
 
     public static void main(String[] args) {
         try {
