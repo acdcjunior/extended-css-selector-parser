@@ -25,10 +25,10 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: TestSerializable.java,v 1.2 2007-08-14 09:43:30 waldbaer Exp $
+ * $Id: TestSerializable.java,v 1.1 2008-03-20 01:24:39 sdanig Exp $
  */
 
-package test;
+package com.steadystate.css;
 
 import com.steadystate.css.parser.CSSOMParser;
 import java.io.FileReader;
@@ -43,13 +43,18 @@ import org.w3c.css.sac.InputSource;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
 import org.w3c.dom.css.CSSStyleSheet;
+import junit.framework.*;
 
 /**
  *
  * @author  David Schweinsberg
  * @version $Release$
  */
-public class TestSerializable {
+public class TestSerializable extends TestCase {
+
+    public void test() {
+        // TODO: test something!
+    }
 
     /**
     * @param args the command line arguments

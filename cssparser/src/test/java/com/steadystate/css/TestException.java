@@ -25,15 +25,16 @@
  * http://www.steadystate.com/css/
  * mailto:css@steadystate.co.uk
  *
- * $Id: TestException.java,v 1.1.1.1 2003-12-28 21:22:42 davidsch Exp $
+ * $Id: TestException.java,v 1.1 2008-03-20 01:24:39 sdanig Exp $
  */
 
-package test;
+package com.steadystate.css;
 
 import java.io.*;
 import com.steadystate.css.*;
 import org.w3c.dom.*;
 import org.w3c.dom.css.*;
+import junit.framework.*;
 
 /**
  * Attempts to perform some illegal operations to ensure the correct exceptions
@@ -42,7 +43,11 @@ import org.w3c.dom.css.*;
  * @author David Schweinsberg
  * @version $Release$
  */
-public class TestException {
+public class TestException extends TestCase {
+
+    public void test() {
+        // TODO: test something!
+    }
 
     public static void main(String[] args) throws ParseException {
         CSS2Parser parser = new CSS2Parser(System.in);
