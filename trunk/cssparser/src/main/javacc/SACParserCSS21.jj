@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSS21.jj,v 1.1 2008-03-20 01:20:18 sdanig Exp $
+ * $Id: SACParserCSS21.jj,v 1.2 2008-03-21 00:33:12 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.sac.TestCSSParseException;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSS21.jj,v 1.1 2008-03-20 01:20:18 sdanig Exp $
+ * @version $Id: SACParserCSS21.jj,v 1.2 2008-03-21 00:33:12 sdanig Exp $
  */
 public class SACParserCSS21 extends AbstractSACParser implements Parser {
 
@@ -153,7 +153,6 @@ TOKEN_MGR_DECLS :
 | < PLUS: <W> "+" >
 | < MINUS: "-" >
 | < EQUALS: "=" >
-| < GT: ">" >
 | < LSQUARE: "[" >
 | < RSQUARE: "]" >
 | < GREATER: <W> ">" >
@@ -562,8 +561,8 @@ char combinator() :
 }
 {
   ( <PLUS> { c='+'; } ( <S> )*
-  | <GT> { c='>'; } ( <S> )*
-  | <S> ( ( <PLUS> { c='+'; } | <GT> { c='>'; } ) ( <S> )* )? )
+  | <GREATER> { c='>'; } ( <S> )*
+  | <S> ( ( <PLUS> { c='+'; } | <GREATER> { c='>'; } ) ( <S> )* )? )
 
   { return c; }
 }
