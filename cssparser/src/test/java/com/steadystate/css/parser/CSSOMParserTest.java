@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParserTest.java,v 1.3 2008-03-25 01:09:25 sdanig Exp $
+ * $Id: CSSOMParserTest.java,v 1.4 2008-03-25 01:22:10 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -44,7 +44,7 @@ import org.w3c.dom.css.CSSValue;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParserTest.java,v 1.3 2008-03-25 01:09:25 sdanig Exp $
+ * @version $Id: CSSOMParserTest.java,v 1.4 2008-03-25 01:22:10 sdanig Exp $
  */
 public class CSSOMParserTest extends TestCase {
 
@@ -92,6 +92,28 @@ public class CSSOMParserTest extends TestCase {
         InputSource is = new InputSource(r);
         CSSStyleDeclaration declaration = _parser.parseStyleDeclaration(is);
         assertEquals(declaration.getLength(), 1);
+    }
+
+    /**
+     * Regression test for bug 1183734.
+     * @throws Exception if any error occurs
+     */
+    public void testColorFirst() throws Exception {
+
+        Reader r = new StringReader("background: #e8eff5 url(images/bottom-angle.png) no-repeat");
+        InputSource is = new InputSource(r);
+        CSSStyleDeclaration d = _parser.parseStyleDeclaration(is);
+        assertEquals("background: rgb(232, 239, 245) url(images/bottom-angle.png) no-repeat", d.getCssText());
+
+        Reader r2 = new StringReader("background: red url(images/bottom-angle.png) no-repeat");
+        InputSource is2 = new InputSource(r2);
+        CSSStyleDeclaration d2 = _parser.parseStyleDeclaration(is2);
+        assertEquals("background: red url(images/bottom-angle.png) no-repeat", d2.getCssText());
+
+        Reader r3 = new StringReader("background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat");
+        InputSource is3 = new InputSource(r3);
+        CSSStyleDeclaration d3 = _parser.parseStyleDeclaration(is3);
+        assertEquals("background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat", d3.getCssText());
     }
 
 }
