@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParserTest.java,v 1.4 2008-03-25 01:22:10 sdanig Exp $
+ * $Id: CSSOMParserTest.java,v 1.5 2008-03-25 16:43:10 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -34,6 +34,7 @@ import java.io.StringReader;
 import junit.framework.TestCase;
 
 import org.w3c.css.sac.InputSource;
+import org.w3c.css.sac.Parser;
 import org.w3c.css.sac.SelectorList;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
@@ -44,7 +45,7 @@ import org.w3c.dom.css.CSSValue;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParserTest.java,v 1.4 2008-03-25 01:22:10 sdanig Exp $
+ * @version $Id: CSSOMParserTest.java,v 1.5 2008-03-25 16:43:10 sdanig Exp $
  */
 public class CSSOMParserTest extends TestCase {
 
@@ -114,6 +115,41 @@ public class CSSOMParserTest extends TestCase {
         InputSource is3 = new InputSource(r3);
         CSSStyleDeclaration d3 = _parser.parseStyleDeclaration(is3);
         assertEquals("background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat", d3.getCssText());
+    }
+
+    /**
+     * Regression test for bug 1226128.
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#escaped-characters">CSS Spec</a>
+     * @throws Exception if an error occurs
+     */
+    public void testEscapedChars() throws Exception {
+        testEscapedChars(new SACParserCSS2());
+        testEscapedChars(new SACParserCSS21());
+    }
+
+    private void testEscapedChars(Parser p) throws Exception {
+        assertEquals("bogus: \"abc\"", getCssTextFromDeclaration(p, "bogus: 'a\\\rbc'"));
+        assertEquals("bogus: \"abc\"", getCssTextFromDeclaration(p, "bogus: 'a\\\nbc'"));
+        assertEquals("bogus: \"abc\"", getCssTextFromDeclaration(p, "bogus: 'a\\\fbc'"));
+        assertEquals("bogus: \"abc\"", getCssTextFromDeclaration(p, "bogus: 'abc\\\r\n'"));
+        assertEquals("bogus: \"abc\"", getCssTextFromDeclaration(p, "bogus: 'a\\\r\nbc'"));
+        assertEquals("bogus: \"abx\"", getCssTextFromDeclaration(p, "bogus: '\\61\\62x'"));
+        assertEquals("bogus: \"abc\"", getCssTextFromDeclaration(p, "bogus: '\\61\\62\\63'"));
+        assertEquals("bogus: \"abx\"", getCssTextFromDeclaration(p, "bogus: '\\61 \\62x'"));
+        assertEquals("bogus: \"abx\"", getCssTextFromDeclaration(p, "bogus: '\\61\t\\62x'"));
+        assertEquals("bogus: \"abx\"", getCssTextFromDeclaration(p, "bogus: '\\61\n\\62x'"));
+        assertEquals("bogus: \"a'bc\"", getCssTextFromDeclaration(p, "bogus: 'a\\'bc'"));
+        assertEquals("bogus: \"a'bc\"", getCssTextFromDeclaration(p, "bogus: \"a\\'bc\""));
+        assertEquals("bogus: \"a\"bc\"", getCssTextFromDeclaration(p, "bogus: 'a\\\"bc'"));
+        assertEquals("bogus: \"a\"bc\"", getCssTextFromDeclaration(p, "bogus: \"a\\\"bc\""));
+    }
+
+    private String getCssTextFromDeclaration(Parser p, String s) throws Exception {
+        CSSOMParser parser = new CSSOMParser(p);
+        Reader r = new StringReader(s);
+        InputSource is = new InputSource(r);
+        CSSStyleDeclaration d = parser.parseStyleDeclaration(is);
+        return d.getCssText();
     }
 
 }

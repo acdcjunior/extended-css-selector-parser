@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSS21.jj,v 1.2 2008-03-21 00:33:12 sdanig Exp $
+ * $Id: SACParserCSS21.jj,v 1.3 2008-03-25 16:43:09 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.sac.TestCSSParseException;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSS21.jj,v 1.2 2008-03-21 00:33:12 sdanig Exp $
+ * @version $Id: SACParserCSS21.jj,v 1.3 2008-03-25 16:43:09 sdanig Exp $
  */
 public class SACParserCSS21 extends AbstractSACParser implements Parser {
 
@@ -1097,7 +1097,7 @@ LexicalUnit term(LexicalUnit prev) :
         | t = <FREQ_KHZ>    { value = LexicalUnitImpl.createKiloHertz(prev, floatValue(op, t.image)); }
         | value = function(prev)
         )
-    | t = <STRING>          { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_STRING_VALUE, t.image); }
+    | t = <STRING>          { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_STRING_VALUE, unescape(t.image)); }
     | t = <IDENT>           { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_IDENT, t.image); }
     | t = <URI>             { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_URI, t.image); }
     | value = hexcolor(prev)
