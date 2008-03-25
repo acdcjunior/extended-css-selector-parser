@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleDeclarationImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * $Id: CSSStyleDeclarationImpl.java,v 1.2 2008-03-25 00:31:35 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -44,7 +44,7 @@ import com.steadystate.css.parser.CSSOMParser;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleDeclarationImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * @version $Id: CSSStyleDeclarationImpl.java,v 1.2 2008-03-25 00:31:35 sdanig Exp $
  */
 public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializable
 {
@@ -74,17 +74,12 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
         this.parentRule = parentRule;
     }
 
-    public CSSStyleDeclarationImpl()
-    {
+    public CSSStyleDeclarationImpl() {
+        // Empty.
     }
-
 
     public String getCssText() {
         StringBuffer sb = new StringBuffer();
-        // see issue 1874800 <https://sourceforge.net/tracker/index.php?func=detail&aid=1874800&group_id=82996&atid=567969>
-//        sb.append("{");
-        //if newlines requested in text
-        //sb.append("\n");
         for (int i = 0; i < this.properties.size(); ++i) {
             Property p = (Property) this.properties.elementAt(i);
             if (p != null) {
@@ -93,10 +88,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
             if (i < this.properties.size() - 1) {
                 sb.append("; ");
             }
-            //if newlines requested in text
-            //sb.append("\n");
         }
-//        sb.append("}");
         return sb.toString();
     }
 
