@@ -6,6 +6,9 @@
 	</properties>
 	<body>
 		<release version="0.9.5">
+			<action type="fix" id="1226128">
+				Correctly unescape escaped characters in strings.
+			</action>
 			<action type="fix" id="1874800">
 				CSSStyleDeclarationImpl.getCssText() fixed to not return curly braces (as per the spec).
 			</action>

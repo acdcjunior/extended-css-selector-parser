@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSACParser.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * $Id: AbstractSACParser.java,v 1.2 2008-03-25 16:43:09 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -640,6 +640,14 @@ abstract class AbstractSACParser implements Parser
         return i - 1;
     }
 
+    /**
+     * Unescapes escaped characters in the specified string, according to the
+     * <a href="http://www.w3.org/TR/CSS21/syndata.html#escaped-characters">CSS specification</a>.
+     * 
+     * This could be done directly in the parser, but portions of the lexer would have to be moved
+     * to the parser, meaning that the grammar would no longer match the standard grammar specified
+     * by the W3C. This would make the parser and lexer much less maintainable.
+     */
     String unescape(String s) {
         int len = s.length();
         StringBuffer buf = new StringBuffer(len);
@@ -667,7 +675,7 @@ abstract class AbstractSACParser implements Parser
                                 p *= 16;
                                 index++;
                             } else {
-                                if (c == ' ') {
+                                if (Character.isWhitespace(c)) {
                                     // skip the latest white space
                                     index++;
                                 }
