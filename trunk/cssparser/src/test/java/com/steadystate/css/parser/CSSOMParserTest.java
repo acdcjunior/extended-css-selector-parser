@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParserTest.java,v 1.2 2008-03-20 02:49:41 sdanig Exp $
+ * $Id: CSSOMParserTest.java,v 1.3 2008-03-25 01:09:25 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -44,7 +44,7 @@ import org.w3c.dom.css.CSSValue;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParserTest.java,v 1.2 2008-03-20 02:49:41 sdanig Exp $
+ * @version $Id: CSSOMParserTest.java,v 1.3 2008-03-25 01:09:25 sdanig Exp $
  */
 public class CSSOMParserTest extends TestCase {
 
@@ -81,6 +81,17 @@ public class CSSOMParserTest extends TestCase {
         InputSource is = new InputSource(r);
         SelectorList sl = _parser.parseSelectors(is);
         assertEquals(sl.item(0).toString(), _testSelector);
+    }
+
+    /**
+     * Regression test for bug 1191376.
+     * @throws Exception if any error occurs
+     */
+    public void testParseStyleDeclaration() throws Exception {
+        Reader r = new StringReader("background-color: white");
+        InputSource is = new InputSource(r);
+        CSSStyleDeclaration declaration = _parser.parseStyleDeclaration(is);
+        assertEquals(declaration.getLength(), 1);
     }
 
 }
