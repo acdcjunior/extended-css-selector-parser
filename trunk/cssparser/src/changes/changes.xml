@@ -6,14 +6,23 @@
 	</properties>
 	<body>
 		<release version="0.9.5">
+			<action type="remove" id="1337730">
+				Removed unused class ParseException (one of two classes with this name).
+			</action>
 			<action type="update">
-				Move build system to Maven 2.
+				Updated the minimum required Java version to Java 5.
+			</action>
+			<action type="remove">
+				Removed the W3C DOM and SAC classes, using instead the classes in the JDK and the official SAC JAR.
+			</action>
+			<action type="update">
+				Moved build system to Maven 2.
 			</action>
 			<action type="add">
 				Added parseMedia() to SACParser.
 			</action>
 			<action type="update">
-				CSSOMParser modified to allow parser creation within the sandbox.
+				Modified CSSOMParser to allow parser creation within the sandbox.
 			</action>
 			<action type="remove">
 				JavaCC-generated files removed from the repository.
