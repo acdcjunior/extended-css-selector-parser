@@ -3,6 +3,7 @@ package com.steadystate.css.dom;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 
 import junit.framework.TestCase;
 
@@ -12,13 +13,16 @@ import com.steadystate.css.parser.CSSOMParser;
 
 /**
  * Unit tests for {@link CSSStyleDeclarationImpl}.
+ * 
  * @author Daniel Gredler
  */
 public class CSSStyleDeclarationImplTest extends TestCase {
 
     /**
      * Regression test for bug 1874800.
-     * @throws Exception if any error occurs
+     * 
+     * @throws Exception
+     *             if any error occurs
      */
     public void testCssTextHasNoCurlyBraces() throws Exception {
 
@@ -36,6 +40,23 @@ public class CSSStyleDeclarationImplTest extends TestCase {
 
         style.setCssText("color: red;");
         assertEquals("color: red", style.getCssText());
+    }
+
+    /**
+     * Regression test for bug 1691221.
+     * 
+     * @throws Exception
+     *             if any error occurs
+     */
+    public void testEmptyUrl() throws Exception {
+
+        CSSOMParser parser = new CSSOMParser();
+
+        Reader r = new StringReader("{ background: url() }");
+        InputSource source = new InputSource(r);
+        CSSStyleDeclarationImpl style = (CSSStyleDeclarationImpl) parser.parseStyleDeclaration(source);
+
+        assertEquals("", style.getCssText());
     }
 
 }
