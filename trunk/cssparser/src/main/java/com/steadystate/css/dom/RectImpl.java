@@ -1,5 +1,5 @@
 /*
- * $Id: RectImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * $Id: RectImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -36,9 +36,10 @@ import org.w3c.dom.css.Rect;
 import org.w3c.css.sac.LexicalUnit;
 
 /** 
- *
+ * Implementation of {@link Rect}.
+ * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: RectImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * @version $Id: RectImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  */
 public class RectImpl implements Rect, Serializable {
     

@@ -9,7 +9,6 @@ import org.w3c.dom.css.CSSStyleSheet;
 
 /**
  * @author koch
- *
  */
 public abstract class AbstractCSSRuleImpl extends CSSOMObjectImpl
 {

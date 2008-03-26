@@ -6,7 +6,6 @@ package com.steadystate.css.dom;
 
 /**
  * @author koch
- *
  */
 public interface CSSOMObject
 {

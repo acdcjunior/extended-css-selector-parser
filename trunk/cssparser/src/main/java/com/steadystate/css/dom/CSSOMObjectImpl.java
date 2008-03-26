@@ -8,8 +8,9 @@ import java.util.Hashtable;
 import java.util.Map;
 
 /**
+ * Implementation of {@link CSSOMObject}.
+ * 
  * @author koch
- *
  */
 public class CSSOMObjectImpl implements CSSOMObject
 {

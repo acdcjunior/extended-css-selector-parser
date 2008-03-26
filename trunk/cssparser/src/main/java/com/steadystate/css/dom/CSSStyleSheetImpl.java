@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleSheetImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * $Id: CSSStyleSheetImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -50,9 +50,10 @@ import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.parser.SACParserCSS2;
 
 /**
- *
+ * Implementation of {@link CSSStyleSheet}.
+ * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleSheetImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * @version $Id: CSSStyleSheetImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  */
 public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
 

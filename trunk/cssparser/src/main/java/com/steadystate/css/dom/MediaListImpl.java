@@ -1,5 +1,5 @@
 /*
- * $Id: MediaListImpl.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
+ * $Id: MediaListImpl.java,v 1.3 2008-03-26 02:17:24 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -33,7 +33,6 @@ import java.io.StringReader;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.w3c.dom.DOMException;
 
@@ -46,9 +45,10 @@ import org.w3c.css.sac.SACMediaList;
 import com.steadystate.css.parser.SACParserCSS2;
 
 /**
- *
+ * Implements {@link MediaList}.
+ * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: MediaListImpl.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
+ * @version $Id: MediaListImpl.java,v 1.3 2008-03-26 02:17:24 sdanig Exp $
  */
 public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Serializable {
 

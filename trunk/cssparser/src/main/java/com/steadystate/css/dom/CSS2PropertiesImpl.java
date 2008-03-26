@@ -1,5 +1,5 @@
 /*
- * $Id: CSS2PropertiesImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * $Id: CSS2PropertiesImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -34,9 +34,12 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSS2Properties;
 
 /**
- * TODO: Implement
+ * Implementation of {@link CSS2Properties}.
+ * 
+ * TODO: Implement.
+ * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSS2PropertiesImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * @version $Id: CSS2PropertiesImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  */
 public class CSS2PropertiesImpl implements CSS2Properties, Serializable {
 
