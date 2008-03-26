@@ -1,5 +1,5 @@
 /*
- * $Id: CounterImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * $Id: CounterImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -37,7 +37,7 @@ import org.w3c.css.sac.LexicalUnit;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CounterImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * @version $Id: CounterImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
  */
 public class CounterImpl implements Counter, Serializable {
 
@@ -123,7 +123,7 @@ public class CounterImpl implements Counter, Serializable {
     }
     
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (this.separator == null) {
             // This is a 'counter()' function
             sb.append("counter(");

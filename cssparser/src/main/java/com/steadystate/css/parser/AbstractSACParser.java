@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSACParser.java,v 1.2 2008-03-25 16:43:09 sdanig Exp $
+ * $Id: AbstractSACParser.java,v 1.3 2008-03-26 01:35:33 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -170,7 +170,7 @@ abstract class AbstractSACParser implements Parser
 
     protected String add_escapes(String str)
     {
-        StringBuffer retval = new StringBuffer();
+        StringBuilder retval = new StringBuilder();
         char ch;
         for (int i = 0; i < str.length(); i++)
         {
@@ -226,7 +226,7 @@ abstract class AbstractSACParser implements Parser
         String messagePattern2 =
             this.getSACParserMessages().getString("invalidExpectingMore");
         int maxSize = 0;
-        StringBuffer expected = new StringBuffer();
+        StringBuilder expected = new StringBuilder();
         for (int i = 0; i < e.expectedTokenSequences.length; i++)
         {
             if (maxSize < e.expectedTokenSequences[i].length)
@@ -243,7 +243,7 @@ abstract class AbstractSACParser implements Parser
                 expected.append(", ");
             }
         }
-        StringBuffer invalid = new StringBuffer();
+        StringBuilder invalid = new StringBuilder();
         Token tok = e.currentToken.next;
         for (int i = 0; i < maxSize; i++)
         {

@@ -1,5 +1,5 @@
 /*
- * $Id: CSSImportRuleImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * $Id: CSSImportRuleImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.parser.CSSOMParser;
  * TODO: Implement getStyleSheet()
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSImportRuleImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * @version $Id: CSSImportRuleImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
  */
 public class CSSImportRuleImpl extends AbstractCSSRuleImpl implements CSSImportRule, Serializable {
 
@@ -88,7 +88,7 @@ public class CSSImportRuleImpl extends AbstractCSSRuleImpl implements CSSImportR
     }
 
     public String getCssText() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("@import url(")
             .append(getHref())
             .append(")");

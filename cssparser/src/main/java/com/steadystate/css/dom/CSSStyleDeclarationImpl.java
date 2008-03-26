@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleDeclarationImpl.java,v 1.2 2008-03-25 00:31:35 sdanig Exp $
+ * $Id: CSSStyleDeclarationImpl.java,v 1.3 2008-03-26 01:35:33 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -44,7 +44,7 @@ import com.steadystate.css.parser.CSSOMParser;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleDeclarationImpl.java,v 1.2 2008-03-25 00:31:35 sdanig Exp $
+ * @version $Id: CSSStyleDeclarationImpl.java,v 1.3 2008-03-26 01:35:33 sdanig Exp $
  */
 public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializable
 {
@@ -79,7 +79,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
     }
 
     public String getCssText() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < this.properties.size(); ++i) {
             Property p = (Property) this.properties.elementAt(i);
             if (p != null) {
