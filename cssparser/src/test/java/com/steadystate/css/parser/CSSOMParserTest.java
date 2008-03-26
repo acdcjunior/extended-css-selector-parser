@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParserTest.java,v 1.6 2008-03-26 01:26:01 sdanig Exp $
+ * $Id: CSSOMParserTest.java,v 1.7 2008-03-26 01:27:18 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -27,13 +27,11 @@
 
 package com.steadystate.css.parser;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
-import java.net.URI;
 
 import junit.framework.TestCase;
 
@@ -50,7 +48,7 @@ import org.w3c.dom.css.CSSValue;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParserTest.java,v 1.6 2008-03-26 01:26:01 sdanig Exp $
+ * @version $Id: CSSOMParserTest.java,v 1.7 2008-03-26 01:27:18 sdanig Exp $
  */
 public class CSSOMParserTest extends TestCase {
 
