@@ -1,5 +1,5 @@
 /*
- * $Id: SelectorListImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * $Id: SelectorListImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -34,7 +34,7 @@ import org.w3c.css.sac.*;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SelectorListImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * @version $Id: SelectorListImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
  */
 public class SelectorListImpl implements SelectorList, Serializable {
 
@@ -65,7 +65,7 @@ public class SelectorListImpl implements SelectorList, Serializable {
     }
     
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int len = getLength();
         for (int i = 0; i < len; i++) {
             sb.append(item(i).toString());

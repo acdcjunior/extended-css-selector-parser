@@ -1,5 +1,5 @@
 /*
- * $Id: LexicalUnitImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * $Id: LexicalUnitImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -33,7 +33,7 @@ import org.w3c.css.sac.*;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LexicalUnitImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * @version $Id: LexicalUnitImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
  */
 public class LexicalUnitImpl implements LexicalUnit, Serializable {
 
@@ -294,7 +294,7 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
     }
     
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         switch (this.lexicalUnitType) {
         case SAC_OPERATOR_COMMA:
             sb.append(",");
@@ -411,7 +411,7 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
     }
 
     public String toDebugString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         switch (this.lexicalUnitType) {
         case SAC_OPERATOR_COMMA:
             sb.append("SAC_OPERATOR_COMMA");
@@ -625,7 +625,7 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
         return sb.toString();
     }
 
-    private void appendParams(StringBuffer sb, LexicalUnit first) {
+    private void appendParams(StringBuilder sb, LexicalUnit first) {
         LexicalUnit l = first;
         while (l != null) {
             sb.append(l.toString());

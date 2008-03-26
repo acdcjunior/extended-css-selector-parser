@@ -1,5 +1,5 @@
 /*
- * $Id: CSSRuleListImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * $Id: CSSRuleListImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -37,7 +37,7 @@ import org.w3c.dom.css.CSSRuleList;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSRuleListImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * @version $Id: CSSRuleListImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
  */
 public class CSSRuleListImpl implements CSSRuleList, Serializable {
     
@@ -84,7 +84,7 @@ public class CSSRuleListImpl implements CSSRuleList, Serializable {
     }
     
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < this.getLength(); i++ ) {
             sb.append(this.item(i).toString()).append("\r\n");
         }

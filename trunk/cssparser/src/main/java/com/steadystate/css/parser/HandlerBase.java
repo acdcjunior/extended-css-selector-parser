@@ -1,5 +1,5 @@
 /*
- * $Id: HandlerBase.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * $Id: HandlerBase.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -88,7 +88,7 @@ public class HandlerBase implements DocumentHandlerExt, ErrorHandler {
     }
 
     public void warning(CSSParseException exception) throws CSSException {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(exception.getURI())
             .append(" [")
             .append(exception.getLineNumber())
@@ -100,7 +100,7 @@ public class HandlerBase implements DocumentHandlerExt, ErrorHandler {
     }
 
     public void error(CSSParseException exception) throws CSSException {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(exception.getURI())
             .append(" [")
             .append(exception.getLineNumber())
@@ -112,7 +112,7 @@ public class HandlerBase implements DocumentHandlerExt, ErrorHandler {
     }
 
     public void fatalError(CSSParseException exception) throws CSSException {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(exception.getURI())
             .append(" [")
             .append(exception.getLineNumber())

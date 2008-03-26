@@ -1,5 +1,5 @@
 /*
- * $Id: CSSValueImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * $Id: CSSValueImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -59,7 +59,7 @@ import com.steadystate.css.userdata.UserDataConstants;
  * A means of checking valid primitive types for properties
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSValueImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * @version $Id: CSSValueImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
  */
 public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, CSSValueList, Serializable {
 
@@ -145,7 +145,7 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
             
             // Create the string from the LexicalUnits so we include the correct
             // operators in the string
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             Vector v = (Vector) this._value;
             java.util.Iterator it = v.iterator();
             while (it.hasNext())
