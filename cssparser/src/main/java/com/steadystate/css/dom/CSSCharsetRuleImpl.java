@@ -1,5 +1,5 @@
 /*
- * $Id: CSSCharsetRuleImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * $Id: CSSCharsetRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -42,9 +42,10 @@ import org.w3c.css.sac.CSSException;
 import com.steadystate.css.parser.CSSOMParser;
 
 /**
- *
+ * Implementation of {@link CSSCharsetRule}.
+ * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSCharsetRuleImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * @version $Id: CSSCharsetRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  */
 public class CSSCharsetRuleImpl extends AbstractCSSRuleImpl implements CSSCharsetRule, Serializable {
 

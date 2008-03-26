@@ -1,5 +1,5 @@
 /*
- * $Id: CSSMediaRuleImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * $Id: CSSMediaRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -45,9 +45,10 @@ import org.w3c.css.sac.InputSource;
 import com.steadystate.css.parser.CSSOMParser;
 
 /**
- *
+ * Implementation of {@link CSSMediaRule}.
+ * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSMediaRuleImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * @version $Id: CSSMediaRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  */
 public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRule, Serializable {
 

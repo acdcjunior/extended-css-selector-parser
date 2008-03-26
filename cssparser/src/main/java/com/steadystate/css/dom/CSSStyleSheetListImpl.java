@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleSheetListImpl.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
+ * $Id: CSSStyleSheetListImpl.java,v 1.3 2008-03-26 02:17:24 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -37,9 +37,10 @@ import org.w3c.dom.stylesheets.StyleSheet;
 import org.w3c.dom.stylesheets.StyleSheetList;
 
 /**
- *
+ * Implementation of {@link StyleSheetList}.
+ * 
  * @author <a href="mailto:waldbaer@users.sourceforge.net">Johannes Koch</a>
- * @version $Id: CSSStyleSheetListImpl.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
+ * @version $Id: CSSStyleSheetListImpl.java,v 1.3 2008-03-26 02:17:24 sdanig Exp $
  */
 public class CSSStyleSheetListImpl implements StyleSheetList
 {

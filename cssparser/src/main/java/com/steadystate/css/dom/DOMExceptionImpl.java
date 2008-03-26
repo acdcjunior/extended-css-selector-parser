@@ -1,5 +1,5 @@
 /*
- * $Id: DOMExceptionImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * $Id: DOMExceptionImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -33,9 +33,10 @@ import java.util.ResourceBundle;
 import org.w3c.dom.DOMException;
 
 /** 
- *
+ * Custom {@link DOMException} extension.
+ * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: DOMExceptionImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * @version $Id: DOMExceptionImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  */
 public class DOMExceptionImpl extends DOMException {
 

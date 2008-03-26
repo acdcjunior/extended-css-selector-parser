@@ -1,5 +1,5 @@
 /*
- * $Id: CSSUnknownRuleImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * $Id: CSSUnknownRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -35,10 +35,13 @@ import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleSheet;
 import org.w3c.dom.css.CSSUnknownRule;
 
-/*
+/**
+ * Implementation of {@link CSSUnknownRule}.
+ * 
  * TODO: Reinstate setCssText
+ * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSUnknownRuleImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * @version $Id: CSSUnknownRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  */
 public class CSSUnknownRuleImpl extends AbstractCSSRuleImpl implements CSSUnknownRule, Serializable {
 

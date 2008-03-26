@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSACParser.java,v 1.3 2008-03-26 01:35:33 sdanig Exp $
+ * $Id: AbstractSACParser.java,v 1.4 2008-03-26 02:17:24 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -53,12 +53,12 @@ import com.steadystate.css.sac.DocumentHandlerExt;
 import com.steadystate.css.sac.TestCSSParseException;
 
 /**
+ * Base implementation of {@link Parser}.
+ * 
  * @author koch
- *
  */
 abstract class AbstractSACParser implements Parser
 {
-
     private DocumentHandlerExt documentHandler = null;
     private ErrorHandler errorHandler = null;
     private InputSource source = null;
