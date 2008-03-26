@@ -6,6 +6,10 @@
 	</properties>
 	<body>
 		<release version="0.9.5">
+			<action type="remove">
+				Removed the deprecated classes com.steadystate.css.CSS2Parser, com.steadystate.css.RGBColorImpl
+				and com.steadystate.css.HexColor.
+			</action>
 			<action type="fix" id="1226128">
 				Correctly unescape escaped characters in strings.
 			</action>
