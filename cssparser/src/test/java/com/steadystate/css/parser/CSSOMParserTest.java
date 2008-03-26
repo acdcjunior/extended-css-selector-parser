@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParserTest.java,v 1.5 2008-03-25 16:43:10 sdanig Exp $
+ * $Id: CSSOMParserTest.java,v 1.6 2008-03-26 01:26:01 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -27,15 +27,20 @@
 
 package com.steadystate.css.parser;
 
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.URI;
 
 import junit.framework.TestCase;
 
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.Parser;
 import org.w3c.css.sac.SelectorList;
+import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
 import org.w3c.dom.css.CSSStyleDeclaration;
@@ -45,14 +50,18 @@ import org.w3c.dom.css.CSSValue;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParserTest.java,v 1.5 2008-03-25 16:43:10 sdanig Exp $
+ * @version $Id: CSSOMParserTest.java,v 1.6 2008-03-26 01:26:01 sdanig Exp $
  */
 public class CSSOMParserTest extends TestCase {
 
     private String _testSelector = "FOO";
+
     private String _testItem = "color";
+
     private String _testValue = "rgb(1, 2, 3)";
+
     private String _testString = _testSelector + "{ " + _testItem + ": " + _testValue + " }";
+
     private CSSOMParser _parser = new CSSOMParser();
 
     public void testParseStyleSheet() throws IOException {
@@ -86,7 +95,9 @@ public class CSSOMParserTest extends TestCase {
 
     /**
      * Regression test for bug 1191376.
-     * @throws Exception if any error occurs
+     * 
+     * @throws Exception
+     *             if any error occurs
      */
     public void testParseStyleDeclaration() throws Exception {
         Reader r = new StringReader("background-color: white");
@@ -97,7 +108,9 @@ public class CSSOMParserTest extends TestCase {
 
     /**
      * Regression test for bug 1183734.
-     * @throws Exception if any error occurs
+     * 
+     * @throws Exception
+     *             if any error occurs
      */
     public void testColorFirst() throws Exception {
 
@@ -119,8 +132,10 @@ public class CSSOMParserTest extends TestCase {
 
     /**
      * Regression test for bug 1226128.
+     * 
      * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#escaped-characters">CSS Spec</a>
-     * @throws Exception if an error occurs
+     * @throws Exception
+     *             if an error occurs
      */
     public void testEscapedChars() throws Exception {
         testEscapedChars(new SACParserCSS2());
@@ -150,6 +165,37 @@ public class CSSOMParserTest extends TestCase {
         InputSource is = new InputSource(r);
         CSSStyleDeclaration d = parser.parseStyleDeclaration(is);
         return d.getCssText();
+    }
+
+    public void testMisc() throws Exception {
+
+        InputStream is = getClass().getClassLoader().getResourceAsStream("page_test.css");
+        assertNotNull(is);
+
+        Reader r = new InputStreamReader(is);
+        InputSource source = new InputSource(r);
+        CSSOMParser parser = new CSSOMParser();
+        CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        System.out.println(ss.toString());
+
+        CSSRuleList rl = ss.getCssRules();
+        for (int i = 0; i < rl.getLength(); i++) {
+            CSSRule rule = rl.item(i);
+            if (rule.getType() == CSSRule.STYLE_RULE) {
+                CSSStyleRule sr = (CSSStyleRule) rule;
+                CSSStyleDeclaration style = sr.getStyle();
+                for (int j = 0; j < style.getLength(); j++) {
+                    CSSValue value = style.getPropertyCSSValue(style.item(j));
+                    if (value.getCssValueType() == CSSValue.CSS_PRIMITIVE_VALUE) {
+                        CSSPrimitiveValue pv = (CSSPrimitiveValue) value;
+                        System.out.println(">> " + pv.toString());
+                        if (pv.getPrimitiveType() == CSSPrimitiveValue.CSS_COUNTER) {
+                            System.out.println("CSS_COUNTER(" + pv.toString() + ")");
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
