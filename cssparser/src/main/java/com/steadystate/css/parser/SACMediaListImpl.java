@@ -1,5 +1,5 @@
 /*
- * $Id: SACMediaListImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
+ * $Id: SACMediaListImpl.java,v 1.3 2008-03-26 02:08:55 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -31,24 +31,25 @@ import java.util.*;
 import org.w3c.css.sac.*;
 
 /**
- *
+ * Implementation of {@link SACMediaList}.
+ * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACMediaListImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
+ * @version $Id: SACMediaListImpl.java,v 1.3 2008-03-26 02:08:55 sdanig Exp $
  */
 public class SACMediaListImpl implements SACMediaList {
 
-    private Vector _selectors = new Vector(10, 10);
+    private List<String> _selectors = new ArrayList<String>(10);
 
     public int getLength() {
         return this._selectors.size();
     }
 
     public String item(int index) {
-        return (String) this._selectors.elementAt(index);
+        return this._selectors.get(index);
     }
 
     public void add(String s) {
-        this._selectors.addElement(s);
+        this._selectors.add(s);
     }
     
     public String toString() {

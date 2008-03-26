@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleSheetListImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * $Id: CSSStyleSheetListImpl.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -27,9 +27,9 @@
 
 package com.steadystate.css.dom;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.w3c.dom.css.CSSStyleSheet;
 
@@ -39,33 +39,30 @@ import org.w3c.dom.stylesheets.StyleSheetList;
 /**
  *
  * @author <a href="mailto:waldbaer@users.sourceforge.net">Johannes Koch</a>
- * @version $Id: CSSStyleSheetListImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * @version $Id: CSSStyleSheetListImpl.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
  */
 public class CSSStyleSheetListImpl implements StyleSheetList
 {
-    
-    private List cssStyleSheets;    // List of CSSStyleSheet
+    private List<CSSStyleSheet> cssStyleSheets;
 
-    public List getCSSStyleSheets()
+    public List<CSSStyleSheet> getCSSStyleSheets()
     {
         if (this.cssStyleSheets == null)
         {
-            this.cssStyleSheets = new Vector();
+            this.cssStyleSheets = new ArrayList<CSSStyleSheet>();
         }
         return this.cssStyleSheets;
     }
 
-    public void setCSSStyleSheets(List cssStyleSheets)
+    public void setCSSStyleSheets(List<CSSStyleSheet> cssStyleSheets)
     {
         this.cssStyleSheets = cssStyleSheets;
     }
-
 
     /** Creates a new instance of CSSStyleSheetListImpl */
     public CSSStyleSheetListImpl()
     {
     }
-
 
     // start StyleSheetList
     public int getLength()
@@ -75,7 +72,7 @@ public class CSSStyleSheetListImpl implements StyleSheetList
     
     public StyleSheet item(int index)
     {
-        return (StyleSheet) this.getCSSStyleSheets().get(index);
+        return this.getCSSStyleSheets().get(index);
     }
     
     /**

@@ -1,5 +1,5 @@
 /*
- * $Id: CSSValueImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
+ * $Id: CSSValueImpl.java,v 1.3 2008-03-26 02:08:55 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -30,7 +30,8 @@ package com.steadystate.css.dom;
 import java.io.Serializable;
 import java.io.StringReader;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.LexicalUnit;
@@ -59,7 +60,7 @@ import com.steadystate.css.userdata.UserDataConstants;
  * A means of checking valid primitive types for properties
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSValueImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
+ * @version $Id: CSSValueImpl.java,v 1.3 2008-03-26 02:08:55 sdanig Exp $
  */
 public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, CSSValueList, Serializable {
 
@@ -119,21 +120,21 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
     }
 
 
-    private Vector getValues(LexicalUnit value)
+    private List<CSSValueImpl> getValues(LexicalUnit value)
     {
         // We need to be a CSSValueList
         // Values in an "expr" can be seperated by "operator"s, which are
         // either '/' or ',' - ignore these operators
-        Vector v = new Vector();
+        List<CSSValueImpl> values = new ArrayList<CSSValueImpl>();
         LexicalUnit lu = value;
         while (lu != null) {
             if ((lu.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
                 && (lu.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_SLASH)) {
-                v.addElement(new CSSValueImpl(lu, true));
+                values.add(new CSSValueImpl(lu, true));
             }
             lu = lu.getNextLexicalUnit();
         }
-        return v;
+        return values;
     }
 
     public CSSValueImpl(LexicalUnit value) {
@@ -146,14 +147,14 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
             // Create the string from the LexicalUnits so we include the correct
             // operators in the string
             StringBuilder sb = new StringBuilder();
-            Vector v = (Vector) this._value;
-            java.util.Iterator it = v.iterator();
+            List list = (List) this._value;
+            java.util.Iterator it = list.iterator();
             while (it.hasNext())
             {
                 Object o = it.next();
                 if (o instanceof LexicalUnit)
                 {
-                    LexicalUnit lu = (LexicalUnit) ((CSSValueImpl) v.elementAt(0))._value;
+                    LexicalUnit lu = (LexicalUnit) ((CSSValueImpl) list.get(0))._value;
                     while (lu != null) {
                         sb.append(lu.toString());
                         
@@ -198,7 +199,7 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
     }
 
     public short getCssValueType() {
-        if (this._value instanceof Vector)
+        if (this._value instanceof List)
         {
             return CSS_VALUE_LIST;
         }
@@ -340,7 +341,7 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
             {
                 return lu.getParameters().getStringValue();
             }
-        } else if (this._value instanceof Vector) {
+        } else if (this._value instanceof List) {
             return null;
         }
 
@@ -377,12 +378,12 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
     }
 
     public int getLength() {
-        return (this._value instanceof Vector) ? ((Vector)this._value).size() : 0;
+        return (this._value instanceof List) ? ((List)this._value).size() : 0;
     }
 
     public CSSValue item(int index) {
-        return (this._value instanceof Vector)
-            ? ((CSSValue)((Vector)this._value).elementAt(index))
+        return (this._value instanceof List)
+            ? ((CSSValue)((List)this._value).get(index))
             : null;
     }
 

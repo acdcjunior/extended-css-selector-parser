@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleDeclarationImpl.java,v 1.3 2008-03-26 01:35:33 sdanig Exp $
+ * $Id: CSSStyleDeclarationImpl.java,v 1.4 2008-03-26 02:08:55 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -30,7 +30,8 @@ package com.steadystate.css.dom;
 import java.io.Serializable;
 import java.io.StringReader;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.w3c.css.sac.InputSource;
 
@@ -43,28 +44,29 @@ import org.w3c.dom.css.CSSValue;
 import com.steadystate.css.parser.CSSOMParser;
 
 /**
+ * Implementation of {@link CSSStyleDeclaration}.
+ * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleDeclarationImpl.java,v 1.3 2008-03-26 01:35:33 sdanig Exp $
+ * @version $Id: CSSStyleDeclarationImpl.java,v 1.4 2008-03-26 02:08:55 sdanig Exp $
  */
 public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializable
 {
-
     private static final long serialVersionUID = -2373755821317100189L;
 
     private CSSRule parentRule;
-    private Vector properties = new Vector();
+    private List<Property> properties = new ArrayList<Property>();
 
     public void setParentRule(CSSRule parentRule)
     {
         this.parentRule = parentRule;
     }
 
-    public Vector getProperties()
+    public List<Property> getProperties()
     {
         return this.properties;
     }
 
-    public void setProperties(Vector properties)
+    public void setProperties(List<Property> properties)
     {
         this.properties = properties;
     }
@@ -81,7 +83,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
     public String getCssText() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < this.properties.size(); ++i) {
-            Property p = (Property) this.properties.elementAt(i);
+            Property p = this.properties.get(i);
             if (p != null) {
                 sb.append(p.toString());
             }
@@ -96,7 +98,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
         try {
             InputSource is = new InputSource(new StringReader(cssText));
             CSSOMParser parser = new CSSOMParser();
-            this.properties.removeAllElements();
+            this.properties.clear();
             parser.parseStyleDeclaration(this, is);
         } catch (Exception e) {
             throw new DOMExceptionImpl(
@@ -118,9 +120,9 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
 
     public String removeProperty(String propertyName) throws DOMException {
         for (int i = 0; i < this.properties.size(); i++) {
-            Property p = (Property) this.properties.elementAt(i);
+            Property p = this.properties.get(i);
             if (p.getName().equalsIgnoreCase(propertyName)) {
-                this.properties.removeElementAt(i);
+                this.properties.remove(i);
                 return p.getValue().toString();
             }
         }
@@ -167,7 +169,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
     }
 
     public String item(int index) {
-        Property p = (Property) this.properties.elementAt(index);
+        Property p = this.properties.get(index);
         return (p != null) ? p.getName() : "";
     }
 
@@ -176,12 +178,12 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
     }
 
     public void addProperty(Property p) {
-        this.properties.addElement(p);
+        this.properties.add(p);
     }
 
     public Property getPropertyDeclaration(String name) {
         for (int i = 0; i < this.properties.size(); i++) {
-            Property p = (Property) this.properties.elementAt(i);
+            Property p = this.properties.get(i);
             if (p.getName().equalsIgnoreCase(name)) {
                 return p;
             }

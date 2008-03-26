@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParser.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * $Id: CSSOMParser.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -33,7 +33,6 @@ import java.util.Properties;
 import java.util.Stack;
 
 import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.DocumentHandler;
 import org.w3c.css.sac.ErrorHandler;
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.LexicalUnit;
@@ -70,7 +69,7 @@ import com.steadystate.css.userdata.UserDataConstants;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParser.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * @version $Id: CSSOMParser.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
  */
 public class CSSOMParser {
     
