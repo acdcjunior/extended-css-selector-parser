@@ -1,5 +1,5 @@
 /*
- * $Id: LocatorImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * $Id: LocatorImpl.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -32,9 +32,10 @@ import java.io.Serializable;
 import org.w3c.css.sac.Locator;
 
 /**
- *
+ * Implementation of {@link Locator}.
+ * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LocatorImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * @version $Id: LocatorImpl.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
  */
 public class LocatorImpl implements Locator, Serializable {
 

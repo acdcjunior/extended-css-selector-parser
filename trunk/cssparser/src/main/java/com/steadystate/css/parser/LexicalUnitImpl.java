@@ -1,5 +1,5 @@
 /*
- * $Id: LexicalUnitImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
+ * $Id: LexicalUnitImpl.java,v 1.3 2008-03-26 02:08:55 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -31,9 +31,10 @@ import java.io.Serializable;
 import org.w3c.css.sac.*;
 
 /** 
- *
+ * Implementation of {@link LexicalUnit}.
+ * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LexicalUnitImpl.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
+ * @version $Id: LexicalUnitImpl.java,v 1.3 2008-03-26 02:08:55 sdanig Exp $
  */
 public class LexicalUnitImpl implements LexicalUnit, Serializable {
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MediaListImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * $Id: MediaListImpl.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
  *
  * CSS Parser Project
  *
@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import org.w3c.dom.DOMException;
@@ -46,15 +48,15 @@ import com.steadystate.css.parser.SACParserCSS2;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: MediaListImpl.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * @version $Id: MediaListImpl.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
  */
 public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Serializable {
 
     private static final long serialVersionUID = 6662784733573034870L;
 
-    private Vector media = new Vector();
+    private List<String> media = new ArrayList<String>();
 
-    public void setMedia(Vector media)
+    public void setMedia(List<String> media)
     {
         this.media = media;
     }
@@ -63,7 +65,7 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
     {
         for (int i = 0; i < mediaList.getLength(); i++)
         {
-            this.media.addElement(mediaList.item(i));
+            this.media.add(mediaList.item(i));
         }
     }
 
@@ -80,7 +82,7 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
     public String getMediaText() {
         StringBuffer sb = new StringBuffer("");
         for (int i = 0; i < this.media.size(); i++) {
-            sb.append(this.media.elementAt(i).toString());
+            sb.append(this.media.get(i));
             if (i < this.media.size() - 1) {
                 sb.append( ", " );
             }
@@ -113,14 +115,14 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
     }
 
     public String item(int index) {
-        return (index < this.media.size()) ? (String) this.media.elementAt(index) : null;
+        return (index < this.media.size()) ? this.media.get(index) : null;
     }
 
     public void deleteMedium(String oldMedium) throws DOMException {
         for (int i = 0; i < this.media.size(); i++) {
-            String str = (String) this.media.elementAt(i);
+            String str = this.media.get(i);
             if (str.equalsIgnoreCase(oldMedium)) {
-                this.media.removeElementAt(i);
+                this.media.remove(i);
                 return;
             }
         }
@@ -130,7 +132,7 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
     }
 
     public void appendMedium(String newMedium) throws DOMException {
-        this.media.addElement(newMedium);
+        this.media.add(newMedium);
     }
 
     public String toString() {
