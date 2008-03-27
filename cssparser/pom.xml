@@ -37,6 +37,7 @@
 	<build>
 		<plugins>
 			<plugin>
+				<!-- set Java 5 as the minimum requirement -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -45,6 +46,7 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<!-- generate parsers and lexers before compiling -->
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>javacc-maven-plugin</artifactId>
 				<version>2.4</version>
@@ -53,6 +55,20 @@
 						<id>javacc</id>
 						<goals>
 							<goal>javacc</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<!-- always generate a source JAR -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar</goal>
 						</goals>
 					</execution>
 				</executions>
