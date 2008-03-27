@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.cssparser</groupId>
 	<artifactId>cssparser</artifactId>
-	<version>0.9.5</version>
+	<version>0.9.6-SNAPSHOT</version>
 	<name>CSS Parser</name>
 	<url>http://cssparser.sourceforge.net/</url>
 	<description>A CSS parser which implements SAC (the Simple API for CSS).</description>
