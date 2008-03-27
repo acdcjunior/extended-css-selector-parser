@@ -71,6 +71,9 @@
 						</reports>
 					</reportSet>
 				</reportSets>
+				<configuration>
+					<issueLinkTemplate>%URL%?group_id=82996&amp;func=detail&amp;atid=567969&amp;aid=%ISSUE%</issueLinkTemplate>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

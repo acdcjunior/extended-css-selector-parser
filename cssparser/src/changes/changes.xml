@@ -5,18 +5,18 @@
 		<author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
 	</properties>
 	<body>
-		<release version="0.9.5">
+		<release version="0.9.5" date="?" description="Long-overdue release with lots of bugfixes.">
 			<action type="remove">
 				Removed the deprecated classes com.steadystate.css.CSS2Parser, com.steadystate.css.RGBColorImpl
 				and com.steadystate.css.HexColor.
 			</action>
-			<action type="fix" id="1226128">
+			<action type="fix" issue="1226128">
 				Correctly unescape escaped characters in strings.
 			</action>
-			<action type="fix" id="1874800">
+			<action type="fix" issue="1874800">
 				CSSStyleDeclarationImpl.getCssText() fixed to not return curly braces (as per the spec).
 			</action>
-			<action type="remove" id="1337730">
+			<action type="remove" issue="1337730">
 				Removed unused class ParseException (one of two classes with this name).
 			</action>
 			<action type="update">
@@ -44,17 +44,17 @@
 				Initial JUnit tests added.
 			</action>
 		</release>
-		<release version="0.9.4">
+		<release version="0.9.4" date="?">
 			<action type="add">
 				Ant buildfile added.
 			</action>
 		</release>
-		<release version="0.9.3">
+		<release version="0.9.3" date="?">
 			<action type="fix">
 				Fixed a bug in the '@page' rule where a space after an identifier or a pseudo page caused a parser exception.
 			</action>
 		</release>
-		<release version="0.9.2">
+		<release version="0.9.2" date="?">
 			<action type="update">
 				Made several modifications to provide JDK 1.1 compatability.
 			</action>
@@ -62,7 +62,7 @@
 				Fixed a bug that caused negative floating-point values to be excessively trimmed.
 			</action>
 		</release>
-		<release version="0.9.1">
+		<release version="0.9.1" date="?">
 			<action type="update">
 				Updated the SAC to version 1.2.
 			</action>
@@ -73,7 +73,7 @@
 				Made the CSSOM serializable.
 			</action>
 		</release>
-		<release version="0.9.0">
+		<release version="0.9.0" date="?">
 			<action type="update">
 				Implemented the SAC (Simple API for CSS).
 			</action>
@@ -81,7 +81,7 @@
 				Converted the CSS DOM to be implemented on top of the SAC.
 			</action>
 		</release>
-		<release version="0.1.4">
+		<release version="0.1.4" date="?">
 			<action type="fix">
 				Fixed case-sensitivity bug in ASTStyleDeclaration.
 			</action>
