@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSACParser.java,v 1.4 2008-03-26 02:17:24 sdanig Exp $
+ * $Id: AbstractSACParser.java,v 1.5 2008-05-28 15:24:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -59,7 +59,7 @@ import com.steadystate.css.sac.TestCSSParseException;
  */
 abstract class AbstractSACParser implements Parser
 {
-    private DocumentHandlerExt documentHandler = null;
+    private DocumentHandler documentHandler = null;
     private ErrorHandler errorHandler = null;
     private InputSource source = null;
     private Locale locale = null;
@@ -68,7 +68,7 @@ abstract class AbstractSACParser implements Parser
     private ResourceBundle sacParserMessages;
     protected abstract Token getToken();
 
-    protected DocumentHandlerExt getDocumentHandler()
+    protected DocumentHandler getDocumentHandler()
     {
         if (this.documentHandler == null)
         {
@@ -79,10 +79,7 @@ abstract class AbstractSACParser implements Parser
 
     public void setDocumentHandler(DocumentHandler handler)
     {
-        if (handler instanceof DocumentHandlerExt)
-        {
-            this.documentHandler = (DocumentHandlerExt) handler;
-        }
+        this.documentHandler = (DocumentHandlerExt) handler;
     }
 
     protected ErrorHandler getErrorHandler()
@@ -493,7 +490,11 @@ abstract class AbstractSACParser implements Parser
 
     protected void handleCharset(String characterEncoding)
     {
-        this.getDocumentHandler().charset(characterEncoding);
+        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
+        {
+            ((DocumentHandlerExt) this.getDocumentHandler())
+                .charset(characterEncoding);
+        }
     }
 
     protected void handleImportStyle(String uri, SACMediaList media,
