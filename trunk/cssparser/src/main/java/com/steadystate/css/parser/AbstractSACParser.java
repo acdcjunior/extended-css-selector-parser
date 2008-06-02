@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSACParser.java,v 1.5 2008-05-28 15:24:55 waldbaer Exp $
+ * $Id: AbstractSACParser.java,v 1.6 2008-06-02 08:24:44 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -79,7 +79,7 @@ abstract class AbstractSACParser implements Parser
 
     public void setDocumentHandler(DocumentHandler handler)
     {
-        this.documentHandler = (DocumentHandlerExt) handler;
+        this.documentHandler = handler;
     }
 
     protected ErrorHandler getErrorHandler()
