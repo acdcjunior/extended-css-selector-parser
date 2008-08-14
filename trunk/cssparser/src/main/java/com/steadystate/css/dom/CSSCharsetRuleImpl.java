@@ -1,5 +1,5 @@
 /*
- * $Id: CSSCharsetRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * $Id: CSSCharsetRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -40,12 +40,13 @@ import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.CSSException;
 
 import com.steadystate.css.parser.CSSOMParser;
+import com.steadystate.css.util.LangUtils;
 
 /**
  * Implementation of {@link CSSCharsetRule}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSCharsetRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * @version $Id: CSSCharsetRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class CSSCharsetRuleImpl extends AbstractCSSRuleImpl implements CSSCharsetRule, Serializable {
 
@@ -114,4 +115,30 @@ public class CSSCharsetRuleImpl extends AbstractCSSRuleImpl implements CSSCharse
     public void setEncoding(String encoding) throws DOMException {
         this.encoding = encoding;
     }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CSSCharsetRule))
+        {
+            return false;
+        }
+        CSSCharsetRule ccr = (CSSCharsetRule) obj;
+        return super.equals(obj)
+            && LangUtils.equals(this.getEncoding(), ccr.getEncoding());
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = super.hashCode();
+        hash = LangUtils.hashCode(hash, this.encoding);
+        return hash;
+    }
+
 }

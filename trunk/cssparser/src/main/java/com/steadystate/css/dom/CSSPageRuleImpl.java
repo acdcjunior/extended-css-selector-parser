@@ -1,5 +1,5 @@
 /*
- * $Id: CSSPageRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * $Id: CSSPageRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -41,6 +41,7 @@ import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
 
 import com.steadystate.css.parser.CSSOMParser;
+import com.steadystate.css.util.LangUtils;
 
 /**
  * Implementation of {@link CSSPageRule}.
@@ -48,7 +49,7 @@ import com.steadystate.css.parser.CSSOMParser;
  * TODO: Implement setSelectorText()
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSPageRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * @version $Id: CSSPageRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule, Serializable {
 
@@ -143,4 +144,34 @@ public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule,
     public void setStyle(CSSStyleDeclarationImpl style) {
         this.style = style;
     }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CSSPageRule))
+        {
+            return false;
+        }
+        CSSPageRule cpr = (CSSPageRule) obj;
+        return super.equals(obj)
+            && LangUtils.equals(this.getSelectorText(), cpr.getSelectorText())
+            && LangUtils.equals(this.getStyle(), cpr.getStyle())
+            ;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = super.hashCode();
+        hash = LangUtils.hashCode(hash, this.ident);
+        hash = LangUtils.hashCode(hash, this.pseudoPage);
+        hash = LangUtils.hashCode(hash, this.style);
+        return hash;
+    }
+
 }

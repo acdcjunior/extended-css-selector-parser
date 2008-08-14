@@ -1,5 +1,5 @@
 /*
- * $Id: MediaListImpl.java,v 1.3 2008-03-26 02:17:24 sdanig Exp $
+ * $Id: MediaListImpl.java,v 1.4 2008-08-14 08:17:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -43,12 +43,13 @@ import org.w3c.css.sac.CSSParseException;
 import org.w3c.css.sac.SACMediaList;
 
 import com.steadystate.css.parser.SACParserCSS2;
+import com.steadystate.css.util.LangUtils;
 
 /**
  * Implements {@link MediaList}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: MediaListImpl.java,v 1.3 2008-03-26 02:17:24 sdanig Exp $
+ * @version $Id: MediaListImpl.java,v 1.4 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Serializable {
 
@@ -138,4 +139,47 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
     public String toString() {
         return this.getMediaText();
     }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof MediaList))
+        {
+            return false;
+        }
+        MediaList ml = (MediaList) obj;
+        return super.equals(obj)
+            && equalsMedia(ml);
+    }
+
+    private boolean equalsMedia(MediaList ml)
+    {
+        if ((ml == null) || (this.getLength() != ml.getLength()))
+        {
+            return false;
+        }
+        for (int i = 0; i < this.getLength(); i++)
+        {
+            String m1 = this.item(i);
+            String m2 = ml.item(i);
+            if (!LangUtils.equals(m1, m2))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    @Override
+    public int hashCode()
+    {
+        int hash = super.hashCode();
+        hash = LangUtils.hashCode(hash, this.media);
+        return hash;
+    }
+
 }

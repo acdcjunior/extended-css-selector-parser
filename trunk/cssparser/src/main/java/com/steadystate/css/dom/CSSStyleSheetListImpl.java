@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleSheetListImpl.java,v 1.3 2008-03-26 02:17:24 sdanig Exp $
+ * $Id: CSSStyleSheetListImpl.java,v 1.4 2008-08-14 08:17:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -36,11 +36,13 @@ import org.w3c.dom.css.CSSStyleSheet;
 import org.w3c.dom.stylesheets.StyleSheet;
 import org.w3c.dom.stylesheets.StyleSheetList;
 
+import com.steadystate.css.util.LangUtils;
+
 /**
  * Implementation of {@link StyleSheetList}.
  * 
  * @author <a href="mailto:waldbaer@users.sourceforge.net">Johannes Koch</a>
- * @version $Id: CSSStyleSheetListImpl.java,v 1.3 2008-03-26 02:17:24 sdanig Exp $
+ * @version $Id: CSSStyleSheetListImpl.java,v 1.4 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class CSSStyleSheetListImpl implements StyleSheetList
 {
@@ -111,4 +113,46 @@ public class CSSStyleSheetListImpl implements StyleSheetList
         return merged;
     }
     
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof StyleSheetList))
+        {
+            return false;
+        }
+        StyleSheetList ssl = (StyleSheetList) obj;
+        return this.equalsStyleSheets(ssl);
+    }
+
+    private boolean equalsStyleSheets(StyleSheetList ssl)
+    {
+        if ((ssl == null) || (this.getLength() != ssl.getLength()))
+        {
+            return false;
+        }
+        for (int i = 0; i < this.getLength(); i++)
+        {
+            StyleSheet styleSheet1 = this.item(i);
+            StyleSheet styleSheet2 = ssl.item(i);
+            if (!LangUtils.equals(styleSheet1, styleSheet2))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = LangUtils.HASH_SEED;
+        hash = LangUtils.hashCode(hash, this.cssStyleSheets);
+        return hash;
+    }
+
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CSSUnknownRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * $Id: CSSUnknownRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -35,13 +35,15 @@ import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleSheet;
 import org.w3c.dom.css.CSSUnknownRule;
 
+import com.steadystate.css.util.LangUtils;
+
 /**
  * Implementation of {@link CSSUnknownRule}.
  * 
  * TODO: Reinstate setCssText
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSUnknownRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * @version $Id: CSSUnknownRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class CSSUnknownRuleImpl extends AbstractCSSRuleImpl implements CSSUnknownRule, Serializable {
 
@@ -123,15 +125,42 @@ public class CSSUnknownRuleImpl extends AbstractCSSRuleImpl implements CSSUnknow
 */
     }
 
-    public CSSStyleSheet getParentStyleSheet() {
-        return this.parentStyleSheet;
-    }
-
-    public CSSRule getParentRule() {
-        return this.parentRule;
-    }
+    // There's no need to override the methods from AbstractCSSRuleImpl
+//    public CSSStyleSheet getParentStyleSheet() {
+//        return this.parentStyleSheet;
+//    }
+//
+//    public CSSRule getParentRule() {
+//        return this.parentRule;
+//    }
     
     public String toString() {
         return this.getCssText();
     }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CSSUnknownRule))
+        {
+            return false;
+        }
+        CSSUnknownRule cur = (CSSUnknownRule) obj;
+        return super.equals(obj)
+            && LangUtils.equals(this.getCssText(), cur.getCssText());
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = super.hashCode();
+        hash = LangUtils.hashCode(hash, this.text);
+        return hash;
+    }
+
 }

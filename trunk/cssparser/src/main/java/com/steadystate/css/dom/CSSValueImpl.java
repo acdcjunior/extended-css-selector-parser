@@ -1,5 +1,5 @@
 /*
- * $Id: CSSValueImpl.java,v 1.3 2008-03-26 02:08:55 sdanig Exp $
+ * $Id: CSSValueImpl.java,v 1.4 2008-08-14 08:17:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -49,6 +49,7 @@ import org.w3c.dom.css.RGBColor;
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.parser.LexicalUnitImpl;
 import com.steadystate.css.userdata.UserDataConstants;
+import com.steadystate.css.util.LangUtils;
 
 /**
  * The <code>CSSValueImpl</code> class can represent either a
@@ -60,7 +61,7 @@ import com.steadystate.css.userdata.UserDataConstants;
  * A means of checking valid primitive types for properties
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSValueImpl.java,v 1.3 2008-03-26 02:08:55 sdanig Exp $
+ * @version $Id: CSSValueImpl.java,v 1.4 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, CSSValueList, Serializable {
 
@@ -390,4 +391,32 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
     public String toString() {
         return getCssText();
     }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CSSValue))
+        {
+            return false;
+        }
+        CSSValue cv = (CSSValue) obj;
+        // TODO to be improved!
+        return super.equals(obj)
+            && (this.getCssValueType() == cv.getCssValueType())
+            && LangUtils.equals(this.getCssText(), cv.getCssText());
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = super.hashCode();
+        hash = LangUtils.hashCode(hash, this._value);
+        return hash;
+    }
+
 }

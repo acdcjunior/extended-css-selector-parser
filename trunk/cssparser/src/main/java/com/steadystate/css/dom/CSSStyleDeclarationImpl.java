@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleDeclarationImpl.java,v 1.4 2008-03-26 02:08:55 sdanig Exp $
+ * $Id: CSSStyleDeclarationImpl.java,v 1.5 2008-08-14 08:17:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -42,12 +42,13 @@ import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSValue;
 
 import com.steadystate.css.parser.CSSOMParser;
+import com.steadystate.css.util.LangUtils;
 
 /**
  * Implementation of {@link CSSStyleDeclaration}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleDeclarationImpl.java,v 1.4 2008-03-26 02:08:55 sdanig Exp $
+ * @version $Id: CSSStyleDeclarationImpl.java,v 1.5 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializable
 {
@@ -191,7 +192,63 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
         return null;
     }
 
+    @Override
     public String toString() {
         return this.getCssText();
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CSSStyleDeclaration))
+        {
+            return false;
+        }
+        CSSStyleDeclaration csd = (CSSStyleDeclaration) obj;
+        return
+        // don't use parentRule in equals()
+        // recursive loop -> stack overflow!
+            this.equalsProperties(csd);
+    }
+
+    private boolean equalsProperties(CSSStyleDeclaration csd)
+    {
+        if ((csd == null) || (this.getLength() != csd.getLength()))
+        {
+            return false;
+        }
+        for (int i = 0; i < this.getLength(); i++)
+        {
+            String propertyName = this.item(i);
+//            CSSValue propertyCSSValue1 = this.getPropertyCSSValue(propertyName);
+//            CSSValue propertyCSSValue2 = csd.getPropertyCSSValue(propertyName);
+            String propertyValue1 = this.getPropertyValue(propertyName);
+            String propertyValue2 = csd.getPropertyValue(propertyName);
+            if (!LangUtils.equals(propertyValue1, propertyValue2))
+            {
+                return false;
+            }
+            String propertyPriority1 = this.getPropertyPriority(propertyName);
+            String propertyPriority2 = csd.getPropertyPriority(propertyName);
+            if (!LangUtils.equals(propertyPriority1, propertyPriority2))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = LangUtils.HASH_SEED;
+        // don't use parentRule in hashCode()
+        // recursive loop -> stack overflow!
+        hash = LangUtils.hashCode(hash, this.properties);
+        return hash;
     }
 }

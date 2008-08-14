@@ -16,6 +16,11 @@ public abstract class AbstractCSSRuleImpl extends CSSOMObjectImpl
     protected CSSStyleSheetImpl parentStyleSheet = null;
     protected CSSRule parentRule = null;
 
+    protected CSSStyleSheetImpl getParentStyleSheetImpl()
+    {
+        return this.parentStyleSheet;
+    }
+
     public void setParentStyleSheet(CSSStyleSheetImpl parentStyleSheet)
     {
         this.parentStyleSheet = parentStyleSheet;
@@ -46,6 +51,33 @@ public abstract class AbstractCSSRuleImpl extends CSSOMObjectImpl
 
     public CSSRule getParentRule() {
         return this.parentRule;
+    }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CSSRule))
+        {
+            return false;
+        }
+        return super.equals(obj)
+        // don't use parentRule and parentStyleSheet in equals()
+        // recursive loop -> stack overflow!
+            ;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = super.hashCode();
+        // don't use parentRule and parentStyleSheet in hashCode()
+        // recursive loop -> stack overflow!
+        return hash;
     }
 
 }
