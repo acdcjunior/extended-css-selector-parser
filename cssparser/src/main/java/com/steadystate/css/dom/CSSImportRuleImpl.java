@@ -1,5 +1,5 @@
 /*
- * $Id: CSSImportRuleImpl.java,v 1.3 2008-03-26 02:17:24 sdanig Exp $
+ * $Id: CSSImportRuleImpl.java,v 1.4 2008-08-14 08:17:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -43,6 +43,7 @@ import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
 
 import com.steadystate.css.parser.CSSOMParser;
+import com.steadystate.css.util.LangUtils;
 
 /**
  * Implementation of {@link CSSImportRule}.
@@ -50,7 +51,7 @@ import com.steadystate.css.parser.CSSOMParser;
  * TODO: Implement getStyleSheet()
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSImportRuleImpl.java,v 1.3 2008-03-26 02:17:24 sdanig Exp $
+ * @version $Id: CSSImportRuleImpl.java,v 1.4 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class CSSImportRuleImpl extends AbstractCSSRuleImpl implements CSSImportRule, Serializable {
 
@@ -150,4 +151,32 @@ public class CSSImportRuleImpl extends AbstractCSSRuleImpl implements CSSImportR
     public String toString() {
         return this.getCssText();
     }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CSSImportRule))
+        {
+            return false;
+        }
+        CSSImportRule cir = (CSSImportRule) obj;
+        return super.equals(obj)
+            && LangUtils.equals(this.getHref(), cir.getHref())
+            && LangUtils.equals(this.getMedia(), cir.getMedia());
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = super.hashCode();
+        hash = LangUtils.hashCode(hash, this.href);
+        hash = LangUtils.hashCode(hash, this.media);
+        return hash;
+    }
+
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Property.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * $Id: Property.java,v 1.2 2008-08-14 08:17:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -31,10 +31,12 @@ import java.io.Serializable;
 
 import org.w3c.dom.css.CSSValue;
 
+import com.steadystate.css.util.LangUtils;
+
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: Property.java,v 1.1 2008-03-20 01:20:16 sdanig Exp $
+ * @version $Id: Property.java,v 1.2 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class Property extends CSSOMObjectImpl implements Serializable {
 
@@ -80,9 +82,39 @@ public class Property extends CSSOMObjectImpl implements Serializable {
         this.important = important;
     }
     
+    @Override
     public String toString() {
         return this.name + ": "
             + this.value.toString()
             + (this.important ? " !important" : "");
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof Property))
+        {
+            return false;
+        }
+        Property p = (Property) obj;
+        return super.equals(obj)
+            && (this.important == p.important)
+            && LangUtils.equals(this.name, p.name)
+            && LangUtils.equals(this.value, p.value)
+            ;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = super.hashCode();
+        hash = LangUtils.hashCode(hash, this.important);
+        hash = LangUtils.hashCode(hash, this.name);
+        hash = LangUtils.hashCode(hash, this.value);
+        return hash;
     }
 }

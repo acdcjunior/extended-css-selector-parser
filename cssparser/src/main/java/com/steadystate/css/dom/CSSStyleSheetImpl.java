@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleSheetImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * $Id: CSSStyleSheetImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -28,6 +28,7 @@
 package com.steadystate.css.dom;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.io.StringReader;
 
@@ -48,12 +49,13 @@ import org.w3c.css.sac.SACMediaList;
 
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.parser.SACParserCSS2;
+import com.steadystate.css.util.LangUtils;
 
 /**
  * Implementation of {@link CSSStyleSheet}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleSheetImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * @version $Id: CSSStyleSheetImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
 
@@ -275,7 +277,87 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
     public String toString() {
         return this.getCssRules().toString();
     }
-    
+
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CSSStyleSheet))
+        {
+            return false;
+        }
+        CSSStyleSheet css = (CSSStyleSheet) obj;
+        boolean eq = LangUtils.equals(this.getCssRules(), css.getCssRules());
+        eq = eq && (this.getDisabled() == css.getDisabled());
+        eq = eq && LangUtils.equals(this.getHref(), css.getHref());
+        eq = eq && LangUtils.equals(this.getMedia(), css.getMedia());
+        // TODO implement some reasonful equals method for ownerNode
+//        eq = eq && Utils.equals(this.getOwnerNode(), css.getOwnerNode());
+            // don't use ownerNode and parentStyleSheet in equals()
+            // recursive loop -> stack overflow!
+        eq = eq && LangUtils.equals(this.getTitle(), css.getTitle())
+            ;
+        return eq;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = LangUtils.HASH_SEED;
+        hash = LangUtils.hashCode(hash, this.baseUri);
+        hash = LangUtils.hashCode(hash, this.cssRules);
+        hash = LangUtils.hashCode(hash, this.disabled);
+        hash = LangUtils.hashCode(hash, this.href);
+        hash = LangUtils.hashCode(hash, this.media);
+        hash = LangUtils.hashCode(hash, this.ownerNode);
+        // don't use ownerNode and parentStyleSheet in hashCode()
+        // recursive loop -> stack overflow!
+        hash = LangUtils.hashCode(hash, this.readOnly);
+        hash = LangUtils.hashCode(hash, this.title);
+        return hash;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out)
+        throws IOException
+    {
+        out.writeObject(this.baseUri);
+        out.writeObject(this.cssRules);
+        out.writeBoolean(this.disabled);
+        out.writeObject(this.href);
+        out.writeObject(this.media);
+        out.writeObject(this.ownerNode);
+        out.writeBoolean(this.readOnly);
+        out.writeObject(this.title);
+    }
+    private void readObject(ObjectInputStream in)
+        throws IOException, ClassNotFoundException
+    {
+        this.baseUri = (String) in.readObject();
+        this.cssRules = (CSSRuleList) in.readObject();
+        if (this.cssRules != null)
+        {
+            for (int i = 0; i < this.cssRules.getLength(); i++)
+            {
+                CSSRule cssRule = this.cssRules.item(i);
+                if (cssRule instanceof AbstractCSSRuleImpl)
+                {
+                    ((AbstractCSSRuleImpl) cssRule).setParentStyleSheet(this);
+                }
+            }
+        }
+        this.disabled = in.readBoolean();
+        this.href = (String) in.readObject();
+        this.media = (MediaList) in.readObject();
+        this.ownerNode = (Node) in.readObject();
+        this.readOnly = in.readBoolean();
+        this.title = (String) in.readObject();
+    }
+
     /**
      * Imports referenced CSSStyleSheets.
      *

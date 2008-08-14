@@ -1,5 +1,5 @@
 /*
- * $Id: CSSRuleListImpl.java,v 1.3 2008-03-26 02:08:55 sdanig Exp $
+ * $Id: CSSRuleListImpl.java,v 1.4 2008-08-14 08:17:54 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -35,11 +35,13 @@ import java.util.List;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
 
+import com.steadystate.css.util.LangUtils;
+
 /**
  * Implementation of {@link CSSRuleList}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSRuleListImpl.java,v 1.3 2008-03-26 02:08:55 sdanig Exp $
+ * @version $Id: CSSRuleListImpl.java,v 1.4 2008-08-14 08:17:54 waldbaer Exp $
  */
 public class CSSRuleListImpl implements CSSRuleList, Serializable {
     
@@ -92,4 +94,47 @@ public class CSSRuleListImpl implements CSSRuleList, Serializable {
         }
         return sb.toString();
     }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CSSRuleList))
+        {
+            return false;
+        }
+        CSSRuleList crl = (CSSRuleList) obj;
+        return this.equalsRules(crl);
+    }
+
+    private boolean equalsRules(CSSRuleList crl)
+    {
+        if ((crl == null) || (this.getLength() != crl.getLength()))
+        {
+            return false;
+        }
+        for (int i = 0; i < this.getLength(); i++)
+        {
+            CSSRule cssRule1 = this.item(i);
+            CSSRule cssRule2 = crl.item(i);
+            if (!LangUtils.equals(cssRule1, cssRule2))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = LangUtils.HASH_SEED;
+        hash = LangUtils.hashCode(hash, this.rules);
+        return hash;
+    }
+
 }

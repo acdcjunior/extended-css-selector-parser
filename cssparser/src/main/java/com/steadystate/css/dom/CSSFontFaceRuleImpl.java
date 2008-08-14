@@ -1,5 +1,5 @@
 /*
- * $Id: CSSFontFaceRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * $Id: CSSFontFaceRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -41,12 +41,13 @@ import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
 
 import com.steadystate.css.parser.CSSOMParser;
+import com.steadystate.css.util.LangUtils;
 
 /**
  * Implementation of {@link CSSFontFaceRule}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSFontFaceRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * @version $Id: CSSFontFaceRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontFaceRule, Serializable {
 
@@ -111,4 +112,30 @@ public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontF
     public void setStyle(CSSStyleDeclarationImpl style) {
         this.style = style;
     }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CSSFontFaceRule))
+        {
+            return false;
+        }
+        CSSFontFaceRule cffr = (CSSFontFaceRule) obj;
+        return super.equals(obj)
+            && LangUtils.equals(this.getStyle(), cffr.getStyle());
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = super.hashCode();
+        hash = LangUtils.hashCode(hash, this.style);
+        return hash;
+    }
+
 }

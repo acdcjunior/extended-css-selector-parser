@@ -1,5 +1,5 @@
 /*
- * $Id: CSSMediaRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * $Id: CSSMediaRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -28,6 +28,7 @@
 package com.steadystate.css.dom;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.io.StringReader;
 
@@ -43,12 +44,13 @@ import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
 
 import com.steadystate.css.parser.CSSOMParser;
+import com.steadystate.css.util.LangUtils;
 
 /**
  * Implementation of {@link CSSMediaRule}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSMediaRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * @version $Id: CSSMediaRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRule, Serializable {
 
@@ -202,4 +204,60 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
     public String toString() {
         return this.getCssText();
     }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CSSMediaRule))
+        {
+            return false;
+        }
+        CSSMediaRule cmr = (CSSMediaRule) obj;
+        return super.equals(obj)
+            && LangUtils.equals(this.getMedia(), cmr.getMedia())
+            && LangUtils.equals(this.getCssRules(), cmr.getCssRules())
+            ;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = super.hashCode();
+        hash = LangUtils.hashCode(hash, this.media);
+        hash = LangUtils.hashCode(hash, this.cssRules);
+        return hash;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out)
+        throws IOException
+    {
+        out.writeObject(this.cssRules);
+        out.writeObject(this.media);
+    }
+
+    private void readObject(ObjectInputStream in)
+        throws IOException, ClassNotFoundException
+    {
+        this.cssRules = (CSSRuleList) in.readObject();
+        if (this.cssRules != null)
+        {
+            for (int i = 0; i < this.cssRules.getLength(); i++)
+            {
+                CSSRule cssRule = this.cssRules.item(i);
+                if (cssRule instanceof AbstractCSSRuleImpl)
+                {
+                    ((AbstractCSSRuleImpl) cssRule).setParentRule(this);
+                    ((AbstractCSSRuleImpl) cssRule).setParentStyleSheet(
+                        this.getParentStyleSheetImpl());
+                }
+            }
+        }
+        this.media = (MediaList) in.readObject();
+    }
+
 }

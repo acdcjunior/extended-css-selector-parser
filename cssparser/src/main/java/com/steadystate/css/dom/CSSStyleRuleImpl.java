@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * $Id: CSSStyleRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -42,12 +42,13 @@ import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.SelectorList;
 
 import com.steadystate.css.parser.CSSOMParser;
+import com.steadystate.css.util.LangUtils;
 
 /** 
  * Implementation of {@link CSSStyleRule}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleRuleImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * @version $Id: CSSStyleRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class CSSStyleRuleImpl extends AbstractCSSRuleImpl
     implements CSSStyleRule, Serializable {
@@ -160,4 +161,33 @@ public class CSSStyleRuleImpl extends AbstractCSSRuleImpl
     public String toString() {
         return this.getCssText();
     }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof CSSStyleRule))
+        {
+            return false;
+        }
+        CSSStyleRule csr = (CSSStyleRule) obj;
+        return super.equals(obj)
+            && LangUtils.equals(this.getSelectorText(), csr.getSelectorText())
+            && LangUtils.equals(this.getStyle(), csr.getStyle())
+            ;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = super.hashCode();
+        hash = LangUtils.hashCode(hash, this.selectors);
+        hash = LangUtils.hashCode(hash, this.style);
+        return hash;
+    }
+
 }

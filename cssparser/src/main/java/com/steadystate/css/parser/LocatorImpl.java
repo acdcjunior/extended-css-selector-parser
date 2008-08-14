@@ -1,5 +1,5 @@
 /*
- * $Id: LocatorImpl.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
+ * $Id: LocatorImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -31,11 +31,13 @@ import java.io.Serializable;
 
 import org.w3c.css.sac.Locator;
 
+import com.steadystate.css.util.LangUtils;
+
 /**
  * Implementation of {@link Locator}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LocatorImpl.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
+ * @version $Id: LocatorImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class LocatorImpl implements Locator, Serializable {
 
@@ -112,5 +114,33 @@ public class LocatorImpl implements Locator, Serializable {
     public int getColumnNumber() {
         return this.columnNumber;
     }
-    
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof Locator))
+        {
+            return false;
+        }
+        Locator l = (Locator) obj;
+        return (this.getColumnNumber() == l.getColumnNumber())
+            && (this.getLineNumber() == l.getLineNumber())
+            && LangUtils.equals(this.getURI(), l.getURI());
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = LangUtils.HASH_SEED;
+        hash = LangUtils.hashCode(hash, this.columnNumber);
+        hash = LangUtils.hashCode(hash, this.lineNumber);
+        hash = LangUtils.hashCode(hash, this.uri);
+        return hash;
+    }
+
 }
