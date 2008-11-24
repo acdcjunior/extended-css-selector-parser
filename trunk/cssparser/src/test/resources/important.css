@@ -1,0 +1,17 @@
+.foo {
+  padding: 0 !important;
+}
+.foo {
+  font-weight: normal ! important;
+}
+.foo {
+  font-weight: normal !	important;
+}
+.foo {
+  font-weight: normal !
+ important;
+}
+
+.important {
+  font-weight: bold
+}
