@@ -1,5 +1,5 @@
 /*
- * $Id: CSSPageRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
+ * $Id: CSSPageRuleImpl.java,v 1.4 2008-11-26 16:23:23 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -49,7 +49,7 @@ import com.steadystate.css.util.LangUtils;
  * TODO: Implement setSelectorText()
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSPageRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
+ * @version $Id: CSSPageRuleImpl.java,v 1.4 2008-11-26 16:23:23 waldbaer Exp $
  */
 public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule, Serializable {
 
@@ -80,8 +80,9 @@ public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule,
 
     public String getCssText() {
         String sel = getSelectorText();
-        return "@page {"
+        return "@page "
             + sel + ((sel.length() > 0) ? " " : "")
+            + "{"
             + getStyle().getCssText()
             + "}";
     }
@@ -172,6 +173,12 @@ public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule,
         hash = LangUtils.hashCode(hash, this.pseudoPage);
         hash = LangUtils.hashCode(hash, this.style);
         return hash;
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.getCssText();
     }
 
 }
