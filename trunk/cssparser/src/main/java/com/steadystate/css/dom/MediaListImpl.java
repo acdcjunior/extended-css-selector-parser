@@ -1,5 +1,5 @@
 /*
- * $Id: MediaListImpl.java,v 1.4 2008-08-14 08:17:55 waldbaer Exp $
+ * $Id: MediaListImpl.java,v 1.5 2008-11-26 16:23:59 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -40,16 +40,19 @@ import org.w3c.dom.stylesheets.MediaList;
 
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.CSSParseException;
+import org.w3c.css.sac.Locator;
 import org.w3c.css.sac.SACMediaList;
 
+import com.steadystate.css.parser.SACMediaListImpl;
 import com.steadystate.css.parser.SACParserCSS2;
+import com.steadystate.css.userdata.UserDataConstants;
 import com.steadystate.css.util.LangUtils;
 
 /**
  * Implements {@link MediaList}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: MediaListImpl.java,v 1.4 2008-08-14 08:17:55 waldbaer Exp $
+ * @version $Id: MediaListImpl.java,v 1.5 2008-11-26 16:23:59 waldbaer Exp $
  */
 public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Serializable {
 
@@ -73,6 +76,12 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
     public MediaListImpl(SACMediaList mediaList)
     {
         this.setMediaList(mediaList);
+        Locator locator = mediaList instanceof SACMediaListImpl ?
+    		((SACMediaListImpl) mediaList).getLocator() : null;
+		if (locator != null)
+		{
+			this.setUserData(UserDataConstants.KEY_LOCATOR, locator);
+		}
     }
 
     public MediaListImpl()
