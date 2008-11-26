@@ -1,5 +1,5 @@
 /*
- * $Id: CSSCharsetRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
+ * $Id: CSSCharsetRuleImpl.java,v 1.4 2008-11-26 16:22:49 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -46,7 +46,7 @@ import com.steadystate.css.util.LangUtils;
  * Implementation of {@link CSSCharsetRule}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSCharsetRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
+ * @version $Id: CSSCharsetRuleImpl.java,v 1.4 2008-11-26 16:22:49 waldbaer Exp $
  */
 public class CSSCharsetRuleImpl extends AbstractCSSRuleImpl implements CSSCharsetRule, Serializable {
 
@@ -140,5 +140,11 @@ public class CSSCharsetRuleImpl extends AbstractCSSRuleImpl implements CSSCharse
         hash = LangUtils.hashCode(hash, this.encoding);
         return hash;
     }
+
+	@Override
+	public String toString()
+	{
+        return this.getCssText();
+	}
 
 }

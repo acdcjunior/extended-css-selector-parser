@@ -1,5 +1,5 @@
 /*
- * $Id: CSSFontFaceRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
+ * $Id: CSSFontFaceRuleImpl.java,v 1.4 2008-11-26 16:22:57 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -47,7 +47,7 @@ import com.steadystate.css.util.LangUtils;
  * Implementation of {@link CSSFontFaceRule}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSFontFaceRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
+ * @version $Id: CSSFontFaceRuleImpl.java,v 1.4 2008-11-26 16:22:57 waldbaer Exp $
  */
 public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontFaceRule, Serializable {
 
@@ -136,6 +136,12 @@ public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontF
         int hash = super.hashCode();
         hash = LangUtils.hashCode(hash, this.style);
         return hash;
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.getCssText();
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: LocatorImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
+ * $Id: LocatorImpl.java,v 1.4 2008-11-26 16:24:30 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -37,7 +37,7 @@ import com.steadystate.css.util.LangUtils;
  * Implementation of {@link Locator}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LocatorImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
+ * @version $Id: LocatorImpl.java,v 1.4 2008-11-26 16:24:30 waldbaer Exp $
  */
 public class LocatorImpl implements Locator, Serializable {
 
@@ -142,5 +142,13 @@ public class LocatorImpl implements Locator, Serializable {
         hash = LangUtils.hashCode(hash, this.uri);
         return hash;
     }
+
+	@Override
+	public String toString()
+	{
+        return new StringBuffer().append(this.getUri()).append(" (")
+        	.append(this.getLineNumber()).append(':')
+        	.append(this.getColumnNumber()).append(')').toString();
+	}
 
 }
