@@ -218,7 +218,7 @@ public class LocatorTest extends TestCase
     private void testLocations(Parser sacParser, String cssCode,
 		Map<Character, List<Integer[]>> positions)
     {
-    	System.out.println(cssCode);
+//    	System.out.println(cssCode);
         Reader r = new StringReader(cssCode);
         InputSource source = new InputSource(r);
         CSSOMParser cssomParser = new CSSOMParser(sacParser);
@@ -233,7 +233,7 @@ public class LocatorTest extends TestCase
         		cssomParser.parseStyleSheet(source, null, null);
         	CSSRuleList cssRules = cssStyleSheet.getCssRules();
         	this.testCSSRules(cssRules, positions, counts);
-        	System.out.println("----------");
+//        	System.out.println("----------");
 		}
         catch (IOException e)
         {
@@ -258,7 +258,7 @@ public class LocatorTest extends TestCase
         if (cssRule instanceof CSSOMObject)
         {
             Locator locator = this.getLocator((CSSOMObject) cssRule);
-            System.out.println(locator.toString() + " R " + cssRule);
+//            System.out.println(locator.toString() + " R " + cssRule);
             Integer[] expected = positions.get('R').get(counts.get('R'));
             int expectedLine = expected[0];
             int expectedColumn = expected[1];
@@ -317,7 +317,7 @@ public class LocatorTest extends TestCase
     	if ((mediaList.getLength() > 0) && (mediaList instanceof CSSOMObject))
     	{
             Locator locator = this.getLocator((CSSOMObject) mediaList);
-            System.out.println("" + locator + " M " + mediaList);
+//            System.out.println("" + locator + " M " + mediaList);
             Integer[] expected = positions.get('M').get(counts.get('M'));
             int expectedLine = expected[0];
             int expectedColumn = expected[1];
@@ -332,7 +332,7 @@ public class LocatorTest extends TestCase
 		Map<Character, Integer> counts)
     {
         Locator locator = this.getLocator(property);
-        System.out.println(locator.toString() + " P " + property);
+//        System.out.println(locator.toString() + " P " + property);
         Integer[] expected = positions.get('P').get(counts.get('P'));
         int expectedLine = expected[0];
         int expectedColumn = expected[1];
@@ -349,7 +349,7 @@ public class LocatorTest extends TestCase
         if (cssValue instanceof CSSValueImpl)
         {
         	Locator locator = this.getLocator((CSSValueImpl) cssValue);
-            System.out.println(locator.toString() + " V " + cssValue);
+//            System.out.println(locator.toString() + " V " + cssValue);
             Integer[] expected = positions.get('V').get(counts.get('V'));
             int expectedLine = expected[0];
             int expectedColumn = expected[1];
