@@ -1,5 +1,5 @@
 /*
- * $Id: HandlerBase.java,v 1.2 2008-03-26 01:35:33 sdanig Exp $
+ * $Id: HandlerBase.java,v 1.3 2008-11-27 14:49:13 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -46,6 +46,11 @@ public class HandlerBase implements DocumentHandlerExt, ErrorHandler {
     public void ignorableAtRule(String atRule) throws CSSException {
     }
 
+    public void ignorableAtRule(String atRule, Locator locator)
+        throws CSSException
+    {
+    }
+
     public void namespaceDeclaration(String prefix, String uri)
 	    throws CSSException {
     }
@@ -55,7 +60,18 @@ public class HandlerBase implements DocumentHandlerExt, ErrorHandler {
 	    throws CSSException {
     }
 
+    public void importStyle(String uri, SACMediaList media, 
+        String defaultNamespaceURI, Locator locator)
+        throws CSSException
+    {
+    }
+
     public void startMedia(SACMediaList media) throws CSSException {
+    }
+
+    public void startMedia(SACMediaList media, Locator locator)
+        throws CSSException
+    {
     }
 
     public void endMedia(SACMediaList media) throws CSSException {
@@ -76,6 +92,11 @@ public class HandlerBase implements DocumentHandlerExt, ErrorHandler {
     public void startSelector(SelectorList selectors) throws CSSException {
     }
 
+    public void startSelector(SelectorList selectors, Locator locator)
+        throws CSSException
+    {
+    }
+
     public void endSelector(SelectorList selectors) throws CSSException {
     }
 
@@ -83,7 +104,13 @@ public class HandlerBase implements DocumentHandlerExt, ErrorHandler {
         throws CSSException {
     }
 
-    public void charset(String characterEncoding) throws CSSException
+    public void property(String name, LexicalUnit value, boolean important,
+        Locator locator)
+	{
+	}
+
+    public void charset(String characterEncoding, Locator locator)
+        throws CSSException
     {
     }
 

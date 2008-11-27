@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSACParser.java,v 1.6 2008-06-02 08:24:44 waldbaer Exp $
+ * $Id: AbstractSACParser.java,v 1.7 2008-11-27 14:48:48 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -160,9 +160,14 @@ abstract class AbstractSACParser implements Parser
 
     public Locator getLocator()
     {
+        return this.createLocator(this.getToken());
+    }
+
+    protected Locator createLocator(Token t)
+    {
         return new LocatorImpl(this.getInputSource().getURI(),
-            this.getToken() == null ? 0 : this.getToken().beginLine,
-            this.getToken() == null ? 0 : this.getToken().beginColumn);//this.locator;
+            t == null ? 0 : t.beginLine,
+            t == null ? 0 : t.beginColumn);
     }
 
     protected String add_escapes(String str)
@@ -483,29 +488,53 @@ abstract class AbstractSACParser implements Parser
         this.getDocumentHandler().endDocument(this.getInputSource());
     }
 
-    protected void handleIgnorableAtRule(String s)
-    {
-        this.getDocumentHandler().ignorableAtRule(s);
-    }
-
-    protected void handleCharset(String characterEncoding)
+    protected void handleIgnorableAtRule(String s, Locator locator)
     {
         if (this.getDocumentHandler() instanceof DocumentHandlerExt)
         {
             ((DocumentHandlerExt) this.getDocumentHandler())
-                .charset(characterEncoding);
+                .ignorableAtRule(s, locator);
+        }
+        else
+        {
+            this.getDocumentHandler().ignorableAtRule(s);
+        }
+    }
+
+    protected void handleCharset(String characterEncoding, Locator locator)
+    {
+        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
+        {
+            ((DocumentHandlerExt) this.getDocumentHandler())
+                .charset(characterEncoding, locator);
         }
     }
 
     protected void handleImportStyle(String uri, SACMediaList media,
-        String defaultNamespaceURI)
+        String defaultNamespaceURI, Locator locator)
     {
-        this.getDocumentHandler().importStyle(uri, media, defaultNamespaceURI);
+        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
+        {
+            ((DocumentHandlerExt) this.getDocumentHandler())
+                .importStyle(uri, media, defaultNamespaceURI, locator);
+        }
+        else
+        {
+        	this.getDocumentHandler().importStyle(uri, media, defaultNamespaceURI);
+        }
     }
 
-    protected void handleStartMedia(SACMediaList media)
+    protected void handleStartMedia(SACMediaList media, Locator locator)
     {
-        this.getDocumentHandler().startMedia(media);
+        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
+        {
+            ((DocumentHandlerExt) this.getDocumentHandler())
+                .startMedia(media, locator);
+        }
+        else
+        {
+            this.getDocumentHandler().startMedia(media);
+        }
     }
 
     protected void handleMedium(String medium)
@@ -517,9 +546,18 @@ abstract class AbstractSACParser implements Parser
         this.getDocumentHandler().endMedia(media);
     }
 
-    protected void handleStartPage(String name, String pseudo_page)
+    protected void handleStartPage(String name, String pseudo_page,
+		Locator locator)
     {
-        this.getDocumentHandler().startPage(name, pseudo_page);
+        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
+        {
+            ((DocumentHandlerExt) this.getDocumentHandler())
+                .startPage(name, pseudo_page, locator);
+        }
+        else
+        {
+            this.getDocumentHandler().startPage(name, pseudo_page);
+        }
     }
 
     protected void handleEndPage(String name, String pseudo_page)
@@ -527,9 +565,17 @@ abstract class AbstractSACParser implements Parser
         this.getDocumentHandler().endPage(name, pseudo_page);
     }
 
-    protected void handleStartFontFace()
+    protected void handleStartFontFace(Locator locator)
     {
-        this.getDocumentHandler().startFontFace();
+        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
+        {
+            ((DocumentHandlerExt) this.getDocumentHandler())
+                .startFontFace(locator);
+        }
+        else
+        {
+            this.getDocumentHandler().startFontFace();
+        }
     }
 
     protected void handleEndFontFace()
@@ -541,9 +587,17 @@ abstract class AbstractSACParser implements Parser
     {
     }
 
-    protected void handleStartSelector(SelectorList selectors)
+    protected void handleStartSelector(SelectorList selectors, Locator locator)
     {
-        this.getDocumentHandler().startSelector(selectors);
+        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
+        {
+            ((DocumentHandlerExt) this.getDocumentHandler())
+                .startSelector(selectors, locator);
+        }
+        else
+        {
+            this.getDocumentHandler().startSelector(selectors);
+        }
     }
 
     protected void handleEndSelector(SelectorList selectors)
@@ -552,9 +606,17 @@ abstract class AbstractSACParser implements Parser
     }
 
     protected void handleProperty(String name, LexicalUnit value,
-        boolean important)
+        boolean important, Locator locator)
     {
-        this.getDocumentHandler().property(name, value, important);
+        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
+        {
+        	((DocumentHandlerExt) this.getDocumentHandler())
+        		.property(name, value, important, locator);
+        }
+        else
+        {
+        	this.getDocumentHandler().property(name, value, important);
+        }
     }
 
     protected LexicalUnit functionInternal(LexicalUnit prev, Token t,

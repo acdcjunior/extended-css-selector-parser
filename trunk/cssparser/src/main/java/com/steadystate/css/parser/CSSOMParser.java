@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParser.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
+ * $Id: CSSOMParser.java,v 1.3 2008-11-27 14:49:13 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -36,6 +36,7 @@ import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.ErrorHandler;
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.LexicalUnit;
+import org.w3c.css.sac.Locator;
 import org.w3c.css.sac.Parser;
 import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
@@ -69,7 +70,7 @@ import com.steadystate.css.userdata.UserDataConstants;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParser.java,v 1.2 2008-03-26 02:08:55 sdanig Exp $
+ * @version $Id: CSSOMParser.java,v 1.3 2008-11-27 14:49:13 waldbaer Exp $
  */
 public class CSSOMParser {
     
@@ -270,13 +271,19 @@ public class CSSOMParser {
         }
 
         public void ignorableAtRule(String atRule) throws CSSException {
+            this.ignorableAtRule(atRule, null);
+        }
+
+        public void ignorableAtRule(String atRule, Locator locator)
+            throws CSSException
+        {
 
             // Create the unknown rule and add it to the rule list
             CSSUnknownRuleImpl ir = new CSSUnknownRuleImpl(
                 CSSOMParser.this.getParentStyleSheet(),
                 this.getParentRule(),
                 atRule);
-            this.addLocator(ir);
+            this.addLocator(locator, ir);
             if (!this._nodeStack.empty()) {
                 ((CSSRuleListImpl)this._nodeStack.peek()).add(ir);
             } else {
@@ -289,12 +296,14 @@ public class CSSOMParser {
                 throws CSSException {
         }
 
-        public void charset(String characterEncoding) throws CSSException
+        public void charset(String characterEncoding, Locator locator)
+        	throws CSSException
         {
-            CSSCharsetRuleImpl cr = new CSSCharsetRuleImpl(CSSOMParser.this.getParentStyleSheet(),
+            CSSCharsetRuleImpl cr = new CSSCharsetRuleImpl(
+        		CSSOMParser.this.getParentStyleSheet(),
                 this.getParentRule(),
                 characterEncoding);
-            this.addLocator(cr);
+            this.addLocator(locator, cr);
             if (!this._nodeStack.empty())
             {
                 ((CSSRuleListImpl)this._nodeStack.peek()).add(cr);
@@ -309,13 +318,18 @@ public class CSSOMParser {
                 String uri,
                 SACMediaList media, 
                 String defaultNamespaceURI) throws CSSException {
+            this.importStyle(uri, media, defaultNamespaceURI, null);
+        }
+
+        public void importStyle(String uri, SACMediaList media, 
+            String defaultNamespaceURI, Locator locator) throws CSSException {
             // Create the import rule and add it to the rule list
             CSSImportRuleImpl ir = new CSSImportRuleImpl(
                 CSSOMParser.this.getParentStyleSheet(),
                 this.getParentRule(),
                 uri,
                 new MediaListImpl(media));
-            this.addLocator(ir);
+            this.addLocator(locator, ir);
             if (!this._nodeStack.empty()) {
                 ((CSSRuleListImpl)this._nodeStack.peek()).add(ir);
             } else {
@@ -325,15 +339,19 @@ public class CSSOMParser {
         }
 
         public void startMedia(SACMediaList media) throws CSSException {
+            this.startMedia(media, null);
+        }
 
+        public void startMedia(SACMediaList media, Locator locator)
+            throws CSSException
+        {
             MediaListImpl ml = new MediaListImpl(media);
-            this.addLocator(ml);
             // Create the media rule and add it to the rule list
             CSSMediaRuleImpl mr = new CSSMediaRuleImpl(
                 CSSOMParser.this.getParentStyleSheet(),
                 this.getParentRule(),
                 ml);
-            this.addLocator(mr);
+            this.addLocator(locator, mr);
             if (!this._nodeStack.empty()) {
                 ((CSSRuleListImpl)this._nodeStack.peek()).add(mr);
             }
@@ -354,11 +372,16 @@ public class CSSOMParser {
 
         public void startPage(String name, String pseudo_page) throws CSSException {
 
+            this.startPage(name, pseudo_page, null);
+        }
+        public void startPage(String name, String pseudo_page, Locator locator)
+            throws CSSException
+        {
             // Create the page rule and add it to the rule list
             CSSPageRuleImpl pr = new CSSPageRuleImpl(
                 CSSOMParser.this.getParentStyleSheet(),
                 this.getParentRule(), name, pseudo_page);
-            this.addLocator(pr);
+            this.addLocator(locator, pr);
             if (!this._nodeStack.empty()) {
                 ((CSSRuleListImpl)this._nodeStack.peek()).add(pr);
             }
@@ -379,11 +402,16 @@ public class CSSOMParser {
 
         public void startFontFace() throws CSSException {
 
+        	this.startFontFace(null);
+        }
+
+        public void startFontFace(Locator locator) throws CSSException
+        {
             // Create the font face rule and add it to the rule list
             CSSFontFaceRuleImpl ffr = new CSSFontFaceRuleImpl(
                 CSSOMParser.this.getParentStyleSheet(),
                 this.getParentRule());
-            this.addLocator(ffr);
+            this.addLocator(locator, ffr);
             if (!this._nodeStack.empty()) {
                 ((CSSRuleListImpl)this._nodeStack.peek()).add(ffr);
             }
@@ -403,12 +431,17 @@ public class CSSOMParser {
         }
 
         public void startSelector(SelectorList selectors) throws CSSException {
+            this.startSelector(selectors, null);
+        }
 
+        public void startSelector(SelectorList selectors, Locator locator)
+            throws CSSException
+        {
             // Create the style rule and add it to the rule list
             CSSStyleRuleImpl sr = new CSSStyleRuleImpl(
                 CSSOMParser.this.getParentStyleSheet(),
                 this.getParentRule(), selectors);
-            this.addLocator(sr);
+            this.addLocator(locator, sr);
             if (!this._nodeStack.empty()) {
                 Object o = this._nodeStack.peek();
                 ((CSSRuleListImpl)/*this._nodeStack.peek()*/o).add(sr);
@@ -430,13 +463,18 @@ public class CSSOMParser {
 
         public void property(String name, LexicalUnit value, boolean important)
                 throws CSSException {
+            this.property(name, value, important, null);
+        }
+        
+        public void property(String name, LexicalUnit value, boolean important,
+            Locator locator) {
             CSSStyleDeclarationImpl decl =
                 (CSSStyleDeclarationImpl) this._nodeStack.peek();
             try
             {
                 Property property = 
                     new Property(name, new CSSValueImpl(value), important);
-                this.addLocator(property);
+                this.addLocator(locator, property);
                 decl.addProperty(property);
             }
             catch (DOMException e)
@@ -444,8 +482,8 @@ public class CSSOMParser {
                 // call ErrorHandler?
             }
         }
-        
-        private CSSRule getParentRule()
+
+		private CSSRule getParentRule()
         {
             if (!this._nodeStack.empty() && this._nodeStack.size() > 1)
             {
@@ -458,11 +496,16 @@ public class CSSOMParser {
             return null;
         }
         
-        private void addLocator(CSSOMObject cssomObject)
+        private void addLocator(Locator locator, CSSOMObject cssomObject)
         {
-            cssomObject.setUserData(UserDataConstants.KEY_LOCATOR,
-                ((AbstractSACParser) CSSOMParser.this._parser).getLocator());
+        	if (locator == null)
+        	{
+        		locator =
+        			((AbstractSACParser) CSSOMParser.this._parser).getLocator();
+        	}
+            cssomObject.setUserData(UserDataConstants.KEY_LOCATOR, locator);
         }
+
     }
 
     public static void setProperty(String key, String val) {

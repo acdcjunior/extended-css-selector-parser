@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSSmobileOKBasic1.jj,v 1.1 2008-03-20 01:20:18 sdanig Exp $
+ * $Id: SACParserCSSmobileOKBasic1.jj,v 1.2 2008-11-27 14:48:16 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.parser.selectors.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSSmobileOKBasic1.jj,v 1.1 2008-03-20 01:20:18 sdanig Exp $
+ * @version $Id: SACParserCSSmobileOKBasic1.jj,v 1.2 2008-11-27 14:48:16 waldbaer Exp $
  */
 public class SACParserCSSmobileOKBasic1 extends AbstractSACParser implements Parser {
 
@@ -283,14 +283,16 @@ void unknownRule() :
 {
     Token t;
     String s;
+    Locator locator;
 }
 {
     try
     {
         t = <ATKEYWORD>
         {
+            locator = this.getLocator();
             s = skip();
-            this.handleIgnorableAtRule(s);
+            this.handleIgnorableAtRule(s, locator);
         }
     }
     catch (ParseException e)
@@ -310,17 +312,22 @@ void importRule() :
 {
     Token t;
     SACMediaListImpl ml = new SACMediaListImpl();
+    Locator locator;
 }
 {
     try
     {
-        <IMPORT_SYM> ( <S> )*
+        <IMPORT_SYM>
+        {
+            locator = this.getLocator();
+        }
+        ( <S> )*
         ( t = <STRING>
         | t = <URL> ) ( <S> )*
         ( mediaList(ml) )?
         <SEMICOLON>
         {
-            this.handleImportStyle(unescape(t.image), new SACMediaListImpl(), null);
+            this.handleImportStyle(unescape(t.image), ml, null, locator);
         }
     }
     catch (CSSParseException e)
@@ -367,15 +374,20 @@ void mediaRule() :
 {
     boolean start = false;
     SACMediaListImpl ml = new SACMediaListImpl();
+    Locator locator;
 }
 {
     try
     {
-        <MEDIA_SYM> ( <S> )*
+        <MEDIA_SYM>
+        {
+            locator = this.getLocator();
+        }
+        ( <S> )*
         mediaList(ml)
         {
             start = true;
-            this.handleStartMedia(ml);
+            this.handleStartMedia(ml, locator);
         }
         <LBRACE> ( <S> )*
         ( mediaRuleList() )?
@@ -409,6 +421,9 @@ void mediaList(SACMediaListImpl ml) :
     try
     {
         s = medium()
+        {
+            ml.setLocator(this.getLocator());
+        }
         ( <COMMA> ( <S> )* { ml.add(s); } s = medium() )*
         { ml.add(s); }
     }
@@ -499,15 +514,18 @@ void styleRule() :
 {
     SelectorList selList = null;
     boolean start = false;
-    boolean noError = true;
+    Token t;
 }
 {
     try {
+        {
+            t = this.getToken();
+        } 
         selList = selectorList()
         <LBRACE> ( <S> )*
         {
             start = true;
-            this.handleStartSelector(selList);
+            this.handleStartSelector(selList, this.createLocator(t.next));
         }
         // TODO: css 2 must have at least one declaration too
         ( declaration() )
@@ -517,13 +535,11 @@ void styleRule() :
     catch(CSSParseException e)
     {
         this.getErrorHandler().error(e);
-        noError = false;
         this.error_skipblock();
     }
     catch(ParseException e)
     {
         this.getErrorHandler().error(this.toCSSParseException("invalidStyleRule", e));
-        noError = false;
         this.error_skipblock();
     }
     finally {
@@ -803,16 +819,20 @@ void declaration() :
   String p;
   LexicalUnit e;
   boolean priority = false;
+  Locator locator = null;
 }
 {
     try
     {
         p = property()
+        {
+            locator = this.getLocator();
+        }
         <COLON> ( <S> )*
         e = expr()
         ( priority = prio() )?
         {
-            this.handleProperty(p, e, priority);
+            this.handleProperty(p, e, priority, locator);
         }
     }
     catch (CSSParseException ex)
@@ -878,35 +898,16 @@ LexicalUnit term(LexicalUnit prev) :
   char op = ' ';
   String s;
   LexicalUnit value = null;
-//  RGBColor color;
-//  HexColor h;
-//  CSSValueImpl value = null;
+  Locator locator = null;
 }
 {
-/*
-  ( ( op = unaryOperator() )?
-  ( ( t = <NUMBER>    { value = new CSSValueImpl( CSSPrimitiveValue.CSS_NUMBER, new Float( op + t.image ) ); }
-    | t = <PERCENTAGE>  { value = new CSSValueImpl( CSSPrimitiveValue.CSS_PERCENTAGE, new Float( op + t.image ) ); }
-    | t = <LENGTH_PX>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_PX, new Float( op + t.image ) ); }
-    | t = <LENGTH_CM>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_CM, new Float( op + t.image ) ); }
-    | t = <LENGTH_MM>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_MM, new Float( op + t.image ) ); }
-    | t = <LENGTH_IN>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_IN, new Float( op + t.image ) ); }
-    | t = <LENGTH_PT>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_PT, new Float( op + t.image ) ); }
-    | t = <LENGTH_PC>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_PC, new Float( op + t.image ) ); }
-    | t = <EMS>     { value = new CSSValueImpl( CSSPrimitiveValue.CSS_EMS, new Float( op + t.image ) ); }
-    | t = <EXS>     { value = new CSSValueImpl( CSSPrimitiveValue.CSS_EXS, new Float( op + t.image ) ); }
-  | t = <STRING>      { value = new CSSValueImpl( CSSPrimitiveValue.CSS_STRING, op + t.image ); }
-  | t = <IDENT>     { value = new CSSValueImpl( CSSPrimitiveValue.CSS_IDENT, op + t.image ); }
-  | t = <URL>       { value = new CSSValueImpl( CSSPrimitiveValue.CSS_URI, op + t.image ); }
-  | t = <UNICODERANGE>  { value = new CSSValueImpl( CSSPrimitiveValue.CSS_IDENT, op + t.image ); }
-  | color = rgb()     { value = new CSSValueImpl( CSSPrimitiveValue.CSS_RGBCOLOR, color ); }
-  | color = hexcolor()  { value = new CSSValueImpl( CSSPrimitiveValue.CSS_RGBCOLOR, color ); }
-  | t = <DIMEN>     { value = new CSSValueImpl( CSSPrimitiveValue.CSS_DIMENSION, new Float( op + t.image ) ); }
-  | t = <INHERIT>     { value = new CSSValueImpl( CSSPrimitiveValue.CSS_INHERIT, op + t.image ); } )
-  ( <S> )* )
-  { return value; }
-*/
     ( op = unaryOperator() )?
+    {
+        if (op != ' ')
+        {
+            locator = this.getLocator();
+        }
+    }
     (
         ( t = <NUMBER>
         {
@@ -936,11 +937,17 @@ LexicalUnit term(LexicalUnit prev) :
     | value = rgb(prev)
     | value = hexcolor(prev)
     )
+    {
+        if (locator == null)
+        {
+            locator = this.getLocator();
+        }
+    }
     ( <S> )*
     {
         if (value instanceof LexicalUnitImpl)
         {
-            ((LexicalUnitImpl) value).setLocator(this.getLocator());
+            ((LexicalUnitImpl) value).setLocator(locator);
         }
         return value;
     }
