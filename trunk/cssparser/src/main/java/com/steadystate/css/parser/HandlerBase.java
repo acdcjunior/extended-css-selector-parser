@@ -1,5 +1,5 @@
 /*
- * $Id: HandlerBase.java,v 1.3 2008-11-27 14:49:13 waldbaer Exp $
+ * $Id: HandlerBase.java,v 1.4 2008-11-27 16:05:05 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -80,10 +80,16 @@ public class HandlerBase implements DocumentHandlerExt, ErrorHandler {
     public void startPage(String name, String pseudo_page) throws CSSException {
     }
 
+    public void startPage(String name, String pseudo_page, Locator locator) throws CSSException {
+    }
+
     public void endPage(String name, String pseudo_page) throws CSSException {
     }
 
     public void startFontFace() throws CSSException {
+    }
+
+    public void startFontFace(Locator locator) throws CSSException {
     }
 
     public void endFontFace() throws CSSException {
