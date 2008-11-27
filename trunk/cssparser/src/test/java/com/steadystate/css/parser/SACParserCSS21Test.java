@@ -23,6 +23,7 @@ public class SACParserCSS21Test extends TestCase {
         CSSOMParser parser = new CSSOMParser(sp);
         CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
+//        System.out.println(sheet);
         assertEquals(17, sheet.getCssRules().getLength());
     }
 
@@ -37,7 +38,9 @@ public class SACParserCSS21Test extends TestCase {
         CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
         CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
-        assertEquals(21, sheet.getCssRules().getLength());
+//        System.out.println(sheet);
+//        assertEquals(21, sheet.getCssRules().getLength());
+        assertEquals(78, sheet.getCssRules().getLength());
     }
 
 }
