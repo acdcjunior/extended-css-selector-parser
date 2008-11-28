@@ -1,5 +1,5 @@
 /*
- * $Id: AndConditionImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * $Id: AndConditionImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -30,12 +30,15 @@ package com.steadystate.css.parser.selectors;
 import java.io.Serializable;
 import org.w3c.css.sac.*;
 
+import com.steadystate.css.parser.Locatable;
+import com.steadystate.css.parser.LocatableImpl;
+
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: AndConditionImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * @version $Id: AndConditionImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  */
-public class AndConditionImpl implements CombinatorCondition, Serializable {
+public class AndConditionImpl extends LocatableImpl implements CombinatorCondition, Serializable {
 
     private static final long serialVersionUID = -3180583860092672742L;
 
@@ -45,6 +48,14 @@ public class AndConditionImpl implements CombinatorCondition, Serializable {
     public void setFirstCondition(Condition c1)
     {
         this.firstCondition = c1;
+        if (c1 instanceof Locatable)
+        {
+        	this.setLocator(((Locatable) c1).getLocator());
+        }
+        else if (c1 == null)
+        {
+        	this.setLocator(null);
+        }
     }
 
     public void setSecondCondition(Condition c2)
@@ -54,8 +65,8 @@ public class AndConditionImpl implements CombinatorCondition, Serializable {
 
 
     public AndConditionImpl(Condition c1, Condition c2) {
-        this.firstCondition = c1;
-        this.secondCondition = c2;
+        this.setFirstCondition(c1);
+        this.setSecondCondition(c2);
     }
 
     public AndConditionImpl()

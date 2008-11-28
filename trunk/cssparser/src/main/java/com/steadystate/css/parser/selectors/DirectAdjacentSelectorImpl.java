@@ -1,5 +1,5 @@
 /*
- * $Id: DirectAdjacentSelectorImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * $Id: DirectAdjacentSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -30,12 +30,15 @@ package com.steadystate.css.parser.selectors;
 import java.io.Serializable;
 import org.w3c.css.sac.*;
 
+import com.steadystate.css.parser.Locatable;
+import com.steadystate.css.parser.LocatableImpl;
+
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: DirectAdjacentSelectorImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * @version $Id: DirectAdjacentSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  */
-public class DirectAdjacentSelectorImpl implements SiblingSelector, Serializable {
+public class DirectAdjacentSelectorImpl extends LocatableImpl implements SiblingSelector, Serializable {
 
     private static final long serialVersionUID = -7328602345833826516L;
 
@@ -51,6 +54,14 @@ public class DirectAdjacentSelectorImpl implements SiblingSelector, Serializable
     public void setSelector(Selector child)
     {
         this.selector = child;
+        if (child instanceof Locatable)
+        {
+        	this.setLocator(((Locatable) child).getLocator());
+        }
+        else if (child == null)
+        {
+        	this.setLocator(null);
+        }
     }
 
     public void setSiblingSelector(SimpleSelector directAdjacent)
@@ -60,9 +71,9 @@ public class DirectAdjacentSelectorImpl implements SiblingSelector, Serializable
 
 
     public DirectAdjacentSelectorImpl(short nodeType, Selector child, SimpleSelector directAdjacent) {
-        this.nodeType = nodeType;
-        this.selector = child;
-        this.siblingSelector = directAdjacent;
+        this.setNodeType(nodeType);
+        this.setSelector(child);
+        this.setSiblingSelector(directAdjacent);
     }
 
     public DirectAdjacentSelectorImpl()

@@ -1,5 +1,5 @@
 /*
- * $Id: LexicalUnitImpl.java,v 1.3 2008-03-26 02:08:55 sdanig Exp $
+ * $Id: LexicalUnitImpl.java,v 1.4 2008-11-28 13:03:27 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -34,9 +34,9 @@ import org.w3c.css.sac.*;
  * Implementation of {@link LexicalUnit}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LexicalUnitImpl.java,v 1.3 2008-03-26 02:08:55 sdanig Exp $
+ * @version $Id: LexicalUnitImpl.java,v 1.4 2008-11-28 13:03:27 waldbaer Exp $
  */
-public class LexicalUnitImpl implements LexicalUnit, Serializable {
+public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Serializable {
 
 /*
     public static final short SAC_OPERATOR_COMMA	= 0;
@@ -95,17 +95,6 @@ public class LexicalUnitImpl implements LexicalUnit, Serializable {
     private String functionName;
     private LexicalUnit parameters;
     private String stringValue;
-    private Locator locator;
-
-    public Locator getLocator()
-    {
-        return this.locator;
-    }
-
-    public void setLocator(Locator locator)
-    {
-        this.locator = locator;
-    }
 
     public void setLexicalUnitType(short type)
     {
