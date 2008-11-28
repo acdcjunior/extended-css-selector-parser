@@ -1,5 +1,5 @@
 /*
- * $Id: IdConditionImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * $Id: IdConditionImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -30,12 +30,14 @@ package com.steadystate.css.parser.selectors;
 import java.io.Serializable;
 import org.w3c.css.sac.*;
 
+import com.steadystate.css.parser.LocatableImpl;
+
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: IdConditionImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * @version $Id: IdConditionImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  */
-public class IdConditionImpl implements AttributeCondition, Serializable {
+public class IdConditionImpl extends LocatableImpl implements AttributeCondition, Serializable {
 
     private static final long serialVersionUID = 5955662524656167683L;
 

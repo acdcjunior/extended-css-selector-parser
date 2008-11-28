@@ -1,5 +1,5 @@
 /*
- * $Id: ChildSelectorImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * $Id: ChildSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -30,12 +30,15 @@ package com.steadystate.css.parser.selectors;
 import java.io.Serializable;
 import org.w3c.css.sac.*;
 
+import com.steadystate.css.parser.Locatable;
+import com.steadystate.css.parser.LocatableImpl;
+
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: ChildSelectorImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * @version $Id: ChildSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  */
-public class ChildSelectorImpl implements DescendantSelector, Serializable {
+public class ChildSelectorImpl extends LocatableImpl implements DescendantSelector, Serializable {
 
     private static final long serialVersionUID = -5843289529637921083L;
 
@@ -45,6 +48,14 @@ public class ChildSelectorImpl implements DescendantSelector, Serializable {
     public void setAncestorSelector(Selector ancestorSelector)
     {
         this.ancestorSelector = ancestorSelector;
+        if (ancestorSelector instanceof Locatable)
+        {
+        	this.setLocator(((Locatable) ancestorSelector).getLocator());
+        }
+        else if (ancestorSelector == null)
+        {
+        	this.setLocator(null);
+        }
     }
 
     public void setSimpleSelector(SimpleSelector simpleSelector)
@@ -54,8 +65,8 @@ public class ChildSelectorImpl implements DescendantSelector, Serializable {
 
 
     public ChildSelectorImpl(Selector parent, SimpleSelector simpleSelector) {
-        this.ancestorSelector = parent;
-        this.simpleSelector = simpleSelector;
+        this.setAncestorSelector(parent);
+        this.setSimpleSelector(simpleSelector);
     }
 
     public ChildSelectorImpl()

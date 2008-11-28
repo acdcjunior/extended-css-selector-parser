@@ -1,5 +1,5 @@
 /*
- * $Id: PseudoElementSelectorImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * $Id: PseudoElementSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -28,14 +28,17 @@
 package com.steadystate.css.parser.selectors;
 
 import org.w3c.css.sac.*;
+
+import com.steadystate.css.parser.LocatableImpl;
+
 import java.io.Serializable;
 
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: PseudoElementSelectorImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * @version $Id: PseudoElementSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  */
-public class PseudoElementSelectorImpl implements ElementSelector, Serializable {
+public class PseudoElementSelectorImpl extends LocatableImpl implements ElementSelector, Serializable {
 
     private static final long serialVersionUID = 2913936296006875268L;
 

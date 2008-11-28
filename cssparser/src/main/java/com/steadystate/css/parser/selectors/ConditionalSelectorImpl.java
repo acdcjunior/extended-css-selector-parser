@@ -1,5 +1,5 @@
 /*
- * $Id: ConditionalSelectorImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * $Id: ConditionalSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -30,12 +30,15 @@ package com.steadystate.css.parser.selectors;
 import java.io.Serializable;
 import org.w3c.css.sac.*;
 
+import com.steadystate.css.parser.Locatable;
+import com.steadystate.css.parser.LocatableImpl;
+
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: ConditionalSelectorImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
+ * @version $Id: ConditionalSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  */
-public class ConditionalSelectorImpl implements ConditionalSelector, Serializable {
+public class ConditionalSelectorImpl extends LocatableImpl implements ConditionalSelector, Serializable {
 
     private static final long serialVersionUID = 7217145899707580586L;
 
@@ -45,19 +48,38 @@ public class ConditionalSelectorImpl implements ConditionalSelector, Serializabl
     public void setSimpleSelector(SimpleSelector simpleSelector)
     {
         this.simpleSelector = simpleSelector;
+        if (simpleSelector instanceof Locatable)
+        {
+        	this.setLocator(((Locatable) simpleSelector).getLocator());
+        }
+        else if (simpleSelector == null)
+        {
+        	this.setLocator(null);
+        }
     }
 
     public void setCondition(Condition condition)
     {
         this.condition = condition;
+        if (this.getLocator() == null)
+        {
+            if (condition instanceof Locatable)
+            {
+            	this.setLocator(((Locatable) condition).getLocator());
+            }
+            else if (condition == null)
+            {
+            	this.setLocator(null);
+            }
+        }
     }
 
 
     public ConditionalSelectorImpl(
         SimpleSelector simpleSelector,
         Condition condition) {
-        this.simpleSelector = simpleSelector;
-        this.condition = condition;
+        this.setSimpleSelector(simpleSelector);
+        this.setCondition(condition);
     }
 
     public ConditionalSelectorImpl()

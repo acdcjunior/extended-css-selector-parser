@@ -1,5 +1,5 @@
 /*
- * $Id: SelectorListImpl.java,v 1.3 2008-03-26 02:08:55 sdanig Exp $
+ * $Id: SelectorListImpl.java,v 1.4 2008-11-28 13:03:27 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -35,9 +35,9 @@ import org.w3c.css.sac.*;
  * Implementation of {@link SelectorList}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SelectorListImpl.java,v 1.3 2008-03-26 02:08:55 sdanig Exp $
+ * @version $Id: SelectorListImpl.java,v 1.4 2008-11-28 13:03:27 waldbaer Exp $
  */
-public class SelectorListImpl implements SelectorList, Serializable {
+public class SelectorListImpl extends LocatableImpl implements SelectorList, Serializable {
 
     private static final long serialVersionUID = 7313376916207026333L;
 
