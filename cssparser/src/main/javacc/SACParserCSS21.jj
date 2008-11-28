@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSS21.jj,v 1.5 2008-11-27 14:48:16 waldbaer Exp $
+ * $Id: SACParserCSS21.jj,v 1.6 2008-11-28 13:07:01 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.sac.TestCSSParseException;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSS21.jj,v 1.5 2008-11-27 14:48:16 waldbaer Exp $
+ * @version $Id: SACParserCSS21.jj,v 1.6 2008-11-28 13:07:01 waldbaer Exp $
  */
 public class SACParserCSS21 extends AbstractSACParser implements Parser {
 
@@ -643,7 +643,11 @@ String medium() :
   Token t;
 }
 {
-  t = <IDENT> ( <S> )* { return t.image; }
+    t = <IDENT> ( <S> )*
+    {
+        this.handleMedium(t.image, this.createLocator(t));
+        return t.image;
+    }
 }
 
 //
@@ -815,6 +819,12 @@ SelectorList selectorList() :
 }
 {
     sel = selector()
+    {
+        if (sel instanceof Locatable)
+        {
+            selList.setLocator(((Locatable) sel).getLocator());
+        }
+    }
     ( <COMMA> ( <S> )* { selList.add(sel); } sel = selector() )*
     {
         selList.add(sel);
@@ -915,13 +925,22 @@ Selector simpleSelector(Selector sel, char comb) :
 Condition _class(Condition pred) :
 {
     Token t;
+    Locator locator;
 }
 {
     try
     {
-        <DOT> t = <IDENT>
+        <DOT>
+        {
+            locator = this.getLocator();
+        }
+        t = <IDENT>
         {
             Condition c = this.getConditionFactory().createClassCondition(null, t.image);
+            if (c instanceof Locatable)
+            {
+                ((Locatable) c).setLocator(locator);
+            }
             return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
         }
     }
@@ -939,14 +958,29 @@ Condition _class(Condition pred) :
 SimpleSelector elementName() :
 {
     Token t;
+    SimpleSelector sel;
 }
 {
     try
     {
         t=<IDENT>
-        { return this.getSelectorFactory().createElementSelector(null, unescape(t.image)); }
+        {
+            sel = this.getSelectorFactory().createElementSelector(null, unescape(t.image));
+            if (sel instanceof Locatable)
+            {
+                ((Locatable) sel).setLocator(this.getLocator());
+            }
+            return sel;
+        }
         | <ASTERISK>
-        { return this.getSelectorFactory().createElementSelector(null, null); }
+        {
+            sel = this.getSelectorFactory().createElementSelector(null, null);
+            if (sel instanceof Locatable)
+            {
+                ((Locatable) sel).setLocator(this.getLocator());
+            }
+            return sel;
+        }
     }
     catch (ParseException e)
     {
@@ -966,11 +1000,16 @@ Condition attrib(Condition pred) :
     String name = null;
     String value = null;
     int type = 0;
+    Locator locator;
 }
 {
     try
     {
-        <LSQUARE> ( <S> )*
+        <LSQUARE>
+        {
+            locator = this.getLocator();
+        }
+        ( <S> )*
         t = <IDENT> { name = unescape(t.image); } ( <S> )*
         (
             (
@@ -989,7 +1028,6 @@ Condition attrib(Condition pred) :
             ( <S> )*
         )?
         <RSQUARE>
-
         {
             Condition c = null;
             switch (type) {
@@ -1005,6 +1043,10 @@ Condition attrib(Condition pred) :
             case 3:
                 c = this.getConditionFactory().createBeginHyphenAttributeCondition(name, null, false, value);
                 break;
+            }
+            if (c instanceof Locatable)
+            {
+                ((Locatable) c).setLocator(locator);
             }
             return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
         }
@@ -1026,11 +1068,15 @@ Condition pseudo(Condition pred) :
     Token t;
     String function;
     String arg = "";
+    Locator locator;
 }
 {
     try
     {
         <COLON>
+        {
+            locator = this.getLocator();
+        }
         (
             t = <IDENT>
             {
@@ -1038,6 +1084,10 @@ Condition pseudo(Condition pred) :
                 //String s = unescape(t.image);
                 String s = t.image;
     		    c = this.getConditionFactory().createPseudoClassCondition(null, s);
+                if (c instanceof Locatable)
+                {
+                    ((Locatable) c).setLocator(locator);
+                }
                 return (pred == null)
                     ? c
                     : this.getConditionFactory().createAndCondition(pred, c);
@@ -1050,11 +1100,19 @@ Condition pseudo(Condition pred) :
                 {
                     if (function.equalsIgnoreCase("lang(")) {
                         c = this.getConditionFactory().createLangCondition(unescape(arg));
+                        if (c instanceof Locatable)
+                        {
+                            ((Locatable) c).setLocator(locator);
+                        }
                         return (pred == null)
                             ? c
                             : this.getConditionFactory().createAndCondition(pred, c);
                     } else {
                     	c = this.getConditionFactory().createPseudoClassCondition(null, function + arg + ")");
+                        if (c instanceof Locatable)
+                        {
+                            ((Locatable) c).setLocator(locator);
+                        }
 						return (pred == null)
                             ? c
                             : this.getConditionFactory().createAndCondition(pred, c);
@@ -1087,6 +1145,10 @@ Condition hash(Condition pred) :
         t = <HASH>
         {
             Condition c = this.getConditionFactory().createIdCondition(t.image.substring(1));
+            if (c instanceof Locatable)
+            {
+                ((Locatable) c).setLocator(this.getLocator());
+            }
             return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
         }
     }
@@ -1264,9 +1326,9 @@ LexicalUnit term(LexicalUnit prev) :
     }
     ( <S> )*
     {
-        if (value instanceof LexicalUnitImpl)
+        if (value instanceof Locatable)
         {
-            ((LexicalUnitImpl) value).setLocator(locator);
+            ((Locatable) value).setLocator(locator);
         }
         return value;
     }
