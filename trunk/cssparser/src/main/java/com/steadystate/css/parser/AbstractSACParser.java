@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSACParser.java,v 1.7 2008-11-27 14:48:48 waldbaer Exp $
+ * $Id: AbstractSACParser.java,v 1.8 2008-11-28 13:04:19 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -537,7 +537,7 @@ abstract class AbstractSACParser implements Parser
         }
     }
 
-    protected void handleMedium(String medium)
+    protected void handleMedium(String medium, Locator locator)
     {
     }
 
