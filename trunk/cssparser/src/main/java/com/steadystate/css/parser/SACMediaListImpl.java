@@ -1,5 +1,5 @@
 /*
- * $Id: SACMediaListImpl.java,v 1.4 2008-11-26 16:24:21 waldbaer Exp $
+ * $Id: SACMediaListImpl.java,v 1.5 2008-11-28 13:03:39 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -24,7 +24,6 @@
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
  */
-
 package com.steadystate.css.parser;
 
 import java.util.*;
@@ -34,33 +33,22 @@ import org.w3c.css.sac.*;
  * Implementation of {@link SACMediaList}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACMediaListImpl.java,v 1.4 2008-11-26 16:24:21 waldbaer Exp $
+ * @version $Id: SACMediaListImpl.java,v 1.5 2008-11-28 13:03:39 waldbaer Exp $
  */
-public class SACMediaListImpl implements SACMediaList {
+public class SACMediaListImpl extends LocatableImpl implements SACMediaList {
 
-    private List<String> _selectors = new ArrayList<String>(10);
-    private Locator locator;
+    private List<String> media = new ArrayList<String>(10);
 
     public int getLength() {
-        return this._selectors.size();
+        return this.media.size();
     }
 
     public String item(int index) {
-        return this._selectors.get(index);
+        return this.media.get(index);
     }
 
     public void add(String s) {
-        this._selectors.add(s);
-    }
-
-    public Locator getLocator()
-    {
-    	return this.locator;
-    }
-
-    public void setLocator(Locator locator)
-    {
-    	this.locator = locator;
+        this.media.add(s);
     }
 
     public String toString() {
