@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSSmobileOKBasic1.jj,v 1.2 2008-11-27 14:48:16 waldbaer Exp $
+ * $Id: SACParserCSSmobileOKBasic1.jj,v 1.3 2008-11-28 13:07:02 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.parser.selectors.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSSmobileOKBasic1.jj,v 1.2 2008-11-27 14:48:16 waldbaer Exp $
+ * @version $Id: SACParserCSSmobileOKBasic1.jj,v 1.3 2008-11-28 13:07:02 waldbaer Exp $
  */
 public class SACParserCSSmobileOKBasic1 extends AbstractSACParser implements Parser {
 
@@ -459,7 +459,7 @@ String medium() :
 {
     t = <IDENT> ( <S> )*
     {
-        this.handleMedium(t.image);
+        this.handleMedium(t.image, this.createLocator(t));
         return t.image;
     }
 }
@@ -555,7 +555,13 @@ SelectorList selectorList() :
     Selector sel;
 }
 {
-    sel = selector() 
+    sel = selector()
+    {
+        if (sel instanceof Locatable)
+        {
+            selList.setLocator(((Locatable) sel).getLocator());
+        }
+    }
     ( <COMMA> ( <S> )* { selList.add(sel); } sel = selector() )* ( <S> )*
     {
         selList.add(sel);
@@ -672,13 +678,22 @@ Selector simpleSelector(Selector sel, char comb) :
 Condition _class(Condition pred) :
 {
     Token t;
+    Locator locator;
 }
 {
     try
     {
-        <DOT> t = <IDENT>
+        <DOT>
+        {
+            locator = this.getLocator();
+        }
+        t = <IDENT>
         {
             Condition c = this.getConditionFactory().createClassCondition(null, t.image);
+            if (c instanceof Locatable)
+            {
+                ((Locatable) c).setLocator(locator);
+            }
             return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
         }
     }
@@ -696,14 +711,29 @@ Condition _class(Condition pred) :
 SimpleSelector elementName() :
 {
     Token t;
+    SimpleSelector sel;
 }
 {
     try
     {
         t=<IDENT>
-        { return this.getSelectorFactory().createElementSelector(null, unescape(t.image)); }
+        {
+            sel = this.getSelectorFactory().createElementSelector(null, unescape(t.image));
+            if (sel instanceof Locatable)
+            {
+                ((Locatable) sel).setLocator(this.getLocator());
+            }
+            return sel;
+        }
         | <ASTERISK>
-        { return this.getSelectorFactory().createElementSelector(null, null); }
+        {
+            sel = this.getSelectorFactory().createElementSelector(null, null);
+            if (sel instanceof Locatable)
+            {
+                ((Locatable) sel).setLocator(this.getLocator());
+            }
+            return sel;
+        }
     }
     catch (ParseException e)
     {
@@ -733,6 +763,10 @@ Condition pseudoClass(Condition pred) :
                 //String s = unescape(t.image);
                 String s = t.image;
     		    c = this.getConditionFactory().createPseudoClassCondition(null, s);
+                if (c instanceof Locatable)
+                {
+                    ((Locatable) c).setLocator(this.getLocator());
+                }
                 return (pred == null)
                     ? c
                     : this.getConditionFactory().createAndCondition(pred, c);
@@ -766,6 +800,10 @@ Condition pseudoElement(Condition pred) :
                 String s = t.image;
                 // TODO: createPseudoElementCondition
     		    c = this.getConditionFactory().createPseudoClassCondition(null, s);
+                if (c instanceof Locatable)
+                {
+                    ((Locatable) c).setLocator(this.getLocator());
+                }
                 return (pred == null)
                     ? c
                     : this.getConditionFactory().createAndCondition(pred, c);
@@ -788,6 +826,10 @@ Condition hash(Condition pred) :
         t = <HASH>
         {
             Condition c = this.getConditionFactory().createIdCondition(t.image.substring(1));
+            if (c instanceof Locatable)
+            {
+                ((Locatable) c).setLocator(this.getLocator());
+            }
             return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
         }
     }
@@ -945,9 +987,9 @@ LexicalUnit term(LexicalUnit prev) :
     }
     ( <S> )*
     {
-        if (value instanceof LexicalUnitImpl)
+        if (value instanceof Locatable)
         {
-            ((LexicalUnitImpl) value).setLocator(locator);
+            ((Locatable) value).setLocator(locator);
         }
         return value;
     }
