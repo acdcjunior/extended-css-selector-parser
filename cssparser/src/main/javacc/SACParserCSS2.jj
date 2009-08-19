@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSS2.jj,v 1.4 2008-11-28 13:07:01 waldbaer Exp $
+ * $Id: SACParserCSS2.jj,v 1.5 2009-08-19 09:10:18 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.sac.TestCSSParseException;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSS2.jj,v 1.4 2008-11-28 13:07:01 waldbaer Exp $
+ * @version $Id: SACParserCSS2.jj,v 1.5 2009-08-19 09:10:18 waldbaer Exp $
  */
 public class SACParserCSS2 extends AbstractSACParser implements Parser {
 
@@ -202,6 +202,7 @@ TOKEN_MGR_DECLS :
 
 // "!{w}important"     {return IMPORTANT_SYM;}
 | < IMPORTANT_SYM: "!" ( <S> )? "important" >
+
 | < INHERIT: "inherit" >
 
 // {num}em         {return EMS;}
