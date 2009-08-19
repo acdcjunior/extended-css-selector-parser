@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSS21.jj,v 1.6 2008-11-28 13:07:01 waldbaer Exp $
+ * $Id: SACParserCSS21.jj,v 1.7 2009-08-19 09:11:16 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.sac.TestCSSParseException;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSS21.jj,v 1.6 2008-11-28 13:07:01 waldbaer Exp $
+ * @version $Id: SACParserCSS21.jj,v 1.7 2009-08-19 09:11:16 waldbaer Exp $
  */
 public class SACParserCSS21 extends AbstractSACParser implements Parser {
 
@@ -190,6 +190,8 @@ TOKEN_MGR_DECLS :
 
 // {num}            {return NUMBER;}
 | < NUMBER: <NUM> >
+
+| < INHERIT: "inherit" >
 
 // ident        -?{nmstart}{nmchar}*
 // {ident}         {return IDENT;}
@@ -375,7 +377,6 @@ TOKEN_MGR_DECLS :
 | < RSQUARE: "]" >
 | < RROUND: ")" >
 | < ATKEYWORD: "@" <IDENT> >
-| < INHERIT: "inherit" >
 }
 
 <*> TOKEN:
