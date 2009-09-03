@@ -1,5 +1,5 @@
 /*
- * $Id: RGBColorImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * $Id: RGBColorImpl.java,v 1.3 2009-09-03 07:59:21 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -39,7 +39,7 @@ import org.w3c.dom.css.RGBColor;
  * Implementation of {@link RGBColor}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: RGBColorImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
+ * @version $Id: RGBColorImpl.java,v 1.3 2009-09-03 07:59:21 waldbaer Exp $
  */
 public class RGBColorImpl implements RGBColor, Serializable {
 
@@ -115,8 +115,8 @@ public class RGBColorImpl implements RGBColor, Serializable {
 
     public String toString() {
         return new StringBuffer("rgb(")
-            .append(this.red.toString()).append(", ")
-            .append(this.green.toString()).append(", ")
-            .append(this.blue.toString()).append(")").toString();
+            .append(this.red).append(", ")
+            .append(this.green).append(", ")
+            .append(this.blue).append(")").toString();
     }
 }

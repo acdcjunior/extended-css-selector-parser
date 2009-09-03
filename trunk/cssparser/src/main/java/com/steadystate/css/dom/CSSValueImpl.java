@@ -1,5 +1,5 @@
 /*
- * $Id: CSSValueImpl.java,v 1.4 2008-08-14 08:17:55 waldbaer Exp $
+ * $Id: CSSValueImpl.java,v 1.5 2009-09-03 07:58:51 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -61,7 +61,7 @@ import com.steadystate.css.util.LangUtils;
  * A means of checking valid primitive types for properties
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSValueImpl.java,v 1.4 2008-08-14 08:17:55 waldbaer Exp $
+ * @version $Id: CSSValueImpl.java,v 1.5 2009-09-03 07:58:51 waldbaer Exp $
  */
 public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, CSSValueList, Serializable {
 
@@ -182,7 +182,7 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
             }
             return sb.toString();
         }
-        return this._value.toString();
+        return this._value != null ? this._value.toString() : "";
     }
 
     public void setCssText(String cssText) throws DOMException {
@@ -191,6 +191,7 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
             CSSOMParser parser = new CSSOMParser();
             CSSValueImpl v2 = (CSSValueImpl) parser.parsePropertyValue(is);
             this._value = v2._value;
+            this.setUserDataMap(v2.getUserDataMap());
         } catch (Exception e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,

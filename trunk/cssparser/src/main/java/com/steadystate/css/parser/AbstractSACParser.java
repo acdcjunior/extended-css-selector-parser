@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSACParser.java,v 1.8 2008-11-28 13:04:19 waldbaer Exp $
+ * $Id: AbstractSACParser.java,v 1.9 2009-09-03 07:59:58 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -624,17 +624,19 @@ abstract class AbstractSACParser implements Parser
     {
         if (t.image.equalsIgnoreCase("counter(")) {
             return LexicalUnitImpl.createCounter(prev, params);
-         } else if (t.image.equalsIgnoreCase("counters(")) {
+        } else if (t.image.equalsIgnoreCase("counters(")) {
             return LexicalUnitImpl.createCounters(prev, params);
-         } else if (t.image.equalsIgnoreCase("attr(")) {
+        } else if (t.image.equalsIgnoreCase("attr(")) {
             return LexicalUnitImpl.createAttr(prev, params);
-         } else if (t.image.equalsIgnoreCase("rect(")) {
+        } else if (t.image.equalsIgnoreCase("rect(")) {
             return LexicalUnitImpl.createRect(prev, params);
-         }
-         return LexicalUnitImpl.createFunction(
-             prev,
-             t.image.substring(0, t.image.length() - 1),
-             params);
+        } else if (t.image.equalsIgnoreCase("rgb(")) {
+            return LexicalUnitImpl.createRgbColor(prev, params);
+        }
+        return LexicalUnitImpl.createFunction(
+            prev,
+            t.image.substring(0, t.image.length() - 1),
+            params);
     }
 
     protected LexicalUnit hexcolorInternal(LexicalUnit prev, Token t)
