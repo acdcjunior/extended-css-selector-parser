@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSSmobileOKBasic1.jj,v 1.3 2008-11-28 13:07:02 waldbaer Exp $
+ * $Id: SACParserCSSmobileOKBasic1.jj,v 1.4 2009-09-11 11:55:21 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.parser.selectors.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSSmobileOKBasic1.jj,v 1.3 2008-11-28 13:07:02 waldbaer Exp $
+ * @version $Id: SACParserCSSmobileOKBasic1.jj,v 1.4 2009-09-11 11:55:21 waldbaer Exp $
  */
 public class SACParserCSSmobileOKBasic1 extends AbstractSACParser implements Parser {
 
@@ -577,12 +577,18 @@ SelectorList selectorList() :
 Selector selector() :
 {
     Selector sel;
+    SimpleSelector pseudoElementSel = null;
 }
 {
     try {
         sel = simpleSelector(null, ' ') 
         ( LOOKAHEAD(2) <S> sel = simpleSelector(sel, ' ') )*
+        ( pseudoElementSel = pseudoElement() )? 
         {
+            if (pseudoElementSel != null)
+            {
+                sel = this.getSelectorFactory().createDescendantSelector(sel, pseudoElementSel);
+            }
             this.handleSelector(sel);
             return sel;
         }
@@ -609,39 +615,29 @@ Selector simpleSelector(Selector sel, char comb) :
     {
         (
             ( simpleSel = elementName()
-                ( c = hash(c) )? 
-                ( c = _class(c) )? 
-                ( c = pseudoClass(c) )? 
-                ( c = pseudoElement(c) )? 
+                ( c = hash(c) )?
+                ( c = _class(c) )?
+                ( c = pseudoClass(c) )?
             )
-            | 
+            |
             ( { simpleSel = this.getSelectorFactory().createElementSelector(null, null); }
-                ( 
-                	( c = hash(c) ) 
-                	( c = _class(c) )? 
-                	( c = pseudoClass(c) )? 
-                	( c = pseudoElement(c) )? 
+                (
+                	( c = hash(c) )
+                	( c = _class(c) )?
+                	( c = pseudoClass(c) )?
                 )
-            ) 
-            | 
+            )
+            |
             ( { simpleSel = this.getSelectorFactory().createElementSelector(null, null); }
-                ( 
-                	( c = _class(c) ) 
-                	( c = pseudoClass(c) )? 
-                	( c = pseudoElement(c) )? 
+                (
+                	( c = _class(c) )
+                	( c = pseudoClass(c) )?
                 )
-            ) 
-            | 
+            )
+            |
             ( { simpleSel = this.getSelectorFactory().createElementSelector(null, null); }
                 ( 
-                	( c = pseudoClass(c) ) 
-                	( c = pseudoElement(c) )? 
-                )
-            ) 
-            | 
-            ( { simpleSel = this.getSelectorFactory().createElementSelector(null, null); }
-                ( 
-                	( c = pseudoElement(c) ) 
+                	( c = pseudoClass(c) )
                 )
             )
         )
@@ -780,35 +776,31 @@ Condition pseudoClass(Condition pred) :
 }
 
 //
-// pseudo
-//   : ':' [ IDENT | S* ')' ]
-//   ;
+// pseudo_element                  /* as in:  P:first-line */
+//  : FIRST_LETTER_AFTER_IDENT
+//  | FIRST_LINE_AFTER_IDENT
+//  ;
 //
-Condition pseudoElement(Condition pred) :
+SimpleSelector pseudoElement() :
 {
-    Condition c;
+    SimpleSelector sel;
     Token t;
 }
 {
     try
     {
-        (
-            t = <FIRST_LETTER> 
-            | t = <FIRST_LINE> 
+        ( t = <FIRST_LETTER> 
+          | t = <FIRST_LINE>
+        ) 
+        {
+            String s = t.image;
+            sel = this.getSelectorFactory().createPseudoElementSelector(null, s);
+            if (sel instanceof Locatable)
             {
-                //String s = unescape(t.image);
-                String s = t.image;
-                // TODO: createPseudoElementCondition
-    		    c = this.getConditionFactory().createPseudoClassCondition(null, s);
-                if (c instanceof Locatable)
-                {
-                    ((Locatable) c).setLocator(this.getLocator());
-                }
-                return (pred == null)
-                    ? c
-                    : this.getConditionFactory().createAndCondition(pred, c);
+                ((Locatable) sel).setLocator(this.getLocator());
             }
-        )
+            return sel;
+        }
     }
     catch (ParseException e)
     {

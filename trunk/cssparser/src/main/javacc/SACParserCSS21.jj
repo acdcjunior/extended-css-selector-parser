@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSS21.jj,v 1.7 2009-08-19 09:11:16 waldbaer Exp $
+ * $Id: SACParserCSS21.jj,v 1.8 2009-09-11 11:55:21 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.sac.TestCSSParseException;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSS21.jj,v 1.7 2009-08-19 09:11:16 waldbaer Exp $
+ * @version $Id: SACParserCSS21.jj,v 1.8 2009-09-11 11:55:21 waldbaer Exp $
  */
 public class SACParserCSS21 extends AbstractSACParser implements Parser {
 
@@ -866,6 +866,8 @@ Selector simpleSelector(Selector sel, char comb) :
 {
     SimpleSelector simpleSel = null;
     Condition c = null;
+    SimpleSelector pseudoElementSel = null;
+    Object o = null;
 }
 {
     try
@@ -875,7 +877,7 @@ Selector simpleSelector(Selector sel, char comb) :
                 ( c = hash(c)
                 | c = _class(c)
                 | c = attrib(c)
-                | c = pseudo(c)
+                | o = pseudo(c)
                 )*
             )
             |
@@ -883,12 +885,20 @@ Selector simpleSelector(Selector sel, char comb) :
                 ( c = hash(c)
                 | c = _class(c)
                 | c = attrib(c)
-                | c = pseudo(c)
+                | o = pseudo(c)
                 )+
             )
         )
 
         {
+            if (o instanceof SimpleSelector)
+            {
+                pseudoElementSel = (SimpleSelector) o;
+            }
+            else if (o instanceof Condition)
+            {
+                c = (Condition) o;
+            }
             if (c != null) {
                 simpleSel = this.getSelectorFactory().createConditionalSelector(simpleSel, c);
             }
@@ -907,6 +917,10 @@ Selector simpleSelector(Selector sel, char comb) :
                 }
             } else {
                 sel = simpleSel;
+            }
+            if (pseudoElementSel != null)
+            {
+                sel = this.getSelectorFactory().createDescendantSelector(sel, pseudoElementSel);
             }
 
             return sel;
@@ -1063,9 +1077,10 @@ Condition attrib(Condition pred) :
 //  : ':' [ IDENT | FUNCTION S* IDENT? S* ')' ]
 //  ;
 //
-Condition pseudo(Condition pred) :
+Object pseudo(Condition pred) :
 {
-    Condition c;
+    SimpleSelector pseudoElementSel = null;
+    Condition c = null;
     Token t;
     String function;
     String arg = "";
@@ -1081,10 +1096,26 @@ Condition pseudo(Condition pred) :
         (
             t = <IDENT>
             {
-                // There appears to be an issue here regarding "first-letter" & "first-line"
-                //String s = unescape(t.image);
                 String s = t.image;
-    		    c = this.getConditionFactory().createPseudoClassCondition(null, s);
+                if ("first-line".equals(s)
+                    || "first-letter".equals(s)
+                    || "before".equals(s)
+                    || "after".equals(s))
+                {
+                    pseudoElementSel = this.getSelectorFactory().createPseudoElementSelector(null, s);
+                }
+                else
+                {
+                    c = this.getConditionFactory().createPseudoClassCondition(null, s);
+                }
+                if (pseudoElementSel != null)
+                {
+                    if (pseudoElementSel instanceof Locatable)
+                    {
+                        ((Locatable) pseudoElementSel).setLocator(locator);
+                    }
+                    return pseudoElementSel;
+                }
                 if (c instanceof Locatable)
                 {
                     ((Locatable) c).setLocator(locator);
