@@ -1,5 +1,5 @@
 /*
- * $Id: CSSStyleSheetImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
+ * $Id: CSSStyleSheetImpl.java,v 1.4 2009-09-11 11:51:57 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -29,6 +29,7 @@ package com.steadystate.css.dom;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.StringReader;
 
@@ -55,7 +56,7 @@ import com.steadystate.css.util.LangUtils;
  * Implementation of {@link CSSStyleSheet}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleSheetImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
+ * @version $Id: CSSStyleSheetImpl.java,v 1.4 2009-09-11 11:51:57 waldbaer Exp $
  */
 public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
 
@@ -322,7 +323,7 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
         return hash;
     }
 
-    private void writeObject(java.io.ObjectOutputStream out)
+    private void writeObject(ObjectOutputStream out)
         throws IOException
     {
         out.writeObject(this.baseUri);
@@ -330,10 +331,12 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
         out.writeBoolean(this.disabled);
         out.writeObject(this.href);
         out.writeObject(this.media);
-        out.writeObject(this.ownerNode);
+        // TODO ownerNode may not be serializable!
+//        out.writeObject(this.ownerNode);
         out.writeBoolean(this.readOnly);
         out.writeObject(this.title);
     }
+
     private void readObject(ObjectInputStream in)
         throws IOException, ClassNotFoundException
     {
@@ -353,7 +356,8 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
         this.disabled = in.readBoolean();
         this.href = (String) in.readObject();
         this.media = (MediaList) in.readObject();
-        this.ownerNode = (Node) in.readObject();
+        // TODO ownerNode may not be serializable!
+//        this.ownerNode = (Node) in.readObject();
         this.readOnly = in.readBoolean();
         this.title = (String) in.readObject();
     }
