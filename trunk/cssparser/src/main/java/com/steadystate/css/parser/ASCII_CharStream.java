@@ -159,10 +159,10 @@ public final class ASCII_CharStream implements CharStream
         case '\n' :
             this.prevCharIsLF = true;
             break;
-        case '\t' :
-            this.column--;
-            this.column += (8 - (this.column & 07));
-            break;
+//        case '\t' :
+//            this.column--;
+//            this.column += (8 - (this.column & 07));
+//            break;
         default :
            break;
      }
