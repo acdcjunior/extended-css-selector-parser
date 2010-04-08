@@ -1,5 +1,5 @@
 /*
- * $Id: CSSOMParser.java,v 1.3 2008-11-27 14:49:13 waldbaer Exp $
+ * $Id: CSSOMParser.java,v 1.4 2010-04-08 13:21:19 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -28,6 +28,8 @@
 package com.steadystate.css.parser;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import java.util.Properties;
 import java.util.Stack;
@@ -70,7 +72,7 @@ import com.steadystate.css.userdata.UserDataConstants;
 /** 
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSOMParser.java,v 1.3 2008-11-27 14:49:13 waldbaer Exp $
+ * @version $Id: CSSOMParser.java,v 1.4 2010-04-08 13:21:19 waldbaer Exp $
  */
 public class CSSOMParser {
     
@@ -500,10 +502,34 @@ public class CSSOMParser {
         {
         	if (locator == null)
         	{
-        		locator =
-        			((AbstractSACParser) CSSOMParser.this._parser).getLocator();
+        	    Parser parser = CSSOMParser.this._parser;
+                try
+                {
+                    Method getLocatorMethod = parser.getClass().getMethod(
+                        "getLocator", (Class[]) null);
+                    locator = (Locator) getLocatorMethod.invoke(
+                        parser, (Object[]) null);
+                }
+                catch (SecurityException e)
+                {
+                }
+                catch (NoSuchMethodException e)
+                {
+                }
+                catch (IllegalArgumentException e)
+                {
+                }
+                catch (IllegalAccessException e)
+                {
+                }
+                catch (InvocationTargetException e)
+                {
+                }
         	}
-            cssomObject.setUserData(UserDataConstants.KEY_LOCATOR, locator);
+        	if (locator != null)
+        	{
+        	    cssomObject.setUserData(UserDataConstants.KEY_LOCATOR, locator);
+        	}
         }
 
     }
