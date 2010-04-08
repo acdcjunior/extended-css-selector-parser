@@ -1,5 +1,5 @@
 /*
- * $Id: CSSValueImpl.java,v 1.5 2009-09-03 07:58:51 waldbaer Exp $
+ * $Id: CSSValueImpl.java,v 1.6 2010-04-08 13:19:51 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -61,7 +61,7 @@ import com.steadystate.css.util.LangUtils;
  * A means of checking valid primitive types for properties
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSValueImpl.java,v 1.5 2009-09-03 07:58:51 waldbaer Exp $
+ * @version $Id: CSSValueImpl.java,v 1.6 2010-04-08 13:19:51 waldbaer Exp $
  */
 public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, CSSValueList, Serializable {
 
@@ -82,11 +82,20 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
      * Constructor
      */
     public CSSValueImpl(LexicalUnit value, boolean forcePrimitive) {
+        LexicalUnit parameters = null;
+        try
+        {
+            // Batik SAC parser throws IllegalStateException in some cases
+            parameters = value.getParameters();
+        }
+        catch (IllegalStateException e)
+        {
+        }
         if (!forcePrimitive && (value.getNextLexicalUnit() != null))
         {
             this._value = this.getValues(value);
         }
-        else if (value.getParameters() != null) {
+        else if (parameters != null) {
             if (value.getLexicalUnitType() == LexicalUnit.SAC_RECT_FUNCTION) {
                 // Rect
                 this._value = new RectImpl(value.getParameters());
