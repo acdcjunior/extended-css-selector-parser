@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSACParser.java,v 1.9 2009-09-03 07:59:58 waldbaer Exp $
+ * $Id: AbstractSACParser.java,v 1.10 2010-04-29 07:29:39 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -151,9 +151,16 @@ abstract class AbstractSACParser implements Parser
     {
         if (this.sacParserMessages == null)
         {
-            this.sacParserMessages = ResourceBundle.getBundle(
-                "com.steadystate.css.parser.SACParserMessages",
-                this.getLocale());
+            try
+            {
+                this.sacParserMessages = ResourceBundle.getBundle(
+                    "com.steadystate.css.parser.SACParserMessages",
+                    this.getLocale());
+            }
+            catch (MissingResourceException e)
+            {
+                e.printStackTrace();
+            }
         }
         return this.sacParserMessages;
     }
