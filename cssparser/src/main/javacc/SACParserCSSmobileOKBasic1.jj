@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSSmobileOKBasic1.jj,v 1.4 2009-09-11 11:55:21 waldbaer Exp $
+ * $Id: SACParserCSSmobileOKBasic1.jj,v 1.5 2010-05-19 13:26:51 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.parser.selectors.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSSmobileOKBasic1.jj,v 1.4 2009-09-11 11:55:21 waldbaer Exp $
+ * @version $Id: SACParserCSSmobileOKBasic1.jj,v 1.5 2010-05-19 13:26:51 waldbaer Exp $
  */
 public class SACParserCSSmobileOKBasic1 extends AbstractSACParser implements Parser {
 
@@ -546,6 +546,18 @@ void styleRule() :
         if (start) {
             this.handleEndSelector(selList);
         }
+    }
+}
+
+SelectorList parseSelectorsInternal() :
+{
+    SelectorList selectors;
+}
+{
+    selectors = selectorList()
+    <EOF>
+    {
+        return selectors;
     }
 }
 
