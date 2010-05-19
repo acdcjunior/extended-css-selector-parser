@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSS2.jj,v 1.7 2009-09-11 11:55:21 waldbaer Exp $
+ * $Id: SACParserCSS2.jj,v 1.8 2010-05-19 13:26:51 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.sac.TestCSSParseException;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSS2.jj,v 1.7 2009-09-11 11:55:21 waldbaer Exp $
+ * @version $Id: SACParserCSS2.jj,v 1.8 2010-05-19 13:26:51 waldbaer Exp $
  */
 public class SACParserCSS2 extends AbstractSACParser implements Parser {
 
@@ -795,6 +795,18 @@ void styleRule() :
         if (start) {
             this.handleEndSelector(selList);
         }
+    }
+}
+
+SelectorList parseSelectorsInternal() :
+{
+    SelectorList selectors;
+}
+{
+    selectors = selectorList()
+    <EOF>
+    {
+        return selectors;
     }
 }
 

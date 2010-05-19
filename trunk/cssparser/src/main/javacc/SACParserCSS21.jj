@@ -1,5 +1,5 @@
 /*
- * $Id: SACParserCSS21.jj,v 1.8 2009-09-11 11:55:21 waldbaer Exp $
+ * $Id: SACParserCSS21.jj,v 1.9 2010-05-19 13:26:51 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -48,7 +48,7 @@ import com.steadystate.css.sac.TestCSSParseException;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACParserCSS21.jj,v 1.8 2009-09-11 11:55:21 waldbaer Exp $
+ * @version $Id: SACParserCSS21.jj,v 1.9 2010-05-19 13:26:51 waldbaer Exp $
  */
 public class SACParserCSS21 extends AbstractSACParser implements Parser {
 
@@ -684,10 +684,22 @@ void pageRule() :
         ( <SEMICOLON> ( <S> )* ( declaration() )? )*
         <RBRACE>
     }
+    catch (CSSParseException e)
+    {
+        this.getErrorHandler().error(e);
+        this.error_skipblock();
+    }
     catch(ParseException e)
     {
-        throw this.toCSSParseException("invalidPageRule", e);
+        CSSParseException cpe = this.toCSSParseException("invalidPageRule", e);
+        this.getErrorHandler().error(cpe);
+        this.getErrorHandler().warning(this.createSkipWarning("ignoringRule", cpe));
+        this.error_skipblock();
     }
+//    catch(ParseException e)
+//    {
+//        throw this.toCSSParseException("invalidPageRule", e);
+//    }
     finally {
         if (start) {
             this.handleEndPage((t != null) ? unescape(t.image) : null, s);
@@ -810,6 +822,18 @@ void styleRule() :
         if (start) {
             this.handleEndSelector(selList);
         }
+    }
+}
+
+SelectorList parseSelectorsInternal() :
+{
+    SelectorList selectors;
+}
+{
+    selectors = selectorList()
+    <EOF>
+    {
+        return selectors;
     }
 }
 

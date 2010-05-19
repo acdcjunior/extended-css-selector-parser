@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSACParser.java,v 1.10 2010-04-29 07:29:39 waldbaer Exp $
+ * $Id: AbstractSACParser.java,v 1.11 2010-05-19 13:27:24 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -386,7 +386,7 @@ abstract class AbstractSACParser implements Parser
         SelectorList sl = null;
         try
         {
-            sl = this.selectorList();
+            sl = this.parseSelectorsInternal();
         }
         catch (ParseException e)
         {
@@ -480,6 +480,7 @@ abstract class AbstractSACParser implements Parser
     protected abstract void styleSheet() throws CSSParseException, ParseException;
     protected abstract void styleDeclaration() throws ParseException;
     protected abstract void styleSheetRuleSingle() throws ParseException;
+    protected abstract SelectorList parseSelectorsInternal() throws ParseException;
     protected abstract SelectorList selectorList() throws ParseException;
     protected abstract LexicalUnit expr() throws ParseException;
     protected abstract boolean prio() throws ParseException;
