@@ -1,5 +1,5 @@
 /*
- * $Id: LexicalUnitImpl.java,v 1.4 2008-11-28 13:03:27 waldbaer Exp $
+ * $Id: LexicalUnitImpl.java,v 1.5 2010-05-20 09:12:29 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -34,7 +34,7 @@ import org.w3c.css.sac.*;
  * Implementation of {@link LexicalUnit}.
  * 
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LexicalUnitImpl.java,v 1.4 2008-11-28 13:03:27 waldbaer Exp $
+ * @version $Id: LexicalUnitImpl.java,v 1.5 2010-05-20 09:12:29 waldbaer Exp $
  */
 public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Serializable {
 
@@ -199,6 +199,14 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
         this(previous, type);
         this.functionName = name;
         this.parameters = params;
+    }
+
+    protected LexicalUnitImpl(LexicalUnit previous, short type, String name,
+        String stringValue)
+    {
+        this(previous, type);
+        this.functionName = name;
+        this.stringValue = stringValue;
     }
 
     public LexicalUnitImpl()
@@ -719,10 +727,20 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_COUNTERS_FUNCTION, "counters", params);
     }
     
+    /**
+     * @deprecated use {@link #createAttr(LexicalUnit, String)} instead
+     */
     public static LexicalUnit createAttr(LexicalUnit prev, LexicalUnit params) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_ATTR, "attr", params);
     }
     
+    public static LexicalUnit createAttr(LexicalUnit prev, String value)
+    {
+        // according to LexicalUnit.SAC_ATTR, LexicalUnit.getStringValue(), not
+        // LexicalUnit.getParameters() is applicable
+        return new LexicalUnitImpl(prev, LexicalUnit.SAC_ATTR, "name", value);
+    }
+
     public static LexicalUnit createRect(LexicalUnit prev, LexicalUnit params) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_RECT_FUNCTION, "rect", params);
     }
