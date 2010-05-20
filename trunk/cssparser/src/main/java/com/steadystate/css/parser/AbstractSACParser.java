@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSACParser.java,v 1.11 2010-05-19 13:27:24 waldbaer Exp $
+ * $Id: AbstractSACParser.java,v 1.12 2010-05-20 09:12:29 waldbaer Exp $
  *
  * CSS Parser Project
  *
@@ -635,7 +635,7 @@ abstract class AbstractSACParser implements Parser
         } else if (t.image.equalsIgnoreCase("counters(")) {
             return LexicalUnitImpl.createCounters(prev, params);
         } else if (t.image.equalsIgnoreCase("attr(")) {
-            return LexicalUnitImpl.createAttr(prev, params);
+            return LexicalUnitImpl.createAttr(prev, params.getStringValue());
         } else if (t.image.equalsIgnoreCase("rect(")) {
             return LexicalUnitImpl.createRect(prev, params);
         } else if (t.image.equalsIgnoreCase("rgb(")) {
