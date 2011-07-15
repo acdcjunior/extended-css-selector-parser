@@ -20,7 +20,7 @@
 		<url>http://sourceforge.net/tracker/?group_id=82996</url>
 	</issueManagement>
 	<scm>
-		<url>http://cssparser.cvs.sourceforge.net/cssparser</url>
+		<url>http://cssparser.svn.sourceforge.net/cssparser</url>
 	</scm>
 	<distributionManagement>
 		<repository>
