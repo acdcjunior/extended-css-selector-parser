@@ -150,7 +150,7 @@ public class RectImpl implements Rect, Serializable {
     }
     
     public String toString() {
-        return new StringBuffer("rect(")
+        return new StringBuilder("rect(")
             .append(this.left).append(", ")
             .append(this.top).append(", ")
             .append(this.right).append(", ")

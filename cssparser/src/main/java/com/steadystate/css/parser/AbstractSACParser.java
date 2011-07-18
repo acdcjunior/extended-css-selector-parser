@@ -50,7 +50,6 @@ import org.w3c.css.sac.SelectorList;
 import com.steadystate.css.parser.selectors.ConditionFactoryImpl;
 import com.steadystate.css.parser.selectors.SelectorFactoryImpl;
 import com.steadystate.css.sac.DocumentHandlerExt;
-import com.steadystate.css.sac.TestCSSParseException;
 
 /**
  * Base implementation of {@link Parser}.
@@ -277,7 +276,7 @@ abstract class AbstractSACParser implements Parser
         {
             s = key;
         }
-        StringBuffer message = new StringBuffer(s);
+        StringBuilder message = new StringBuilder(s);
         message.append(' ');
         if (e.expectedTokenSequences.length == 1)
         {
@@ -289,17 +288,17 @@ abstract class AbstractSACParser implements Parser
             message.append(MessageFormat.format(
                 messagePattern2, new Object[] {invalid, expected}));
         }
-        return new TestCSSParseException(message.toString(),
+        return new CSSParseException(message.toString(),
             this.getInputSource().getURI(), e.currentToken.next.beginLine,
-            e.currentToken.next.beginColumn, this.getGrammarUri());
+            e.currentToken.next.beginColumn);
     }
 
     protected CSSParseException toCSSParseException(TokenMgrError e)
     {
         String messagePattern =
             this.getSACParserMessages().getString("tokenMgrError");
-        return new TestCSSParseException(messagePattern,
-            this.getInputSource().getURI(), 1, 1, this.getGrammarUri());
+        return new CSSParseException(messagePattern,
+            this.getInputSource().getURI(), 1, 1);
     }
 
     protected CSSParseException createSkipWarning(String key, CSSParseException e)
@@ -313,8 +312,8 @@ abstract class AbstractSACParser implements Parser
         {
             s = key;
         }
-        return new TestCSSParseException(s, e.getURI(), e.getLineNumber(),
-            e.getColumnNumber(), this.getGrammarUri());
+        return new CSSParseException(s, e.getURI(), e.getLineNumber(),
+            e.getColumnNumber());
     }
 
     public void parseStyleSheet(InputSource source)
@@ -361,6 +360,15 @@ abstract class AbstractSACParser implements Parser
             this.getErrorHandler().error(
                 this.toCSSParseException("invalidStyleDeclaration", e));
         }
+        catch (TokenMgrError e)
+        {
+            this.getErrorHandler().error(
+                this.toCSSParseException(e));
+        }
+        catch (CSSParseException e)
+        {
+            this.getErrorHandler().error(e);
+        }
     }
     
     public void parseRule(InputSource source) throws IOException
@@ -375,6 +383,15 @@ abstract class AbstractSACParser implements Parser
         {
             this.getErrorHandler().error(
                 this.toCSSParseException("invalidRule", e));
+        }
+        catch (TokenMgrError e)
+        {
+            this.getErrorHandler().error(
+                this.toCSSParseException(e));
+        }
+        catch (CSSParseException e)
+        {
+            this.getErrorHandler().error(e);
         }
     }
     
@@ -392,6 +409,15 @@ abstract class AbstractSACParser implements Parser
         {
             this.getErrorHandler().error(
                 this.toCSSParseException("invalidSelectorList", e));
+        }
+        catch (TokenMgrError e)
+        {
+            this.getErrorHandler().error(
+                this.toCSSParseException(e));
+        }
+        catch (CSSParseException e)
+        {
+            this.getErrorHandler().error(e);
         }
         return sl;
     }
@@ -411,6 +437,15 @@ abstract class AbstractSACParser implements Parser
             this.getErrorHandler().error(
                 this.toCSSParseException("invalidExpr", e));
         }
+        catch (TokenMgrError e)
+        {
+            this.getErrorHandler().error(
+                this.toCSSParseException(e));
+        }
+        catch (CSSParseException e)
+        {
+            this.getErrorHandler().error(e);
+        }
         return lu;
     }
     
@@ -429,6 +464,15 @@ abstract class AbstractSACParser implements Parser
             this.getErrorHandler().error(
                 this.toCSSParseException("invalidPrio", e));
         }
+        catch (TokenMgrError e)
+        {
+            this.getErrorHandler().error(
+                this.toCSSParseException(e));
+        }
+        catch (CSSParseException e)
+        {
+            this.getErrorHandler().error(e);
+        }
         return b;
     }
     
@@ -445,6 +489,11 @@ abstract class AbstractSACParser implements Parser
         {
             this.getErrorHandler().error(
                 this.toCSSParseException("invalidMediaList", e));
+        }
+        catch (TokenMgrError e)
+        {
+            this.getErrorHandler().error(
+                this.toCSSParseException(e));
         }
         catch (CSSParseException e)
         {
@@ -670,10 +719,10 @@ abstract class AbstractSACParser implements Parser
                 g = Integer.parseInt(t.image.substring(i + 2, i + 4), 16);
                 b = Integer.parseInt(t.image.substring(i + 4, i + 6), 16);
             } else {
-                throw new TestCSSParseException(MessageFormat.format(
+                throw new CSSParseException(MessageFormat.format(
                     pattern, new Object[] {t}),
                     this.getInputSource().getURI(), t.beginLine,
-                    t.beginColumn, this.getGrammarUri());
+                    t.beginColumn);
             }
 
             // Turn into an "rgb()"
@@ -681,16 +730,16 @@ abstract class AbstractSACParser implements Parser
             LexicalUnit lc1 = LexicalUnitImpl.createComma(lr);
             LexicalUnit lg = LexicalUnitImpl.createNumber(lc1, g);
             LexicalUnit lc2 = LexicalUnitImpl.createComma(lg);
-            LexicalUnit lb = LexicalUnitImpl.createNumber(lc2, b);
+            LexicalUnitImpl.createNumber(lc2, b);
 
             return LexicalUnitImpl.createRgbColor(prev, lr);
         }
         catch (NumberFormatException ex)
         {
-            throw new TestCSSParseException(MessageFormat.format(
+            throw new CSSParseException(MessageFormat.format(
                 pattern, new Object[] {t}),
                 this.getInputSource().getURI(), t.beginLine,
-                t.beginColumn, ex, this.getGrammarUri());
+                t.beginColumn, ex);
         }
     }
 
@@ -723,7 +772,7 @@ abstract class AbstractSACParser implements Parser
      */
     String unescape(String s) {
         int len = s.length();
-        StringBuffer buf = new StringBuffer(len);
+        StringBuilder buf = new StringBuilder(len);
         int index = 0;
 
         while (index < len) {
@@ -757,22 +806,27 @@ abstract class AbstractSACParser implements Parser
                         }
                         buf.append((char) numValue);
                         break;
-                        case '\n':
-                        case '\f':
+                    case '\n':
+                    case '\f':
                         break;
-                        case '\r':
+                    case '\r':
                         if (index + 1 < len) {
                             if (s.charAt(index + 1) == '\n') {
                                 index ++;
                             }
                         }
                         break;
+                    case '\'':
+                        // strings are always enclosed in double quotes;
+                        // no need for escaping single quotes
+                        buf.append(c);
+                        break;
                     default:
+                        c = s.charAt(--index);
                         buf.append(c);
                     }
                 } else {
-                    throw new TestCSSParseException("invalid string " + s,
-                        getLocator(), this.getGrammarUri());
+                    throw new CSSParseException("invalid string " + s, getLocator());
                 }
             } else {
                 buf.append(c);

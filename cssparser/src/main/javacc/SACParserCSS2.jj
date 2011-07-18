@@ -44,7 +44,6 @@ import java.text.MessageFormat;
 import java.util.*;
 import org.w3c.css.sac.*;
 import com.steadystate.css.parser.selectors.*;
-import com.steadystate.css.sac.TestCSSParseException;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
@@ -81,13 +80,13 @@ TOKEN_MGR_DECLS :
     private boolean _quiet = true;
     private ErrorHandler errorHandler;
 
-    private String trimBy(StringBuffer s, int left, int right) {
+    private String trimBy(StringBuilder s, int left, int right) {
         int end = s.length();
         return s.toString().substring(left, end-right);
     }
 
-    private String trimUrl(StringBuffer s) {
-        StringBuffer s1 = new StringBuffer( trimBy(s, 4, 1).trim() );
+    private String trimUrl(StringBuilder s) {
+        StringBuilder s1 = new StringBuilder( trimBy(s, 4, 1).trim() );
         if (s1.length() == 0)
         {
             return s1.toString();
@@ -384,6 +383,7 @@ void styleSheetRuleSingle() :
 {
 }
 {
+  ( <S> )*
   ( charsetRule() | importRule() | styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule() )
 }
 
@@ -1457,7 +1457,7 @@ void skipSelector() {
 
 JAVACODE
 String skip() {
-  StringBuffer sb = new StringBuffer();
+  StringBuilder sb = new StringBuilder();
   int nesting = 0;
   Token t = getToken(0);
   if (t.image != null) {
@@ -1536,5 +1536,5 @@ void error_skipAtRule()
     {
         t = getNextToken();
     }
-    while (t.kind != SEMICOLON);
+    while (t.kind != SEMICOLON && t.kind != EOF);
 }

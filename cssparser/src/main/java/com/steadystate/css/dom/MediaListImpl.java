@@ -30,22 +30,18 @@ package com.steadystate.css.dom;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.DOMException;
-
-import org.w3c.dom.stylesheets.MediaList;
-
-import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.CSSParseException;
+import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.Locator;
 import org.w3c.css.sac.SACMediaList;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.stylesheets.MediaList;
 
+import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.parser.Locatable;
-import com.steadystate.css.parser.SACMediaListImpl;
-import com.steadystate.css.parser.SACParserCSS2;
 import com.steadystate.css.userdata.UserDataConstants;
 import com.steadystate.css.util.LangUtils;
 
@@ -91,7 +87,7 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
 
 
     public String getMediaText() {
-        StringBuffer sb = new StringBuffer("");
+        StringBuilder sb = new StringBuilder("");
         for (int i = 0; i < this.media.size(); i++) {
             sb.append(this.media.get(i));
             if (i < this.media.size() - 1) {
@@ -105,8 +101,8 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
         InputSource source = new InputSource(new StringReader(mediaText));
         try
         {
-            // TODO get SAC Parser version from System property?
-            SACMediaList sml = new SACParserCSS2().parseMedia(source);
+            CSSOMParser parser = new CSSOMParser();
+            SACMediaList sml = parser.parseMedia(source);
             this.setMediaList(sml);
         }
         catch (CSSParseException e)

@@ -88,7 +88,7 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
     }
 
     public String getCssText() {
-        StringBuffer sb = new StringBuffer("@media ");
+        StringBuilder sb = new StringBuilder("@media ");
         sb.append(getMedia().toString()).append(" {");
         for (int i = 0; i < getCssRules().getLength(); i++) {
             CSSRule rule = getCssRules().item(i);

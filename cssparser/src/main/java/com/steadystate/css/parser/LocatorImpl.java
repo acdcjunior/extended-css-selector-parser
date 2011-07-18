@@ -146,7 +146,7 @@ public class LocatorImpl implements Locator, Serializable {
 	@Override
 	public String toString()
 	{
-        return new StringBuffer().append(this.getUri()).append(" (")
+        return new StringBuilder().append(this.getUri()).append(" (")
         	.append(this.getLineNumber()).append(':')
         	.append(this.getColumnNumber()).append(')').toString();
 	}

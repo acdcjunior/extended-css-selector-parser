@@ -37,6 +37,7 @@ import junit.framework.TestCase;
 
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.Parser;
+import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSRule;
@@ -52,18 +53,54 @@ import org.w3c.dom.css.CSSValue;
  */
 public class CSSOMParserTest extends TestCase {
 
+    private String _testStyleDeclaration = "align: right"; 
+    private String _testParseMedia = "print, screen";
+    private String _testParseRule = "p { " + _testStyleDeclaration + " }";
     private String _testSelector = "FOO";
-
     private String _testItem = "color";
-
     private String _testValue = "rgb(1, 2, 3)";
-
     private String _testString = _testSelector + "{ " + _testItem + ": " + _testValue + " }";
-
+    private String _testPropertyValue = "sans-serif";
     private CSSOMParser _parser = new CSSOMParser();
 
-    public void testParseStyleSheet() throws IOException {
+    public void testDefaultConstructor() {
+        CSSOMParser parser = new CSSOMParser();
+        assertNotNull(parser);
+        assertEquals("com.steadystate.css.parser.SACParserCSS21", System.getProperty("org.w3c.css.sac.parser"));
+    }
+    
+    public void testDefineParserClass() {
+        System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS21");
+        CSSOMParser parser = new CSSOMParser();
+        assertNotNull(parser);
+        assertEquals("com.steadystate.css.parser.SACParserCSS21", System.getProperty("org.w3c.css.sac.parser"));
 
+        System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS2");
+        parser = new CSSOMParser();
+        assertNotNull(parser);
+        assertEquals("com.steadystate.css.parser.SACParserCSS2", System.getProperty("org.w3c.css.sac.parser"));
+
+        System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS1");
+        parser = new CSSOMParser();
+        assertNotNull(parser);
+        assertEquals("com.steadystate.css.parser.SACParserCSS1", System.getProperty("org.w3c.css.sac.parser"));
+    }
+    
+    public void testDefineParserInstance() {
+        CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+        assertNotNull(parser);
+        assertEquals("com.steadystate.css.parser.SACParserCSS21", System.getProperty("org.w3c.css.sac.parser"));
+
+        parser = new CSSOMParser(new SACParserCSS2());
+        assertNotNull(parser);
+        assertEquals("com.steadystate.css.parser.SACParserCSS2", System.getProperty("org.w3c.css.sac.parser"));
+
+        parser = new CSSOMParser(new SACParserCSS1());
+        assertNotNull(parser);
+        assertEquals("com.steadystate.css.parser.SACParserCSS1", System.getProperty("org.w3c.css.sac.parser"));
+    }
+    
+    public void testParseStyleSheet() throws IOException {
         Reader r = new StringReader(_testString);
         InputSource is = new InputSource(r);
         CSSStyleSheet ss = _parser.parseStyleSheet(is, null, null);
@@ -72,38 +109,179 @@ public class CSSOMParserTest extends TestCase {
         CSSRule rule = rl.item(0);
         if (rule.getType() == CSSRule.STYLE_RULE) {
             CSSStyleRule sr = (CSSStyleRule) rule;
-            assertEquals(sr.getSelectorText(), _testSelector);
+            assertEquals(_testSelector, sr.getSelectorText());
 
             CSSStyleDeclaration style = sr.getStyle();
-            assertEquals(style.item(0), _testItem);
+            assertEquals(_testItem, style.item(0));
 
             CSSValue value = style.getPropertyCSSValue(style.item(0));
-            assertEquals(value.getCssText(), _testValue);
+            assertEquals(_testValue, value.getCssText());
         } else {
             fail();
         }
     }
 
+    
+    public void testParseStyleSheetIgnoreProblem() throws IOException {
+        String test = "p{filter:alpha(opacity=33.3);opacity:0.333}a{color:#123456;}";
+
+        Reader r = new StringReader(test);
+        InputSource is = new InputSource(r);
+        CSSStyleSheet ss = _parser.parseStyleSheet(is, null, null);
+        CSSRuleList rl = ss.getCssRules();
+        assertEquals(2, rl.getLength());
+
+        CSSRule rule = rl.item(0);
+        CSSStyleRule sr = (CSSStyleRule) rule;
+        assertEquals("p {  }", sr.getCssText());
+
+        rule = rl.item(1);
+        sr = (CSSStyleRule) rule;
+        assertEquals("a { color: rgb(18, 52, 86) }", sr.getCssText());
+    }
+    
+    
+    
     public void testParseSelectors() throws Exception {
         Reader r = new StringReader(_testSelector);
         InputSource is = new InputSource(r);
         SelectorList sl = _parser.parseSelectors(is);
-        assertEquals(sl.item(0).toString(), _testSelector);
+        assertEquals(_testSelector, sl.item(0).toString());
     }
 
+    public void testParseSelectorsParseException() throws Exception {
+        Reader r = new StringReader("table:bogus(1) td");
+        InputSource is = new InputSource(r);
+        SelectorList sl = _parser.parseSelectors(is);
+
+        assertNull(sl);
+    }
+
+    public void testParsePropertyValue() throws Exception {
+        Reader r = new StringReader(_testPropertyValue);
+        InputSource is = new InputSource(r);
+        CSSValue pv = _parser.parsePropertyValue(is);
+        assertEquals(_testPropertyValue, pv.toString());
+    }
+
+    public void testParsePropertyValueParseException() throws Exception {
+        Reader r = new StringReader("@a");
+        InputSource is = new InputSource(r);
+        CSSValue pv = _parser.parsePropertyValue(is);
+
+        assertNull(pv);
+    }
+    
+    public void testParseMedia() throws Exception {
+        Reader r = new StringReader(_testParseMedia);
+        InputSource is = new InputSource(r);
+        SACMediaList ml = _parser.parseMedia(is);
+
+        assertEquals(2, ml.getLength());
+    }
+
+    public void testParseMediaParseException() throws Exception {
+        Reader r = new StringReader("~xx");
+        InputSource is = new InputSource(r);
+        SACMediaList ml = _parser.parseMedia(is);
+
+        assertEquals(0, ml.getLength());
+    }
+
+    public void testParseRule() throws Exception {
+        Reader r = new StringReader(_testParseRule);
+        InputSource is = new InputSource(r);
+        CSSRule rule = _parser.parseRule(is);
+
+        assertEquals(_testParseRule, rule.getCssText());
+    }
+
+    public void testParseRuleParseException() throws Exception {
+        Reader r = new StringReader("~xx");
+        InputSource is = new InputSource(r);
+        CSSRule rule = _parser.parseRule(is);
+
+        assertNull(rule);
+    }
+
+    public void testParseStyleDeclaration() throws Exception {
+        Reader r = new StringReader(_testStyleDeclaration);
+        InputSource is = new InputSource(r);
+        CSSStyleDeclaration sd = _parser.parseStyleDeclaration(is);
+        assertEquals(_testStyleDeclaration, sd.toString());
+    }
+
+    public void testParseStyleDeclarationParseException() throws Exception {
+        Reader r = new StringReader("@abc");
+        InputSource is = new InputSource(r);
+        CSSStyleDeclaration sd = _parser.parseStyleDeclaration(is);
+
+        assertEquals(sd.getLength(), 0);
+    }
+    
     /**
      * Regression test for bug 1191376.
      * 
      * @throws Exception
      *             if any error occurs
      */
-    public void testParseStyleDeclaration() throws Exception {
+    public void testParseStyleDeclarationWithoutBrace() throws Exception {
         Reader r = new StringReader("background-color: white");
         InputSource is = new InputSource(r);
         CSSStyleDeclaration declaration = _parser.parseStyleDeclaration(is);
-        assertEquals(declaration.getLength(), 1);
+        assertEquals(1, declaration.getLength());
     }
 
+    /**
+     * Regression test for bug 3293695.
+     * 
+     * @throws Exception
+     *             if any error occurs
+     */
+    public void testUrlGreedy() throws Exception {
+        assertEquals(
+            "background: url(images/bottom-angle.png); background-image: url(background.png)",
+            getCssTextFromDeclaration(new SACParserCSS2(), "background:url('images/bottom-angle.png');background-image:url('background.png');"));
+        assertEquals(
+            "background: url(images/bottom-angle.png); background-image: url(background.png)",
+            getCssTextFromDeclaration(new SACParserCSS2(), "background:url(\"images/bottom-angle.png\");background-image:url(\"background.png\");"));
+        assertEquals(
+            "background: rgb(60, 90, 118) url(/images/status_bg.png?2) no-repeat center; font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
+            getCssTextFromDeclaration(new SACParserCSS2(), "background:#3c5a76 url('/images/status_bg.png?2') no-repeat center;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif"));
+
+        assertEquals(
+            "background: url(images/bottom-angle.png); background-image: url(background.png)",
+            getCssTextFromDeclaration(new SACParserCSS21(), "background:url('images/bottom-angle.png');background-image:url('background.png');"));
+        assertEquals(
+            "background: url(images/bottom-angle.png); background-image: url(background.png)",
+            getCssTextFromDeclaration(new SACParserCSS21(), "background:url(\"images/bottom-angle.png\");background-image:url(\"background.png\");"));
+        assertEquals(
+            "background: rgb(60, 90, 118) url(/images/status_bg.png?2) no-repeat center; font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
+            getCssTextFromDeclaration(new SACParserCSS21(), "background:#3c5a76 url('/images/status_bg.png?2') no-repeat center;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif"));
+    }
+
+    /**
+     * Regression test for bug 2042900.
+     * 
+     * @throws Exception
+     *             if any error occurs
+     */
+    public void testCommaList() throws Exception {
+        assertEquals(
+            "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
+            getCssTextFromDeclaration(new SACParserCSS2(), "font-family: Arial,'Helvetica Neue',Helvetica,sans-serif"));
+        assertEquals(
+            "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
+            getCssTextFromDeclaration(new SACParserCSS2(), "font-family: Arial, 'Helvetica Neue', Helvetica,  sans-serif"));
+
+        assertEquals(
+            "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
+            getCssTextFromDeclaration(new SACParserCSS21(), "font-family: Arial,'Helvetica Neue',Helvetica,sans-serif"));
+        assertEquals(
+            "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
+            getCssTextFromDeclaration(new SACParserCSS21(), "font-family: Arial, 'Helvetica Neue', Helvetica,  sans-serif"));
+    }
+    
     /**
      * Regression test for bug 1183734.
      * 
@@ -111,21 +289,106 @@ public class CSSOMParserTest extends TestCase {
      *             if any error occurs
      */
     public void testColorFirst() throws Exception {
+        assertEquals(
+            "background: rgb(232, 239, 245) url(images/bottom-angle.png) no-repeat", 
+            getCssTextFromDeclaration(new SACParserCSS2(), "background: #e8eff5 url(images/bottom-angle.png) no-repeat"));
+        assertEquals(
+            "background: red url(images/bottom-angle.png) no-repeat", 
+            getCssTextFromDeclaration(new SACParserCSS2(), "background: red url(images/bottom-angle.png) no-repeat"));
+        assertEquals(
+            "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat", 
+            getCssTextFromDeclaration(new SACParserCSS2(), "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat"));
 
-        Reader r = new StringReader("background: #e8eff5 url(images/bottom-angle.png) no-repeat");
-        InputSource is = new InputSource(r);
-        CSSStyleDeclaration d = _parser.parseStyleDeclaration(is);
-        assertEquals("background: rgb(232, 239, 245) url(images/bottom-angle.png) no-repeat", d.getCssText());
+        assertEquals(
+            "background: rgb(232, 239, 245) url(images/bottom-angle.png) no-repeat", 
+            getCssTextFromDeclaration(new SACParserCSS21(), "background: #e8eff5 url(images/bottom-angle.png) no-repeat"));
+        assertEquals(
+            "background: red url(images/bottom-angle.png) no-repeat", 
+            getCssTextFromDeclaration(new SACParserCSS21(), "background: red url(images/bottom-angle.png) no-repeat"));
+        assertEquals(
+            "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat", 
+            getCssTextFromDeclaration(new SACParserCSS21(), "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat"));
+    }
 
-        Reader r2 = new StringReader("background: red url(images/bottom-angle.png) no-repeat");
-        InputSource is2 = new InputSource(r2);
-        CSSStyleDeclaration d2 = _parser.parseStyleDeclaration(is2);
-        assertEquals("background: red url(images/bottom-angle.png) no-repeat", d2.getCssText());
+    public void testSpeciaChars() throws Exception {
+        assertEquals(
+            "content: \"•\"", 
+            getCssTextFromDeclaration(new SACParserCSS2(), "content: '•';"));
+        assertEquals(
+            "content: \"\u0122\"", 
+            getCssTextFromDeclaration(new SACParserCSS2(), "content: '\u0122';"));
+        assertEquals(
+            "content: \"\u0422\"", 
+            getCssTextFromDeclaration(new SACParserCSS2(), "content: '\u0422';"));
 
-        Reader r3 = new StringReader("background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat");
-        InputSource is3 = new InputSource(r3);
-        CSSStyleDeclaration d3 = _parser.parseStyleDeclaration(is3);
-        assertEquals("background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat", d3.getCssText());
+        assertEquals(
+            "content: \"•\"", 
+            getCssTextFromDeclaration(new SACParserCSS21(), "content: '•';"));
+        assertEquals(
+            "content: \"\u0122\"", 
+            getCssTextFromDeclaration(new SACParserCSS21(), "content: '\u0122';"));
+        assertEquals(
+            "content: \"\u0422\"", 
+            getCssTextFromDeclaration(new SACParserCSS21(), "content: '\u0422';"));
+    }
+    
+    /**
+     * Regression test for bug 1659992.
+     * 
+     * @throws Exception
+     *             if any error occurs
+     */
+    public void testDoubleDotSelector() throws Exception {
+        testDoubleDotSelector(new SACParserCSS2());
+        testDoubleDotSelector(new SACParserCSS21());
+    }
+    
+    private void testDoubleDotSelector(Parser p) throws Exception {
+        Reader r = new StringReader("..nieuwsframedatum{ font-size : 8pt;}");
+        InputSource source = new InputSource(r);
+        CSSOMParser parser = new CSSOMParser(p);
+        CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        assertEquals(0, ss.getCssRules().getLength());
+    }
+
+    /**
+     * Regression test for bug 2796824.
+     * 
+     * @throws Exception
+     *             if any error occurs
+     */
+    public void testImportEOF() throws Exception {
+        testImportEOF(new SACParserCSS2());
+        testImportEOF(new SACParserCSS21());
+    }
+    
+    private void testImportEOF(Parser p) throws Exception {
+        Reader r = new StringReader("@import http://www.wetator.org");
+        InputSource source = new InputSource(r);
+        CSSOMParser parser = new CSSOMParser(p);
+        CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        assertEquals(0, ss.getCssRules().getLength());
+    }
+
+    /**
+     * Regression test for bug 3198584.
+     * 
+     * @throws Exception
+     *             if any error occurs
+     */
+    public void testImportWithoutClosingSemicolon() throws Exception {
+        testImportWithoutClosingSemicolon(new SACParserCSS2());
+        testImportWithoutClosingSemicolon(new SACParserCSS21());
+    }
+    
+    private void testImportWithoutClosingSemicolon(Parser p) throws Exception {
+        Reader r = new StringReader("@import url('a.css'); @import url('c.css')");
+        InputSource source = new InputSource(r);
+        CSSOMParser parser = new CSSOMParser(p);
+        CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+
+        // second rule is not detected, because the closing semicolon is missed
+        assertEquals(1, ss.getCssRules().getLength());
     }
 
     /**
@@ -153,8 +416,11 @@ public class CSSOMParserTest extends TestCase {
         assertEquals("bogus: \"abx\"", getCssTextFromDeclaration(p, "bogus: '\\61\n\\62x'"));
         assertEquals("bogus: \"a'bc\"", getCssTextFromDeclaration(p, "bogus: 'a\\'bc'"));
         assertEquals("bogus: \"a'bc\"", getCssTextFromDeclaration(p, "bogus: \"a\\'bc\""));
-        assertEquals("bogus: \"a\"bc\"", getCssTextFromDeclaration(p, "bogus: 'a\\\"bc'"));
-        assertEquals("bogus: \"a\"bc\"", getCssTextFromDeclaration(p, "bogus: \"a\\\"bc\""));
+        assertEquals("bogus: \"a\\\"bc\"", getCssTextFromDeclaration(p, "bogus: 'a\\\"bc'"));
+
+        // regression for 2891851
+        assertEquals("bogus: \"NNNNN\\-NNNN\"", getCssTextFromDeclaration(p, "bogus: 'NNNNN\\-NNNN'"));
+        assertEquals("bogus: \"NNNNN\\-NNNN\"", getCssTextFromDeclaration(p, "bogus: \"NNNNN\\-NNNN\""));
     }
 
     private String getCssTextFromDeclaration(Parser p, String s) throws Exception {
@@ -166,7 +432,6 @@ public class CSSOMParserTest extends TestCase {
     }
 
     public void testMisc() throws Exception {
-
         InputStream is = getClass().getClassLoader().getResourceAsStream("page_test.css");
         assertNotNull(is);
 
@@ -174,7 +439,6 @@ public class CSSOMParserTest extends TestCase {
         InputSource source = new InputSource(r);
         CSSOMParser parser = new CSSOMParser();
         CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
-        System.out.println(ss.toString());
 
         CSSRuleList rl = ss.getCssRules();
         for (int i = 0; i < rl.getLength(); i++) {
@@ -186,9 +450,9 @@ public class CSSOMParserTest extends TestCase {
                     CSSValue value = style.getPropertyCSSValue(style.item(j));
                     if (value.getCssValueType() == CSSValue.CSS_PRIMITIVE_VALUE) {
                         CSSPrimitiveValue pv = (CSSPrimitiveValue) value;
-                        System.out.println(">> " + pv.toString());
+                        // System.out.println(">> " + pv.toString());
                         if (pv.getPrimitiveType() == CSSPrimitiveValue.CSS_COUNTER) {
-                            System.out.println("CSS_COUNTER(" + pv.toString() + ")");
+                            // System.out.println("CSS_COUNTER(" + pv.toString() + ")");
                         }
                     }
                 }
