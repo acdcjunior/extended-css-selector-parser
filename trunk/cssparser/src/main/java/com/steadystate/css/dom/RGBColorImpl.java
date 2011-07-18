@@ -114,7 +114,7 @@ public class RGBColorImpl implements RGBColor, Serializable {
     }
 
     public String toString() {
-        return new StringBuffer("rgb(")
+        return new StringBuilder("rgb(")
             .append(this.red).append(", ")
             .append(this.green).append(", ")
             .append(this.blue).append(")").toString();

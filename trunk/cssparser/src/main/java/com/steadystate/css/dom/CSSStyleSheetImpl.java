@@ -33,23 +33,19 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.StringReader;
 
+import org.w3c.css.sac.CSSException;
+import org.w3c.css.sac.InputSource;
+import org.w3c.css.sac.SACMediaList;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
-
-import org.w3c.dom.stylesheets.MediaList;
-import org.w3c.dom.stylesheets.StyleSheet;
-
 import org.w3c.dom.css.CSSImportRule;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
 import org.w3c.dom.css.CSSStyleSheet;
-
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.InputSource;
-import org.w3c.css.sac.SACMediaList;
+import org.w3c.dom.stylesheets.MediaList;
+import org.w3c.dom.stylesheets.StyleSheet;
 
 import com.steadystate.css.parser.CSSOMParser;
-import com.steadystate.css.parser.SACParserCSS2;
 import com.steadystate.css.util.LangUtils;
 
 /**
@@ -257,8 +253,8 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
         InputSource source = new InputSource(new StringReader(mediaText));
         try
         {
-            // TODO get SAC Parser version from System property?
-            SACMediaList sml = new SACParserCSS2().parseMedia(source);
+            CSSOMParser parser = new CSSOMParser();
+            SACMediaList sml = parser.parseMedia(source);
             this.media = new MediaListImpl(sml);
         }
         catch (IOException e)

@@ -30,8 +30,6 @@ package com.steadystate.css.parser;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import java.util.Properties;
 import java.util.Stack;
 
 import org.w3c.css.sac.CSSException;
@@ -42,15 +40,13 @@ import org.w3c.css.sac.Locator;
 import org.w3c.css.sac.Parser;
 import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
-
+import org.w3c.css.sac.helpers.ParserFactory;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSStyleSheet;
 import org.w3c.dom.css.CSSValue;
-
-import org.w3c.css.sac.helpers.ParserFactory;
 
 import com.steadystate.css.dom.CSSCharsetRuleImpl;
 import com.steadystate.css.dom.CSSFontFaceRuleImpl;
@@ -76,43 +72,53 @@ import com.steadystate.css.userdata.UserDataConstants;
  */
 public class CSSOMParser {
     
-    private static final String PARSER = "com.steadystate.css.parser.SACParserCSS2";
+    private static final String DEFAULT_PARSER = "com.steadystate.css.parser.SACParserCSS21";
     
-    private static boolean use_internal = false;
+    private static String lastFailed = null;
 
     private Parser _parser = null;
     private CSSStyleSheetImpl _parentStyleSheet = null;
-    // TODO what is this _parentRule for? It is not read locally.
-    //private CSSRule _parentRule = null;
 
     /** Creates new CSSOMParser */
     public CSSOMParser() {
-        try {
-            // use the direct method if we already failed once before
-            if(use_internal) {
-                this._parser = new SACParserCSS2();
-            } else {
-                setProperty("org.w3c.css.sac.parser", PARSER);
-                ParserFactory factory = new ParserFactory();
-                this._parser = factory.makeParser();
-            }
-        } catch (Exception e) {
-            use_internal = true;
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-            System.err.println("using the default parser instead");
-            this._parser = new SACParserCSS2();
-        }
+        this (null);
     }
 
     /**
-     * Creates new CSSOMParser
+     * Creates new CSSOMParser.
      *
      * @param parser the SAC Parser
      */
-    public CSSOMParser(Parser parser)
-    {
-        this._parser = parser;
+    public CSSOMParser(Parser parser) {
+        synchronized (DEFAULT_PARSER) {
+            if (null != parser) {
+                System.setProperty("org.w3c.css.sac.parser", parser.getClass().getCanonicalName());
+                this._parser = parser;
+                return;
+            }
+            
+            // no parser provided, determine the correct one
+            String currentParser = System.getProperty("org.w3c.css.sac.parser");
+            try {
+                // use the direct method if we already failed once before
+                if(null != lastFailed && lastFailed.equals(currentParser)) {
+                    this._parser = new SACParserCSS21();
+                } else {
+                    if (null == currentParser) {
+                        System.setProperty("org.w3c.css.sac.parser", DEFAULT_PARSER);
+                        currentParser = DEFAULT_PARSER;
+                    }
+                    ParserFactory factory = new ParserFactory();
+                    this._parser = factory.makeParser();
+                }
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+                e.printStackTrace();
+                System.err.println("using the default parser instead");
+                lastFailed = currentParser;
+                this._parser = new SACParserCSS21();
+            }
+        }
     }
     
 
@@ -132,8 +138,7 @@ public class CSSOMParser {
      * @return the CSSOM style sheet
      * @throws IOException if the underlying SAC parser throws an IOException
      */
-    public CSSStyleSheet parseStyleSheet(InputSource source, Node ownerNode,
-        String href) throws IOException {
+    public CSSStyleSheet parseStyleSheet(InputSource source, Node ownerNode, String href) throws IOException {
         CSSOMHandler handler = new CSSOMHandler();
         handler.setOwnerNode(ownerNode);
         handler.setHref(href);
@@ -163,7 +168,7 @@ public class CSSOMParser {
     
     public void parseStyleDeclaration(CSSStyleDeclaration sd, InputSource source)
             throws IOException {
-        Stack nodeStack = new Stack();
+        Stack<Object> nodeStack = new Stack<Object>();
         nodeStack.push(sd);
         CSSOMHandler handler = new CSSOMHandler(nodeStack);
         this._parser.setDocumentHandler(handler);
@@ -173,7 +178,11 @@ public class CSSOMParser {
     public CSSValue parsePropertyValue(InputSource source) throws IOException {
         CSSOMHandler handler = new CSSOMHandler();
         this._parser.setDocumentHandler(handler);
-        return new CSSValueImpl(this._parser.parsePropertyValue(source));
+        LexicalUnit lu = this._parser.parsePropertyValue(source);
+        if (null == lu) {
+            return null;
+        }
+        return new CSSValueImpl(lu);
     }
     
     public CSSRule parseRule(InputSource source) throws IOException {
@@ -189,6 +198,16 @@ public class CSSOMParser {
         return this._parser.parseSelectors(source);
     }
 
+    public SACMediaList parseMedia(InputSource source) throws IOException {
+        HandlerBase handler = new HandlerBase();
+        this._parser.setDocumentHandler(handler);
+        if (this._parser instanceof AbstractSACParser) {
+            
+            return ((AbstractSACParser)this._parser).parseMedia(source);
+        }
+        return null;
+    }
+
     public void setParentStyleSheet(CSSStyleSheetImpl parentStyleSheet) {
         this._parentStyleSheet = parentStyleSheet;
     }
@@ -197,16 +216,9 @@ public class CSSOMParser {
     {
         return this._parentStyleSheet;
     }
-    // See _parentRule
-    /*
-    public void setParentRule(CSSRule parentRule) {
-        _parentRule = parentRule;
-    }
-    */
     
     class CSSOMHandler implements DocumentHandlerExt {
-        
-        private Stack _nodeStack;
+        private Stack<Object> _nodeStack;
         private Object _root = null;
         private Node ownerNode;
         private String href;
@@ -231,12 +243,12 @@ public class CSSOMParser {
             this.href = href;
         }
 
-        public CSSOMHandler(Stack nodeStack) {
+        public CSSOMHandler(Stack<Object> nodeStack) {
             this._nodeStack = nodeStack;
         }
         
         public CSSOMHandler() {
-            this._nodeStack = new Stack();
+            this._nodeStack = new Stack<Object>();
         }
         
         public Object getRoot() {
@@ -532,11 +544,5 @@ public class CSSOMParser {
         	}
         }
 
-    }
-
-    public static void setProperty(String key, String val) {
-        Properties props = System.getProperties();
-        props.put(key, val);
-        System.setProperties(props);
     }
 }

@@ -32,7 +32,6 @@ import java.io.Serializable;
 import org.w3c.dom.DOMException;
 
 import org.w3c.dom.css.CSSRule;
-import org.w3c.dom.css.CSSStyleSheet;
 import org.w3c.dom.css.CSSUnknownRule;
 
 import com.steadystate.css.util.LangUtils;

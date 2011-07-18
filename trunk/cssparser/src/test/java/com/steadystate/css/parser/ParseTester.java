@@ -44,7 +44,7 @@ import org.w3c.css.sac.helpers.ParserFactory;
  */
 public class ParseTester extends HandlerBase {
 
-    private static final String PARSER = "com.steadystate.css.parser.SACParser";
+    private static final String PARSER = "com.steadystate.css.parser.SACParserCSS21";
 
     private int _propertyCounter = 0;
 
@@ -56,7 +56,7 @@ public class ParseTester extends HandlerBase {
 
     public void testParsing() {
         try {
-            CSSOMParser.setProperty("org.w3c.css.sac.parser", PARSER);
+            System.setProperty("org.w3c.css.sac.parser", PARSER);
             ParserFactory factory = new ParserFactory();
             Parser parser = factory.makeParser();
             parser.setDocumentHandler(this);
@@ -172,7 +172,7 @@ public class ParseTester extends HandlerBase {
     }
 
     private String indent() {
-        StringBuffer sb = new StringBuffer(16);
+        StringBuilder sb = new StringBuilder(16);
         for (int i = 0; i < this._indentSize; i++) {
             sb.append(" ");
         }

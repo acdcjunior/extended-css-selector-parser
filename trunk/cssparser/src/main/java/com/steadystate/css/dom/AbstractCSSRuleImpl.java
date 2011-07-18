@@ -65,10 +65,9 @@ public abstract class AbstractCSSRuleImpl extends CSSOMObjectImpl
         {
             return false;
         }
-        return super.equals(obj)
+        return super.equals(obj);
         // don't use parentRule and parentStyleSheet in equals()
         // recursive loop -> stack overflow!
-            ;
     }
 
     @Override

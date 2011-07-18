@@ -45,6 +45,7 @@ import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.parser.CSSOMParser;
+import com.steadystate.css.parser.SACParserCSS2;
 
 /**
  * Tests the CSS DOM implementation by loading a stylesheet and performing a few operations upon it.
@@ -62,7 +63,9 @@ public class TestDOM2 extends TestCase {
         Reader r = new InputStreamReader(is);
         InputSource source = new InputSource(r);
 
-        CSSOMParser parser = new CSSOMParser();
+        // set CSS2 parser because this test contains test for features
+        // no longer supported by CSS21
+        CSSOMParser parser = new CSSOMParser(new SACParserCSS2());
         CSSStyleSheet stylesheet = parser.parseStyleSheet(source, null, null);
         CSSRuleList rules = stylesheet.getCssRules();
 
