@@ -34,8 +34,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import junit.framework.TestCase;
-
+import org.junit.Assert;
+import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSStyleDeclaration;
@@ -47,14 +47,14 @@ import com.steadystate.css.parser.CSSOMParser;
  * Tests the CSS DOM implementation by loading a stylesheet and performing a few operations upon it.
  * 
  * @author David Schweinsberg
- * @version $Release$
+ * @author rbri
  */
-public class TestDOM extends TestCase {
+public class TestDOM {
 
+    @Test
     public void test() throws Exception {
-
         InputStream is = getClass().getClassLoader().getResourceAsStream("basic.css");
-        assertNotNull(is);
+        Assert.assertNotNull(is);
 
         CSSOMParser parser = new CSSOMParser();
 

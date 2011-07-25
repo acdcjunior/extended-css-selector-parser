@@ -1,7 +1,3 @@
-/*
- * Created on 01.08.2008
- *
- */
 package com.steadystate.css.dom;
 
 import java.io.ByteArrayInputStream;
@@ -19,8 +15,13 @@ import org.w3c.dom.css.CSSStyleSheet;
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.parser.SACParserCSS21;
 
-public class CSSStyleSheetImplTest
-{
+/**
+/**
+ * Unit tests for {@link CSSStyleSheetImpl}.
+ * 
+ * @author exxws
+ */
+public class CSSStyleSheetImplTest {
 
     /**
      * Regression test for bug 2123264.
@@ -29,7 +30,7 @@ public class CSSStyleSheetImplTest
      *             if any error occurs
      */
     @Test
-    public void insertRuleWithLeadingWhitespaceTest() throws IOException {
+    public void insertRuleWithLeadingWhitespaceTest() throws Exception {
         final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
         final InputSource source = new InputSource(new StringReader(""));
         final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
@@ -47,8 +48,7 @@ public class CSSStyleSheetImplTest
     }    
     
     @Test
-    public void serializeTest()
-    {
+    public void serializeTest() {
         String cssText =
             "h1 {\n" +
             "  font-size: 2em\n" +
@@ -76,14 +76,11 @@ public class CSSStyleSheetImplTest
             Object o = ois.readObject();
             Assert.assertEquals(css, o);
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             Assert.assertFalse(e.getLocalizedMessage(), true);
         }
-        catch (ClassNotFoundException e)
-        {
+        catch (ClassNotFoundException e) {
             Assert.assertFalse(e.getLocalizedMessage(), true);
         }
     }
-
 }

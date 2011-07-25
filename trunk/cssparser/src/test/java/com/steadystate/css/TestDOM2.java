@@ -34,8 +34,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import junit.framework.TestCase;
-
+import org.junit.Assert;
+import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 import org.w3c.dom.css.CSSFontFaceRule;
 import org.w3c.dom.css.CSSImportRule;
@@ -51,14 +51,15 @@ import com.steadystate.css.parser.SACParserCSS2;
  * Tests the CSS DOM implementation by loading a stylesheet and performing a few operations upon it.
  * 
  * @author David Schweinsberg
- * @version $Release$
+ * @author rbri
  */
-public class TestDOM2 extends TestCase {
+public class TestDOM2 {
 
+    @Test
     public void test() throws Exception {
 
         InputStream is = getClass().getClassLoader().getResourceAsStream("test.css");
-        assertNotNull(is);
+        Assert.assertNotNull(is);
 
         Reader r = new InputStreamReader(is);
         InputSource source = new InputSource(r);

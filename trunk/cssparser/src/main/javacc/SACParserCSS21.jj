@@ -437,6 +437,7 @@ void styleSheetRuleSingle() :
 {
   ( <S> )*
   ( charsetRule() | importRule() | styleRule() | mediaRule() | pageRule() | unknownRule() )
+  ( <S> )*
 }
 
 void charsetRule() :
@@ -512,7 +513,6 @@ void importRule() :
         | t = <URI> ) ( <S> )*
         ( mediaList(ml) )?
         <SEMICOLON>
-        ( <S> )*
         {
             this.handleImportStyle(unescape(t.image), ml, null, locator);
         }
@@ -1151,7 +1151,7 @@ Object pseudo(Condition pred) :
             |
             (
                 t = <FUNCTION> { function = unescape(t.image); } ( <S> )*
-                (t = <IDENT> { arg = unescape(t.image); })? ( <S> )*
+                (t = <IDENT> { arg = unescape(t.image); } ( <S> )* )? 
                 <RROUND>
                 {
                     if (function.equalsIgnoreCase("lang(")) {
@@ -1173,13 +1173,6 @@ Object pseudo(Condition pred) :
                             ? c
                             : this.getConditionFactory().createAndCondition(pred, c);
                     }
-                    /*
-                    else {
-                        throw new TestCSSParseException(
-                            "Invalid pseudo function name " + function,
-                            getLocator());
-                    }
-                    */
                 }
             )
             

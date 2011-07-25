@@ -35,6 +35,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
+import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.Locator;
 import org.w3c.css.sac.Parser;
@@ -57,10 +59,7 @@ import com.steadystate.css.dom.CSSValueImpl;
 import com.steadystate.css.dom.Property;
 import com.steadystate.css.userdata.UserDataConstants;
 
-import junit.framework.TestCase;
-
-public class LocatorTest extends TestCase
-{
+public class LocatorTest {
 
 	private static final String CHARSET_RULE = "@charset \"utf-8\";\n";
 	private static final String SIMPLE_IMPORT_RULE =
@@ -83,8 +82,8 @@ public class LocatorTest extends TestCase
 		+ "  border-right: medium solid #00f\n"
 		+ "}\n";
 
-	public void testLocationsCSS1()
-    {
+	@Test
+	public void locationsCSS1() {
         String cssCode = SIMPLE_IMPORT_RULE
         	+ UNKNOWN_AT_RULE
         	+ STYLE_RULE;
@@ -108,11 +107,12 @@ public class LocatorTest extends TestCase
         vPos.add(new Integer[] {6,24});
         vPos.add(new Integer[] {6,30});
         positions.put('V', vPos);
-        this.testLocations(new SACParserCSS1(), cssCode, positions);
+
+        locations(new SACParserCSS1(), cssCode, positions);
     }
 
-    public void testLocationsCSS2()
-    {
+	@Test
+    public void locationsCSS2() {
         String cssCode = CHARSET_RULE
         	+ IMPORT_RULE
         	+ UNKNOWN_AT_RULE
@@ -155,11 +155,11 @@ public class LocatorTest extends TestCase
         vPos.add(new Integer[] {15,24});
         vPos.add(new Integer[] {15,30});
         positions.put('V', vPos);
-        this.testLocations(new SACParserCSS2(), cssCode, positions);
+        locations(new SACParserCSS2(), cssCode, positions);
     }
 
-    public void testLocationsCSS21()
-    {
+	@Test
+    public void testLocationsCSS21() {
         String cssCode = CHARSET_RULE
         	+ IMPORT_RULE
         	+ UNKNOWN_AT_RULE
@@ -198,11 +198,12 @@ public class LocatorTest extends TestCase
         vPos.add(new Integer[] {15,24});
         vPos.add(new Integer[] {15,30});
         positions.put('V', vPos);
-        this.testLocations(new SACParserCSS21(), cssCode, positions);
+
+        locations(new SACParserCSS21(), cssCode, positions);
     }
 
-    public void testLocationsCSSmobileOKbasic1()
-    {
+	@Test
+    public void locationsCSSmobileOKbasic1() {
         String cssCode = IMPORT_RULE
 	    	+ UNKNOWN_AT_RULE
 	    	+ PAGE_RULE
@@ -238,13 +239,12 @@ public class LocatorTest extends TestCase
 	    vPos.add(new Integer[] {14,24});
 	    vPos.add(new Integer[] {14,30});
 	    positions.put('V', vPos);
-        this.testLocations(new SACParserCSSmobileOKBasic1(), cssCode, positions);
+
+	    locations(new SACParserCSSmobileOKBasic1(), cssCode, positions);
     }
 
-    private void testLocations(Parser sacParser, String cssCode,
-		Map<Character, List<Integer[]>> positions)
-    {
-//    	System.out.println(cssCode);
+    private void locations(Parser sacParser, String cssCode,
+		Map<Character, List<Integer[]>> positions) {
         Reader r = new StringReader(cssCode);
         InputSource source = new InputSource(r);
         CSSOMParser cssomParser = new CSSOMParser(sacParser);
@@ -253,148 +253,121 @@ public class LocatorTest extends TestCase
         counts.put('M', 0);
         counts.put('P', 0);
         counts.put('V', 0);
-        try
-        {
+        try {
         	CSSStyleSheet cssStyleSheet =
         		cssomParser.parseStyleSheet(source, null, null);
         	CSSRuleList cssRules = cssStyleSheet.getCssRules();
-        	this.testCSSRules(cssRules, positions, counts);
-//        	System.out.println("----------");
+        	cssRules(cssRules, positions, counts);
 		}
-        catch (IOException e)
-        {
-            assertFalse(e.getLocalizedMessage(), true);
+        catch (IOException e) {
+            Assert.assertFalse(e.getLocalizedMessage(), true);
 		}
     }
 
-    private void testCSSRules(CSSRuleList cssRules,
-		Map<Character, List<Integer[]>> positions,
-		Map<Character, Integer> counts)
-    {
-        for (int i = 0; i < cssRules.getLength(); i++)
-        {
-            this.testCSSRule(cssRules.item(i), positions, counts);
+    private void cssRules(CSSRuleList cssRules, Map<Character, List<Integer[]>> positions,
+		Map<Character, Integer> counts) {
+        for (int i = 0; i < cssRules.getLength(); i++) {
+            cssRule(cssRules.item(i), positions, counts);
         }
     }
 
-    private void testCSSRule(CSSRule cssRule,
-		Map<Character, List<Integer[]>> positions,
-		Map<Character, Integer> counts)
-    {
-        if (cssRule instanceof CSSOMObject)
-        {
+    private void cssRule(CSSRule cssRule, Map<Character, List<Integer[]>> positions,
+		Map<Character, Integer> counts) {
+        if (cssRule instanceof CSSOMObject) {
             Locator locator = this.getLocator((CSSOMObject) cssRule);
-//            System.out.println(locator.toString() + " R " + cssRule);
             Integer[] expected = positions.get('R').get(counts.get('R'));
             int expectedLine = expected[0];
             int expectedColumn = expected[1];
-            assertEquals(expectedLine, locator.getLineNumber());
-            assertEquals(expectedColumn, locator.getColumnNumber());
+            Assert.assertEquals(expectedLine, locator.getLineNumber());
+            Assert.assertEquals(expectedColumn, locator.getColumnNumber());
             counts.put('R', counts.get('R') + 1);
         }
-        switch (cssRule.getType())
-        {
+        switch (cssRule.getType()) {
         case CSSRule.IMPORT_RULE:
             CSSImportRule cssImportRule = (CSSImportRule) cssRule;
-            this.testMediaList(cssImportRule.getMedia(), positions, counts);
+            mediaList(cssImportRule.getMedia(), positions, counts);
             break;
         case CSSRule.MEDIA_RULE:
             CSSMediaRule cssMediaRule = (CSSMediaRule) cssRule;
-            this.testMediaList(cssMediaRule.getMedia(), positions, counts);
-            this.testCSSRules(cssMediaRule.getCssRules(), positions, counts);
+            mediaList(cssMediaRule.getMedia(), positions, counts);
+            cssRules(cssMediaRule.getCssRules(), positions, counts);
             break;
         case CSSRule.PAGE_RULE:
         	CSSPageRule cssPageRule = (CSSPageRule) cssRule;
-        	this.testCSSStyleDeclaration(cssPageRule.getStyle(), positions,
-    			counts);
+        	cssStyleDeclaration(cssPageRule.getStyle(), positions, counts);
         	break;
         case CSSRule.FONT_FACE_RULE:
         	CSSFontFaceRule cssFontFaceRule = (CSSFontFaceRule) cssRule;
-        	this.testCSSStyleDeclaration(cssFontFaceRule.getStyle(), positions,
-    			counts);
+        	cssStyleDeclaration(cssFontFaceRule.getStyle(), positions, counts);
             break;
         case CSSRule.STYLE_RULE:
             CSSStyleRule cssStyleRule = (CSSStyleRule) cssRule;
-            this.testCSSStyleDeclaration(cssStyleRule.getStyle(), positions,
-    			counts);
+            cssStyleDeclaration(cssStyleRule.getStyle(), positions, counts);
             break;
         }
     }
 
-	private void testCSSStyleDeclaration(CSSStyleDeclaration style,
+	private void cssStyleDeclaration(CSSStyleDeclaration style,
 		Map<Character, List<Integer[]>> positions,
-		Map<Character, Integer> counts)
-	{
-		if (style instanceof CSSStyleDeclarationImpl)
-		{
+		Map<Character, Integer> counts)	{
+		if (style instanceof CSSStyleDeclarationImpl) {
 		    CSSStyleDeclarationImpl csdi = (CSSStyleDeclarationImpl) style;
 		    Iterator<Property> it = csdi.getProperties().iterator();
-		    while (it.hasNext())
-		    {
-		        this.testProperty(it.next(), positions, counts);
+		    while (it.hasNext()) {
+		        property(it.next(), positions, counts);
 		    }
 		}
 	}
 
-    private void testMediaList(MediaList mediaList,
+    private void mediaList(MediaList mediaList,
 		Map<Character, List<Integer[]>> positions,
-		Map<Character, Integer> counts)
-    {
-    	if ((mediaList.getLength() > 0) && (mediaList instanceof CSSOMObject))
-    	{
+		Map<Character, Integer> counts) {
+    	if ((mediaList.getLength() > 0) && (mediaList instanceof CSSOMObject)) {
             Locator locator = this.getLocator((CSSOMObject) mediaList);
-//            System.out.println("" + locator + " M " + mediaList);
             Integer[] expected = positions.get('M').get(counts.get('M'));
             int expectedLine = expected[0];
             int expectedColumn = expected[1];
-            assertEquals(expectedLine, locator.getLineNumber());
-            assertEquals(expectedColumn, locator.getColumnNumber());
+            Assert.assertEquals(expectedLine, locator.getLineNumber());
+            Assert.assertEquals(expectedColumn, locator.getColumnNumber());
             counts.put('M', counts.get('M') + 1);
     	}
     }
 
-    private void testProperty(Property property,
+    private void property(Property property,
 		Map<Character, List<Integer[]>> positions,
-		Map<Character, Integer> counts)
-    {
+		Map<Character, Integer> counts) {
         Locator locator = this.getLocator(property);
-//        System.out.println(locator.toString() + " P " + property);
         Integer[] expected = positions.get('P').get(counts.get('P'));
         int expectedLine = expected[0];
         int expectedColumn = expected[1];
-        assertEquals(expectedLine, locator.getLineNumber());
-        assertEquals(expectedColumn, locator.getColumnNumber());
+        Assert.assertEquals(expectedLine, locator.getLineNumber());
+        Assert.assertEquals(expectedColumn, locator.getColumnNumber());
         counts.put('P', counts.get('P') + 1);
-        this.testCSSValue(property.getValue(), positions, counts);
+        cssValue(property.getValue(), positions, counts);
     }
 
-    private void testCSSValue(CSSValue cssValue,
+    private void cssValue(CSSValue cssValue,
 		Map<Character, List<Integer[]>> positions,
-		Map<Character, Integer> counts)
-    {
-        if (cssValue instanceof CSSValueImpl)
-        {
+		Map<Character, Integer> counts) {
+        if (cssValue instanceof CSSValueImpl) {
         	Locator locator = this.getLocator((CSSValueImpl) cssValue);
-//            System.out.println(locator.toString() + " V " + cssValue);
             Integer[] expected = positions.get('V').get(counts.get('V'));
             int expectedLine = expected[0];
             int expectedColumn = expected[1];
-            assertEquals(expectedLine, locator.getLineNumber());
-            assertEquals(expectedColumn, locator.getColumnNumber());
+            Assert.assertEquals(expectedLine, locator.getLineNumber());
+            Assert.assertEquals(expectedColumn, locator.getColumnNumber());
 	        counts.put('V', counts.get('V') + 1);
         }
         if (cssValue.getCssValueType() == CSSValue.CSS_VALUE_LIST)
         {
         	CSSValueList cssValueList = (CSSValueList) cssValue;
-        	for (int i = 0; i < cssValueList.getLength(); i++)
-        	{
-        		this.testCSSValue(cssValueList.item(i), positions, counts);
+        	for (int i = 0; i < cssValueList.getLength(); i++) {
+        		cssValue(cssValueList.item(i), positions, counts);
         	}
         }
     }
 
-    private Locator getLocator(CSSOMObject cssomObject)
-    {
+    private Locator getLocator(CSSOMObject cssomObject) {
     	return (Locator) cssomObject.getUserData(UserDataConstants.KEY_LOCATOR);
     }
 }
