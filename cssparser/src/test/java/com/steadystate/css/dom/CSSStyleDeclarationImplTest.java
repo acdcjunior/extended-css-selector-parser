@@ -9,8 +9,8 @@ import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 
-import junit.framework.TestCase;
-
+import org.junit.Assert;
+import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 
 import com.steadystate.css.parser.CSSOMParser;
@@ -20,8 +20,9 @@ import com.steadystate.css.parser.CSSOMParser;
  * 
  * @author Daniel Gredler
  * @author waldbaer
+ * @author rbri
  */
-public class CSSStyleDeclarationImplTest extends TestCase {
+public class CSSStyleDeclarationImplTest {
 
     /**
      * Regression test for bug 1874800.
@@ -29,10 +30,10 @@ public class CSSStyleDeclarationImplTest extends TestCase {
      * @throws Exception
      *             if any error occurs
      */
-    public void testCssTextHasNoCurlyBraces() throws Exception {
-
+    @Test
+    public void cssTextHasNoCurlyBraces() throws Exception {
         InputStream is = getClass().getClassLoader().getResourceAsStream("basic.css");
-        assertNotNull(is);
+        Assert.assertNotNull(is);
 
         CSSOMParser parser = new CSSOMParser();
 
@@ -40,11 +41,11 @@ public class CSSStyleDeclarationImplTest extends TestCase {
         InputSource source = new InputSource(r);
         CSSStyleDeclarationImpl style = (CSSStyleDeclarationImpl) parser.parseStyleDeclaration(source);
 
-        assertFalse(style.getCssText().contains("{"));
-        assertFalse(style.getCssText().contains("}"));
+        Assert.assertFalse(style.getCssText().contains("{"));
+        Assert.assertFalse(style.getCssText().contains("}"));
 
         style.setCssText("color: red;");
-        assertEquals("color: red", style.getCssText());
+        Assert.assertEquals("color: red", style.getCssText());
     }
 
     /**
@@ -53,21 +54,21 @@ public class CSSStyleDeclarationImplTest extends TestCase {
      * @throws Exception
      *             if any error occurs
      */
-    public void testEmptyUrl() throws Exception {
-
+    @Test
+    public void emptyUrl() throws Exception {
         CSSOMParser parser = new CSSOMParser();
 
         Reader r = new StringReader("{ background: url() }");
         InputSource source = new InputSource(r);
         CSSStyleDeclarationImpl style = (CSSStyleDeclarationImpl) parser.parseStyleDeclaration(source);
 
-        assertEquals("", style.getCssText());
+        Assert.assertEquals("", style.getCssText());
     }
 
-    public void testSerialize() throws Exception
-    {
+    @Test
+    public void serialize() throws Exception {
         InputStream is = getClass().getClassLoader().getResourceAsStream("basic.css");
-        assertNotNull(is);
+        Assert.assertNotNull(is);
 
         CSSOMParser parser = new CSSOMParser();
 
@@ -83,7 +84,6 @@ public class CSSStyleDeclarationImplTest extends TestCase {
             new ByteArrayInputStream(baos.toByteArray()));
         Object o = ois.readObject();
         ois.close();
-        assertEquals(style, o);
+        Assert.assertEquals(style, o);
     }
-
 }

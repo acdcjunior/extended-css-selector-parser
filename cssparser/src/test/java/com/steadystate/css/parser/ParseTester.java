@@ -40,14 +40,14 @@ import org.w3c.css.sac.helpers.ParserFactory;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: ParseTester.java,v 1.1 2008-03-26 02:18:51 sdanig Exp $
+ * @author sdanig
+ * @author exxws
  */
 public class ParseTester extends HandlerBase {
 
     private static final String PARSER = "com.steadystate.css.parser.SACParserCSS21";
 
     private int _propertyCounter = 0;
-
     private int _indentSize = 0;
 
     public static void main(String[] args) {

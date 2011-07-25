@@ -41,8 +41,8 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
 
-import junit.framework.TestCase;
-
+import org.junit.Assert;
+import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
@@ -52,14 +52,15 @@ import com.steadystate.css.parser.CSSOMParser;
 
 /**
  * @author David Schweinsberg
- * @version $Release$
+ * @author rbri
  */
-public class TestSerializable extends TestCase {
+public class TestSerializable {
 
+    @Test
     public void test() throws Exception {
 
         InputStream is = getClass().getClassLoader().getResourceAsStream("html40.css");
-        assertNotNull(is);
+        Assert.assertNotNull(is);
 
         CSSOMParser parser = new CSSOMParser();
 

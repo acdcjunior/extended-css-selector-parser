@@ -33,8 +33,7 @@ package com.steadystate.css;
 import java.io.Reader;
 import java.io.StringReader;
 
-import junit.framework.TestCase;
-
+import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 import org.w3c.dom.css.CSSMediaRule;
 import org.w3c.dom.css.CSSRule;
@@ -47,12 +46,12 @@ import com.steadystate.css.parser.CSSOMParser;
  * Attempts to perform some illegal operations to ensure the correct exceptions are thrown.
  * 
  * @author David Schweinsberg
- * @version $Release$
+ * @author rbri
  */
-public class TestException extends TestCase {
+public class TestException {
 
+    @Test
     public void test() throws Exception {
-
         CSSOMParser parser = new CSSOMParser();
 
         Reader r = new StringReader("");
