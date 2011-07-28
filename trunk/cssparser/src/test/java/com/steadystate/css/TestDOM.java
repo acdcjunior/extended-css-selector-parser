@@ -30,15 +30,23 @@
 
 package com.steadystate.css;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Reader;
+import java.io.StringReader;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 import org.w3c.dom.css.CSSPrimitiveValue;
+import org.w3c.dom.css.CSSRuleList;
 import org.w3c.dom.css.CSSStyleDeclaration;
+import org.w3c.dom.css.CSSStyleSheet;
 import org.w3c.dom.css.CSSValueList;
 
 import com.steadystate.css.parser.CSSOMParser;
@@ -137,4 +145,28 @@ public class TestDOM {
         System.out.println("getValueType: 'list-test' = " + value.getCssValueType());
         System.out.println(style.getCssText());
     }
+
+
+    @Test
+    public void inheritGetStringValue() throws Exception {
+        String cssText =
+            "p {\n" +
+            "  font-size: 2em\n" +
+            "}\n" +
+            "p a:link {\n" +
+            "  font-size: inherit\n" +
+            "}\n";
+        InputSource source = new InputSource(new StringReader(cssText));
+        CSSOMParser cssomParser = new CSSOMParser();
+
+        CSSStyleSheet css = cssomParser.parseStyleSheet(source, null,
+            "http://www.example.org/css/style.css");
+        
+        CSSRuleList rules = css.getCssRules();
+        Assert.assertEquals(2, rules.getLength());
+        
+        Assert.assertEquals("p { font-size: 2em }", rules.item(0).getCssText());
+        Assert.assertEquals("p a:link { font-size: inherit }", rules.item(1).getCssText());
+    }
+
 }

@@ -216,7 +216,7 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
         {
             return CSS_VALUE_LIST;
         }
-        else if ((this._value instanceof LexicalUnit) &&
+        if ((this._value instanceof LexicalUnit) &&
             (((LexicalUnit) this._value).getLexicalUnitType() == LexicalUnit.SAC_INHERIT))
         {
             return CSS_INHERIT;
