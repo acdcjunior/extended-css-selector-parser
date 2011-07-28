@@ -1,7 +1,29 @@
 /*
- * Created on 04.12.2007
+ * CSS Parser Project
+ *
+ * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * To contact the authors of the library:
+ *
+ * http://cssparser.sourceforge.net/
+ * mailto:davidsch@users.sourceforge.net
  *
  */
+
 package com.steadystate.css.sac;
 
 import org.w3c.css.sac.CSSException;
@@ -11,19 +33,17 @@ import org.w3c.css.sac.Locator;
 import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
 
-public interface DocumentHandlerExt extends DocumentHandler
-{
+public interface DocumentHandlerExt extends DocumentHandler {
 
     /**
      * Receive notification of a charset at-rule.
-     * 
+     *
      * @param characterEncoding the character encoding
      * @param locator the SAC locator
      * @throws CSSException Any CSS exception, possibly wrapping another
      *  exception.
      */
-    public void charset(String characterEncoding, Locator locator)
-        throws CSSException;
+    void charset(String characterEncoding, Locator locator) throws CSSException;
 
     /**
      * Receive notification of a import statement in the style sheet.
@@ -36,9 +56,8 @@ public interface DocumentHandlerExt extends DocumentHandler
      * @exception CSSException Any CSS exception, possibly wrapping another
      *  exception.
      */
-    public void importStyle(String uri, SACMediaList media, 
-        String defaultNamespaceURI, Locator locator)
-	    throws CSSException;
+    void importStyle(String uri, SACMediaList media,
+        String defaultNamespaceURI, Locator locator) throws CSSException;
 
     /**
      * Receive notification of an unknown rule t-rule not supported by this
@@ -47,10 +66,9 @@ public interface DocumentHandlerExt extends DocumentHandler
      * @param at-rule The complete ignored at-rule.
      * @param locator the SAC locator
      * @exception CSSException Any CSS exception, possibly wrapping another
-     *  exception.  
+     *  exception.
      */
-    public void ignorableAtRule(String atRule, Locator locator)
-        throws CSSException;
+    void ignorableAtRule(String atRule, Locator locator) throws CSSException;
 
     /**
      * Receive notification of the beginning of a font face statement.
@@ -63,7 +81,7 @@ public interface DocumentHandlerExt extends DocumentHandler
      * @exception CSSException Any CSS exception, possibly wrapping another
      *  exception.
      */
-    public void startFontFace(Locator locator) throws CSSException;
+    void startFontFace(Locator locator) throws CSSException;
 
     /**
      * Receive notification of the beginning of a page statement.
@@ -73,13 +91,12 @@ public interface DocumentHandlerExt extends DocumentHandler
      * event for every startPage() event.
      *
      * @param name the name of the page (if any, null otherwise)
-     * @param pseudo_page the pseudo page (if any, null otherwise)
+     * @param pseudoPage the pseudo page (if any, null otherwise)
      * @param locator the SAC locator
      * @exception CSSException Any CSS exception, possibly wrapping another
-     *  exception.  
-     */    
-    public void startPage(String name, String pseudo_page, Locator locator)
-        throws CSSException;
+     *  exception.
+     */
+    void startPage(String name, String pseudoPage, Locator locator) throws CSSException;
 
     /**
      * Receive notification of the beginning of a media statement.
@@ -91,10 +108,9 @@ public interface DocumentHandlerExt extends DocumentHandler
      * @param media The intended destination media for style information.
      * @param locator the SAC locator
      * @exception CSSException Any CSS exception, possibly wrapping another
-     *  exception.  
+     *  exception.
      */
-    public void startMedia(SACMediaList media, Locator locator)
-        throws CSSException;
+    void startMedia(SACMediaList media, Locator locator) throws CSSException;
 
     /**
      * Receive notification of the beginning of a rule statement.
@@ -104,18 +120,15 @@ public interface DocumentHandlerExt extends DocumentHandler
      * @exception CSSException Any CSS exception, possibly wrapping another
      *  exception.
      */
-    public void startSelector(SelectorList selectors, Locator locator)
-        throws CSSException;
+    void startSelector(SelectorList selectors, Locator locator) throws CSSException;
 
     /**
      * Receive notification of a declaration.
-     * 
+     *
      * @param name the name of the property.
      * @param value the value of the property. All whitespace are stripped.
      * @param important is this property important ?
      * @param locator the SAC locator
      */
-    public void property(String name, LexicalUnit value,
-        boolean important, Locator locator);
-
+    void property(String name, LexicalUnit value, boolean important, Locator locator);
 }
