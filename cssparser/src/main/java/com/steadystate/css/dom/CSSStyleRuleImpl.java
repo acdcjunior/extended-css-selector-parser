@@ -1,6 +1,4 @@
 /*
- * $Id: CSSStyleRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
- *
  * CSS Parser Project
  *
  * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.dom;
@@ -44,77 +43,75 @@ import org.w3c.css.sac.SelectorList;
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.util.LangUtils;
 
-/** 
+/**
  * Implementation of {@link CSSStyleRule}.
- * 
+ *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class CSSStyleRuleImpl extends AbstractCSSRuleImpl
     implements CSSStyleRule, Serializable {
 
     private static final long serialVersionUID = -697009251364657426L;
 
-    private SelectorList selectors = null;
-    private CSSStyleDeclaration style = null;
+    private SelectorList selectors_;
+    private CSSStyleDeclaration style_;
 
-    public SelectorList getSelectors()
-    {
-        return this.selectors;
+    public SelectorList getSelectors() {
+        return selectors_;
     }
 
-    public void setSelectors(SelectorList selectors)
-    {
-        this.selectors = selectors;
+    public void setSelectors(final SelectorList selectors) {
+        selectors_ = selectors;
     }
 
-
-    public CSSStyleRuleImpl(CSSStyleSheetImpl parentStyleSheet,
-        CSSRule parentRule, SelectorList selectors) {
+    public CSSStyleRuleImpl(final CSSStyleSheetImpl parentStyleSheet,
+        final CSSRule parentRule, final SelectorList selectors) {
         super(parentStyleSheet, parentRule);
-        this.selectors = selectors;
+        selectors_ = selectors;
     }
 
-    public CSSStyleRuleImpl()
-    {
+    public CSSStyleRuleImpl() {
+        super();
     }
-
 
     public short getType() {
         return STYLE_RULE;
     }
 
     public String getCssText() {
-        return this.getSelectorText() + " { " + this.getStyle().getCssText() + " }";
+        return getSelectorText() + " { " + getStyle().getCssText() + " }";
     }
 
-    public void setCssText(String cssText) throws DOMException {
-        if (this.parentStyleSheet != null && this.parentStyleSheet.isReadOnly()) {
+    public void setCssText(final String cssText) throws DOMException {
+        if (parentStyleSheet_ != null && parentStyleSheet_.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
         }
 
         try {
-            InputSource is = new InputSource(new StringReader(cssText));
-            CSSOMParser parser = new CSSOMParser();
-            CSSRule r = parser.parseRule(is);
+            final InputSource is = new InputSource(new StringReader(cssText));
+            final CSSOMParser parser = new CSSOMParser();
+            final CSSRule r = parser.parseRule(is);
 
             // The rule must be a style rule
             if (r.getType() == CSSRule.STYLE_RULE) {
-                this.selectors = ((CSSStyleRuleImpl)r).selectors;
-                this.style = ((CSSStyleRuleImpl)r).style;
-            } else {
+                selectors_ = ((CSSStyleRuleImpl) r).selectors_;
+                style_ = ((CSSStyleRuleImpl) r).style_;
+            }
+            else {
                 throw new DOMExceptionImpl(
                     DOMException.INVALID_MODIFICATION_ERR,
                     DOMExceptionImpl.EXPECTING_STYLE_RULE);
             }
-        } catch (CSSException e) {
+        }
+        catch (final CSSException e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
                 DOMExceptionImpl.SYNTAX_ERROR,
                 e.getMessage());
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
                 DOMExceptionImpl.SYNTAX_ERROR,
@@ -123,26 +120,28 @@ public class CSSStyleRuleImpl extends AbstractCSSRuleImpl
     }
 
     public String getSelectorText() {
-        return this.selectors.toString();
+        return selectors_.toString();
     }
 
-    public void setSelectorText(String selectorText) throws DOMException {
-        if (this.parentStyleSheet != null && this.parentStyleSheet.isReadOnly()) {
+    public void setSelectorText(final String selectorText) throws DOMException {
+        if (parentStyleSheet_ != null && parentStyleSheet_.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
-                DOMExceptionImpl.READ_ONLY_STYLE_SHEET );
+                DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
         }
 
         try {
-            InputSource is = new InputSource(new StringReader(selectorText));
-            CSSOMParser parser = new CSSOMParser();
-            this.selectors = parser.parseSelectors(is);
-        } catch (CSSException e) {
+            final InputSource is = new InputSource(new StringReader(selectorText));
+            final CSSOMParser parser = new CSSOMParser();
+            selectors_ = parser.parseSelectors(is);
+        }
+        catch (final CSSException e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
                 DOMExceptionImpl.SYNTAX_ERROR,
                 e.getMessage());
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
                 DOMExceptionImpl.SYNTAX_ERROR,
@@ -151,43 +150,35 @@ public class CSSStyleRuleImpl extends AbstractCSSRuleImpl
     }
 
     public CSSStyleDeclaration getStyle() {
-        return this.style;
+        return style_;
     }
 
-    public void setStyle(CSSStyleDeclaration style) {
-        this.style = style;
+    public void setStyle(final CSSStyleDeclaration style) {
+        style_ = style;
     }
-    
     public String toString() {
-        return this.getCssText();
+        return getCssText();
     }
-
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (!(obj instanceof CSSStyleRule))
-        {
+        if (!(obj instanceof CSSStyleRule)) {
             return false;
         }
-        CSSStyleRule csr = (CSSStyleRule) obj;
+        final CSSStyleRule csr = (CSSStyleRule) obj;
         return super.equals(obj)
-            && LangUtils.equals(this.getSelectorText(), csr.getSelectorText())
-            && LangUtils.equals(this.getStyle(), csr.getStyle())
-            ;
+            && LangUtils.equals(getSelectorText(), csr.getSelectorText())
+            && LangUtils.equals(getStyle(), csr.getStyle());
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int hash = super.hashCode();
-        hash = LangUtils.hashCode(hash, this.selectors);
-        hash = LangUtils.hashCode(hash, this.style);
+        hash = LangUtils.hashCode(hash, selectors_);
+        hash = LangUtils.hashCode(hash, style_);
         return hash;
     }
-
 }

@@ -1,6 +1,4 @@
 /*
- * $Id: CSSPageRuleImpl.java,v 1.4 2008-11-26 16:23:23 waldbaer Exp $
- *
  * CSS Parser Project
  *
  * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.dom;
@@ -45,41 +44,39 @@ import com.steadystate.css.util.LangUtils;
 
 /**
  * Implementation of {@link CSSPageRule}.
- * 
+ *
  * TODO: Implement setSelectorText()
- * 
+ *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSPageRuleImpl.java,v 1.4 2008-11-26 16:23:23 waldbaer Exp $
  */
 public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule, Serializable {
 
     private static final long serialVersionUID = -6007519872104320812L;
 
-    private String ident = null;
-    private String pseudoPage = null;
-    private CSSStyleDeclaration style = null;
+    private String ident_;
+    private String pseudoPage_;
+    private CSSStyleDeclaration style_;
 
     public CSSPageRuleImpl(
-            CSSStyleSheetImpl parentStyleSheet,
-            CSSRule parentRule,
-            String ident,
-            String pseudoPage) {
+            final CSSStyleSheetImpl parentStyleSheet,
+            final CSSRule parentRule,
+            final String ident,
+            final String pseudoPage) {
         super(parentStyleSheet, parentRule);
-        this.ident = ident;
-        this.pseudoPage = pseudoPage;
+        ident_ = ident;
+        pseudoPage_ = pseudoPage;
     }
 
-    public CSSPageRuleImpl()
-    {
+    public CSSPageRuleImpl() {
+        super();
     }
-
 
     public short getType() {
         return PAGE_RULE;
     }
 
     public String getCssText() {
-        String sel = getSelectorText();
+        final String sel = getSelectorText();
         return "@page "
             + sel + ((sel.length() > 0) ? " " : "")
             + "{"
@@ -87,34 +84,37 @@ public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule,
             + "}";
     }
 
-    public void setCssText(String cssText) throws DOMException {
-        if (this.parentStyleSheet != null && this.parentStyleSheet.isReadOnly()) {
+    public void setCssText(final String cssText) throws DOMException {
+        if (parentStyleSheet_ != null && parentStyleSheet_.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
         }
 
         try {
-            InputSource is = new InputSource(new StringReader(cssText));
-            CSSOMParser parser = new CSSOMParser();
-            CSSRule r = parser.parseRule(is);
+            final InputSource is = new InputSource(new StringReader(cssText));
+            final CSSOMParser parser = new CSSOMParser();
+            final CSSRule r = parser.parseRule(is);
 
             // The rule must be a page rule
             if (r.getType() == CSSRule.PAGE_RULE) {
-                this.ident = ((CSSPageRuleImpl)r).ident;
-                this.pseudoPage = ((CSSPageRuleImpl)r).pseudoPage;
-                this.style = ((CSSPageRuleImpl)r).style;
-            } else {
+                ident_ = ((CSSPageRuleImpl) r).ident_;
+                pseudoPage_ = ((CSSPageRuleImpl) r).pseudoPage_;
+                style_ = ((CSSPageRuleImpl) r).style_;
+            }
+            else {
                 throw new DOMExceptionImpl(
                     DOMException.INVALID_MODIFICATION_ERR,
                     DOMExceptionImpl.EXPECTING_PAGE_RULE);
             }
-        } catch (CSSException e) {
+        }
+        catch (final CSSException e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
                 DOMExceptionImpl.SYNTAX_ERROR,
                 e.getMessage());
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
                 DOMExceptionImpl.SYNTAX_ERROR,
@@ -123,62 +123,54 @@ public class CSSPageRuleImpl extends AbstractCSSRuleImpl implements CSSPageRule,
     }
 
     public String getSelectorText() {
-        return ((this.ident != null) ? this.ident : "")
-            + ((this.pseudoPage != null) ? ":" + this.pseudoPage : "");
+        return ((ident_ != null) ? ident_ : "")
+            + ((pseudoPage_ != null) ? ":" + pseudoPage_ : "");
     }
 
-    public void setSelectorText(String selectorText) throws DOMException {
+    public void setSelectorText(final String selectorText) throws DOMException {
     }
 
     public CSSStyleDeclaration getStyle() {
-        return this.style;
+        return style_;
     }
 
-    public void setIdent(String ident) {
-        this.ident = ident;
+    public void setIdent(final String ident) {
+        ident_ = ident;
     }
 
-    public void setPseudoPage(String pseudoPage) {
-        this.pseudoPage = pseudoPage;
+    public void setPseudoPage(final String pseudoPage) {
+        pseudoPage_ = pseudoPage;
     }
 
-    public void setStyle(CSSStyleDeclarationImpl style) {
-        this.style = style;
+    public void setStyle(final CSSStyleDeclarationImpl style) {
+        style_ = style;
     }
-
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (!(obj instanceof CSSPageRule))
-        {
+        if (!(obj instanceof CSSPageRule)) {
             return false;
         }
-        CSSPageRule cpr = (CSSPageRule) obj;
+        final CSSPageRule cpr = (CSSPageRule) obj;
         return super.equals(obj)
-            && LangUtils.equals(this.getSelectorText(), cpr.getSelectorText())
-            && LangUtils.equals(this.getStyle(), cpr.getStyle())
-            ;
+            && LangUtils.equals(getSelectorText(), cpr.getSelectorText())
+            && LangUtils.equals(getStyle(), cpr.getStyle());
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int hash = super.hashCode();
-        hash = LangUtils.hashCode(hash, this.ident);
-        hash = LangUtils.hashCode(hash, this.pseudoPage);
-        hash = LangUtils.hashCode(hash, this.style);
+        hash = LangUtils.hashCode(hash, ident_);
+        hash = LangUtils.hashCode(hash, pseudoPage_);
+        hash = LangUtils.hashCode(hash, style_);
         return hash;
     }
 
     @Override
-    public String toString()
-    {
-        return this.getCssText();
+    public String toString() {
+        return getCssText();
     }
-
 }

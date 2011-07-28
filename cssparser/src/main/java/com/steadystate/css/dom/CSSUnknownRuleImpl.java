@@ -1,6 +1,4 @@
 /*
- * $Id: CSSUnknownRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
- *
  * CSS Parser Project
  *
  * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.dom;
@@ -38,51 +37,46 @@ import com.steadystate.css.util.LangUtils;
 
 /**
  * Implementation of {@link CSSUnknownRule}.
- * 
+ *
  * TODO: Reinstate setCssText
- * 
+ *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSUnknownRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class CSSUnknownRuleImpl extends AbstractCSSRuleImpl implements CSSUnknownRule, Serializable {
 
     private static final long serialVersionUID = -268104019127675990L;
 
-    String text = null;
+    private String text_;
 
-    public String getText()
-    {
-        return this.text;
+    public String getText() {
+        return text_;
     }
 
-    public void setText(String text)
-    {
-        this.text = text;
+    public void setText(final String text) {
+        text_ = text;
     }
-
 
     public CSSUnknownRuleImpl(
-            CSSStyleSheetImpl parentStyleSheet,
-            CSSRule parentRule,
-            String text) {
+            final CSSStyleSheetImpl parentStyleSheet,
+            final CSSRule parentRule,
+            final String text) {
         super(parentStyleSheet, parentRule);
-        this.text = text;
+        text_ = text;
     }
 
-    public CSSUnknownRuleImpl()
-    {
+    public CSSUnknownRuleImpl() {
+        super();
     }
-
 
     public short getType() {
         return UNKNOWN_RULE;
     }
 
     public String getCssText() {
-        return this.text;
+        return text_;
     }
 
-    public void setCssText(String cssText) throws DOMException {
+    public void setCssText(final String cssText) throws DOMException {
 /*
         if( _parentStyleSheet != null && _parentStyleSheet.isReadOnly() )
         throw new DOMExceptionImpl(
@@ -126,39 +120,34 @@ public class CSSUnknownRuleImpl extends AbstractCSSRuleImpl implements CSSUnknow
 
     // There's no need to override the methods from AbstractCSSRuleImpl
 //    public CSSStyleSheet getParentStyleSheet() {
-//        return this.parentStyleSheet;
+//        return parentStyleSheet;
 //    }
 //
 //    public CSSRule getParentRule() {
-//        return this.parentRule;
+//        return parentRule;
 //    }
-    
+
     public String toString() {
-        return this.getCssText();
+        return getCssText();
     }
 
-
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (!(obj instanceof CSSUnknownRule))
-        {
+        if (!(obj instanceof CSSUnknownRule)) {
             return false;
         }
-        CSSUnknownRule cur = (CSSUnknownRule) obj;
+        final CSSUnknownRule cur = (CSSUnknownRule) obj;
         return super.equals(obj)
-            && LangUtils.equals(this.getCssText(), cur.getCssText());
+            && LangUtils.equals(getCssText(), cur.getCssText());
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int hash = super.hashCode();
-        hash = LangUtils.hashCode(hash, this.text);
+        hash = LangUtils.hashCode(hash, text_);
         return hash;
     }
 

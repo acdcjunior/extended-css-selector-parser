@@ -1,6 +1,4 @@
 /*
- * $Id: CSSMediaRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
- *
  * CSS Parser Project
  *
  * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
@@ -23,12 +21,14 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.dom;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.StringReader;
 
@@ -48,83 +48,81 @@ import com.steadystate.css.util.LangUtils;
 
 /**
  * Implementation of {@link CSSMediaRule}.
- * 
+ *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSMediaRuleImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRule, Serializable {
 
     private static final long serialVersionUID = 6603734096445214651L;
 
-    private MediaList media = null;
-    private CSSRuleList cssRules = null;
+    private MediaList media_;
+    private CSSRuleList cssRules_;
 
-    public void setMedia(MediaList media)
-    {
-        this.media = media;
+    public void setMedia(final MediaList media) {
+        media_ = media;
     }
 
-    public void setCssRules(CSSRuleList cssRules)
-    {
-        this.cssRules = cssRules;
+    public void setCssRules(final CSSRuleList cssRules) {
+        cssRules_ = cssRules;
     }
-
 
     public CSSMediaRuleImpl(
-            CSSStyleSheetImpl parentStyleSheet,
-            CSSRule parentRule,
-            MediaList media) {
+            final CSSStyleSheetImpl parentStyleSheet,
+            final CSSRule parentRule,
+            final MediaList media) {
         super(parentStyleSheet, parentRule);
-        this.media = media;
+        media_ = media;
     }
 
-    public CSSMediaRuleImpl()
-    {
+    public CSSMediaRuleImpl() {
+        super();
     }
-
 
     public short getType() {
         return MEDIA_RULE;
     }
 
     public String getCssText() {
-        StringBuilder sb = new StringBuilder("@media ");
+        final StringBuilder sb = new StringBuilder("@media ");
         sb.append(getMedia().toString()).append(" {");
         for (int i = 0; i < getCssRules().getLength(); i++) {
-            CSSRule rule = getCssRules().item(i);
+            final CSSRule rule = getCssRules().item(i);
             sb.append(rule.getCssText()).append(" ");
         }
         sb.append("}");
         return sb.toString();
     }
 
-    public void setCssText(String cssText) throws DOMException {
-        if (this.parentStyleSheet != null && this.parentStyleSheet.isReadOnly()) {
+    public void setCssText(final String cssText) throws DOMException {
+        if (parentStyleSheet_ != null && parentStyleSheet_.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
         }
 
         try {
-            InputSource is = new InputSource(new StringReader(cssText));
-            CSSOMParser parser = new CSSOMParser();
-            CSSRule r = parser.parseRule(is);
+            final InputSource is = new InputSource(new StringReader(cssText));
+            final CSSOMParser parser = new CSSOMParser();
+            final CSSRule r = parser.parseRule(is);
 
             // The rule must be a media rule
             if (r.getType() == CSSRule.MEDIA_RULE) {
-                this.media = ((CSSMediaRuleImpl)r).media;
-                this.cssRules = ((CSSMediaRuleImpl)r).cssRules;
-            } else {
+                media_ = ((CSSMediaRuleImpl) r).media_;
+                cssRules_ = ((CSSMediaRuleImpl) r).cssRules_;
+            }
+            else {
                 throw new DOMExceptionImpl(
                     DOMException.INVALID_MODIFICATION_ERR,
                     DOMExceptionImpl.EXPECTING_MEDIA_RULE);
             }
-        } catch (CSSException e) {
+        }
+        catch (final CSSException e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
                 DOMExceptionImpl.SYNTAX_ERROR,
                 e.getMessage());
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
                 DOMExceptionImpl.SYNTAX_ERROR,
@@ -133,46 +131,48 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
     }
 
     public MediaList getMedia() {
-        return this.media;
+        return media_;
     }
 
     public CSSRuleList getCssRules() {
-        if (this.cssRules == null)
-        {
-            this.cssRules = new CSSRuleListImpl();
+        if (cssRules_ == null) {
+            cssRules_ = new CSSRuleListImpl();
         }
-        return this.cssRules;
+        return cssRules_;
     }
 
-    public int insertRule(String rule, int index) throws DOMException {
-        if (this.parentStyleSheet != null && this.parentStyleSheet.isReadOnly()) {
+    public int insertRule(final String rule, final int index) throws DOMException {
+        if (parentStyleSheet_ != null && parentStyleSheet_.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
         }
 
         try {
-            InputSource is = new InputSource(new StringReader(rule));
-            CSSOMParser parser = new CSSOMParser();
-            parser.setParentStyleSheet(this.parentStyleSheet);
+            final InputSource is = new InputSource(new StringReader(rule));
+            final CSSOMParser parser = new CSSOMParser();
+            parser.setParentStyleSheet(parentStyleSheet_);
             // parser._parentRule is never read
-            //parser.setParentRule(_parentRule);
-            CSSRule r = parser.parseRule(is);
+            // parser.setParentRule(_parentRule);
+            final CSSRule r = parser.parseRule(is);
 
             // Insert the rule into the list of rules
-            ((CSSRuleListImpl)getCssRules()).insert(r, index);
+            ((CSSRuleListImpl) getCssRules()).insert(r, index);
 
-        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+        catch (final ArrayIndexOutOfBoundsException e) {
             throw new DOMExceptionImpl(
                 DOMException.INDEX_SIZE_ERR,
                 DOMExceptionImpl.ARRAY_OUT_OF_BOUNDS,
                 e.getMessage());
-        } catch (CSSException e) {
+        }
+        catch (final CSSException e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
                 DOMExceptionImpl.SYNTAX_ERROR,
                 e.getMessage());
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
                 DOMExceptionImpl.SYNTAX_ERROR,
@@ -181,15 +181,16 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
         return index;
     }
 
-    public void deleteRule(int index) throws DOMException {
-        if (this.parentStyleSheet != null && this.parentStyleSheet.isReadOnly()) {
+    public void deleteRule(final int index) throws DOMException {
+        if (parentStyleSheet_ != null && parentStyleSheet_.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
         }
         try {
-            ((CSSRuleListImpl)getCssRules()).delete(index);
-        } catch (ArrayIndexOutOfBoundsException e) {
+            ((CSSRuleListImpl) getCssRules()).delete(index);
+        }
+        catch (final ArrayIndexOutOfBoundsException e) {
             throw new DOMExceptionImpl(
                 DOMException.INDEX_SIZE_ERR,
                 DOMExceptionImpl.ARRAY_OUT_OF_BOUNDS,
@@ -197,67 +198,55 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
         }
     }
 
-    public void setRuleList(CSSRuleListImpl rules) {
-        this.cssRules = rules;
-    }
-    
-    public String toString() {
-        return this.getCssText();
+    public void setRuleList(final CSSRuleListImpl rules) {
+        cssRules_ = rules;
     }
 
+    public String toString() {
+        return getCssText();
+    }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (!(obj instanceof CSSMediaRule))
-        {
+        if (!(obj instanceof CSSMediaRule)) {
             return false;
         }
-        CSSMediaRule cmr = (CSSMediaRule) obj;
+        final CSSMediaRule cmr = (CSSMediaRule) obj;
         return super.equals(obj)
-            && LangUtils.equals(this.getMedia(), cmr.getMedia())
-            && LangUtils.equals(this.getCssRules(), cmr.getCssRules())
-            ;
+            && LangUtils.equals(getMedia(), cmr.getMedia())
+            && LangUtils.equals(getCssRules(), cmr.getCssRules());
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int hash = super.hashCode();
-        hash = LangUtils.hashCode(hash, this.media);
-        hash = LangUtils.hashCode(hash, this.cssRules);
+        hash = LangUtils.hashCode(hash, media_);
+        hash = LangUtils.hashCode(hash, cssRules_);
         return hash;
     }
 
-    private void writeObject(java.io.ObjectOutputStream out)
-        throws IOException
-    {
-        out.writeObject(this.cssRules);
-        out.writeObject(this.media);
+    private void writeObject(final ObjectOutputStream out) throws IOException {
+        out.writeObject(cssRules_);
+        out.writeObject(media_);
     }
 
-    private void readObject(ObjectInputStream in)
-        throws IOException, ClassNotFoundException
-    {
-        this.cssRules = (CSSRuleList) in.readObject();
-        if (this.cssRules != null)
-        {
-            for (int i = 0; i < this.cssRules.getLength(); i++)
-            {
-                CSSRule cssRule = this.cssRules.item(i);
-                if (cssRule instanceof AbstractCSSRuleImpl)
-                {
+    private void readObject(final ObjectInputStream in)
+        throws IOException, ClassNotFoundException {
+
+        cssRules_ = (CSSRuleList) in.readObject();
+        if (cssRules_ != null) {
+            for (int i = 0; i < cssRules_.getLength(); i++) {
+                final CSSRule cssRule = cssRules_.item(i);
+                if (cssRule instanceof AbstractCSSRuleImpl) {
                     ((AbstractCSSRuleImpl) cssRule).setParentRule(this);
                     ((AbstractCSSRuleImpl) cssRule).setParentStyleSheet(
-                        this.getParentStyleSheetImpl());
+                        getParentStyleSheetImpl());
                 }
             }
         }
-        this.media = (MediaList) in.readObject();
+        media_ = (MediaList) in.readObject();
     }
-
 }

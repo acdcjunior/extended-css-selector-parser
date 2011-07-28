@@ -1,6 +1,4 @@
 /*
- * $Id: RectImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
- *
  * CSS Parser Project
  *
  * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
@@ -23,8 +21,9 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
- 
+
 package com.steadystate.css.dom;
 
 import java.io.Serializable;
@@ -35,87 +34,74 @@ import org.w3c.dom.css.Rect;
 
 import org.w3c.css.sac.LexicalUnit;
 
-/** 
+/**
  * Implementation of {@link Rect}.
- * 
+ *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: RectImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  */
 public class RectImpl implements Rect, Serializable {
-    
+
     private static final long serialVersionUID = -7031248513917920621L;
 
-    private CSSPrimitiveValue left;
-    private CSSPrimitiveValue top;
-    private CSSPrimitiveValue right;
-    private CSSPrimitiveValue bottom;
+    private CSSPrimitiveValue left_;
+    private CSSPrimitiveValue top_;
+    private CSSPrimitiveValue right_;
+    private CSSPrimitiveValue bottom_;
 
-    public void setLeft(CSSPrimitiveValue left)
-    {
-        this.left = left;
+    public void setLeft(final CSSPrimitiveValue left) {
+        left_ = left;
     }
 
-    public void setTop(CSSPrimitiveValue top)
-    {
-        this.top = top;
+    public void setTop(final CSSPrimitiveValue top) {
+        top_ = top;
     }
 
-    public void setRight(CSSPrimitiveValue right)
-    {
-        this.right = right;
+    public void setRight(final CSSPrimitiveValue right) {
+        right_ = right;
     }
 
-    public void setBottom(CSSPrimitiveValue bottom)
-    {
-        this.bottom = bottom;
+    public void setBottom(final CSSPrimitiveValue bottom) {
+        bottom_ = bottom;
     }
 
-
-    /** Creates new RectImpl */
-    public RectImpl(LexicalUnit lu) throws DOMException {
+    /**
+     * Creates new RectImpl
+     */
+    public RectImpl(final LexicalUnit lu) throws DOMException {
         LexicalUnit next = lu;
-        this.left = new CSSValueImpl(next, true);
+        left_ = new CSSValueImpl(next, true);
         next = next.getNextLexicalUnit();  // ,
-        if (next != null)
-        {
-            if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
-            {
+        if (next != null) {
+            if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA) {
                 // error
                 throw new DOMException(DOMException.SYNTAX_ERR,
                     "Rect parameters must be separated by ','.");
             }
             next = next.getNextLexicalUnit();
-            if (next != null)
-            {
-                this.top = new CSSValueImpl(next, true);
+            if (next != null) {
+                top_ = new CSSValueImpl(next, true);
                 next = next.getNextLexicalUnit();   // ,
-                if (next != null)
-                {
-                    if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
-                    {
+                if (next != null) {
+                    if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA) {
                         // error
                         throw new DOMException(DOMException.SYNTAX_ERR,
                             "Rect parameters must be separated by ','.");
                     }
                     next = next.getNextLexicalUnit();
-                    if (next != null)
-                    {
-                        this.right = new CSSValueImpl(next, true);
+                    if (next != null) {
+                        right_ = new CSSValueImpl(next, true);
                         next = next.getNextLexicalUnit();   // ,
-                        if (next != null)
-                        {
-                            if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
-                            {
+                        if (next != null) {
+                            if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA) {
                                 // error
                                 throw new DOMException(DOMException.SYNTAX_ERR,
                                     "Rect parameters must be separated by ','.");
                             }
                             next = next.getNextLexicalUnit();
-                            if (next != null)
-                            {
-                                this.bottom = new CSSValueImpl(next, true);
-                                if ((next = next.getNextLexicalUnit()) != null)
-                                {
+                            if (next != null) {
+                                bottom_ = new CSSValueImpl(next, true);
+                                next = next.getNextLexicalUnit();
+                                if (next != null) {
                                     // error
                                     throw new DOMException(DOMException.SYNTAX_ERR,
                                         "Too many parameters for rect function.");
@@ -128,32 +114,31 @@ public class RectImpl implements Rect, Serializable {
         }
     }
 
-    public RectImpl()
-    {
+    public RectImpl() {
+        super();
     }
 
-
     public CSSPrimitiveValue getTop() {
-        return this.top;
+        return top_;
     }
 
     public CSSPrimitiveValue getRight() {
-        return this.right;
+        return right_;
     }
 
     public CSSPrimitiveValue getBottom() {
-        return this.bottom;
+        return bottom_;
     }
 
     public CSSPrimitiveValue getLeft() {
-        return this.left;
+        return left_;
     }
-    
+
     public String toString() {
         return new StringBuilder("rect(")
-            .append(this.left).append(", ")
-            .append(this.top).append(", ")
-            .append(this.right).append(", ")
-            .append(this.bottom).append(")").toString();
+            .append(left_).append(", ")
+            .append(top_).append(", ")
+            .append(right_).append(", ")
+            .append(bottom_).append(")").toString();
     }
 }

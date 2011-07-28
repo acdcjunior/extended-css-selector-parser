@@ -1,6 +1,4 @@
 /*
- * $Id: Property.java,v 1.2 2008-08-14 08:17:55 waldbaer Exp $
- *
  * CSS Parser Project
  *
  * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
@@ -23,8 +21,9 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
- 
+
 package com.steadystate.css.dom;
 
 import java.io.Serializable;
@@ -33,88 +32,82 @@ import org.w3c.dom.css.CSSValue;
 
 import com.steadystate.css.util.LangUtils;
 
-/** 
+/**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: Property.java,v 1.2 2008-08-14 08:17:55 waldbaer Exp $
  */
 public class Property extends CSSOMObjectImpl implements Serializable {
 
     private static final long serialVersionUID = 8720637891949104989L;
-    private String name;
-    private CSSValue value;
-    private boolean important;
+    private String name_;
+    private CSSValue value_;
+    private boolean important_;
 
-    public void setName(String name)
-    {
-        this.name = name;
+    public void setName(final String name) {
+        name_ = name;
     }
 
-    /** Creates new Property */
-    public Property(String name, CSSValue value, boolean important) {
-        this.name = name;
-        this.value = value;
-        this.important = important;
+    /**
+     * Creates new Property
+     */
+    public Property(final String name, final CSSValue value, final boolean important) {
+        name_ = name;
+        value_ = value;
+        important_ = important;
     }
 
-    public Property()
-    {
+    public Property() {
+        super();
     }
-
 
     public String getName() {
-        return this.name;
+        return name_;
     }
 
     public CSSValue getValue() {
-        return this.value;
+        return value_;
     }
 
     public boolean isImportant() {
-        return this.important;
+        return important_;
     }
 
-    public void setValue(CSSValue value) {
-        this.value = value;
+    public void setValue(final CSSValue value) {
+        value_ = value;
     }
-    
-    public void setImportant(boolean important) {
-        this.important = important;
+
+    public void setImportant(final boolean important) {
+        important_ = important;
     }
-    
+
     @Override
     public String toString() {
-        return this.name + ": "
-            + this.value.toString()
-            + (this.important ? " !important" : "");
+        return name_ + ": "
+            + value_.toString()
+            + (important_ ? " !important" : "");
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (!(obj instanceof Property))
-        {
+        if (!(obj instanceof Property)) {
             return false;
         }
-        Property p = (Property) obj;
+        final Property p = (Property) obj;
         return super.equals(obj)
-            && (this.important == p.important)
-            && LangUtils.equals(this.name, p.name)
-            && LangUtils.equals(this.value, p.value)
-            ;
+            && (important_ == p.important_)
+            && LangUtils.equals(name_, p.name_)
+            && LangUtils.equals(value_, p.value_);
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int hash = super.hashCode();
-        hash = LangUtils.hashCode(hash, this.important);
-        hash = LangUtils.hashCode(hash, this.name);
-        hash = LangUtils.hashCode(hash, this.value);
+        hash = LangUtils.hashCode(hash, important_);
+        hash = LangUtils.hashCode(hash, name_);
+        hash = LangUtils.hashCode(hash, value_);
         return hash;
     }
 }

@@ -1,7 +1,29 @@
 /*
- * Created on 05.12.2005
+ * CSS Parser Project
+ *
+ * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * To contact the authors of the library:
+ *
+ * http://cssparser.sourceforge.net/
+ * mailto:davidsch@users.sourceforge.net
  *
  */
+
 package com.steadystate.css.dom;
 
 import org.w3c.dom.css.CSSRule;
@@ -10,59 +32,47 @@ import org.w3c.dom.css.CSSStyleSheet;
 /**
  * @author koch
  */
-public abstract class AbstractCSSRuleImpl extends CSSOMObjectImpl
-{
+public abstract class AbstractCSSRuleImpl extends CSSOMObjectImpl {
 
-    protected CSSStyleSheetImpl parentStyleSheet = null;
-    protected CSSRule parentRule = null;
+    protected CSSStyleSheetImpl parentStyleSheet_;
+    private CSSRule parentRule_;
 
-    protected CSSStyleSheetImpl getParentStyleSheetImpl()
-    {
-        return this.parentStyleSheet;
+    protected CSSStyleSheetImpl getParentStyleSheetImpl() {
+        return parentStyleSheet_;
     }
 
-    public void setParentStyleSheet(CSSStyleSheetImpl parentStyleSheet)
-    {
-        this.parentStyleSheet = parentStyleSheet;
+    public void setParentStyleSheet(final CSSStyleSheetImpl parentStyleSheet) {
+        parentStyleSheet_ = parentStyleSheet;
     }
 
-    public void setParentRule(CSSRule parentRule)
-    {
-        this.parentRule = parentRule;
+    public void setParentRule(final CSSRule parentRule) {
+        parentRule_ = parentRule;
     }
 
-
-    public AbstractCSSRuleImpl(CSSStyleSheetImpl parentStyleSheet,
-        CSSRule parentRule)
-    {
+    public AbstractCSSRuleImpl(final CSSStyleSheetImpl parentStyleSheet, final CSSRule parentRule) {
         super();
-        this.parentStyleSheet = parentStyleSheet;
-        this.parentRule = parentRule;
+        parentStyleSheet_ = parentStyleSheet;
+        parentRule_ = parentRule;
     }
 
-    public AbstractCSSRuleImpl()
-    {
+    public AbstractCSSRuleImpl() {
+        super();
     }
-
 
     public CSSStyleSheet getParentStyleSheet() {
-        return this.parentStyleSheet;
+        return parentStyleSheet_;
     }
 
     public CSSRule getParentRule() {
-        return this.parentRule;
+        return parentRule_;
     }
 
-
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (!(obj instanceof CSSRule))
-        {
+        if (!(obj instanceof CSSRule)) {
             return false;
         }
         return super.equals(obj);
@@ -71,12 +81,10 @@ public abstract class AbstractCSSRuleImpl extends CSSOMObjectImpl
     }
 
     @Override
-    public int hashCode()
-    {
-        int hash = super.hashCode();
+    public int hashCode() {
+        final int hash = super.hashCode();
         // don't use parentRule and parentStyleSheet in hashCode()
         // recursive loop -> stack overflow!
         return hash;
     }
-
 }
