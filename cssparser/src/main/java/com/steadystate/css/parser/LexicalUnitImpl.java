@@ -30,66 +30,19 @@ package com.steadystate.css.parser;
 import java.io.Serializable;
 import org.w3c.css.sac.*;
 
-/** 
+/**
  * Implementation of {@link LexicalUnit}.
- * 
+ *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @version $Id: LexicalUnitImpl.java,v 1.5 2010-05-20 09:12:29 waldbaer Exp $
  */
 public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Serializable {
-
-/*
-    public static final short SAC_OPERATOR_COMMA	= 0;
-    public static final short SAC_OPERATOR_PLUS		= 1;
-    public static final short SAC_OPERATOR_MINUS	= 2;
-    public static final short SAC_OPERATOR_MULTIPLY	= 3;
-    public static final short SAC_OPERATOR_SLASH	= 4;
-    public static final short SAC_OPERATOR_MOD		= 5;
-    public static final short SAC_OPERATOR_EXP		= 6;
-    public static final short SAC_OPERATOR_LT		= 7;
-    public static final short SAC_OPERATOR_GT		= 8;
-    public static final short SAC_OPERATOR_LE		= 9;
-    public static final short SAC_OPERATOR_GE		= 10;
-    public static final short SAC_OPERATOR_TILDE	= 11;
-    public static final short SAC_INHERIT		= 12;
-    public static final short SAC_INTEGER		= 13;
-    public static final short SAC_REAL		        = 14;
-    public static final short SAC_EM		= 15;
-    public static final short SAC_EX		= 16;
-    public static final short SAC_PIXEL		= 17;
-    public static final short SAC_INCH		= 18;
-    public static final short SAC_CENTIMETER	= 19;
-    public static final short SAC_MILLIMETER	= 20;
-    public static final short SAC_POINT		= 21;
-    public static final short SAC_PICA		= 22;
-    public static final short SAC_PERCENTAGE		= 23;
-    public static final short SAC_URI		        = 24;
-    public static final short SAC_COUNTER_FUNCTION	= 25;
-    public static final short SAC_COUNTERS_FUNCTION	= 26;
-    public static final short SAC_RGBCOLOR		= 27;
-    public static final short SAC_DEGREE		= 28;
-    public static final short SAC_GRADIAN		= 29;
-    public static final short SAC_RADIAN		= 30;
-    public static final short SAC_MILLISECOND		= 31;
-    public static final short SAC_SECOND		= 32;
-    public static final short SAC_HERTZ		        = 33;
-    public static final short SAC_KILOHERTZ		= 34;
-    public static final short SAC_IDENT		        = 35;
-    public static final short SAC_STRING_VALUE		= 36;
-    public static final short SAC_ATTR		        = 37;
-    public static final short SAC_RECT_FUNCTION		= 38;
-    public static final short SAC_UNICODERANGE		= 39;
-    public static final short SAC_SUB_EXPRESSION	= 40;
-    public static final short SAC_FUNCTION		= 41;
-    public static final short SAC_DIMENSION		= 42;
-*/
 
     private static final long serialVersionUID = -7260032046960116891L;
 
     private short lexicalUnitType;
     private LexicalUnit nextLexicalUnit;
     private LexicalUnit previousLexicalUnit;
-//    private int _intVal;
     private float floatValue;
     private String dimension;
     private String functionName;
@@ -155,7 +108,6 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
      */
     protected LexicalUnitImpl(LexicalUnit previous, int value) {
         this(previous, SAC_INTEGER);
-//        _intVal = value;
         this.floatValue = value;
     }
 
@@ -217,24 +169,23 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
     public short getLexicalUnitType() {
         return this.lexicalUnitType;
     }
-    
+
     public LexicalUnit getNextLexicalUnit() {
         return this.nextLexicalUnit;
     }
-    
+
     public LexicalUnit getPreviousLexicalUnit() {
         return this.previousLexicalUnit;
     }
-    
+
     public int getIntegerValue() {
-//        return _intVal;
         return (int) this.floatValue;
     }
-    
+
     public float getFloatValue() {
         return this.floatValue;
     }
-    
+
     public String getDimensionUnitText() {
         switch (this.lexicalUnitType) {
         case SAC_EM:
@@ -274,11 +225,11 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
         }
         return "";
     }
-    
+
     public String getFunctionName() {
         return this.functionName;
     }
-    
+
     public LexicalUnit getParameters() {
         return this.parameters;
     }
@@ -290,7 +241,7 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
     public LexicalUnit getSubValues() {
         return this.parameters;
     }
-    
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         switch (this.lexicalUnitType) {
@@ -630,112 +581,97 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
             l = l.getNextLexicalUnit();
         }
     }
-    
+
     private String trimFloat(float f) {
         String s = String.valueOf(this.getFloatValue());
         return (f - (int) f != 0) ? s : s.substring(0, s.length() - 2);
     }
 
-    // TODO what is this method for? It is not used locally.
-    /*
-    private static float value(char op, String s) {
-        return ((op == '-') ? -1 : 1) * Float.valueOf(s).floatValue();
-    }
-    */
-    
     public static LexicalUnit createNumber(LexicalUnit prev, int i) {
         return new LexicalUnitImpl(prev, i);
     }
-    
+
     public static LexicalUnit createNumber(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_REAL, f);
     }
-    
+
     public static LexicalUnit createPercentage(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_PERCENTAGE, f);
     }
-    
+
     public static LexicalUnit createPixel(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_PIXEL, f);
     }
-    
+
     public static LexicalUnit createCentimeter(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_CENTIMETER, f);
     }
-    
+
     public static LexicalUnit createMillimeter(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_MILLIMETER, f);
     }
-    
+
     public static LexicalUnit createInch(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_INCH, f);
     }
-    
+
     public static LexicalUnit createPoint(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_POINT, f);
     }
-    
+
     public static LexicalUnit createPica(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_PICA, f);
     }
-    
+
     public static LexicalUnit createEm(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_EM, f);
     }
-    
+
     public static LexicalUnit createEx(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_EX, f);
     }
-    
+
     public static LexicalUnit createDegree(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_DEGREE, f);
     }
-    
+
     public static LexicalUnit createRadian(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_RADIAN, f);
     }
-    
+
     public static LexicalUnit createGradian(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_GRADIAN, f);
     }
-    
+
     public static LexicalUnit createMillisecond(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_MILLISECOND, f);
     }
-    
+
     public static LexicalUnit createSecond(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_SECOND, f);
     }
-    
+
     public static LexicalUnit createHertz(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_HERTZ, f);
     }
-    
+
     public static LexicalUnit createDimension(LexicalUnit prev, float f, String dim) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_DIMENSION, dim, f);
     }
-    
+
     public static LexicalUnit createKiloHertz(LexicalUnit prev, float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_KILOHERTZ, f);
     }
-    
+
     public static LexicalUnit createCounter(LexicalUnit prev, LexicalUnit params) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_COUNTER_FUNCTION, "counter", params);
     }
-    
+
     public static LexicalUnit createCounters(LexicalUnit prev, LexicalUnit params) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_COUNTERS_FUNCTION, "counters", params);
     }
-    
-    /**
-     * @deprecated use {@link #createAttr(LexicalUnit, String)} instead
-     */
-    public static LexicalUnit createAttr(LexicalUnit prev, LexicalUnit params) {
-        return new LexicalUnitImpl(prev, LexicalUnit.SAC_ATTR, "attr", params);
-    }
-    
-    public static LexicalUnit createAttr(LexicalUnit prev, String value)
-    {
+
+    public static LexicalUnit createAttr(LexicalUnit prev, String value) {
         // according to LexicalUnit.SAC_ATTR, LexicalUnit.getStringValue(), not
         // LexicalUnit.getParameters() is applicable
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_ATTR, "name", value);
@@ -744,11 +680,11 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
     public static LexicalUnit createRect(LexicalUnit prev, LexicalUnit params) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_RECT_FUNCTION, "rect", params);
     }
-    
+
     public static LexicalUnit createRgbColor(LexicalUnit prev, LexicalUnit params) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_RGBCOLOR, "rgb", params);
     }
-    
+
     public static LexicalUnit createFunction(LexicalUnit prev, String name, LexicalUnit params) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_FUNCTION, name, params);
     }
@@ -756,15 +692,15 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
     public static LexicalUnit createString(LexicalUnit prev, String value) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_STRING_VALUE, value);
     }
-    
+
     public static LexicalUnit createIdent(LexicalUnit prev, String value) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_IDENT, value);
     }
-    
+
     public static LexicalUnit createURI(LexicalUnit prev, String value) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_URI, value);
     }
-    
+
     public static LexicalUnit createComma(LexicalUnit prev) {
         return new LexicalUnitImpl(prev, SAC_OPERATOR_COMMA);
     }
