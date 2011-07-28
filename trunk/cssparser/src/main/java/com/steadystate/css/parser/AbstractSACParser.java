@@ -53,7 +53,7 @@ import com.steadystate.css.sac.DocumentHandlerExt;
 
 /**
  * Base implementation of {@link Parser}.
- * 
+ *
  * @author koch
  */
 abstract class AbstractSACParser implements Parser
@@ -117,7 +117,7 @@ abstract class AbstractSACParser implements Parser
         }
         return this.locale;
     }
-    
+
     protected SelectorFactory getSelectorFactory()
     {
         if (this.selectorFactory == null)
@@ -131,7 +131,7 @@ abstract class AbstractSACParser implements Parser
     {
         this.selectorFactory = selectorFactory;
     }
-    
+
     protected ConditionFactory getConditionFactory()
     {
         if (this.conditionFactory == null)
@@ -340,7 +340,7 @@ abstract class AbstractSACParser implements Parser
             this.getErrorHandler().error(e);
         }
     }
-    
+
     public void parseStyleSheet(String uri) throws IOException
     {
         this.parseStyleSheet(new InputSource(uri));
@@ -370,7 +370,7 @@ abstract class AbstractSACParser implements Parser
             this.getErrorHandler().error(e);
         }
     }
-    
+
     public void parseRule(InputSource source) throws IOException
     {
         this.source = source;
@@ -394,7 +394,7 @@ abstract class AbstractSACParser implements Parser
             this.getErrorHandler().error(e);
         }
     }
-    
+
     public SelectorList parseSelectors(InputSource source)
         throws IOException
     {
@@ -421,7 +421,7 @@ abstract class AbstractSACParser implements Parser
         }
         return sl;
     }
-    
+
     public LexicalUnit parsePropertyValue(InputSource source)
         throws IOException
     {
@@ -448,7 +448,7 @@ abstract class AbstractSACParser implements Parser
         }
         return lu;
     }
-    
+
     public boolean parsePriority(InputSource source)
         throws IOException
     {
@@ -475,7 +475,7 @@ abstract class AbstractSACParser implements Parser
         }
         return b;
     }
-    
+
     public SACMediaList parseMedia(InputSource source) throws IOException
     {
         this.source = source;
@@ -501,7 +501,7 @@ abstract class AbstractSACParser implements Parser
         }
         return ml;
     }
-    
+
     private CharStream getCharStream(InputSource source)
         throws IOException
     {
@@ -577,7 +577,7 @@ abstract class AbstractSACParser implements Parser
         }
         else
         {
-        	this.getDocumentHandler().importStyle(uri, media, defaultNamespaceURI);
+            this.getDocumentHandler().importStyle(uri, media, defaultNamespaceURI);
         }
     }
 
@@ -604,7 +604,7 @@ abstract class AbstractSACParser implements Parser
     }
 
     protected void handleStartPage(String name, String pseudo_page,
-		Locator locator)
+        Locator locator)
     {
         if (this.getDocumentHandler() instanceof DocumentHandlerExt)
         {
@@ -667,27 +667,27 @@ abstract class AbstractSACParser implements Parser
     {
         if (this.getDocumentHandler() instanceof DocumentHandlerExt)
         {
-        	((DocumentHandlerExt) this.getDocumentHandler())
-        		.property(name, value, important, locator);
+            ((DocumentHandlerExt) this.getDocumentHandler())
+                .property(name, value, important, locator);
         }
         else
         {
-        	this.getDocumentHandler().property(name, value, important);
+            this.getDocumentHandler().property(name, value, important);
         }
     }
 
     protected LexicalUnit functionInternal(LexicalUnit prev, Token t,
         LexicalUnit params)
     {
-        if (t.image.equalsIgnoreCase("counter(")) {
+        if ("counter(".equalsIgnoreCase(t.image)) {
             return LexicalUnitImpl.createCounter(prev, params);
-        } else if (t.image.equalsIgnoreCase("counters(")) {
+        } else if ("counters(".equalsIgnoreCase(t.image)) {
             return LexicalUnitImpl.createCounters(prev, params);
-        } else if (t.image.equalsIgnoreCase("attr(")) {
+        } else if ("attr(".equalsIgnoreCase(t.image)) {
             return LexicalUnitImpl.createAttr(prev, params.getStringValue());
-        } else if (t.image.equalsIgnoreCase("rect(")) {
+        } else if ("rect(".equalsIgnoreCase(t.image)) {
             return LexicalUnitImpl.createRect(prev, params);
-        } else if (t.image.equalsIgnoreCase("rgb(")) {
+        } else if ("rgb(".equalsIgnoreCase(t.image)) {
             return LexicalUnitImpl.createRgbColor(prev, params);
         }
         return LexicalUnitImpl.createFunction(
@@ -765,7 +765,7 @@ abstract class AbstractSACParser implements Parser
     /**
      * Unescapes escaped characters in the specified string, according to the
      * <a href="http://www.w3.org/TR/CSS21/syndata.html#escaped-characters">CSS specification</a>.
-     * 
+     *
      * This could be done directly in the parser, but portions of the lexer would have to be moved
      * to the parser, meaning that the grammar would no longer match the standard grammar specified
      * by the W3C. This would make the parser and lexer much less maintainable.
