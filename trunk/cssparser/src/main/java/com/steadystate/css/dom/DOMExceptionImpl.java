@@ -1,6 +1,4 @@
 /*
- * $Id: DOMExceptionImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
- *
  * CSS Parser Project
  *
  * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.dom;
@@ -32,11 +31,10 @@ import java.util.ResourceBundle;
 
 import org.w3c.dom.DOMException;
 
-/** 
+/**
  * Custom {@link DOMException} extension.
- * 
+ *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: DOMExceptionImpl.java,v 1.2 2008-03-26 02:17:24 sdanig Exp $
  */
 public class DOMExceptionImpl extends DOMException {
 
@@ -63,24 +61,24 @@ public class DOMExceptionImpl extends DOMException {
     public static final int NOT_FOUND = 18;
     public static final int NOT_IMPLEMENTED = 19;
 
-    private static ResourceBundle _exceptionResource =
+    private static ResourceBundle ExceptionResource_ =
         ResourceBundle.getBundle(
             "com.steadystate.css.parser.ExceptionResource",
             Locale.getDefault());
 
-    public DOMExceptionImpl(short code, int messageKey) {
-        super(code, _exceptionResource.getString(keyString(messageKey)));
+    public DOMExceptionImpl(final short code, final int messageKey) {
+        super(code, ExceptionResource_.getString(keyString(messageKey)));
     }
 
-    public DOMExceptionImpl(int code, int messageKey) {
-        super((short) code, _exceptionResource.getString(keyString(messageKey)));
+    public DOMExceptionImpl(final int code, final int messageKey) {
+        super((short) code, ExceptionResource_.getString(keyString(messageKey)));
     }
 
-    public DOMExceptionImpl(short code, int messageKey, String info) {
-        super(code, _exceptionResource.getString(keyString(messageKey)));
+    public DOMExceptionImpl(final short code, final int messageKey, final String info) {
+        super(code, ExceptionResource_.getString(keyString(messageKey)));
     }
 
-    private static String keyString(int key) {
+    private static String keyString(final int key) {
         return "s" + String.valueOf(key);
     }
 }

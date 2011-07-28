@@ -1,6 +1,4 @@
 /*
- * $Id: CSSOMObjectImpl.java,v 1.3 2008-08-14 08:17:55 waldbaer Exp $
- *
  * CSS Parser Project
  *
  * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 package com.steadystate.css.dom;
 
@@ -34,67 +33,54 @@ import com.steadystate.css.util.LangUtils;
 
 /**
  * Implementation of {@link CSSOMObject}.
- * 
+ *
  * @author koch
  */
-public class CSSOMObjectImpl implements CSSOMObject, Serializable
-{
+public class CSSOMObjectImpl implements CSSOMObject, Serializable {
 
     private static final long serialVersionUID = 0L;
 
-    private Map<String, Object> userDataMap;
+    private Map<String, Object> userDataMap_;
 
-    public Map<String, Object> getUserDataMap()
-    {
-        if (this.userDataMap == null)
-        {
-            this.userDataMap = new Hashtable<String, Object>();
+    public Map<String, Object> getUserDataMap() {
+        if (userDataMap_ == null) {
+            userDataMap_ = new Hashtable<String, Object>();
         }
-        return this.userDataMap;
+        return userDataMap_;
     }
 
-    public void setUserDataMap(Map<String, Object> userDataMap)
-    {
-        this.userDataMap = userDataMap;
+    public void setUserDataMap(final Map<String, Object> userDataMap) {
+        userDataMap_ = userDataMap;
     }
 
-
-    public CSSOMObjectImpl()
-    {
+    public CSSOMObjectImpl() {
         super();
     }
 
-
-    public Object getUserData(String key)
-    {
-        return this.getUserDataMap().get(key);
+    public Object getUserData(final String key) {
+        return getUserDataMap().get(key);
     }
 
-    public Object setUserData(String key, Object data)
-    {
-        return this.getUserDataMap().put(key, data);
+    public Object setUserData(final String key, final Object data) {
+        return getUserDataMap().put(key, data);
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (!(obj instanceof CSSOMObjectImpl))
-        {
+        if (!(obj instanceof CSSOMObjectImpl)) {
             return false;
         }
-        CSSOMObjectImpl coi = (CSSOMObjectImpl) obj;
-        return LangUtils.equals(this.userDataMap, coi.userDataMap);
+        final CSSOMObjectImpl coi = (CSSOMObjectImpl) obj;
+        return LangUtils.equals(userDataMap_, coi.userDataMap_);
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int hash = LangUtils.HASH_SEED;
-        hash = LangUtils.hashCode(hash, this.userDataMap);
+        hash = LangUtils.hashCode(hash, userDataMap_);
         return hash;
     }
 }

@@ -1,6 +1,4 @@
 /*
- * $Id: RGBColorImpl.java,v 1.3 2009-09-03 07:59:21 waldbaer Exp $
- *
  * CSS Parser Project
  *
  * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.dom;
@@ -37,46 +36,40 @@ import org.w3c.dom.css.RGBColor;
 
 /**
  * Implementation of {@link RGBColor}.
- * 
+ *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: RGBColorImpl.java,v 1.3 2009-09-03 07:59:21 waldbaer Exp $
  */
 public class RGBColorImpl implements RGBColor, Serializable {
 
     private static final long serialVersionUID = 8152675334081993160L;
-    private CSSPrimitiveValue red = null;
-    private CSSPrimitiveValue green = null;
-    private CSSPrimitiveValue blue = null;
+    private CSSPrimitiveValue red_;
+    private CSSPrimitiveValue green_;
+    private CSSPrimitiveValue blue_;
 
-    protected RGBColorImpl(LexicalUnit lu) throws DOMException {
+    protected RGBColorImpl(final LexicalUnit lu) throws DOMException {
         LexicalUnit next = lu;
-        this.red = new CSSValueImpl(next, true);
+        red_ = new CSSValueImpl(next, true);
         next = next.getNextLexicalUnit();   // ,
-        if (next != null)
-        {
-            if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
-            {
+        if (next != null) {
+            if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA) {
                 // error
                 throw new DOMException(DOMException.SYNTAX_ERR,
                     "rgb parameters must be separated by ','.");
             }
             next = next.getNextLexicalUnit();
-            if (next != null)
-            {
-                this.green = new CSSValueImpl(next, true);
+            if (next != null) {
+                green_ = new CSSValueImpl(next, true);
                 next = next.getNextLexicalUnit();   // ,
-                if (next != null)
-                {
-                    if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA)
-                    {
+                if (next != null) {
+                    if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA) {
                         // error
                         throw new DOMException(DOMException.SYNTAX_ERR,
                             "rgb parameters must be separated by ','.");
                     }
                     next = next.getNextLexicalUnit();
-                    this.blue = new CSSValueImpl(next, true);
-                    if ((next = next.getNextLexicalUnit()) != null)
-                    {
+                    blue_ = new CSSValueImpl(next, true);
+                    next = next.getNextLexicalUnit();
+                    if (next != null) {
                         // error
                         throw new DOMException(DOMException.SYNTAX_ERR,
                             "Too many parameters for rgb function.");
@@ -87,36 +80,37 @@ public class RGBColorImpl implements RGBColor, Serializable {
     }
 
     public RGBColorImpl() {
-    }
-    
-    public CSSPrimitiveValue getRed() {
-        return this.red;
+        super();
     }
 
-    public void setRed(CSSPrimitiveValue red) {
-        this.red = red;
+    public CSSPrimitiveValue getRed() {
+        return red_;
+    }
+
+    public void setRed(final CSSPrimitiveValue red) {
+        red_ = red;
     }
 
     public CSSPrimitiveValue getGreen() {
-        return this.green;
+        return green_;
     }
 
-    public void setGreen(CSSPrimitiveValue green) {
-        this.green = green;
+    public void setGreen(final CSSPrimitiveValue green) {
+        green_ = green;
     }
 
     public CSSPrimitiveValue getBlue() {
-        return this.blue;
+        return blue_;
     }
 
-    public void setBlue(CSSPrimitiveValue blue) {
-        this.blue = blue;
+    public void setBlue(final CSSPrimitiveValue blue) {
+        blue_ = blue;
     }
 
     public String toString() {
         return new StringBuilder("rgb(")
-            .append(this.red).append(", ")
-            .append(this.green).append(", ")
-            .append(this.blue).append(")").toString();
+            .append(red_).append(", ")
+            .append(green_).append(", ")
+            .append(blue_).append(")").toString();
     }
 }

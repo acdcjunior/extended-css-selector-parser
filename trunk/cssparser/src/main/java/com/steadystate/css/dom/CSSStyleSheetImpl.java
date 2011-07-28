@@ -1,6 +1,4 @@
 /*
- * $Id: CSSStyleSheetImpl.java,v 1.4 2009-09-11 11:51:57 waldbaer Exp $
- *
  * CSS Parser Project
  *
  * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.dom;
@@ -32,6 +31,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.StringReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
@@ -50,104 +51,99 @@ import com.steadystate.css.util.LangUtils;
 
 /**
  * Implementation of {@link CSSStyleSheet}.
- * 
+ *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CSSStyleSheetImpl.java,v 1.4 2009-09-11 11:51:57 waldbaer Exp $
  */
 public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
 
     private static final long serialVersionUID = -2300541300646796363L;
 
-    private boolean disabled = false;
-    private Node ownerNode = null;
-    private StyleSheet parentStyleSheet = null;
-    private String href = null;
-    private String title = null;
-    private MediaList media = null;
-    private CSSRule ownerRule = null;
-    private boolean readOnly = false;
-    private CSSRuleList cssRules = null;
-    private String baseUri;
+    private boolean disabled_;
+    private Node ownerNode_;
+    private StyleSheet parentStyleSheet_;
+    private String href_;
+    private String title_;
+    private MediaList media_;
+    private CSSRule ownerRule_;
+    private boolean readOnly_;
+    private CSSRuleList cssRules_;
+    private String baseUri_;
 
-    public void setMedia(MediaList media)
-    {
-        this.media = media;
+    public void setMedia(final MediaList media) {
+        media_ = media;
     }
 
-    private String getBaseUri()
-    {
-        return this.baseUri;
+    private String getBaseUri() {
+        return baseUri_;
     }
 
-    public void setBaseUri(String baseUri)
-    {
-        this.baseUri = baseUri;
+    public void setBaseUri(final String baseUri) {
+        baseUri_ = baseUri;
     }
 
     public CSSStyleSheetImpl() {
+        super();
     }
-
 
     public String getType() {
         return "text/css";
     }
 
     public boolean getDisabled() {
-        return this.disabled;
+        return disabled_;
     }
 
     /**
      * We will need to respond more fully if a stylesheet is disabled, probably
      * by generating an event for the main application.
      */
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
+    public void setDisabled(final boolean disabled) {
+        disabled_ = disabled;
     }
 
     public Node getOwnerNode() {
-        return this.ownerNode;
+        return ownerNode_;
     }
 
     public StyleSheet getParentStyleSheet() {
-        return this.parentStyleSheet;
+        return parentStyleSheet_;
     }
 
     public String getHref() {
-        return this.href;
+        return href_;
     }
 
     public String getTitle() {
-        return this.title;
+        return title_;
     }
 
     public MediaList getMedia() {
-        return this.media;
+        return media_;
     }
 
     public CSSRule getOwnerRule() {
-        return this.ownerRule;
+        return ownerRule_;
     }
 
     public CSSRuleList getCssRules() {
-        if (this.cssRules == null)
-        {
-            this.cssRules = new CSSRuleListImpl();
+        if (cssRules_ == null) {
+            cssRules_ = new CSSRuleListImpl();
         }
-        return this.cssRules;
+        return cssRules_;
     }
 
-    public int insertRule(String rule, int index) throws DOMException {
-        if (this.readOnly) {
+    public int insertRule(final String rule, final int index) throws DOMException {
+        if (readOnly_) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
         }
 
         try {
-            InputSource is = new InputSource(new StringReader(rule));
-            CSSOMParser parser = new CSSOMParser();
+            final InputSource is = new InputSource(new StringReader(rule));
+            final CSSOMParser parser = new CSSOMParser();
             parser.setParentStyleSheet(this);
-            CSSRule r = parser.parseRule(is);
+            final CSSRule r = parser.parseRule(is);
 
             if (getCssRules().getLength() > 0) {
 
@@ -159,17 +155,19 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
                     // Index must be 0, and there can be only one charset rule
                     if (index != 0) {
                         msg = DOMExceptionImpl.CHARSET_NOT_FIRST;
-                    } else if (getCssRules().item(0).getType()
+                    }
+                    else if (getCssRules().item(0).getType()
                             == CSSRule.CHARSET_RULE) {
                         msg = DOMExceptionImpl.CHARSET_NOT_UNIQUE;
                     }
-                } else if (r.getType() == CSSRule.IMPORT_RULE) {
+                }
+                else if (r.getType() == CSSRule.IMPORT_RULE) {
 
                     // Import rules must preceed all other rules (except
                     // charset rules)
                     if (index <= getCssRules().getLength()) {
                         for (int i = 0; i < index; i++) {
-                            int rt = getCssRules().item(i).getType();
+                            final int rt = getCssRules().item(i).getType();
                             if ((rt != CSSRule.CHARSET_RULE)
                                     || (rt != CSSRule.IMPORT_RULE)) {
                                 msg = DOMExceptionImpl.IMPORT_NOT_FIRST;
@@ -187,19 +185,22 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
             }
 
             // Insert the rule into the list of rules
-            ((CSSRuleListImpl)getCssRules()).insert(r, index);
+            ((CSSRuleListImpl) getCssRules()).insert(r, index);
 
-        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+        catch (final ArrayIndexOutOfBoundsException e) {
             throw new DOMExceptionImpl(
                 DOMException.INDEX_SIZE_ERR,
                 DOMExceptionImpl.ARRAY_OUT_OF_BOUNDS,
                 e.getMessage());
-        } catch (CSSException e) {
+        }
+        catch (final CSSException e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
                 DOMExceptionImpl.SYNTAX_ERROR,
                 e.getMessage());
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new DOMExceptionImpl(
                 DOMException.SYNTAX_ERR,
                 DOMExceptionImpl.SYNTAX_ERROR,
@@ -208,16 +209,17 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
         return index;
     }
 
-    public void deleteRule(int index) throws DOMException {
-        if (this.readOnly) {
+    public void deleteRule(final int index) throws DOMException {
+        if (readOnly_) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
         }
 
         try {
-            ((CSSRuleListImpl)getCssRules()).delete(index);
-        } catch (ArrayIndexOutOfBoundsException e) {
+            ((CSSRuleListImpl) getCssRules()).delete(index);
+        }
+        catch (final ArrayIndexOutOfBoundsException e) {
             throw new DOMExceptionImpl(
                 DOMException.INDEX_SIZE_ERR,
                 DOMExceptionImpl.ARRAY_OUT_OF_BOUNDS,
@@ -226,136 +228,120 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
     }
 
     public boolean isReadOnly() {
-        return this.readOnly;
+        return readOnly_;
     }
 
-    public void setReadOnly(boolean b) {
-        this.readOnly = b;
+    public void setReadOnly(final boolean b) {
+        readOnly_ = b;
     }
 
-    public void setOwnerNode(Node ownerNode) {
-        this.ownerNode = ownerNode;
+    public void setOwnerNode(final Node ownerNode) {
+        ownerNode_ = ownerNode;
     }
 
-    public void setParentStyleSheet(StyleSheet parentStyleSheet) {
-        this.parentStyleSheet = parentStyleSheet;
+    public void setParentStyleSheet(final StyleSheet parentStyleSheet) {
+        parentStyleSheet_ = parentStyleSheet;
     }
 
-    public void setHref(String href) {
-        this.href = href;
+    public void setHref(final String href) {
+        href_ = href;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitle(final String title) {
+        title_ = title;
     }
 
-    public void setMediaText(String mediaText) {
-        InputSource source = new InputSource(new StringReader(mediaText));
-        try
-        {
-            CSSOMParser parser = new CSSOMParser();
-            SACMediaList sml = parser.parseMedia(source);
-            this.media = new MediaListImpl(sml);
+    public void setMediaText(final String mediaText) {
+        final InputSource source = new InputSource(new StringReader(mediaText));
+        try {
+            final CSSOMParser parser = new CSSOMParser();
+            final SACMediaList sml = parser.parseMedia(source);
+            media_ = new MediaListImpl(sml);
         }
-        catch (IOException e)
-        {
+        catch (final IOException e) {
             // TODO handle exception
         }
     }
 
-    public void setOwnerRule(CSSRule ownerRule) {
-        this.ownerRule = ownerRule;
+    public void setOwnerRule(final CSSRule ownerRule) {
+        ownerRule_ = ownerRule;
     }
-    
-    public void setCssRules(CSSRuleList rules) {
-        this.cssRules = rules;
+
+    public void setCssRules(final CSSRuleList rules) {
+        cssRules_ = rules;
     }
-    
+
     public String toString() {
-        return this.getCssRules().toString();
+        return getCssRules().toString();
     }
-
-
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (!(obj instanceof CSSStyleSheet))
-        {
+        if (!(obj instanceof CSSStyleSheet)) {
             return false;
         }
-        CSSStyleSheet css = (CSSStyleSheet) obj;
-        boolean eq = LangUtils.equals(this.getCssRules(), css.getCssRules());
-        eq = eq && (this.getDisabled() == css.getDisabled());
-        eq = eq && LangUtils.equals(this.getHref(), css.getHref());
-        eq = eq && LangUtils.equals(this.getMedia(), css.getMedia());
+        final CSSStyleSheet css = (CSSStyleSheet) obj;
+        boolean eq = LangUtils.equals(getCssRules(), css.getCssRules());
+        eq = eq && (getDisabled() == css.getDisabled());
+        eq = eq && LangUtils.equals(getHref(), css.getHref());
+        eq = eq && LangUtils.equals(getMedia(), css.getMedia());
         // TODO implement some reasonful equals method for ownerNode
-//        eq = eq && Utils.equals(this.getOwnerNode(), css.getOwnerNode());
+//        eq = eq && Utils.equals(getOwnerNode(), css.getOwnerNode());
             // don't use ownerNode and parentStyleSheet in equals()
             // recursive loop -> stack overflow!
-        eq = eq && LangUtils.equals(this.getTitle(), css.getTitle())
-            ;
+        eq = eq && LangUtils.equals(getTitle(), css.getTitle());
         return eq;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int hash = LangUtils.HASH_SEED;
-        hash = LangUtils.hashCode(hash, this.baseUri);
-        hash = LangUtils.hashCode(hash, this.cssRules);
-        hash = LangUtils.hashCode(hash, this.disabled);
-        hash = LangUtils.hashCode(hash, this.href);
-        hash = LangUtils.hashCode(hash, this.media);
-        hash = LangUtils.hashCode(hash, this.ownerNode);
+        hash = LangUtils.hashCode(hash, baseUri_);
+        hash = LangUtils.hashCode(hash, cssRules_);
+        hash = LangUtils.hashCode(hash, disabled_);
+        hash = LangUtils.hashCode(hash, href_);
+        hash = LangUtils.hashCode(hash, media_);
+        hash = LangUtils.hashCode(hash, ownerNode_);
         // don't use ownerNode and parentStyleSheet in hashCode()
         // recursive loop -> stack overflow!
-        hash = LangUtils.hashCode(hash, this.readOnly);
-        hash = LangUtils.hashCode(hash, this.title);
+        hash = LangUtils.hashCode(hash, readOnly_);
+        hash = LangUtils.hashCode(hash, title_);
         return hash;
     }
 
-    private void writeObject(ObjectOutputStream out)
-        throws IOException
-    {
-        out.writeObject(this.baseUri);
-        out.writeObject(this.cssRules);
-        out.writeBoolean(this.disabled);
-        out.writeObject(this.href);
-        out.writeObject(this.media);
+    private void writeObject(final ObjectOutputStream out) throws IOException {
+        out.writeObject(baseUri_);
+        out.writeObject(cssRules_);
+        out.writeBoolean(disabled_);
+        out.writeObject(href_);
+        out.writeObject(media_);
         // TODO ownerNode may not be serializable!
-//        out.writeObject(this.ownerNode);
-        out.writeBoolean(this.readOnly);
-        out.writeObject(this.title);
+//        out.writeObject(ownerNode);
+        out.writeBoolean(readOnly_);
+        out.writeObject(title_);
     }
 
-    private void readObject(ObjectInputStream in)
-        throws IOException, ClassNotFoundException
-    {
-        this.baseUri = (String) in.readObject();
-        this.cssRules = (CSSRuleList) in.readObject();
-        if (this.cssRules != null)
-        {
-            for (int i = 0; i < this.cssRules.getLength(); i++)
-            {
-                CSSRule cssRule = this.cssRules.item(i);
-                if (cssRule instanceof AbstractCSSRuleImpl)
-                {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        baseUri_ = (String) in.readObject();
+        cssRules_ = (CSSRuleList) in.readObject();
+        if (cssRules_ != null) {
+            for (int i = 0; i < cssRules_.getLength(); i++) {
+                final CSSRule cssRule = cssRules_.item(i);
+                if (cssRule instanceof AbstractCSSRuleImpl) {
                     ((AbstractCSSRuleImpl) cssRule).setParentStyleSheet(this);
                 }
             }
         }
-        this.disabled = in.readBoolean();
-        this.href = (String) in.readObject();
-        this.media = (MediaList) in.readObject();
+        disabled_ = in.readBoolean();
+        href_ = (String) in.readObject();
+        media_ = (MediaList) in.readObject();
         // TODO ownerNode may not be serializable!
-//        this.ownerNode = (Node) in.readObject();
-        this.readOnly = in.readBoolean();
-        this.title = (String) in.readObject();
+//        ownerNode = (Node) in.readObject();
+        readOnly_ = in.readBoolean();
+        title_ = (String) in.readObject();
     }
 
     /**
@@ -364,46 +350,35 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
      * @param recursive <code>true</code> if the import should be done
      *   recursively, <code>false</code> otherwise
      */
-    public void importImports(boolean recursive)
-        throws DOMException
-    {
-        for (int i = 0; i < this.getCssRules().getLength(); i++)
-        {
-            CSSRule cssRule = this.getCssRules().item(i);
-            if (cssRule.getType() == CSSRule.IMPORT_RULE)
-            {
-                CSSImportRule cssImportRule = (CSSImportRule) cssRule;
-                try
-                {
-                    java.net.URI importURI = new java.net.URI(this.getBaseUri())
+    public void importImports(final boolean recursive) throws DOMException {
+        for (int i = 0; i < getCssRules().getLength(); i++) {
+            final CSSRule cssRule = getCssRules().item(i);
+            if (cssRule.getType() == CSSRule.IMPORT_RULE) {
+                final CSSImportRule cssImportRule = (CSSImportRule) cssRule;
+                try {
+                    final URI importURI = new java.net.URI(getBaseUri())
                         .resolve(cssImportRule.getHref());
-                    CSSStyleSheetImpl importedCSS = (CSSStyleSheetImpl)
+                    final CSSStyleSheetImpl importedCSS = (CSSStyleSheetImpl)
                         new CSSOMParser().parseStyleSheet(new InputSource(
                             importURI.toString()), null, importURI.toString());
-                    if (recursive)
-                    {
+                    if (recursive) {
                         importedCSS.importImports(recursive);
                     }
-                    MediaList mediaList = cssImportRule.getMedia();
-                    if (mediaList.getLength() == 0)
-                    {
+                    final MediaList mediaList = cssImportRule.getMedia();
+                    if (mediaList.getLength() == 0) {
                         mediaList.appendMedium("all");
                     }
-                    CSSMediaRuleImpl cssMediaRule =
-                        new CSSMediaRuleImpl(this, null, mediaList);
-                    cssMediaRule.setRuleList(
-                        (CSSRuleListImpl) importedCSS.getCssRules());
-                    this.deleteRule(i);
-                    ((CSSRuleListImpl) this.getCssRules()).insert(cssMediaRule, i);
+                    final CSSMediaRuleImpl cssMediaRule = new CSSMediaRuleImpl(this, null, mediaList);
+                    cssMediaRule.setRuleList((CSSRuleListImpl) importedCSS.getCssRules());
+                    deleteRule(i);
+                    ((CSSRuleListImpl) getCssRules()).insert(cssMediaRule, i);
                 }
-                catch (java.net.URISyntaxException e)
-                {
+                catch (final URISyntaxException e) {
                     // TODO handle exception
                     throw new DOMException(DOMException.SYNTAX_ERR,
                         e.getLocalizedMessage());
                 }
-                catch (IOException e)
-                {
+                catch (final IOException e) {
                     // TODO handle exception
                 }
             }

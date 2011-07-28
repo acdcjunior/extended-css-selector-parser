@@ -1,6 +1,4 @@
 /*
- * $Id: MediaListImpl.java,v 1.6 2008-11-28 14:03:07 waldbaer Exp $
- *
  * CSS Parser Project
  *
  * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.dom;
@@ -47,89 +46,79 @@ import com.steadystate.css.util.LangUtils;
 
 /**
  * Implements {@link MediaList}.
- * 
+ *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: MediaListImpl.java,v 1.6 2008-11-28 14:03:07 waldbaer Exp $
  */
 public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Serializable {
 
     private static final long serialVersionUID = 6662784733573034870L;
 
-    private List<String> media = new ArrayList<String>();
+    private List<String> media_ = new ArrayList<String>();
 
-    public void setMedia(List<String> media)
-    {
-        this.media = media;
+    public void setMedia(final List<String> media) {
+        media_ = media;
     }
 
-    private void setMediaList(SACMediaList mediaList)
-    {
-        for (int i = 0; i < mediaList.getLength(); i++)
-        {
-            this.media.add(mediaList.item(i));
+    private void setMediaList(final SACMediaList mediaList) {
+        for (int i = 0; i < mediaList.getLength(); i++) {
+            media_.add(mediaList.item(i));
         }
     }
 
-    public MediaListImpl(SACMediaList mediaList)
-    {
-        this.setMediaList(mediaList);
-        Locator locator = mediaList instanceof Locatable ?
-    		((Locatable) mediaList).getLocator() : null;
-		if (locator != null)
-		{
-			this.setUserData(UserDataConstants.KEY_LOCATOR, locator);
-		}
+    public MediaListImpl(final SACMediaList mediaList) {
+        setMediaList(mediaList);
+        final Locator locator = mediaList instanceof Locatable
+            ? ((Locatable) mediaList).getLocator() : null;
+        if (locator != null) {
+            setUserData(UserDataConstants.KEY_LOCATOR, locator);
+        }
     }
 
-    public MediaListImpl()
-    {
+    public MediaListImpl() {
+        super();
     }
-
 
     public String getMediaText() {
-        StringBuilder sb = new StringBuilder("");
-        for (int i = 0; i < this.media.size(); i++) {
-            sb.append(this.media.get(i));
-            if (i < this.media.size() - 1) {
-                sb.append( ", " );
+        final StringBuilder sb = new StringBuilder("");
+        for (int i = 0; i < media_.size(); i++) {
+            sb.append(media_.get(i));
+            if (i < media_.size() - 1) {
+                sb.append(", ");
             }
         }
         return sb.toString();
     }
 
-    public void setMediaText(String mediaText) throws DOMException {
-        InputSource source = new InputSource(new StringReader(mediaText));
-        try
-        {
-            CSSOMParser parser = new CSSOMParser();
-            SACMediaList sml = parser.parseMedia(source);
-            this.setMediaList(sml);
+    public void setMediaText(final String mediaText) throws DOMException {
+        final InputSource source = new InputSource(new StringReader(mediaText));
+        try {
+            final CSSOMParser parser = new CSSOMParser();
+            final SACMediaList sml = parser.parseMedia(source);
+            setMediaList(sml);
         }
-        catch (CSSParseException e)
-        {
+        catch (final CSSParseException e) {
             throw new DOMException(DOMException.SYNTAX_ERR,
                 e.getLocalizedMessage());
         }
-        catch (IOException e)
-        {
+        catch (final IOException e) {
             throw new DOMException(DOMException.NOT_FOUND_ERR,
                 e.getLocalizedMessage());
         }
     }
 
     public int getLength() {
-        return this.media.size();
+        return media_.size();
     }
 
-    public String item(int index) {
-        return (index < this.media.size()) ? this.media.get(index) : null;
+    public String item(final int index) {
+        return (index < media_.size()) ? media_.get(index) : null;
     }
 
-    public void deleteMedium(String oldMedium) throws DOMException {
-        for (int i = 0; i < this.media.size(); i++) {
-            String str = this.media.get(i);
+    public void deleteMedium(final String oldMedium) throws DOMException {
+        for (int i = 0; i < media_.size(); i++) {
+            final String str = media_.get(i);
             if (str.equalsIgnoreCase(oldMedium)) {
-                this.media.remove(i);
+                media_.remove(i);
                 return;
             }
         }
@@ -138,53 +127,44 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
             DOMExceptionImpl.NOT_FOUND);
     }
 
-    public void appendMedium(String newMedium) throws DOMException {
-        this.media.add(newMedium);
+    public void appendMedium(final String newMedium) throws DOMException {
+        media_.add(newMedium);
     }
 
     public String toString() {
-        return this.getMediaText();
+        return getMediaText();
     }
-
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (!(obj instanceof MediaList))
-        {
+        if (!(obj instanceof MediaList)) {
             return false;
         }
-        MediaList ml = (MediaList) obj;
-        return super.equals(obj)
-            && equalsMedia(ml);
+        final MediaList ml = (MediaList) obj;
+        return super.equals(obj) && equalsMedia(ml);
     }
 
-    private boolean equalsMedia(MediaList ml)
-    {
-        if ((ml == null) || (this.getLength() != ml.getLength()))
-        {
+    private boolean equalsMedia(final MediaList ml) {
+        if ((ml == null) || (getLength() != ml.getLength())) {
             return false;
         }
-        for (int i = 0; i < this.getLength(); i++)
-        {
-            String m1 = this.item(i);
-            String m2 = ml.item(i);
-            if (!LangUtils.equals(m1, m2))
-            {
+        for (int i = 0; i < getLength(); i++) {
+            final String m1 = item(i);
+            final String m2 = ml.item(i);
+            if (!LangUtils.equals(m1, m2)) {
                 return false;
             }
         }
         return true;
     }
+
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int hash = super.hashCode();
-        hash = LangUtils.hashCode(hash, this.media);
+        hash = LangUtils.hashCode(hash, media_);
         return hash;
     }
 
