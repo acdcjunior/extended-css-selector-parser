@@ -146,7 +146,6 @@ public class TestDOM {
         Assert.assertEquals("beta: 100; delta: 1mm; omega: 1 !important; list-test: bogus", style.getCssText());
     }
 
-
     @Test
     public void inheritGetStringValue() throws Exception {
         String cssText =
@@ -163,5 +162,4 @@ public class TestDOM {
         Assert.assertEquals("p { font-size: 2em }", rules.item(0).getCssText());
         Assert.assertEquals("p a:link { font-size: inherit }", rules.item(1).getCssText());
     }
-
 }
