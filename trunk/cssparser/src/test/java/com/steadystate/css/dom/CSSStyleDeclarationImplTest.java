@@ -17,7 +17,7 @@ import com.steadystate.css.parser.CSSOMParser;
 
 /**
  * Unit tests for {@link CSSStyleDeclarationImpl}.
- * 
+ *
  * @author Daniel Gredler
  * @author waldbaer
  * @author rbri
@@ -26,7 +26,7 @@ public class CSSStyleDeclarationImplTest {
 
     /**
      * Regression test for bug 1874800.
-     * 
+     *
      * @throws Exception
      *             if any error occurs
      */
@@ -50,7 +50,7 @@ public class CSSStyleDeclarationImplTest {
 
     /**
      * Regression test for bug 1691221.
-     * 
+     *
      * @throws Exception
      *             if any error occurs
      */
@@ -58,11 +58,14 @@ public class CSSStyleDeclarationImplTest {
     public void emptyUrl() throws Exception {
         CSSOMParser parser = new CSSOMParser();
 
-        Reader r = new StringReader("{ background: url() }");
+        Reader r = new StringReader("background: url()");
         InputSource source = new InputSource(r);
         CSSStyleDeclarationImpl style = (CSSStyleDeclarationImpl) parser.parseStyleDeclaration(source);
 
-        Assert.assertEquals("", style.getCssText());
+        Assert.assertEquals("background: url()", style.getCssText());
+        Assert.assertEquals(1, style.getLength());
+        Assert.assertEquals("background", style.item(0));
+        Assert.assertEquals("url()", style.getPropertyValue("background"));
     }
 
     @Test

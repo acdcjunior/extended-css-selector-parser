@@ -30,14 +30,6 @@
 
 package com.steadystate.css;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Reader;
 import java.io.StringReader;
 
 import org.junit.Assert;
@@ -47,13 +39,14 @@ import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSRuleList;
 import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSStyleSheet;
+import org.w3c.dom.css.CSSValue;
 import org.w3c.dom.css.CSSValueList;
 
 import com.steadystate.css.parser.CSSOMParser;
 
 /**
  * Tests the CSS DOM implementation by loading a stylesheet and performing a few operations upon it.
- * 
+ *
  * @author David Schweinsberg
  * @author rbri
  */
@@ -61,110 +54,112 @@ public class TestDOM {
 
     @Test
     public void test() throws Exception {
-        InputStream is = getClass().getClassLoader().getResourceAsStream("basic.css");
-        Assert.assertNotNull(is);
+        String cssText = "foo: 1.5; bogus: 3, 2, 1; bar-color: #0FEED0; background: #abc; foreground: rgb( 10, 20, 30 )";
 
         CSSOMParser parser = new CSSOMParser();
+        ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
 
-        Reader r = new InputStreamReader(is);
-        InputSource source = new InputSource(r);
+        InputSource source = new InputSource(new StringReader(cssText));
         CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
 
-        // Enumerate the properties and retrieve their values
-        System.out.println("No. of properties: " + style.getLength());
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
 
-        for (int i = 0; i < style.getLength(); i++) {
-            String name = style.item(i);
-            System.out.println(name + " : " + style.getPropertyValue(name));
-        }
+        // Enumerate the properties and retrieve their values
+        Assert.assertEquals(5, style.getLength());
+
+        String name = style.item(0);
+        Assert.assertEquals("foo : 1.5", name + " : " + style.getPropertyValue(name));
+        name = style.item(1);
+        Assert.assertEquals("bogus : 3, 2, 1", name + " : " + style.getPropertyValue(name));
+        name = style.item(2);
+        Assert.assertEquals("bar-color : rgb(15, 238, 208)", name + " : " + style.getPropertyValue(name));
+        name = style.item(3);
+        Assert.assertEquals("background : rgb(170, 187, 204)", name + " : " + style.getPropertyValue(name));
+        name = style.item(4);
+        Assert.assertEquals("foreground : rgb(10, 20, 30)", name + " : " + style.getPropertyValue(name));
+
 
         // Get the style declaration as a single lump of text
-        System.out.println("\ngetCssText");
-        System.out.println(style.getCssText());
+        Assert.assertEquals("foo: 1.5; " +
+                "bogus: 3, 2, 1; " +
+                "bar-color: rgb(15, 238, 208); " +
+                "background: rgb(170, 187, 204); " +
+                "foreground: rgb(10, 20, 30)", style.getCssText());
 
         // Directly set the CSS style declaration
-        // NOTE: We must include the braces!
-        System.out.println("\nsetCssText");
-        style.setCssText("{ alpha: 2; beta: 20px; gamma: 40em; delta: 1mm; epsilon: 24pt }");
-
-        System.out.println(style.getCssText());
+        style.setCssText("alpha: 2; beta: 20px; gamma: 40em; delta: 1mm; epsilon: 24pt");
+        Assert.assertEquals("alpha: 2; beta: 20px; gamma: 40em; delta: 1mm; epsilon: 24pt", style.getCssText());
 
         // Remove some properties, from the middle, beginning, and end
-        System.out.println();
-        System.out.println("Removing 'gamma'");
-        System.out.println(style.removeProperty("gamma"));
-        System.out.println("Removing 'alpha'");
-        System.out.println(style.removeProperty("alpha"));
-        System.out.println("Removing 'epsilon'");
-        System.out.println(style.removeProperty("epsilon"));
+        style.removeProperty("gamma");
+        Assert.assertEquals("alpha: 2; beta: 20px; delta: 1mm; epsilon: 24pt", style.getCssText());
 
-        // Let's see what remains
-        System.out.println(style.getCssText());
+        style.removeProperty("alpha");
+        Assert.assertEquals("beta: 20px; delta: 1mm; epsilon: 24pt", style.getCssText());
+
+        style.removeProperty("epsilon");
+        Assert.assertEquals("beta: 20px; delta: 1mm", style.getCssText());
 
         // Use the setProperty method to modify an existing property,
         // and add a new one.
-        System.out.println();
-        System.out.println("setting 'beta' to 40px");
         style.setProperty("beta", "40px", null);
-        System.out.println("setting 'omega' to 1 with 'important' priority");
-        style.setProperty("omega", "1", "important");
+        Assert.assertEquals("beta: 40px; delta: 1mm", style.getCssText());
 
-        // Let's look at the changes
-        System.out.println(style.getCssText());
+        style.setProperty("omega", "1", "important");
+        Assert.assertEquals("beta: 40px; delta: 1mm; omega: 1 !important", style.getCssText());
 
         // Work with CSSValues
-        System.out.println();
-        System.out.println("Retrieving 'beta' as a CSSPrimitiveValue");
         CSSPrimitiveValue value = (CSSPrimitiveValue) style.getPropertyCSSValue("beta");
-        System.out.println("getCssText: 'beta' = " + value.getCssText());
-        System.out.println("getFloatValue: 'beta' = " + value.getFloatValue(CSSPrimitiveValue.CSS_PX));
-        System.out.println("Setting 'beta' to 100px");
-        value.setFloatValue(CSSPrimitiveValue.CSS_PX, 100);
+        Assert.assertEquals("40px", value.getCssText());
+        Assert.assertEquals(40f, value.getFloatValue(CSSPrimitiveValue.CSS_PX), 0.000000f);
 
-        System.out
-            .println("Adding a new value, which should end-up as a CSSValueList.\nSetting 'list-test' to 100 200 300");
+        value.setFloatValue(CSSPrimitiveValue.CSS_PX, 100);
+        Assert.assertEquals("100", value.getCssText());
+
         style.setProperty("list-test", "100 200 300", null);
+        Assert.assertEquals("beta: 100; delta: 1mm; omega: 1 !important; list-test: 100 200 300", style.getCssText());
+
         value = (CSSPrimitiveValue) style.getPropertyCSSValue("list-test");
-        System.out.println("getValueType: 'list-test' = " + value.getCssValueType());
+        Assert.assertEquals(CSSValue.CSS_VALUE_LIST, value.getCssValueType());
 
         CSSValueList vl = (CSSValueList) style.getPropertyCSSValue("list-test");
-        for (int i = 0; i < vl.getLength(); i++) {
-            System.out.println("getFloatValue: 'list-test[" + String.valueOf(i) + "]' = "
-                + ((CSSPrimitiveValue) vl.item(i)).getFloatValue(CSSPrimitiveValue.CSS_NUMBER));
-        }
+        Assert.assertEquals(3, vl.getLength());
+
+        value = (CSSPrimitiveValue) vl.item(0);
+        Assert.assertEquals(100, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.000000f);
+
+        value = (CSSPrimitiveValue) vl.item(1);
+        Assert.assertEquals(200, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.000000f);
+
+        value = (CSSPrimitiveValue) vl.item(2);
+        Assert.assertEquals(300, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.000000f);
 
         // When a CSSValue is modified, it modifies the declaration
-        System.out.println("Let's see the change within the entire declaration");
-        System.out.println(style.getCssText());
+        Assert.assertEquals("beta: 100; delta: 1mm; omega: 1 !important; list-test: 100 200 300", style.getCssText());
 
         // Using the setCssText method, we can change the type of value
-        System.out.println("Setting 'list-test' to something completely different, the string 'bogus'.");
         vl.setCssText("bogus");
-
-        System.out.println("What happens...");
-        System.out.println("getValueType: 'list-test' = " + value.getCssValueType());
-        System.out.println(style.getCssText());
+        Assert.assertEquals(CSSValue.CSS_PRIMITIVE_VALUE, value.getCssValueType());
+        Assert.assertEquals("beta: 100; delta: 1mm; omega: 1 !important; list-test: bogus", style.getCssText());
     }
 
 
     @Test
     public void inheritGetStringValue() throws Exception {
         String cssText =
-            "p {\n" +
-            "  font-size: 2em\n" +
-            "}\n" +
-            "p a:link {\n" +
-            "  font-size: inherit\n" +
-            "}\n";
+            "p { font-size: 2em } p a:link { font-size: inherit }";
         InputSource source = new InputSource(new StringReader(cssText));
         CSSOMParser cssomParser = new CSSOMParser();
 
         CSSStyleSheet css = cssomParser.parseStyleSheet(source, null,
             "http://www.example.org/css/style.css");
-        
+
         CSSRuleList rules = css.getCssRules();
         Assert.assertEquals(2, rules.getLength());
-        
+
         Assert.assertEquals("p { font-size: 2em }", rules.item(0).getCssText());
         Assert.assertEquals("p a:link { font-size: inherit }", rules.item(1).getCssText());
     }
