@@ -1,9 +1,7 @@
 /*
- * $Id: ConditionalSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,12 +21,17 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser.selectors;
 
 import java.io.Serializable;
-import org.w3c.css.sac.*;
+
+import org.w3c.css.sac.Condition;
+import org.w3c.css.sac.ConditionalSelector;
+import org.w3c.css.sac.Selector;
+import org.w3c.css.sac.SimpleSelector;
 
 import com.steadystate.css.parser.Locatable;
 import com.steadystate.css.parser.LocatableImpl;
@@ -36,70 +39,57 @@ import com.steadystate.css.parser.LocatableImpl;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: ConditionalSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  */
 public class ConditionalSelectorImpl extends LocatableImpl implements ConditionalSelector, Serializable {
 
     private static final long serialVersionUID = 7217145899707580586L;
 
-    private SimpleSelector simpleSelector;
-    private Condition condition;
+    private SimpleSelector simpleSelector_;
+    private Condition condition_;
 
-    public void setSimpleSelector(SimpleSelector simpleSelector)
-    {
-        this.simpleSelector = simpleSelector;
-        if (simpleSelector instanceof Locatable)
-        {
-        	this.setLocator(((Locatable) simpleSelector).getLocator());
+    public void setSimpleSelector(final SimpleSelector simpleSelector) {
+        simpleSelector_ = simpleSelector;
+        if (simpleSelector instanceof Locatable) {
+            setLocator(((Locatable) simpleSelector).getLocator());
         }
-        else if (simpleSelector == null)
-        {
-        	this.setLocator(null);
+        else if (simpleSelector == null) {
+            setLocator(null);
         }
     }
 
-    public void setCondition(Condition condition)
-    {
-        this.condition = condition;
-        if (this.getLocator() == null)
-        {
-            if (condition instanceof Locatable)
-            {
-            	this.setLocator(((Locatable) condition).getLocator());
+    public void setCondition(final Condition condition) {
+        condition_ = condition;
+        if (getLocator() == null) {
+            if (condition instanceof Locatable) {
+                setLocator(((Locatable) condition).getLocator());
             }
-            else if (condition == null)
-            {
-            	this.setLocator(null);
+            else if (condition == null) {
+                setLocator(null);
             }
         }
     }
 
-
-    public ConditionalSelectorImpl(
-        SimpleSelector simpleSelector,
-        Condition condition) {
-        this.setSimpleSelector(simpleSelector);
-        this.setCondition(condition);
+    public ConditionalSelectorImpl(final SimpleSelector simpleSelector, final Condition condition) {
+        setSimpleSelector(simpleSelector);
+        setCondition(condition);
     }
 
-    public ConditionalSelectorImpl()
-    {
+    public ConditionalSelectorImpl() {
     }
-
 
     public short getSelectorType() {
         return Selector.SAC_CONDITIONAL_SELECTOR;
     }
 
     public SimpleSelector getSimpleSelector() {
-        return this.simpleSelector;
+        return simpleSelector_;
     }
 
     public Condition getCondition() {
-        return this.condition;
+        return condition_;
     }
-    
+
     public String toString() {
-        return this.simpleSelector.toString() + this.condition.toString();
+        return simpleSelector_.toString() + condition_.toString();
     }
 }

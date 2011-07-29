@@ -1,9 +1,7 @@
 /*
- * $Id: CharacterDataSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,50 +21,48 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser.selectors;
 
 import java.io.Serializable;
-import org.w3c.css.sac.*;
+
+import org.w3c.css.sac.CharacterDataSelector;
+import org.w3c.css.sac.Selector;
 
 import com.steadystate.css.parser.LocatableImpl;
 
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: CharacterDataSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  */
 public class CharacterDataSelectorImpl extends LocatableImpl implements CharacterDataSelector, Serializable {
 
     private static final long serialVersionUID = 4635511567927852889L;
 
-    private String data;
+    private String data_;
 
-    public void setData(String data)
-    {
-        this.data = data;
+    public void setData(final String data) {
+        data_ = data;
     }
 
-
-    public CharacterDataSelectorImpl(String data) {
-        this.data = data;
+    public CharacterDataSelectorImpl(final String data) {
+        data_ = data;
     }
 
-    public CharacterDataSelectorImpl()
-    {
+    public CharacterDataSelectorImpl() {
     }
-
 
     public short getSelectorType() {
         return Selector.SAC_CDATA_SECTION_NODE_SELECTOR;
     }
 
     public String getData() {
-        return this.data;
+        return data_;
     }
-    
+
     public String toString() {
-        return this.getData();
+        return getData();
     }
 }

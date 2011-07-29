@@ -1,9 +1,7 @@
 /*
- * $Id: ConditionFactoryImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,98 +21,88 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser.selectors;
 
-import org.w3c.css.sac.*;
+import org.w3c.css.sac.AttributeCondition;
+import org.w3c.css.sac.CSSException;
+import org.w3c.css.sac.CombinatorCondition;
+import org.w3c.css.sac.Condition;
+import org.w3c.css.sac.ConditionFactory;
+import org.w3c.css.sac.ContentCondition;
+import org.w3c.css.sac.LangCondition;
+import org.w3c.css.sac.NegativeCondition;
+import org.w3c.css.sac.PositionalCondition;
 
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: ConditionFactoryImpl.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
  */
 public class ConditionFactoryImpl implements ConditionFactory {
 
-    public CombinatorCondition createAndCondition(
-        Condition first, 
-        Condition second) throws CSSException {
+    public CombinatorCondition createAndCondition(final Condition first, final Condition second) throws CSSException {
         return new AndConditionImpl(first, second);
     }
 
-    public CombinatorCondition createOrCondition(
-        Condition first, 
-        Condition second) throws CSSException {
+    public CombinatorCondition createOrCondition(final Condition first, final Condition second) throws CSSException {
         throw new CSSException(CSSException.SAC_NOT_SUPPORTED_ERR);
     }
 
-    public NegativeCondition createNegativeCondition(Condition condition)
-        throws CSSException {
+    public NegativeCondition createNegativeCondition(final Condition condition) throws CSSException {
         throw new CSSException(CSSException.SAC_NOT_SUPPORTED_ERR);
     }
 
     public PositionalCondition createPositionalCondition(
-        int position,
-        boolean typeNode, 
-        boolean type) throws CSSException {
+            final int position,
+            final boolean typeNode,
+            final boolean type) throws CSSException {
         throw new CSSException(CSSException.SAC_NOT_SUPPORTED_ERR);
     }
 
     public AttributeCondition createAttributeCondition(
-        String localName,
-        String namespaceURI,
-        boolean specified,
-        String value) throws CSSException {
-//        if ((namespaceURI != null) || !specified) {
-//            throw new CSSException(CSSException.SAC_NOT_SUPPORTED_ERR);
-//        } else {
-            return new AttributeConditionImpl(localName, value);
-//        }
+            final String localName,
+            final String namespaceURI,
+            final boolean specified,
+            final String value) throws CSSException {
+        return new AttributeConditionImpl(localName, value);
     }
 
-    public AttributeCondition createIdCondition(String value)
+    public AttributeCondition createIdCondition(final String value)
         throws CSSException {
         return new IdConditionImpl(value);
     }
 
-    public LangCondition createLangCondition(String lang)
-	    throws CSSException {
-    	return new LangConditionImpl(lang);
+    public LangCondition createLangCondition(final String lang) throws CSSException {
+        return new LangConditionImpl(lang);
     }
 
     public AttributeCondition createOneOfAttributeCondition(
-        String localName,
-        String namespaceURI,
-        boolean specified,
-        String value) throws CSSException {
-//        if ((namespaceURI != null) || !specified) {
-//            throw new CSSException(CSSException.SAC_NOT_SUPPORTED_ERR);
-//        } else {
-            return new OneOfAttributeConditionImpl(localName, value);
-//        }
+            final String localName,
+            final String namespaceURI,
+            final boolean specified,
+            final String value) throws CSSException {
+        return new OneOfAttributeConditionImpl(localName, value);
     }
 
     public AttributeCondition createBeginHyphenAttributeCondition(
-        String localName,
-        String namespaceURI,
-        boolean specified,
-        String value) throws CSSException {
-//        if ((namespaceURI != null) || !specified) {
-//            throw new CSSException(CSSException.SAC_NOT_SUPPORTED_ERR);
-//        } else {
-            return new BeginHyphenAttributeConditionImpl(localName, value);
-//        }
+            final String localName,
+            final String namespaceURI,
+            final boolean specified,
+            final String value) throws CSSException {
+        return new BeginHyphenAttributeConditionImpl(localName, value);
     }
 
     public AttributeCondition createClassCondition(
-        String namespaceURI,
-        String value) throws CSSException {
+            final String namespaceURI,
+            final String value) throws CSSException {
         return new ClassConditionImpl(value);
     }
 
     public AttributeCondition createPseudoClassCondition(
-        String namespaceURI,
-        String value) throws CSSException {
+            final String namespaceURI,
+            final String value) throws CSSException {
         return new PseudoClassConditionImpl(value);
     }
 
@@ -126,8 +114,8 @@ public class ConditionFactoryImpl implements ConditionFactory {
         throw new CSSException(CSSException.SAC_NOT_SUPPORTED_ERR);
     }
 
-    public ContentCondition createContentCondition(String data)
+    public ContentCondition createContentCondition(final String data)
         throws CSSException {
         throw new CSSException(CSSException.SAC_NOT_SUPPORTED_ERR);
-    }    
+    }
 }

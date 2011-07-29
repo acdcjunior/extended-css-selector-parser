@@ -1,9 +1,7 @@
 /*
- * $Id: DescendantSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,70 +21,65 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser.selectors;
 
 import java.io.Serializable;
-import org.w3c.css.sac.*;
+
+import org.w3c.css.sac.DescendantSelector;
+import org.w3c.css.sac.Selector;
+import org.w3c.css.sac.SimpleSelector;
 
 import com.steadystate.css.parser.Locatable;
 import com.steadystate.css.parser.LocatableImpl;
 
 /**
- *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: DescendantSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  */
 public class DescendantSelectorImpl extends LocatableImpl implements DescendantSelector, Serializable {
 
     private static final long serialVersionUID = -3620467847449531232L;
 
-    private Selector ancestorSelector;
-    private SimpleSelector simpleSelector;
+    private Selector ancestorSelector_;
+    private SimpleSelector simpleSelector_;
 
-    public void setAncestorSelector(Selector ancestorSelector)
-    {
-        this.ancestorSelector = ancestorSelector;
-        if (ancestorSelector instanceof Locatable)
-        {
-        	this.setLocator(((Locatable) ancestorSelector).getLocator());
+    public void setAncestorSelector(final Selector ancestorSelector) {
+        ancestorSelector_ = ancestorSelector;
+        if (ancestorSelector instanceof Locatable) {
+            setLocator(((Locatable) ancestorSelector).getLocator());
         }
-        else if (ancestorSelector == null)
-        {
-        	this.setLocator(null);
+        else if (ancestorSelector == null) {
+            setLocator(null);
         }
     }
 
-    public void setSimpleSelector(SimpleSelector simpleSelector)
-    {
-        this.simpleSelector = simpleSelector;
+    public void setSimpleSelector(final SimpleSelector simpleSelector) {
+        simpleSelector_ = simpleSelector;
     }
 
-
-    public DescendantSelectorImpl(Selector parent, SimpleSelector simpleSelector) {
-        this.setAncestorSelector(parent);
-        this.setSimpleSelector(simpleSelector);
+    public DescendantSelectorImpl(final Selector parent, final SimpleSelector simpleSelector) {
+        setAncestorSelector(parent);
+        setSimpleSelector(simpleSelector);
     }
 
-    public DescendantSelectorImpl()
-    {
+    public DescendantSelectorImpl() {
     }
-
 
     public short getSelectorType() {
         return Selector.SAC_DESCENDANT_SELECTOR;
     }
 
     public Selector getAncestorSelector() {
-        return this.ancestorSelector;
+        return ancestorSelector_;
     }
 
     public SimpleSelector getSimpleSelector() {
-        return this.simpleSelector;
+        return simpleSelector_;
     }
-    
+
     public String toString() {
-        return this.getAncestorSelector().toString() + " " + this.getSimpleSelector().toString();
+        return getAncestorSelector().toString() + " " + getSimpleSelector().toString();
     }
 }
