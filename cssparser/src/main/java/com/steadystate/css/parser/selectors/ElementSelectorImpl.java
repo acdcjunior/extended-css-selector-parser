@@ -1,9 +1,7 @@
 /*
- * $Id: ElementSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,52 +21,51 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser.selectors;
 
 import java.io.Serializable;
-import org.w3c.css.sac.*;
+
+import org.w3c.css.sac.ElementSelector;
+import org.w3c.css.sac.Selector;
 
 import com.steadystate.css.parser.LocatableImpl;
 
 /**
- *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: ElementSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  */
 public class ElementSelectorImpl extends LocatableImpl implements ElementSelector, Serializable {
 
     private static final long serialVersionUID = 7507121069969409061L;
 
-    private String localName;
+    private String localName_;
 
-    public void setLocalName(String localName)
-    {
-        this.localName = localName;
+    public void setLocalName(final String localName) {
+        localName_ = localName;
     }
 
-    public ElementSelectorImpl(String localName) {
-       this. localName = localName;
+    public ElementSelectorImpl(final String localName) {
+        localName_ = localName;
     }
 
-    public ElementSelectorImpl()
-    {
+    public ElementSelectorImpl() {
     }
 
     public short getSelectorType() {
         return Selector.SAC_ELEMENT_NODE_SELECTOR;
     }
-    
+
     public String getNamespaceURI() {
         return null;
     }
 
     public String getLocalName() {
-        return this.localName;
+        return localName_;
     }
-    
+
     public String toString() {
-        return (this.getLocalName() != null) ? this.getLocalName() : "*";
+        return (getLocalName() != null) ? getLocalName() : "*";
     }
 }

@@ -1,9 +1,7 @@
 /*
- * $Id: AndConditionImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,12 +21,15 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser.selectors;
 
 import java.io.Serializable;
-import org.w3c.css.sac.*;
+
+import org.w3c.css.sac.CombinatorCondition;
+import org.w3c.css.sac.Condition;
 
 import com.steadystate.css.parser.Locatable;
 import com.steadystate.css.parser.LocatableImpl;
@@ -36,57 +37,49 @@ import com.steadystate.css.parser.LocatableImpl;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: AndConditionImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  */
 public class AndConditionImpl extends LocatableImpl implements CombinatorCondition, Serializable {
 
     private static final long serialVersionUID = -3180583860092672742L;
 
-    private Condition firstCondition;
-    private Condition secondCondition;
+    private Condition firstCondition_;
+    private Condition secondCondition_;
 
-    public void setFirstCondition(Condition c1)
-    {
-        this.firstCondition = c1;
-        if (c1 instanceof Locatable)
-        {
-        	this.setLocator(((Locatable) c1).getLocator());
+    public void setFirstCondition(final Condition c1) {
+        firstCondition_ = c1;
+        if (c1 instanceof Locatable) {
+            setLocator(((Locatable) c1).getLocator());
         }
-        else if (c1 == null)
-        {
-        	this.setLocator(null);
+        else if (c1 == null) {
+            setLocator(null);
         }
     }
 
-    public void setSecondCondition(Condition c2)
-    {
-        this.secondCondition = c2;
+    public void setSecondCondition(final Condition c2) {
+        secondCondition_ = c2;
     }
 
-
-    public AndConditionImpl(Condition c1, Condition c2) {
-        this.setFirstCondition(c1);
-        this.setSecondCondition(c2);
+    public AndConditionImpl(final Condition c1, final Condition c2) {
+        setFirstCondition(c1);
+        setSecondCondition(c2);
     }
 
-    public AndConditionImpl()
-    {
+    public AndConditionImpl() {
     }
-
 
     public short getConditionType() {
         return Condition.SAC_AND_CONDITION;
     }
 
     public Condition getFirstCondition() {
-        return this.firstCondition;
+        return firstCondition_;
     }
 
     public Condition getSecondCondition() {
-        return this.secondCondition;
+        return secondCondition_;
     }
-    
+
     public String toString() {
-        return this.getFirstCondition().toString() + this.getSecondCondition().toString();
+        return getFirstCondition().toString() + getSecondCondition().toString();
     }
 }

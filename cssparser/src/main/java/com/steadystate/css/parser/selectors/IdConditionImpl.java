@@ -1,9 +1,7 @@
 /*
- * $Id: IdConditionImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,40 +21,37 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser.selectors;
 
 import java.io.Serializable;
-import org.w3c.css.sac.*;
+
+import org.w3c.css.sac.AttributeCondition;
+import org.w3c.css.sac.Condition;
 
 import com.steadystate.css.parser.LocatableImpl;
 
 /**
- *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: IdConditionImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  */
 public class IdConditionImpl extends LocatableImpl implements AttributeCondition, Serializable {
 
     private static final long serialVersionUID = 5955662524656167683L;
 
-    private String value;
+    private String value_;
 
-    public void setValue(String value)
-    {
-        this.value = value;
+    public void setValue(final String value) {
+        this.value_ = value;
     }
 
-
-    public IdConditionImpl(String value) {
-        this.value = value;
+    public IdConditionImpl(final String value) {
+        this.value_ = value;
     }
 
-    public IdConditionImpl()
-    {
+    public IdConditionImpl() {
     }
-
 
     public short getConditionType() {
         return Condition.SAC_ID_CONDITION;
@@ -75,9 +70,9 @@ public class IdConditionImpl extends LocatableImpl implements AttributeCondition
     }
 
     public String getValue() {
-        return this.value;
+        return this.value_;
     }
-    
+
     public String toString() {
         return "#" + this.getValue();
     }

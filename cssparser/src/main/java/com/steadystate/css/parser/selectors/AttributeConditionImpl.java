@@ -1,9 +1,7 @@
 /*
- * $Id: AttributeConditionImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,47 +21,43 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser.selectors;
 
 import java.io.Serializable;
-import org.w3c.css.sac.*;
+
+import org.w3c.css.sac.AttributeCondition;
+import org.w3c.css.sac.Condition;
 
 import com.steadystate.css.parser.LocatableImpl;
 
 /**
- *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: AttributeConditionImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  */
 public class AttributeConditionImpl extends LocatableImpl implements AttributeCondition, Serializable {
 
     private static final long serialVersionUID = 9035418830958954213L;
 
-    private String localName;
-    private String value;
+    private String localName_;
+    private String value_;
 
-    public void setLocaleName(String localName)
-    {
-        this.localName = localName;
+    public void setLocaleName(final String localName) {
+        localName_ = localName;
     }
 
-    public void setValue(String value)
-    {
-        this.value = value;
+    public void setValue(final String value) {
+        value_ = value;
     }
 
-
-    public AttributeConditionImpl(String localName, String value) {
-        this.localName = localName;
-        this.value = value;
+    public AttributeConditionImpl(final String localName, final String value) {
+        localName_ = localName;
+        value_ = value;
     }
 
-    public AttributeConditionImpl()
-    {
+    public AttributeConditionImpl() {
     }
-
 
     public short getConditionType() {
         return Condition.SAC_ATTRIBUTE_CONDITION;
@@ -74,7 +68,7 @@ public class AttributeConditionImpl extends LocatableImpl implements AttributeCo
     }
 
     public String getLocalName() {
-        return this.localName;
+        return localName_;
     }
 
     public boolean getSpecified() {
@@ -82,13 +76,13 @@ public class AttributeConditionImpl extends LocatableImpl implements AttributeCo
     }
 
     public String getValue() {
-        return this.value;
+        return value_;
     }
-    
+
     public String toString() {
-        if (this.getValue() != null) {
-            return "[" + this.getLocalName() + "=\"" + this.getValue() + "\"]";
+        if (getValue() != null) {
+            return "[" + getLocalName() + "=\"" + getValue() + "\"]";
         }
-        return "[" + this.getLocalName() + "]";
+        return "[" + getLocalName() + "]";
     }
 }

@@ -1,9 +1,7 @@
 /*
- * $Id: DirectAdjacentSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,81 +21,76 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser.selectors;
 
 import java.io.Serializable;
-import org.w3c.css.sac.*;
+
+import org.w3c.css.sac.Selector;
+import org.w3c.css.sac.SiblingSelector;
+import org.w3c.css.sac.SimpleSelector;
 
 import com.steadystate.css.parser.Locatable;
 import com.steadystate.css.parser.LocatableImpl;
 
 /**
- *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: DirectAdjacentSelectorImpl.java,v 1.2 2008-11-28 13:05:17 waldbaer Exp $
  */
 public class DirectAdjacentSelectorImpl extends LocatableImpl implements SiblingSelector, Serializable {
 
     private static final long serialVersionUID = -7328602345833826516L;
 
-    private short nodeType;
-    private Selector selector;  // child
-    private SimpleSelector siblingSelector; // direct adjacent
+    private short nodeType_;
+    private Selector selector_;  // child
+    private SimpleSelector siblingSelector_; // direct adjacent
 
-    public void setNodeType(short nodeType)
-    {
-        this.nodeType = nodeType;
+    public void setNodeType(final short nodeType) {
+        nodeType_ = nodeType;
     }
 
-    public void setSelector(Selector child)
-    {
-        this.selector = child;
-        if (child instanceof Locatable)
-        {
-        	this.setLocator(((Locatable) child).getLocator());
+    public void setSelector(final Selector child) {
+        selector_ = child;
+        if (child instanceof Locatable) {
+            setLocator(((Locatable) child).getLocator());
         }
-        else if (child == null)
-        {
-        	this.setLocator(null);
+        else if (child == null) {
+            setLocator(null);
         }
     }
 
-    public void setSiblingSelector(SimpleSelector directAdjacent)
-    {
-        this.siblingSelector = directAdjacent;
+    public void setSiblingSelector(final SimpleSelector directAdjacent) {
+        siblingSelector_ = directAdjacent;
     }
 
-
-    public DirectAdjacentSelectorImpl(short nodeType, Selector child, SimpleSelector directAdjacent) {
-        this.setNodeType(nodeType);
-        this.setSelector(child);
-        this.setSiblingSelector(directAdjacent);
+    public DirectAdjacentSelectorImpl(final short nodeType,
+            final Selector child, final SimpleSelector directAdjacent) {
+        setNodeType(nodeType);
+        setSelector(child);
+        setSiblingSelector(directAdjacent);
     }
 
-    public DirectAdjacentSelectorImpl()
-    {
+    public DirectAdjacentSelectorImpl() {
     }
-
 
     public short getNodeType() {
-        return this.nodeType;
+        return nodeType_;
     }
-    
+
     public short getSelectorType() {
         return Selector.SAC_DIRECT_ADJACENT_SELECTOR;
     }
 
     public Selector getSelector() {
-        return this.selector;
+        return selector_;
     }
 
     public SimpleSelector getSiblingSelector() {
-        return this.siblingSelector;
+        return siblingSelector_;
     }
-    
+
     public String toString() {
-        return this.selector.toString() + " + " + this.siblingSelector.toString();
+        return selector_.toString() + " + " + siblingSelector_.toString();
     }
 }
