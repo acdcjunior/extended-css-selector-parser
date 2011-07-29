@@ -49,7 +49,7 @@ import com.steadystate.css.parser.SACParserCSS2;
 
 /**
  * Tests the CSS DOM implementation by loading a stylesheet and performing a few operations upon it.
- * 
+ *
  * @author David Schweinsberg
  * @author rbri
  */
@@ -57,7 +57,6 @@ public class TestDOM2 {
 
     @Test
     public void test() throws Exception {
-
         InputStream is = getClass().getClassLoader().getResourceAsStream("test.css");
         Assert.assertNotNull(is);
 
@@ -67,59 +66,57 @@ public class TestDOM2 {
         // set CSS2 parser because this test contains test for features
         // no longer supported by CSS21
         CSSOMParser parser = new CSSOMParser(new SACParserCSS2());
+        ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
         CSSStyleSheet stylesheet = parser.parseStyleSheet(source, null, null);
-        CSSRuleList rules = stylesheet.getCssRules();
 
-        for (int i = 0; i < rules.getLength(); i++) {
-            CSSRule rule = rules.item(i);
-            System.out.println(rule.getCssText());
-        }
+        Assert.assertEquals(3, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(3, errorHandler.getWarningCount());
+
+        CSSRuleList rules = stylesheet.getCssRules();
+        Assert.assertEquals(78, rules.getLength());
+
+        CSSRule rule = rules.item(9);
+        Assert.assertEquals("H1, H2 { color: green; background-color: blue }", rule.getCssText());
 
         // Do some modifications and output the results
 
         // Style Rules
-        rules.item(9).setCssText("apple { color: green }"); // GOOD
-        // rules.item(9).setCssText("@font-face { src: url(null) }"); // BAD
+        rule = rules.item(9);
+        rule.setCssText("apple { color: green }");
+        Assert.assertEquals("apple { color: green }", rule.getCssText());
 
-        CSSRule rule = rules.item(9);
-        System.out.println(rule.getCssText());
+        ((CSSStyleRule) rule).setSelectorText("banana");
+        Assert.assertEquals("banana { color: green }", rule.getCssText());
 
-        ((CSSStyleRule) rules.item(9)).setSelectorText("banana"); // GOOD
+        ((CSSStyleRule) rule).setSelectorText("orange tangerine, grapefruit");
+        Assert.assertEquals("orange tangerine, grapefruit { color: green }", rule.getCssText());
 
-        System.out.println(rule.getCssText());
-
-        ((CSSStyleRule) rules.item(9)).setSelectorText("banana, orange tangerine, grapefruit"); // GOOD
-
-        System.out.println(rule.getCssText());
-
-        ((CSSStyleRule) rules.item(9)).getStyle().setCssText(
-            "{ color: red green brown; smell: sweet, sour; taste: sweet/tart }"); // GOOD
-
-        System.out.println(rule.getCssText());
-
-        // Import rules
-        stylesheet.insertRule("@import \"thing.css\";", 0); // GOOD
-        // stylesheet.insertRule("@import \"thing.css\";", 10); // BAD
+        ((CSSStyleRule) rule).getStyle().setCssText(
+            "color: red green brown; smell: sweet, sour; taste: sweet/tart");
+        Assert.assertEquals("orange tangerine, grapefruit { color: red green brown; smell: sweet, sour; taste: sweet/ tart }", rule.getCssText());
 
         rule = rules.item(0);
-        System.out.println(rule.getCssText());
+        Assert.assertEquals("@import url(foo.css);", rule.getCssText());
 
-        ((CSSImportRule) rules.item(0)).setCssText("@import \"thing-hack.css\";");
+        // Import rules
+        stylesheet.insertRule("@import \"thing.css\";", 0);
+        Assert.assertEquals(79, rules.getLength());
+        rule = rules.item(0);
+        Assert.assertEquals("@import url(thing.css);", rule.getCssText());
 
-        System.out.println(rule.getCssText());
+        ((CSSImportRule) rule).setCssText("@import \"thing-hack.css\";");
+        rule = rules.item(0);
+        Assert.assertEquals("@import url(thing-hack.css);", rule.getCssText());
 
         // Font-face rules
-        stylesheet.insertRule("@font-face { src: \"#foo\" }", 10); // GOOD
-
+        stylesheet.insertRule("@font-face { src: \"#foo\" }", 10);
+        Assert.assertEquals(80, rules.getLength());
         rule = rules.item(10);
-        System.out.println(rule.getCssText());
+        Assert.assertEquals("@font-face {src: \"#foo\"}", rule.getCssText());
 
-        ((CSSFontFaceRule) rules.item(10)).setCssText("@font-face { src: \"#bar\" }"); // GOOD
-        // ((CSSFontFaceRule)rules.item(10)).setCssText("@import \"thing-hack.css\";"); // BAD
-
-        System.out.println(rule.getCssText());
-
-        // Media rules
-
+        ((CSSFontFaceRule) rules.item(10)).setCssText("@font-face { src: \"#bar\" }");
+        Assert.assertEquals("@font-face {src: \"#bar\"}", rule.getCssText());
     }
 }
