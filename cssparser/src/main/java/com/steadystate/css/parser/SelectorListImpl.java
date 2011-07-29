@@ -1,9 +1,7 @@
 /*
- * $Id: SelectorListImpl.java,v 1.4 2008-11-28 13:03:27 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,51 +21,52 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser;
 
 import java.io.Serializable;
-import java.util.*;
-import org.w3c.css.sac.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.w3c.css.sac.Selector;
+import org.w3c.css.sac.SelectorList;
 
 /**
  * Implementation of {@link SelectorList}.
- * 
+ *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SelectorListImpl.java,v 1.4 2008-11-28 13:03:27 waldbaer Exp $
  */
 public class SelectorListImpl extends LocatableImpl implements SelectorList, Serializable {
 
     private static final long serialVersionUID = 7313376916207026333L;
 
-    private List<Selector> selectors = new ArrayList<Selector>(10);
+    private List<Selector> selectors_ = new ArrayList<Selector>(10);
 
-    public List<Selector> getSelectors()
-    {
-        return this.selectors;
+    public List<Selector> getSelectors() {
+        return selectors_;
     }
 
-    public void setSelectors(List<Selector> selectors)
-    {
-        this.selectors = selectors;
+    public void setSelectors(final List<Selector> selectors) {
+        selectors_ = selectors;
     }
 
     public int getLength() {
-        return this.selectors.size();
+        return selectors_.size();
     }
 
-    public Selector item(int index) {
-        return this.selectors.get(index);
+    public Selector item(final int index) {
+        return selectors_.get(index);
     }
 
-    public void add(Selector sel) {
-        this.selectors.add(sel);
+    public void add(final Selector sel) {
+        selectors_.add(sel);
     }
-    
+
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        int len = getLength();
+        final StringBuilder sb = new StringBuilder();
+        final int len = getLength();
         for (int i = 0; i < len; i++) {
             sb.append(item(i).toString());
             if (i < len - 1) {
