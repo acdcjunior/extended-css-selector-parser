@@ -1,9 +1,7 @@
 /*
- * $Id: LocatableImpl.java,v 1.1 2008-11-28 13:02:37 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2008 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 package com.steadystate.css.parser;
 
@@ -30,23 +29,18 @@ import org.w3c.css.sac.Locator;
 
 /**
  * Implementation of {@link Locatable}
- * 
+ *
  * @author <a href="mailto:waldbaer@users.sourceforge.net">Johannes Koch</a>
- * @version $Id: LocatableImpl.java,v 1.1 2008-11-28 13:02:37 waldbaer Exp $
  */
-public class LocatableImpl implements Locatable
-{
+public class LocatableImpl implements Locatable {
 
-    private Locator locator;
+    private Locator locator_;
 
-    public Locator getLocator()
-    {
-    	return this.locator;
+    public Locator getLocator() {
+        return locator_;
     }
 
-    public void setLocator(Locator locator)
-    {
-    	this.locator = locator;
+    public void setLocator(final Locator locator) {
+        locator_ = locator;
     }
-
 }

@@ -1,9 +1,7 @@
 /*
- * $Id: SACMediaListImpl.java,v 1.5 2008-11-28 13:03:39 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,37 +21,39 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 package com.steadystate.css.parser;
 
-import java.util.*;
-import org.w3c.css.sac.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.w3c.css.sac.SACMediaList;
 
 /**
  * Implementation of {@link SACMediaList}.
- * 
+ *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: SACMediaListImpl.java,v 1.5 2008-11-28 13:03:39 waldbaer Exp $
  */
 public class SACMediaListImpl extends LocatableImpl implements SACMediaList {
 
-    private List<String> media = new ArrayList<String>(10);
+    private List<String> media_ = new ArrayList<String>(10);
 
     public int getLength() {
-        return this.media.size();
+        return media_.size();
     }
 
-    public String item(int index) {
-        return this.media.get(index);
+    public String item(final int index) {
+        return media_.get(index);
     }
 
-    public void add(String s) {
-        this.media.add(s);
+    public void add(final String s) {
+        media_.add(s);
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        int len = getLength();
+        final StringBuilder sb = new StringBuilder();
+        final int len = getLength();
         for (int i = 0; i < len; i++) {
             sb.append(item(i));
             if (i < len - 1) {

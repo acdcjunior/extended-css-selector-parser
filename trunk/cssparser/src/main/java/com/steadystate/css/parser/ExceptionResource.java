@@ -1,9 +1,7 @@
 /*
- * $Id: ExceptionResource.java,v 1.1 2008-03-20 01:20:17 sdanig Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser;

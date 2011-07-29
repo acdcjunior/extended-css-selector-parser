@@ -1,9 +1,7 @@
 /*
- * $Id: LexicalUnitImpl.java,v 1.5 2010-05-20 09:12:29 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,558 +21,545 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser;
 
 import java.io.Serializable;
-import org.w3c.css.sac.*;
+
+import org.w3c.css.sac.LexicalUnit;
 
 /**
  * Implementation of {@link LexicalUnit}.
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LexicalUnitImpl.java,v 1.5 2010-05-20 09:12:29 waldbaer Exp $
  */
 public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Serializable {
 
     private static final long serialVersionUID = -7260032046960116891L;
 
-    private short lexicalUnitType;
-    private LexicalUnit nextLexicalUnit;
-    private LexicalUnit previousLexicalUnit;
-    private float floatValue;
-    private String dimension;
-    private String functionName;
-    private LexicalUnit parameters;
-    private String stringValue;
+    private short lexicalUnitType_;
+    private LexicalUnit nextLexicalUnit_;
+    private LexicalUnit previousLexicalUnit_;
+    private float floatValue_;
+    private String dimension_;
+    private String functionName_;
+    private LexicalUnit parameters_;
+    private String stringValue_;
 
-    public void setLexicalUnitType(short type)
-    {
-        this.lexicalUnitType = type;
+    public void setLexicalUnitType(final short type) {
+        lexicalUnitType_ = type;
     }
 
-    public void setNextLexicalUnit(LexicalUnit next)
-    {
-        this.nextLexicalUnit = next;
+    public void setNextLexicalUnit(final LexicalUnit next) {
+        nextLexicalUnit_ = next;
     }
 
-    public void setPreviousLexicalUnit(LexicalUnit prev)
-    {
-        this.previousLexicalUnit = prev;
+    public void setPreviousLexicalUnit(final LexicalUnit prev) {
+        previousLexicalUnit_ = prev;
     }
 
-    public void setFloatValue(float floatVal)
-    {
-        this.floatValue = floatVal;
+    public void setFloatValue(final float floatVal) {
+        floatValue_ = floatVal;
     }
 
-    public String getDimension()
-    {
-        return this.dimension;
+    public String getDimension() {
+        return dimension_;
     }
 
-    public void setDimension(String dimension)
-    {
-        this.dimension = dimension;
+    public void setDimension(final String dimension) {
+        dimension_ = dimension;
     }
 
-    public void setFunctionName(String function)
-    {
-        this.functionName = function;
+    public void setFunctionName(final String function) {
+        functionName_ = function;
     }
 
-    public void setParameters(LexicalUnit params)
-    {
-        this.parameters = params;
+    public void setParameters(final LexicalUnit params) {
+        parameters_ = params;
     }
 
-    public void setStringValue(String stringVal)
-    {
-        this.stringValue = stringVal;
+    public void setStringValue(final String stringVal) {
+        stringValue_ = stringVal;
     }
 
-
-    protected LexicalUnitImpl(LexicalUnit previous, short type) {
-        this.lexicalUnitType = type;
-        this.previousLexicalUnit = previous;
-        if (this.previousLexicalUnit != null) {
-            ((LexicalUnitImpl)this.previousLexicalUnit).nextLexicalUnit = this;
+    protected LexicalUnitImpl(final LexicalUnit previous, final short type) {
+        lexicalUnitType_ = type;
+        previousLexicalUnit_ = previous;
+        if (previousLexicalUnit_ != null) {
+            ((LexicalUnitImpl) previousLexicalUnit_).nextLexicalUnit_ = this;
         }
     }
 
     /**
      * Integer
      */
-    protected LexicalUnitImpl(LexicalUnit previous, int value) {
+    protected LexicalUnitImpl(final LexicalUnit previous, final int value) {
         this(previous, SAC_INTEGER);
-        this.floatValue = value;
+        floatValue_ = value;
     }
 
     /**
      * Dimension
      */
-    protected LexicalUnitImpl(LexicalUnit previous, short type, float value) {
+    protected LexicalUnitImpl(final LexicalUnit previous, final short type, final float value) {
         this(previous, type);
-        this.floatValue = value;
+        floatValue_ = value;
     }
 
     /**
      * Unknown dimension
      */
     protected LexicalUnitImpl(
-            LexicalUnit previous,
-            short type,
-            String dimension,
-            float value) {
+            final LexicalUnit previous,
+            final short type,
+            final String dimension,
+            final float value) {
         this(previous, type);
-        this.dimension = dimension;
-        this.floatValue = value;
+        dimension_ = dimension;
+        floatValue_ = value;
     }
 
     /**
      * String
      */
-    protected LexicalUnitImpl(LexicalUnit previous, short type, String value) {
+    protected LexicalUnitImpl(final LexicalUnit previous, final short type, final String value) {
         this(previous, type);
-        this.stringValue = value;
+        stringValue_ = value;
     }
 
     /**
      * Function
      */
     protected LexicalUnitImpl(
-            LexicalUnit previous,
-            short type,
-            String name,
-            LexicalUnit params) {
+            final LexicalUnit previous,
+            final short type,
+            final String name,
+            final LexicalUnit params) {
         this(previous, type);
-        this.functionName = name;
-        this.parameters = params;
+        functionName_ = name;
+        parameters_ = params;
     }
 
-    protected LexicalUnitImpl(LexicalUnit previous, short type, String name,
-        String stringValue)
-    {
+    protected LexicalUnitImpl(final LexicalUnit previous, final short type, final String name,
+            final String stringValue) {
         this(previous, type);
-        this.functionName = name;
-        this.stringValue = stringValue;
+        functionName_ = name;
+        stringValue_ = stringValue;
     }
 
-    public LexicalUnitImpl()
-    {
+    public LexicalUnitImpl() {
     }
-
 
     public short getLexicalUnitType() {
-        return this.lexicalUnitType;
+        return lexicalUnitType_;
     }
 
     public LexicalUnit getNextLexicalUnit() {
-        return this.nextLexicalUnit;
+        return nextLexicalUnit_;
     }
 
     public LexicalUnit getPreviousLexicalUnit() {
-        return this.previousLexicalUnit;
+        return previousLexicalUnit_;
     }
 
     public int getIntegerValue() {
-        return (int) this.floatValue;
+        return (int) floatValue_;
     }
 
     public float getFloatValue() {
-        return this.floatValue;
+        return floatValue_;
     }
 
     public String getDimensionUnitText() {
-        switch (this.lexicalUnitType) {
-        case SAC_EM:
-            return "em";
-        case SAC_EX:
-            return "ex";
-        case SAC_PIXEL:
-            return "px";
-        case SAC_INCH:
-            return "in";
-        case SAC_CENTIMETER:
-            return "cm";
-        case SAC_MILLIMETER:
-            return "mm";
-        case SAC_POINT:
-            return "pt";
-        case SAC_PICA:
-            return "pc";
-        case SAC_PERCENTAGE:
-            return "%";
-        case SAC_DEGREE:
-            return "deg";
-        case SAC_GRADIAN:
-            return "grad";
-        case SAC_RADIAN:
-            return "rad";
-        case SAC_MILLISECOND:
-            return "ms";
-        case SAC_SECOND:
-            return "s";
-        case SAC_HERTZ:
-            return "Hz";
-        case SAC_KILOHERTZ:
-            return "kHz";
-        case SAC_DIMENSION:
-            return this.dimension;
+        switch (lexicalUnitType_) {
+            case SAC_EM:
+                return "em";
+            case SAC_EX:
+                return "ex";
+            case SAC_PIXEL:
+                return "px";
+            case SAC_INCH:
+                return "in";
+            case SAC_CENTIMETER:
+                return "cm";
+            case SAC_MILLIMETER:
+                return "mm";
+            case SAC_POINT:
+                return "pt";
+            case SAC_PICA:
+                return "pc";
+            case SAC_PERCENTAGE:
+                return "%";
+            case SAC_DEGREE:
+                return "deg";
+            case SAC_GRADIAN:
+                return "grad";
+            case SAC_RADIAN:
+                return "rad";
+            case SAC_MILLISECOND:
+                return "ms";
+            case SAC_SECOND:
+                return "s";
+            case SAC_HERTZ:
+                return "Hz";
+            case SAC_KILOHERTZ:
+                return "kHz";
+            case SAC_DIMENSION:
+                return dimension_;
         }
         return "";
     }
 
     public String getFunctionName() {
-        return this.functionName;
+        return functionName_;
     }
 
     public LexicalUnit getParameters() {
-        return this.parameters;
+        return parameters_;
     }
 
     public String getStringValue() {
-        return this.stringValue;
+        return stringValue_;
     }
 
     public LexicalUnit getSubValues() {
-        return this.parameters;
+        return parameters_;
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        switch (this.lexicalUnitType) {
-        case SAC_OPERATOR_COMMA:
-            sb.append(",");
-            break;
-        case SAC_OPERATOR_PLUS:
-            sb.append("+");
-            break;
-        case SAC_OPERATOR_MINUS:
-            sb.append("-");
-            break;
-        case SAC_OPERATOR_MULTIPLY:
-            sb.append("*");
-            break;
-        case SAC_OPERATOR_SLASH:
-            sb.append("/");
-            break;
-        case SAC_OPERATOR_MOD:
-            sb.append("%");
-            break;
-        case SAC_OPERATOR_EXP:
-            sb.append("^");
-            break;
-        case SAC_OPERATOR_LT:
-            sb.append("<");
-            break;
-        case SAC_OPERATOR_GT:
-            sb.append(">");
-            break;
-        case SAC_OPERATOR_LE:
-            sb.append("<=");
-            break;
-        case SAC_OPERATOR_GE:
-            sb.append(">=");
-            break;
-        case SAC_OPERATOR_TILDE:
-            sb.append("~");
-            break;
-        case SAC_INHERIT:
-            sb.append("inherit");
-            break;
-        case SAC_INTEGER:
-            sb.append(String.valueOf(this.getIntegerValue()));
-            break;
-        case SAC_REAL:
-            sb.append(this.trimFloat(this.getFloatValue()));
-            break;
-        case SAC_EM:
-        case SAC_EX:
-        case SAC_PIXEL:
-        case SAC_INCH:
-        case SAC_CENTIMETER:
-        case SAC_MILLIMETER:
-        case SAC_POINT:
-        case SAC_PICA:
-        case SAC_PERCENTAGE:
-        case SAC_DEGREE:
-        case SAC_GRADIAN:
-        case SAC_RADIAN:
-        case SAC_MILLISECOND:
-        case SAC_SECOND:
-        case SAC_HERTZ:
-        case SAC_KILOHERTZ:
-        case SAC_DIMENSION:
-            sb.append(this.trimFloat(this.getFloatValue()))
-              .append(this.getDimensionUnitText());
-            break;
-        case SAC_URI:
-            sb.append("url(").append(this.getStringValue()).append(")");
-            break;
-        case SAC_COUNTER_FUNCTION:
-            sb.append("counter(");
-            appendParams(sb, this.parameters);
-            sb.append(")");
-            break;
-        case SAC_COUNTERS_FUNCTION:
-            sb.append("counters(");
-            appendParams(sb, this.parameters);
-            sb.append(")");
-            break;
-        case SAC_RGBCOLOR:
-            sb.append("rgb(");
-            appendParams(sb, this.parameters);
-            sb.append(")");
-            break;
-        case SAC_IDENT:
-            sb.append(this.getStringValue());
-            break;
-        case SAC_STRING_VALUE:
-            sb.append("\"").append(this.getStringValue()).append("\"");
-            break;
-        case SAC_ATTR:
-            sb.append("attr(");
-            appendParams(sb, this.parameters);
-            sb.append(")");
-            break;
-        case SAC_RECT_FUNCTION:
-            sb.append("rect(");
-            appendParams(sb,this. parameters);
-            sb.append(")");
-            break;
-        case SAC_UNICODERANGE:
-            sb.append(this.getStringValue());
-            break;
-        case SAC_SUB_EXPRESSION:
-            sb.append(this.getStringValue());
-            break;
-        case SAC_FUNCTION:
-            sb.append(this.getFunctionName()).append('(');
-            appendParams(sb, this.parameters);
-            sb.append(")");
-            break;
+        final StringBuilder sb = new StringBuilder();
+        switch (lexicalUnitType_) {
+            case SAC_OPERATOR_COMMA:
+                sb.append(",");
+                break;
+            case SAC_OPERATOR_PLUS:
+                sb.append("+");
+                break;
+            case SAC_OPERATOR_MINUS:
+                sb.append("-");
+                break;
+            case SAC_OPERATOR_MULTIPLY:
+                sb.append("*");
+                break;
+            case SAC_OPERATOR_SLASH:
+                sb.append("/");
+                break;
+            case SAC_OPERATOR_MOD:
+                sb.append("%");
+                break;
+            case SAC_OPERATOR_EXP:
+                sb.append("^");
+                break;
+            case SAC_OPERATOR_LT:
+                sb.append("<");
+                break;
+            case SAC_OPERATOR_GT:
+                sb.append(">");
+                break;
+            case SAC_OPERATOR_LE:
+                sb.append("<=");
+                break;
+            case SAC_OPERATOR_GE:
+                sb.append(">=");
+                break;
+            case SAC_OPERATOR_TILDE:
+                sb.append("~");
+                break;
+            case SAC_INHERIT:
+                sb.append("inherit");
+                break;
+            case SAC_INTEGER:
+                sb.append(String.valueOf(getIntegerValue()));
+                break;
+            case SAC_REAL:
+                sb.append(trimFloat(getFloatValue()));
+                break;
+            case SAC_EM:
+            case SAC_EX:
+            case SAC_PIXEL:
+            case SAC_INCH:
+            case SAC_CENTIMETER:
+            case SAC_MILLIMETER:
+            case SAC_POINT:
+            case SAC_PICA:
+            case SAC_PERCENTAGE:
+            case SAC_DEGREE:
+            case SAC_GRADIAN:
+            case SAC_RADIAN:
+            case SAC_MILLISECOND:
+            case SAC_SECOND:
+            case SAC_HERTZ:
+            case SAC_KILOHERTZ:
+            case SAC_DIMENSION:
+                sb.append(trimFloat(getFloatValue())).append(getDimensionUnitText());
+                break;
+            case SAC_URI:
+                sb.append("url(").append(getStringValue()).append(")");
+                break;
+            case SAC_COUNTER_FUNCTION:
+                sb.append("counter(");
+                appendParams(sb, parameters_);
+                sb.append(")");
+                break;
+            case SAC_COUNTERS_FUNCTION:
+                sb.append("counters(");
+                appendParams(sb, parameters_);
+                sb.append(")");
+                break;
+            case SAC_RGBCOLOR:
+                sb.append("rgb(");
+                appendParams(sb, parameters_);
+                sb.append(")");
+                break;
+            case SAC_IDENT:
+                sb.append(getStringValue());
+                break;
+            case SAC_STRING_VALUE:
+                sb.append("\"").append(getStringValue()).append("\"");
+                break;
+            case SAC_ATTR:
+                sb.append("attr(");
+                appendParams(sb, parameters_);
+                sb.append(")");
+                break;
+            case SAC_RECT_FUNCTION:
+                sb.append("rect(");
+                appendParams(sb, parameters_);
+                sb.append(")");
+                break;
+            case SAC_UNICODERANGE:
+                sb.append(getStringValue());
+                break;
+            case SAC_SUB_EXPRESSION:
+                sb.append(getStringValue());
+                break;
+            case SAC_FUNCTION:
+                sb.append(getFunctionName()).append('(');
+                appendParams(sb, parameters_);
+                sb.append(")");
+                break;
         }
         return sb.toString();
     }
 
     public String toDebugString() {
-        StringBuilder sb = new StringBuilder();
-        switch (this.lexicalUnitType) {
-        case SAC_OPERATOR_COMMA:
-            sb.append("SAC_OPERATOR_COMMA");
-            break;
-        case SAC_OPERATOR_PLUS:
-            sb.append("SAC_OPERATOR_PLUS");
-            break;
-        case SAC_OPERATOR_MINUS:
-            sb.append("SAC_OPERATOR_MINUS");
-            break;
-        case SAC_OPERATOR_MULTIPLY:
-            sb.append("SAC_OPERATOR_MULTIPLY");
-            break;
-        case SAC_OPERATOR_SLASH:
-            sb.append("SAC_OPERATOR_SLASH");
-            break;
-        case SAC_OPERATOR_MOD:
-            sb.append("SAC_OPERATOR_MOD");
-            break;
-        case SAC_OPERATOR_EXP:
-            sb.append("SAC_OPERATOR_EXP");
-            break;
-        case SAC_OPERATOR_LT:
-            sb.append("SAC_OPERATOR_LT");
-            break;
-        case SAC_OPERATOR_GT:
-            sb.append("SAC_OPERATOR_GT");
-            break;
-        case SAC_OPERATOR_LE:
-            sb.append("SAC_OPERATOR_LE");
-            break;
-        case SAC_OPERATOR_GE:
-            sb.append("SAC_OPERATOR_GE");
-            break;
-        case SAC_OPERATOR_TILDE:
-            sb.append("SAC_OPERATOR_TILDE");
-            break;
-        case SAC_INHERIT:
-            sb.append("SAC_INHERIT");
-            break;
-        case SAC_INTEGER:
-            sb.append("SAC_INTEGER(")
-                .append(String.valueOf(this.getIntegerValue()))
-                .append(")");
-            break;
-        case SAC_REAL:
-            sb.append("SAC_REAL(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(")");
-            break;
-        case SAC_EM:
-            sb.append("SAC_EM(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_EX:
-            sb.append("SAC_EX(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_PIXEL:
-            sb.append("SAC_PIXEL(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_INCH:
-            sb.append("SAC_INCH(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_CENTIMETER:
-            sb.append("SAC_CENTIMETER(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_MILLIMETER:
-            sb.append("SAC_MILLIMETER(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_POINT:
-            sb.append("SAC_POINT(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_PICA:
-            sb.append("SAC_PICA(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_PERCENTAGE:
-            sb.append("SAC_PERCENTAGE(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_DEGREE:
-            sb.append("SAC_DEGREE(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_GRADIAN:
-            sb.append("SAC_GRADIAN(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_RADIAN:
-            sb.append("SAC_RADIAN(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_MILLISECOND:
-            sb.append("SAC_MILLISECOND(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_SECOND:
-            sb.append("SAC_SECOND(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_HERTZ:
-            sb.append("SAC_HERTZ(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_KILOHERTZ:
-            sb.append("SAC_KILOHERTZ(")
-                .append(trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_DIMENSION:
-            sb.append("SAC_DIMENSION(")
-                .append(this.trimFloat(this.getFloatValue()))
-                .append(this.getDimensionUnitText())
-                .append(")");
-            break;
-        case SAC_URI:
-            sb.append("SAC_URI(url(")
-                .append(this.getStringValue())
-                .append("))");
-            break;
-        case SAC_COUNTER_FUNCTION:
-            sb.append("SAC_COUNTER_FUNCTION(counter(");
-            appendParams(sb, this.parameters);
-            sb.append("))");
-            break;
-        case SAC_COUNTERS_FUNCTION:
-            sb.append("SAC_COUNTERS_FUNCTION(counters(");
-            appendParams(sb, this.parameters);
-            sb.append("))");
-            break;
-        case SAC_RGBCOLOR:
-            sb.append("SAC_RGBCOLOR(rgb(");
-            appendParams(sb, this.parameters);
-            sb.append("))");
-            break;
-        case SAC_IDENT:
-            sb.append("SAC_IDENT(")
-                .append(this.getStringValue())
-                .append(")");
-            break;
-        case SAC_STRING_VALUE:
-            sb.append("SAC_STRING_VALUE(\"")
-                .append(this.getStringValue())
-                .append("\")");
-            break;
-        case SAC_ATTR:
-            sb.append("SAC_ATTR(attr(");
-            appendParams(sb, this.parameters);
-            sb.append("))");
-            break;
-        case SAC_RECT_FUNCTION:
-            sb.append("SAC_RECT_FUNCTION(rect(");
-            appendParams(sb, this.parameters);
-            sb.append("))");
-            break;
-        case SAC_UNICODERANGE:
-            sb.append("SAC_UNICODERANGE(")
-                .append(this.getStringValue())
-                .append(")");
-            break;
-        case SAC_SUB_EXPRESSION:
-            sb.append("SAC_SUB_EXPRESSION(")
-                .append(this.getStringValue())
-                .append(")");
-            break;
-        case SAC_FUNCTION:
-            sb.append("SAC_FUNCTION(")
-                .append(this.getFunctionName())
-                .append("(");
-            appendParams(sb, this.parameters);
-            sb.append("))");
-            break;
+        final StringBuilder sb = new StringBuilder();
+        switch (lexicalUnitType_) {
+            case SAC_OPERATOR_COMMA:
+                sb.append("SAC_OPERATOR_COMMA");
+                break;
+            case SAC_OPERATOR_PLUS:
+                sb.append("SAC_OPERATOR_PLUS");
+                break;
+            case SAC_OPERATOR_MINUS:
+                sb.append("SAC_OPERATOR_MINUS");
+                break;
+            case SAC_OPERATOR_MULTIPLY:
+                sb.append("SAC_OPERATOR_MULTIPLY");
+                break;
+            case SAC_OPERATOR_SLASH:
+                sb.append("SAC_OPERATOR_SLASH");
+                break;
+            case SAC_OPERATOR_MOD:
+                sb.append("SAC_OPERATOR_MOD");
+                break;
+            case SAC_OPERATOR_EXP:
+                sb.append("SAC_OPERATOR_EXP");
+                break;
+            case SAC_OPERATOR_LT:
+                sb.append("SAC_OPERATOR_LT");
+                break;
+            case SAC_OPERATOR_GT:
+                sb.append("SAC_OPERATOR_GT");
+                break;
+            case SAC_OPERATOR_LE:
+                sb.append("SAC_OPERATOR_LE");
+                break;
+            case SAC_OPERATOR_GE:
+                sb.append("SAC_OPERATOR_GE");
+                break;
+            case SAC_OPERATOR_TILDE:
+                sb.append("SAC_OPERATOR_TILDE");
+                break;
+            case SAC_INHERIT:
+                sb.append("SAC_INHERIT");
+                break;
+            case SAC_INTEGER:
+                sb.append("SAC_INTEGER(")
+                    .append(String.valueOf(getIntegerValue()))
+                    .append(")");
+                break;
+            case SAC_REAL:
+                sb.append("SAC_REAL(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(")");
+                break;
+            case SAC_EM:
+                sb.append("SAC_EM(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_EX:
+                sb.append("SAC_EX(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_PIXEL:
+                sb.append("SAC_PIXEL(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_INCH:
+                sb.append("SAC_INCH(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_CENTIMETER:
+                sb.append("SAC_CENTIMETER(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_MILLIMETER:
+                sb.append("SAC_MILLIMETER(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_POINT:
+                sb.append("SAC_POINT(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_PICA:
+                sb.append("SAC_PICA(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_PERCENTAGE:
+                sb.append("SAC_PERCENTAGE(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_DEGREE:
+                sb.append("SAC_DEGREE(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_GRADIAN:
+                sb.append("SAC_GRADIAN(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_RADIAN:
+                sb.append("SAC_RADIAN(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_MILLISECOND:
+                sb.append("SAC_MILLISECOND(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_SECOND:
+                sb.append("SAC_SECOND(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_HERTZ:
+                sb.append("SAC_HERTZ(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_KILOHERTZ:
+                sb.append("SAC_KILOHERTZ(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_DIMENSION:
+                sb.append("SAC_DIMENSION(")
+                    .append(trimFloat(getFloatValue()))
+                    .append(getDimensionUnitText())
+                    .append(")");
+                break;
+            case SAC_URI:
+                sb.append("SAC_URI(url(")
+                    .append(getStringValue())
+                    .append("))");
+                break;
+            case SAC_COUNTER_FUNCTION:
+                sb.append("SAC_COUNTER_FUNCTION(counter(");
+                appendParams(sb, parameters_);
+                sb.append("))");
+                break;
+            case SAC_COUNTERS_FUNCTION:
+                sb.append("SAC_COUNTERS_FUNCTION(counters(");
+                appendParams(sb, parameters_);
+                sb.append("))");
+                break;
+            case SAC_RGBCOLOR:
+                sb.append("SAC_RGBCOLOR(rgb(");
+                appendParams(sb, parameters_);
+                sb.append("))");
+                break;
+            case SAC_IDENT:
+                sb.append("SAC_IDENT(")
+                    .append(getStringValue())
+                    .append(")");
+                break;
+            case SAC_STRING_VALUE:
+                sb.append("SAC_STRING_VALUE(\"")
+                    .append(getStringValue())
+                    .append("\")");
+                break;
+            case SAC_ATTR:
+                sb.append("SAC_ATTR(attr(");
+                appendParams(sb, parameters_);
+                sb.append("))");
+                break;
+            case SAC_RECT_FUNCTION:
+                sb.append("SAC_RECT_FUNCTION(rect(");
+                appendParams(sb, parameters_);
+                sb.append("))");
+                break;
+            case SAC_UNICODERANGE:
+                sb.append("SAC_UNICODERANGE(")
+                    .append(getStringValue())
+                    .append(")");
+                break;
+            case SAC_SUB_EXPRESSION:
+                sb.append("SAC_SUB_EXPRESSION(")
+                    .append(getStringValue())
+                    .append(")");
+                break;
+            case SAC_FUNCTION:
+                sb.append("SAC_FUNCTION(")
+                    .append(getFunctionName())
+                    .append("(");
+                appendParams(sb, parameters_);
+                sb.append("))");
+                break;
         }
         return sb.toString();
     }
 
-    private void appendParams(StringBuilder sb, LexicalUnit first) {
+    private void appendParams(final StringBuilder sb, final LexicalUnit first) {
         LexicalUnit l = first;
         while (l != null) {
             sb.append(l.toString());
@@ -582,126 +567,126 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
         }
     }
 
-    private String trimFloat(float f) {
-        String s = String.valueOf(this.getFloatValue());
+    private String trimFloat(final float f) {
+        final String s = String.valueOf(getFloatValue());
         return (f - (int) f != 0) ? s : s.substring(0, s.length() - 2);
     }
 
-    public static LexicalUnit createNumber(LexicalUnit prev, int i) {
+    public static LexicalUnit createNumber(final LexicalUnit prev, final int i) {
         return new LexicalUnitImpl(prev, i);
     }
 
-    public static LexicalUnit createNumber(LexicalUnit prev, float f) {
+    public static LexicalUnit createNumber(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_REAL, f);
     }
 
-    public static LexicalUnit createPercentage(LexicalUnit prev, float f) {
+    public static LexicalUnit createPercentage(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_PERCENTAGE, f);
     }
 
-    public static LexicalUnit createPixel(LexicalUnit prev, float f) {
+    public static LexicalUnit createPixel(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_PIXEL, f);
     }
 
-    public static LexicalUnit createCentimeter(LexicalUnit prev, float f) {
+    public static LexicalUnit createCentimeter(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_CENTIMETER, f);
     }
 
-    public static LexicalUnit createMillimeter(LexicalUnit prev, float f) {
+    public static LexicalUnit createMillimeter(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_MILLIMETER, f);
     }
 
-    public static LexicalUnit createInch(LexicalUnit prev, float f) {
+    public static LexicalUnit createInch(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_INCH, f);
     }
 
-    public static LexicalUnit createPoint(LexicalUnit prev, float f) {
+    public static LexicalUnit createPoint(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_POINT, f);
     }
 
-    public static LexicalUnit createPica(LexicalUnit prev, float f) {
+    public static LexicalUnit createPica(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_PICA, f);
     }
 
-    public static LexicalUnit createEm(LexicalUnit prev, float f) {
+    public static LexicalUnit createEm(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_EM, f);
     }
 
-    public static LexicalUnit createEx(LexicalUnit prev, float f) {
+    public static LexicalUnit createEx(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_EX, f);
     }
 
-    public static LexicalUnit createDegree(LexicalUnit prev, float f) {
+    public static LexicalUnit createDegree(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_DEGREE, f);
     }
 
-    public static LexicalUnit createRadian(LexicalUnit prev, float f) {
+    public static LexicalUnit createRadian(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_RADIAN, f);
     }
 
-    public static LexicalUnit createGradian(LexicalUnit prev, float f) {
+    public static LexicalUnit createGradian(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_GRADIAN, f);
     }
 
-    public static LexicalUnit createMillisecond(LexicalUnit prev, float f) {
+    public static LexicalUnit createMillisecond(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_MILLISECOND, f);
     }
 
-    public static LexicalUnit createSecond(LexicalUnit prev, float f) {
+    public static LexicalUnit createSecond(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_SECOND, f);
     }
 
-    public static LexicalUnit createHertz(LexicalUnit prev, float f) {
+    public static LexicalUnit createHertz(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_HERTZ, f);
     }
 
-    public static LexicalUnit createDimension(LexicalUnit prev, float f, String dim) {
+    public static LexicalUnit createDimension(final LexicalUnit prev, final float f, final String dim) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_DIMENSION, dim, f);
     }
 
-    public static LexicalUnit createKiloHertz(LexicalUnit prev, float f) {
+    public static LexicalUnit createKiloHertz(final LexicalUnit prev, final float f) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_KILOHERTZ, f);
     }
 
-    public static LexicalUnit createCounter(LexicalUnit prev, LexicalUnit params) {
+    public static LexicalUnit createCounter(final LexicalUnit prev, final LexicalUnit params) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_COUNTER_FUNCTION, "counter", params);
     }
 
-    public static LexicalUnit createCounters(LexicalUnit prev, LexicalUnit params) {
+    public static LexicalUnit createCounters(final LexicalUnit prev, final LexicalUnit params) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_COUNTERS_FUNCTION, "counters", params);
     }
 
-    public static LexicalUnit createAttr(LexicalUnit prev, String value) {
+    public static LexicalUnit createAttr(final LexicalUnit prev, final String value) {
         // according to LexicalUnit.SAC_ATTR, LexicalUnit.getStringValue(), not
         // LexicalUnit.getParameters() is applicable
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_ATTR, "name", value);
     }
 
-    public static LexicalUnit createRect(LexicalUnit prev, LexicalUnit params) {
+    public static LexicalUnit createRect(final LexicalUnit prev, final LexicalUnit params) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_RECT_FUNCTION, "rect", params);
     }
 
-    public static LexicalUnit createRgbColor(LexicalUnit prev, LexicalUnit params) {
+    public static LexicalUnit createRgbColor(final LexicalUnit prev, final LexicalUnit params) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_RGBCOLOR, "rgb", params);
     }
 
-    public static LexicalUnit createFunction(LexicalUnit prev, String name, LexicalUnit params) {
+    public static LexicalUnit createFunction(final LexicalUnit prev, final String name, final LexicalUnit params) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_FUNCTION, name, params);
     }
 
-    public static LexicalUnit createString(LexicalUnit prev, String value) {
+    public static LexicalUnit createString(final LexicalUnit prev, final String value) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_STRING_VALUE, value);
     }
 
-    public static LexicalUnit createIdent(LexicalUnit prev, String value) {
+    public static LexicalUnit createIdent(final LexicalUnit prev, final String value) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_IDENT, value);
     }
 
-    public static LexicalUnit createURI(LexicalUnit prev, String value) {
+    public static LexicalUnit createURI(final LexicalUnit prev, final String value) {
         return new LexicalUnitImpl(prev, LexicalUnit.SAC_URI, value);
     }
 
-    public static LexicalUnit createComma(LexicalUnit prev) {
+    public static LexicalUnit createComma(final LexicalUnit prev) {
         return new LexicalUnitImpl(prev, SAC_OPERATOR_COMMA);
     }
 }

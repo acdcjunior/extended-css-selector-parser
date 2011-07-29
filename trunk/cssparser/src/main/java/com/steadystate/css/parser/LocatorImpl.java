@@ -1,9 +1,7 @@
 /*
- * $Id: LocatorImpl.java,v 1.4 2008-11-26 16:24:30 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser;
@@ -35,48 +34,41 @@ import com.steadystate.css.util.LangUtils;
 
 /**
  * Implementation of {@link Locator}.
- * 
+ *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @version $Id: LocatorImpl.java,v 1.4 2008-11-26 16:24:30 waldbaer Exp $
  */
 public class LocatorImpl implements Locator, Serializable {
 
     private static final long serialVersionUID = 2240824537064705530L;
 
-    private String uri;
-    private int lineNumber;
-    private int columnNumber;
+    private String uri_;
+    private int lineNumber_;
+    private int columnNumber_;
 
-    public String getUri()
-    {
-        return this.uri;
+    public String getUri() {
+        return uri_;
     }
 
-    public void setUri(String uri)
-    {
-        this.uri = uri;
+    public void setUri(final String uri) {
+        uri_ = uri;
     }
 
-    public void setLineNumber(int line)
-    {
-        this.lineNumber = line;
+    public void setLineNumber(final int line) {
+        lineNumber_ = line;
     }
 
-    public void setColumnNumber(int column)
-    {
-        this.columnNumber = column;
+    public void setColumnNumber(final int column) {
+        columnNumber_ = column;
     }
-
 
     /** Creates new LocatorImpl */
-    public LocatorImpl(String uri, int line, int column) {
-        this.uri = uri;
-        this.lineNumber = line;
-        this.columnNumber = column;
+    public LocatorImpl(final String uri, final int line, final int column) {
+        uri_ = uri;
+        lineNumber_ = line;
+        columnNumber_ = column;
     }
 
-    public LocatorImpl()
-    {
+    public LocatorImpl() {
     }
 
     /**
@@ -87,9 +79,9 @@ public class LocatorImpl implements Locator, Serializable {
      * @see #getColumnNumber
      */
     public int getLineNumber() {
-        return this.lineNumber;
+        return lineNumber_;
     }
-    
+
     /**
      * Return the URI for the current document event.
      *
@@ -100,9 +92,9 @@ public class LocatorImpl implements Locator, Serializable {
      *        if none is available.
      */
     public String getURI() {
-        return this.uri;
+        return uri_;
     }
-    
+
     /**
      * Return the column number where the current document event ends.
      * Note that this is the column number of the first
@@ -112,43 +104,36 @@ public class LocatorImpl implements Locator, Serializable {
      * @see #getLineNumber
      */
     public int getColumnNumber() {
-        return this.columnNumber;
+        return columnNumber_;
     }
 
-
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (!(obj instanceof Locator))
-        {
+        if (!(obj instanceof Locator)) {
             return false;
         }
-        Locator l = (Locator) obj;
-        return (this.getColumnNumber() == l.getColumnNumber())
-            && (this.getLineNumber() == l.getLineNumber())
-            && LangUtils.equals(this.getURI(), l.getURI());
+        final Locator l = (Locator) obj;
+        return (getColumnNumber() == l.getColumnNumber())
+            && (getLineNumber() == l.getLineNumber())
+            && LangUtils.equals(getURI(), l.getURI());
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int hash = LangUtils.HASH_SEED;
-        hash = LangUtils.hashCode(hash, this.columnNumber);
-        hash = LangUtils.hashCode(hash, this.lineNumber);
-        hash = LangUtils.hashCode(hash, this.uri);
+        hash = LangUtils.hashCode(hash, columnNumber_);
+        hash = LangUtils.hashCode(hash, lineNumber_);
+        hash = LangUtils.hashCode(hash, uri_);
         return hash;
     }
 
-	@Override
-	public String toString()
-	{
-        return new StringBuilder().append(this.getUri()).append(" (")
-        	.append(this.getLineNumber()).append(':')
-        	.append(this.getColumnNumber()).append(')').toString();
-	}
-
+    @Override
+    public String toString() {
+        return new StringBuilder().append(getUri()).append(" (")
+            .append(getLineNumber()).append(':')
+            .append(getColumnNumber()).append(')').toString();
+    }
 }

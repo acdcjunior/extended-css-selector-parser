@@ -1,9 +1,7 @@
 /*
- * $Id: HandlerBase.java,v 1.4 2008-11-27 16:05:05 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,105 +21,98 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser;
 
-import org.w3c.css.sac.*;
+import org.w3c.css.sac.CSSException;
+import org.w3c.css.sac.CSSParseException;
+import org.w3c.css.sac.ErrorHandler;
+import org.w3c.css.sac.InputSource;
+import org.w3c.css.sac.LexicalUnit;
+import org.w3c.css.sac.Locator;
+import org.w3c.css.sac.SACMediaList;
+import org.w3c.css.sac.SelectorList;
 
 import com.steadystate.css.sac.DocumentHandlerExt;
 
 public class HandlerBase implements DocumentHandlerExt, ErrorHandler {
 
-    public void startDocument(InputSource source)
+    public void startDocument(final InputSource source)
         throws CSSException {
     }
-    
-    public void endDocument(InputSource source) throws CSSException {
+
+    public void endDocument(final InputSource source) throws CSSException {
     }
 
-    public void comment(String text) throws CSSException {
+    public void comment(final String text) throws CSSException {
     }
 
-    public void ignorableAtRule(String atRule) throws CSSException {
+    public void ignorableAtRule(final String atRule) throws CSSException {
     }
 
-    public void ignorableAtRule(String atRule, Locator locator)
-        throws CSSException
-    {
+    public void ignorableAtRule(final String atRule, final Locator locator) throws CSSException {
     }
 
-    public void namespaceDeclaration(String prefix, String uri)
-	    throws CSSException {
+    public void namespaceDeclaration(final String prefix, final String uri) throws CSSException {
     }
 
-    public void importStyle(String uri, SACMediaList media, 
-			String defaultNamespaceURI)
-	    throws CSSException {
+    public void importStyle(final String uri, final SACMediaList media,
+            final String defaultNamespaceURI) throws CSSException {
     }
 
-    public void importStyle(String uri, SACMediaList media, 
-        String defaultNamespaceURI, Locator locator)
-        throws CSSException
-    {
+    public void importStyle(final String uri, final SACMediaList media,
+            final String defaultNamespaceURI, final Locator locator) throws CSSException {
     }
 
-    public void startMedia(SACMediaList media) throws CSSException {
+    public void startMedia(final SACMediaList media) throws CSSException {
     }
 
-    public void startMedia(SACMediaList media, Locator locator)
-        throws CSSException
-    {
+    public void startMedia(final SACMediaList media, final Locator locator) throws CSSException {
     }
 
-    public void endMedia(SACMediaList media) throws CSSException {
+    public void endMedia(final SACMediaList media) throws CSSException {
     }
 
-    public void startPage(String name, String pseudo_page) throws CSSException {
+    public void startPage(final String name, final String pseudoPage) throws CSSException {
     }
 
-    public void startPage(String name, String pseudo_page, Locator locator) throws CSSException {
+    public void startPage(final String name, final String pseudoPage, final Locator locator) throws CSSException {
     }
 
-    public void endPage(String name, String pseudo_page) throws CSSException {
+    public void endPage(final String name, final String pseudoPage) throws CSSException {
     }
 
     public void startFontFace() throws CSSException {
     }
 
-    public void startFontFace(Locator locator) throws CSSException {
+    public void startFontFace(final Locator locator) throws CSSException {
     }
 
     public void endFontFace() throws CSSException {
     }
 
-    public void startSelector(SelectorList selectors) throws CSSException {
+    public void startSelector(final SelectorList selectors) throws CSSException {
     }
 
-    public void startSelector(SelectorList selectors, Locator locator)
-        throws CSSException
-    {
+    public void startSelector(final SelectorList selectors, final Locator locator) throws CSSException {
     }
 
-    public void endSelector(SelectorList selectors) throws CSSException {
+    public void endSelector(final SelectorList selectors) throws CSSException {
     }
 
-    public void property(String name, LexicalUnit value, boolean important)
-        throws CSSException {
+    public void property(final String name, final LexicalUnit value, final boolean important) throws CSSException {
     }
 
-    public void property(String name, LexicalUnit value, boolean important,
-        Locator locator)
-	{
-	}
-
-    public void charset(String characterEncoding, Locator locator)
-        throws CSSException
-    {
+    public void property(final String name, final LexicalUnit value, final boolean important, final Locator locator) {
     }
 
-    public void warning(CSSParseException exception) throws CSSException {
-        StringBuilder sb = new StringBuilder();
+    public void charset(final String characterEncoding, final Locator locator) throws CSSException {
+    }
+
+    public void warning(final CSSParseException exception) throws CSSException {
+        final StringBuilder sb = new StringBuilder();
         sb.append(exception.getURI())
             .append(" [")
             .append(exception.getLineNumber())
@@ -132,8 +123,8 @@ public class HandlerBase implements DocumentHandlerExt, ErrorHandler {
         System.err.println(sb.toString());
     }
 
-    public void error(CSSParseException exception) throws CSSException {
-        StringBuilder sb = new StringBuilder();
+    public void error(final CSSParseException exception) throws CSSException {
+        final StringBuilder sb = new StringBuilder();
         sb.append(exception.getURI())
             .append(" [")
             .append(exception.getLineNumber())
@@ -144,8 +135,8 @@ public class HandlerBase implements DocumentHandlerExt, ErrorHandler {
         System.err.println(sb.toString());
     }
 
-    public void fatalError(CSSParseException exception) throws CSSException {
-        StringBuilder sb = new StringBuilder();
+    public void fatalError(final CSSParseException exception) throws CSSException {
+        final StringBuilder sb = new StringBuilder();
         sb.append(exception.getURI())
             .append(" [")
             .append(exception.getLineNumber())
