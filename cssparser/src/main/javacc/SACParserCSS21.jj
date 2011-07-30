@@ -672,7 +672,7 @@ void pageRule() :
         }
         ( <S> )*
 
-        ( LOOKAHEAD(2) ( s = pseudoPage() ( <S> )* ) )?
+        ( ( s = pseudoPage() ( <S> )* ) )?
 
         <LBRACE> ( <S> )*
         {
@@ -696,10 +696,6 @@ void pageRule() :
         this.getErrorHandler().warning(this.createSkipWarning("ignoringRule", cpe));
         this.error_skipblock();
     }
-//    catch(ParseException e)
-//    {
-//        throw this.toCSSParseException("invalidPageRule", e);
-//    }
     finally {
         if (start) {
             this.handleEndPage((t != null) ? unescape(t.image) : null, s);

@@ -27,8 +27,6 @@
 
 package com.steadystate.css.parser;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 
@@ -38,7 +36,7 @@ import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.Parser;
 import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
-import org.w3c.dom.css.CSSPrimitiveValue;
+import org.w3c.dom.css.CSSPageRule;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
 import org.w3c.dom.css.CSSStyleDeclaration;
@@ -484,32 +482,44 @@ public class CSSOMParserTest {
     }
 
     @Test
-    public void misc() throws Exception {
-        InputStream is = getClass().getClassLoader().getResourceAsStream("page_test.css");
-        Assert.assertNotNull(is);
+    public void parsePageDeclaration() throws Exception {
+        Reader r = new StringReader("@page :pageStyle { size: 21.0cm 29.7cm; }");
+        InputSource is = new InputSource(r);
+        CSSStyleSheet ss = getCss21Parser().parseStyleSheet(is, null, null);
 
-        Reader r = new InputStreamReader(is);
-        InputSource source = new InputSource(r);
-        CSSOMParser parser = new CSSOMParser();
-        CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        Assert.assertEquals("@page :pageStyle {size: 21cm 29.7cm}", ss.toString().trim());
+        
+        CSSRuleList rules = ss.getCssRules();
+        Assert.assertEquals(1, rules.getLength());
+        
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals(CSSRule.PAGE_RULE, rule.getType());
 
-        CSSRuleList rl = ss.getCssRules();
-        for (int i = 0; i < rl.getLength(); i++) {
-            CSSRule rule = rl.item(i);
-            if (rule.getType() == CSSRule.STYLE_RULE) {
-                CSSStyleRule sr = (CSSStyleRule) rule;
-                CSSStyleDeclaration style = sr.getStyle();
-                for (int j = 0; j < style.getLength(); j++) {
-                    CSSValue value = style.getPropertyCSSValue(style.item(j));
-                    if (value.getCssValueType() == CSSValue.CSS_PRIMITIVE_VALUE) {
-                        CSSPrimitiveValue pv = (CSSPrimitiveValue) value;
-                        // System.out.println(">> " + pv.toString());
-                        if (pv.getPrimitiveType() == CSSPrimitiveValue.CSS_COUNTER) {
-                            // System.out.println("CSS_COUNTER(" + pv.toString() + ")");
-                        }
-                    }
-                }
-            }
-        }
+        Assert.assertEquals("@page :pageStyle {size: 21cm 29.7cm}", rule.getCssText());
+
+        CSSPageRule pageRule = (CSSPageRule) rule;
+        Assert.assertEquals(":pageStyle", pageRule.getSelectorText());
+        Assert.assertEquals("size: 21cm 29.7cm", pageRule.getStyle().getCssText());
+    }
+
+    @Test
+    public void parsePageDeclaration2() throws Exception {
+        Reader r = new StringReader("@page { size: 21.0cm 29.7cm; }");
+        InputSource is = new InputSource(r);
+        CSSStyleSheet ss = getCss21Parser().parseStyleSheet(is, null, null);
+
+        Assert.assertEquals("@page {size: 21cm 29.7cm}", ss.toString().trim());
+        
+        CSSRuleList rules = ss.getCssRules();
+        Assert.assertEquals(1, rules.getLength());
+        
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals(CSSRule.PAGE_RULE, rule.getType());
+
+        Assert.assertEquals("@page {size: 21cm 29.7cm}", rule.getCssText());
+
+        CSSPageRule pageRule = (CSSPageRule) rule;
+        Assert.assertEquals("", pageRule.getSelectorText());
+        Assert.assertEquals("size: 21cm 29.7cm", pageRule.getStyle().getCssText());
     }
 }
