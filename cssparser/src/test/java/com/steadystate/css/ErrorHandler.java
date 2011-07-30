@@ -1,7 +1,7 @@
 /*
  * CSS Parser Project
  *
- * Copyright (C) 1999-2008 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,36 +28,39 @@ package com.steadystate.css;
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.CSSParseException;
 
+/**
+ * @author RBRi
+ */
 public class ErrorHandler implements org.w3c.css.sac.ErrorHandler {
 
-    private int errorCount;
-    private int fatalErrorCount;
-    private int warningCount;
+    private int errorCount_;
+    private int fatalErrorCount_;
+    private int warningCount_;
 
-    public void error(CSSParseException e) throws CSSException {
+    public void error(final CSSParseException e) throws CSSException {
         System.out.println(e.toString());
-        errorCount++;
+        errorCount_++;
     }
 
-    public void fatalError(CSSParseException e) throws CSSException	{
+    public void fatalError(final CSSParseException e) throws CSSException {
         System.out.println(e.toString());
-        fatalErrorCount++;
+        fatalErrorCount_++;
     }
 
-    public void warning(CSSParseException e) throws CSSException {
+    public void warning(final CSSParseException e) throws CSSException {
         System.out.println(e.toString());
-        warningCount++;
+        warningCount_++;
     }
 
     public int getErrorCount() {
-        return errorCount;
+        return errorCount_;
     }
 
     public int getFatalErrorCount() {
-        return fatalErrorCount;
+        return fatalErrorCount_;
     }
 
     public int getWarningCount() {
-        return warningCount;
+        return warningCount_;
     }
 }

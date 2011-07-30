@@ -299,13 +299,13 @@ public class CSSOMParser {
 
         public void charset(final String characterEncoding, final Locator locator)
             throws CSSException {
-            CSSCharsetRuleImpl cr = new CSSCharsetRuleImpl(
-        		CSSOMParser.this.getParentStyleSheet(),
-                getParentRule(),
-                characterEncoding);
+            final CSSCharsetRuleImpl cr = new CSSCharsetRuleImpl(
+                    CSSOMParser.this.getParentStyleSheet(),
+                    getParentRule(),
+                    characterEncoding);
             addLocator(locator, cr);
             if (!nodeStack_.empty()) {
-                ((CSSRuleListImpl)nodeStack_.peek()).add(cr);
+                ((CSSRuleListImpl) nodeStack_.peek()).add(cr);
             }
             else {
                 root_ = cr;
@@ -314,12 +314,12 @@ public class CSSOMParser {
 
         public void importStyle(
                 final String uri,
-                final SACMediaList media, 
+                final SACMediaList media,
                 final String defaultNamespaceURI) throws CSSException {
             importStyle(uri, media, defaultNamespaceURI, null);
         }
 
-        public void importStyle(final String uri, final SACMediaList media, 
+        public void importStyle(final String uri, final SACMediaList media,
             final String defaultNamespaceURI, final Locator locator) throws CSSException {
             // Create the import rule and add it to the rule list
             final CSSImportRuleImpl ir = new CSSImportRuleImpl(
@@ -366,10 +366,10 @@ public class CSSOMParser {
             root_ = nodeStack_.pop();
         }
 
-        public void startPage(final String name, final String pseudo_page) throws CSSException {
-
-            startPage(name, pseudo_page, null);
+        public void startPage(final String name, final String pseudoPage) throws CSSException {
+            startPage(name, pseudoPage, null);
         }
+
         public void startPage(final String name, final String pseudoPage, final Locator locator)
             throws CSSException {
             // Create the page rule and add it to the rule list
@@ -490,14 +490,19 @@ public class CSSOMParser {
                         parser, (Object[]) null);
                 }
                 catch (final SecurityException e) {
+                    // TODO
                 }
                 catch (final NoSuchMethodException e) {
+                    // TODO
                 }
                 catch (final IllegalArgumentException e) {
+                    // TODO
                 }
                 catch (final IllegalAccessException e) {
+                    // TODO
                 }
                 catch (final InvocationTargetException e) {
+                    // TODO
                 }
             }
             if (locator != null) {
