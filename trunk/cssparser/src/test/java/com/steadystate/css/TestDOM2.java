@@ -1,9 +1,7 @@
 /*
- * TestDOM_1.java
+ * CSS Parser Project
  *
- * Steady State CSS2 Parser
- *
- * Copyright (C) 1999, 2002 Steady State Software Ltd.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,15 +17,12 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * To contact the authors of the library, write to Steady State Software Ltd.,
- * 49 Littleworth, Wing, Buckinghamshire, LU7 0JX, England
+ * To contact the authors of the library:
  *
- * http://www.steadystate.com/css/
- * mailto:css@steadystate.co.uk
+ * http://cssparser.sourceforge.net/
+ * mailto:davidsch@users.sourceforge.net
  *
- * $Id: TestDOM2.java,v 1.2 2008-03-20 02:49:41 sdanig Exp $
  */
-
 package com.steadystate.css;
 
 import java.io.InputStream;
@@ -57,24 +52,24 @@ public class TestDOM2 {
 
     @Test
     public void test() throws Exception {
-        InputStream is = getClass().getClassLoader().getResourceAsStream("test.css");
+        final InputStream is = getClass().getClassLoader().getResourceAsStream("test.css");
         Assert.assertNotNull(is);
 
-        Reader r = new InputStreamReader(is);
-        InputSource source = new InputSource(r);
+        final Reader r = new InputStreamReader(is);
+        final InputSource source = new InputSource(r);
 
         // set CSS2 parser because this test contains test for features
         // no longer supported by CSS21
-        CSSOMParser parser = new CSSOMParser(new SACParserCSS2());
-        ErrorHandler errorHandler = new ErrorHandler();
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS2());
+        final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
-        CSSStyleSheet stylesheet = parser.parseStyleSheet(source, null, null);
+        final CSSStyleSheet stylesheet = parser.parseStyleSheet(source, null, null);
 
         Assert.assertEquals(3, errorHandler.getErrorCount());
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(3, errorHandler.getWarningCount());
 
-        CSSRuleList rules = stylesheet.getCssRules();
+        final CSSRuleList rules = stylesheet.getCssRules();
         Assert.assertEquals(78, rules.getLength());
 
         CSSRule rule = rules.item(9);
@@ -95,7 +90,9 @@ public class TestDOM2 {
 
         ((CSSStyleRule) rule).getStyle().setCssText(
             "color: red green brown; smell: sweet, sour; taste: sweet/tart");
-        Assert.assertEquals("orange tangerine, grapefruit { color: red green brown; smell: sweet, sour; taste: sweet/ tart }", rule.getCssText());
+        Assert.assertEquals(
+                "orange tangerine, grapefruit { color: red green brown; smell: sweet, sour; taste: sweet/ tart }",
+                rule.getCssText());
 
         rule = rules.item(0);
         Assert.assertEquals("@import url(foo.css);", rule.getCssText());

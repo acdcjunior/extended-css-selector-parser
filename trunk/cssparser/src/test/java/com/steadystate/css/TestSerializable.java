@@ -1,9 +1,7 @@
 /*
- * TestSerializable.java
+ * CSS Parser Project
  *
- * Steady State CSS2 Parser
- *
- * Copyright (C) 1999, 2002 Steady State Software Ltd.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,15 +17,12 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * To contact the authors of the library, write to Steady State Software Ltd.,
- * 49 Littleworth, Wing, Buckinghamshire, LU7 0JX, England
+ * To contact the authors of the library:
  *
- * http://www.steadystate.com/css/
- * mailto:css@steadystate.co.uk
+ * http://cssparser.sourceforge.net/
+ * mailto:davidsch@users.sourceforge.net
  *
- * $Id: TestSerializable.java,v 1.2 2008-03-20 02:49:41 sdanig Exp $
  */
-
 package com.steadystate.css;
 
 import java.io.File;
@@ -58,33 +53,34 @@ public class TestSerializable {
 
     @Test
     public void test() throws Exception {
-        InputStream is = getClass().getClassLoader().getResourceAsStream("html40.css");
+        final InputStream is = getClass().getClassLoader().getResourceAsStream("html40.css");
         Assert.assertNotNull(is);
 
-        CSSOMParser parser = new CSSOMParser();
+        final CSSOMParser parser = new CSSOMParser();
 
-        Reader r = new InputStreamReader(is);
-        InputSource source = new InputSource(r);
+        final Reader r = new InputStreamReader(is);
+        final InputSource source = new InputSource(r);
 
-        CSSStyleSheet stylesheet = parser.parseStyleSheet(source, null, null);
+        final CSSStyleSheet stylesheet = parser.parseStyleSheet(source, null, null);
 
         // Serialize the style sheet
-        File temp = File.createTempFile("temp", "css");
+        final File temp = File.createTempFile("temp", "css");
         temp.deleteOnExit();
-        FileOutputStream fo = new FileOutputStream(temp);
-        ObjectOutput oo = new ObjectOutputStream(fo);
+        final FileOutputStream fo = new FileOutputStream(temp);
+        final ObjectOutput oo = new ObjectOutputStream(fo);
         oo.writeObject(stylesheet);
         oo.flush();
 
         // Read it back in
-        FileInputStream fi = new FileInputStream(temp);
-        ObjectInput oi = new ObjectInputStream(fi);
-        CSSStyleSheet stylesheet2 = (CSSStyleSheet) oi.readObject();
+        final FileInputStream fi = new FileInputStream(temp);
+        final ObjectInput oi = new ObjectInputStream(fi);
+        final CSSStyleSheet stylesheet2 = (CSSStyleSheet) oi.readObject();
 
-        CSSRuleList rules = stylesheet2.getCssRules();
+        final CSSRuleList rules = stylesheet2.getCssRules();
 
+        // TODO
         for (int i = 0; i < rules.getLength(); i++) {
-            CSSRule rule = rules.item(i);
+            final CSSRule rule = rules.item(i);
             System.out.println(rule.getCssText());
         }
     }

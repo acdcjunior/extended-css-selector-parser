@@ -1,9 +1,7 @@
 /*
- * $Id: AbstractSACParser.java,v 1.12 2010-05-20 09:12:29 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 2005-2008 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 package com.steadystate.css.parser;
 
@@ -56,134 +55,107 @@ import com.steadystate.css.sac.DocumentHandlerExt;
  *
  * @author koch
  */
-abstract class AbstractSACParser implements Parser
-{
-    private DocumentHandler documentHandler = null;
-    private ErrorHandler errorHandler = null;
-    private InputSource source = null;
-    private Locale locale = null;
-    private SelectorFactory selectorFactory = null;
-    private ConditionFactory conditionFactory = null;
-    private ResourceBundle sacParserMessages;
+abstract class AbstractSACParser implements Parser {
+    private DocumentHandler documentHandler_;
+    private ErrorHandler errorHandler_;
+    private InputSource source_;
+    private Locale locale_;
+    private SelectorFactory selectorFactory_;
+    private ConditionFactory conditionFactory_;
+    private ResourceBundle sacParserMessages_;
     protected abstract Token getToken();
 
-    protected DocumentHandler getDocumentHandler()
-    {
-        if (this.documentHandler == null)
-        {
-            this.setDocumentHandler(new HandlerBase());
+    protected DocumentHandler getDocumentHandler() {
+        if (documentHandler_ == null) {
+            setDocumentHandler(new HandlerBase());
         }
-        return this.documentHandler;
+        return documentHandler_;
     }
 
-    public void setDocumentHandler(DocumentHandler handler)
-    {
-        this.documentHandler = handler;
+    public void setDocumentHandler(final DocumentHandler handler) {
+        documentHandler_ = handler;
     }
 
-    protected ErrorHandler getErrorHandler()
-    {
-        if (this.errorHandler == null)
-        {
-            this.setErrorHandler(new HandlerBase());
+    protected ErrorHandler getErrorHandler() {
+        if (errorHandler_ == null) {
+            setErrorHandler(new HandlerBase());
         }
-        return this.errorHandler;
+        return errorHandler_;
     }
 
-    public void setErrorHandler(ErrorHandler eh)
-    {
-        this.errorHandler = eh;
+    public void setErrorHandler(final ErrorHandler eh) {
+        errorHandler_ = eh;
     }
 
-    protected InputSource getInputSource()
-    {
-        return this.source;
+    protected InputSource getInputSource() {
+        return source_;
     }
 
-    public void setLocale(Locale locale)
-    {
-        if (this.locale != locale)
-        {
-            this.sacParserMessages = null;
+    public void setLocale(final Locale locale) {
+        if (locale_ != locale) {
+            sacParserMessages_ = null;
         }
-        this.locale = locale;
+        locale_ = locale;
     }
 
-    protected Locale getLocale()
-    {
-        if (this.locale == null)
-        {
-            this.setLocale(Locale.getDefault());
+    protected Locale getLocale() {
+        if (locale_ == null) {
+            setLocale(Locale.getDefault());
         }
-        return this.locale;
+        return locale_;
     }
 
-    protected SelectorFactory getSelectorFactory()
-    {
-        if (this.selectorFactory == null)
-        {
-            this.selectorFactory = new SelectorFactoryImpl();
+    protected SelectorFactory getSelectorFactory() {
+        if (selectorFactory_ == null) {
+            selectorFactory_ = new SelectorFactoryImpl();
         }
-        return this.selectorFactory;
+        return selectorFactory_;
     }
 
-    public void setSelectorFactory(SelectorFactory selectorFactory)
-    {
-        this.selectorFactory = selectorFactory;
+    public void setSelectorFactory(final SelectorFactory selectorFactory) {
+        selectorFactory_ = selectorFactory;
     }
 
-    protected ConditionFactory getConditionFactory()
-    {
-        if (this.conditionFactory == null)
-        {
-            this.conditionFactory = new ConditionFactoryImpl();
+    protected ConditionFactory getConditionFactory() {
+        if (conditionFactory_ == null) {
+            conditionFactory_ = new ConditionFactoryImpl();
         }
-        return this.conditionFactory;
+        return conditionFactory_;
     }
 
-    public void setConditionFactory(ConditionFactory conditionFactory)
-    {
-        this.conditionFactory = conditionFactory;
+    public void setConditionFactory(final ConditionFactory conditionFactory) {
+        conditionFactory_ = conditionFactory;
     }
 
-    protected ResourceBundle getSACParserMessages()
-    {
-        if (this.sacParserMessages == null)
-        {
-            try
-            {
-                this.sacParserMessages = ResourceBundle.getBundle(
+    protected ResourceBundle getSACParserMessages() {
+        if (sacParserMessages_ == null) {
+            try {
+                sacParserMessages_ = ResourceBundle.getBundle(
                     "com.steadystate.css.parser.SACParserMessages",
-                    this.getLocale());
+                    getLocale());
             }
-            catch (MissingResourceException e)
-            {
+            catch (final MissingResourceException e) {
                 e.printStackTrace();
             }
         }
-        return this.sacParserMessages;
+        return sacParserMessages_;
     }
 
-    public Locator getLocator()
-    {
-        return this.createLocator(this.getToken());
+    public Locator getLocator() {
+        return createLocator(getToken());
     }
 
-    protected Locator createLocator(Token t)
-    {
-        return new LocatorImpl(this.getInputSource().getURI(),
+    protected Locator createLocator(final Token t) {
+        return new LocatorImpl(getInputSource().getURI(),
             t == null ? 0 : t.beginLine,
             t == null ? 0 : t.beginColumn);
     }
 
-    protected String add_escapes(String str)
-    {
-        StringBuilder retval = new StringBuilder();
+    protected String add_escapes(final String str) {
+        final StringBuilder retval = new StringBuilder();
         char ch;
-        for (int i = 0; i < str.length(); i++)
-        {
-            switch (str.charAt(i))
-            {
+        for (int i = 0; i < str.length(); i++) {
+            switch (str.charAt(i)) {
                 case 0 :
                     continue;
                 case '\b':
@@ -211,15 +183,13 @@ abstract class AbstractSACParser implements Parser
                     retval.append("\\\\");
                     continue;
                 default:
-                    if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e)
-                    {
-                       String s = "0000" + Integer.toString(ch, 16);
-                       retval.append("\\u"
-                           + s.substring(s.length() - 4, s.length()));
+                    ch = str.charAt(i);
+                    if (ch < 0x20 || ch > 0x7e) {
+                        final String s = "0000" + Integer.toString(ch, 16);
+                        retval.append("\\u" + s.substring(s.length() - 4, s.length()));
                     }
-                    else
-                    {
-                       retval.append(ch);
+                    else {
+                        retval.append(ch);
                     }
                     continue;
             }
@@ -227,296 +197,230 @@ abstract class AbstractSACParser implements Parser
         return retval.toString();
     }
 
-    protected CSSParseException toCSSParseException(String key, ParseException e)
-    {
-        String messagePattern1 =
-            this.getSACParserMessages().getString("invalidExpectingOne");
-        String messagePattern2 =
-            this.getSACParserMessages().getString("invalidExpectingMore");
+    protected CSSParseException toCSSParseException(final String key, final ParseException e) {
+        final String messagePattern1 = getSACParserMessages().getString("invalidExpectingOne");
+        final String messagePattern2 = getSACParserMessages().getString("invalidExpectingMore");
         int maxSize = 0;
-        StringBuilder expected = new StringBuilder();
-        for (int i = 0; i < e.expectedTokenSequences.length; i++)
-        {
-            if (maxSize < e.expectedTokenSequences[i].length)
-            {
+        final StringBuilder expected = new StringBuilder();
+        for (int i = 0; i < e.expectedTokenSequences.length; i++) {
+            if (maxSize < e.expectedTokenSequences[i].length) {
                 maxSize = e.expectedTokenSequences[i].length;
             }
-            for (int j = 0; j < e.expectedTokenSequences[i].length; j++)
-            {
+            for (int j = 0; j < e.expectedTokenSequences[i].length; j++) {
                 expected.append(e.tokenImage[e.expectedTokenSequences[i][j]]);
             }
-            //if (e.expectedTokenSequences[i][e.expectedTokenSequences[i].length - 1] != 0)
-            if (i < e.expectedTokenSequences.length - 1)
-            {
+            if (i < e.expectedTokenSequences.length - 1) {
                 expected.append(", ");
             }
         }
-        StringBuilder invalid = new StringBuilder();
+        final StringBuilder invalid = new StringBuilder();
         Token tok = e.currentToken.next;
-        for (int i = 0; i < maxSize; i++)
-        {
-            if (i != 0)
-            {
+        for (int i = 0; i < maxSize; i++) {
+            if (i != 0) {
                 invalid.append(" ");
             }
-            if (tok.kind == 0)
-            {
+            if (tok.kind == 0) {
                 invalid.append(e.tokenImage[0]);
                 break;
             }
-            invalid.append(this.add_escapes(tok.image));
+            invalid.append(add_escapes(tok.image));
             tok = tok.next;
         }
         String s = null;
-        try
-        {
-            s = this.getSACParserMessages().getString(key);
+        try {
+            s = getSACParserMessages().getString(key);
         }
-        catch (MissingResourceException ex)
-        {
+        catch (final MissingResourceException ex) {
             s = key;
         }
-        StringBuilder message = new StringBuilder(s);
+        final StringBuilder message = new StringBuilder(s);
         message.append(' ');
-        if (e.expectedTokenSequences.length == 1)
-        {
+        if (e.expectedTokenSequences.length == 1) {
             message.append(MessageFormat.format(
                 messagePattern1, new Object[] {invalid, expected}));
         }
-        else
-        {
+        else {
             message.append(MessageFormat.format(
                 messagePattern2, new Object[] {invalid, expected}));
         }
         return new CSSParseException(message.toString(),
-            this.getInputSource().getURI(), e.currentToken.next.beginLine,
+            getInputSource().getURI(), e.currentToken.next.beginLine,
             e.currentToken.next.beginColumn);
     }
 
-    protected CSSParseException toCSSParseException(TokenMgrError e)
-    {
-        String messagePattern =
-            this.getSACParserMessages().getString("tokenMgrError");
+    protected CSSParseException toCSSParseException(final TokenMgrError e) {
+        final String messagePattern = getSACParserMessages().getString("tokenMgrError");
         return new CSSParseException(messagePattern,
-            this.getInputSource().getURI(), 1, 1);
+            getInputSource().getURI(), 1, 1);
     }
 
-    protected CSSParseException createSkipWarning(String key, CSSParseException e)
-    {
+    protected CSSParseException createSkipWarning(final String key, final CSSParseException e) {
         String s = null;
-        try
-        {
-            s = this.getSACParserMessages().getString(key);
+        try {
+            s = getSACParserMessages().getString(key);
         }
-        catch (MissingResourceException ex)
-        {
+        catch (final MissingResourceException ex) {
             s = key;
         }
         return new CSSParseException(s, e.getURI(), e.getLineNumber(),
             e.getColumnNumber());
     }
 
-    public void parseStyleSheet(InputSource source)
-        throws IOException
-    {
-        this.source = source;
-        this.ReInit(getCharStream(source));
-        try
-        {
-            this.styleSheet();
+    public void parseStyleSheet(final InputSource source) throws IOException {
+        source_ = source;
+        ReInit(getCharStream(source));
+        try {
+            styleSheet();
         }
-        catch (ParseException e)
-        {
-            this.getErrorHandler().error(
-                this.toCSSParseException("invalidStyleSheet", e));
+        catch (final ParseException e) {
+            getErrorHandler().error(
+                toCSSParseException("invalidStyleSheet", e));
         }
-        catch (TokenMgrError e)
-        {
-            this.getErrorHandler().error(
-                this.toCSSParseException(e));
+        catch (final TokenMgrError e) {
+            getErrorHandler().error(
+                toCSSParseException(e));
         }
-        catch (CSSParseException e)
-        {
-            this.getErrorHandler().error(e);
+        catch (final CSSParseException e) {
+            getErrorHandler().error(e);
         }
     }
 
-    public void parseStyleSheet(String uri) throws IOException
-    {
-        this.parseStyleSheet(new InputSource(uri));
+    public void parseStyleSheet(final String uri) throws IOException {
+        parseStyleSheet(new InputSource(uri));
     }
 
-    public void parseStyleDeclaration(InputSource source)
-        throws IOException
-    {
-        this.source = source;
-        this.ReInit(getCharStream(source));
-        try
-        {
-            this.styleDeclaration();
+    public void parseStyleDeclaration(final InputSource source) throws IOException {
+        source_ = source;
+        ReInit(getCharStream(source));
+        try {
+            styleDeclaration();
         }
-        catch (ParseException e)
-        {
-            this.getErrorHandler().error(
-                this.toCSSParseException("invalidStyleDeclaration", e));
+        catch (final ParseException e) {
+            getErrorHandler().error(
+                toCSSParseException("invalidStyleDeclaration", e));
         }
-        catch (TokenMgrError e)
-        {
-            this.getErrorHandler().error(
-                this.toCSSParseException(e));
+        catch (final TokenMgrError e) {
+            getErrorHandler().error(
+                toCSSParseException(e));
         }
-        catch (CSSParseException e)
-        {
-            this.getErrorHandler().error(e);
+        catch (final CSSParseException e) {
+            getErrorHandler().error(e);
         }
     }
 
-    public void parseRule(InputSource source) throws IOException
-    {
-        this.source = source;
-        this.ReInit(getCharStream(source));
-        try
-        {
-            this.styleSheetRuleSingle();
+    public void parseRule(final InputSource source) throws IOException {
+        source_ = source;
+        ReInit(getCharStream(source));
+        try {
+            styleSheetRuleSingle();
         }
-        catch (ParseException e)
-        {
-            this.getErrorHandler().error(
-                this.toCSSParseException("invalidRule", e));
+        catch (final ParseException e) {
+            getErrorHandler().error(
+                toCSSParseException("invalidRule", e));
         }
-        catch (TokenMgrError e)
-        {
-            this.getErrorHandler().error(
-                this.toCSSParseException(e));
+        catch (final TokenMgrError e) {
+            getErrorHandler().error(
+                toCSSParseException(e));
         }
-        catch (CSSParseException e)
-        {
-            this.getErrorHandler().error(e);
+        catch (final CSSParseException e) {
+            getErrorHandler().error(e);
         }
     }
 
-    public SelectorList parseSelectors(InputSource source)
-        throws IOException
-    {
-        this.source = source;
-        this.ReInit(getCharStream(source));
+    public SelectorList parseSelectors(final InputSource source) throws IOException {
+        source_ = source;
+        ReInit(getCharStream(source));
         SelectorList sl = null;
-        try
-        {
-            sl = this.parseSelectorsInternal();
+        try {
+            sl = parseSelectorsInternal();
         }
-        catch (ParseException e)
-        {
-            this.getErrorHandler().error(
-                this.toCSSParseException("invalidSelectorList", e));
+        catch (final ParseException e) {
+            getErrorHandler().error(
+                toCSSParseException("invalidSelectorList", e));
         }
-        catch (TokenMgrError e)
-        {
-            this.getErrorHandler().error(
-                this.toCSSParseException(e));
+        catch (final TokenMgrError e) {
+            getErrorHandler().error(
+                toCSSParseException(e));
         }
-        catch (CSSParseException e)
-        {
-            this.getErrorHandler().error(e);
+        catch (final CSSParseException e) {
+            getErrorHandler().error(e);
         }
         return sl;
     }
 
-    public LexicalUnit parsePropertyValue(InputSource source)
-        throws IOException
-    {
-        this.source = source;
-        this.ReInit(getCharStream(source));
+    public LexicalUnit parsePropertyValue(final InputSource source) throws IOException {
+        source_ = source;
+        ReInit(getCharStream(source));
         LexicalUnit lu = null;
-        try
-        {
+        try {
             lu = expr();
         }
-        catch (ParseException e)
-        {
-            this.getErrorHandler().error(
-                this.toCSSParseException("invalidExpr", e));
+        catch (final ParseException e) {
+            getErrorHandler().error(
+                toCSSParseException("invalidExpr", e));
         }
-        catch (TokenMgrError e)
-        {
-            this.getErrorHandler().error(
-                this.toCSSParseException(e));
+        catch (final TokenMgrError e) {
+            getErrorHandler().error(
+                toCSSParseException(e));
         }
-        catch (CSSParseException e)
-        {
-            this.getErrorHandler().error(e);
+        catch (final CSSParseException e) {
+            getErrorHandler().error(e);
         }
         return lu;
     }
 
-    public boolean parsePriority(InputSource source)
-        throws IOException
-    {
-        this.source = source;
-        this.ReInit(getCharStream(source));
+    public boolean parsePriority(final InputSource source) throws IOException {
+        source_ = source;
+        ReInit(getCharStream(source));
         boolean b = false;
-        try
-        {
+        try {
             b = prio();
         }
-        catch (ParseException e)
-        {
-            this.getErrorHandler().error(
-                this.toCSSParseException("invalidPrio", e));
+        catch (final ParseException e) {
+            getErrorHandler().error(
+                toCSSParseException("invalidPrio", e));
         }
-        catch (TokenMgrError e)
-        {
-            this.getErrorHandler().error(
-                this.toCSSParseException(e));
+        catch (final TokenMgrError e) {
+            getErrorHandler().error(
+                toCSSParseException(e));
         }
-        catch (CSSParseException e)
-        {
-            this.getErrorHandler().error(e);
+        catch (final CSSParseException e) {
+            getErrorHandler().error(e);
         }
         return b;
     }
 
-    public SACMediaList parseMedia(InputSource source) throws IOException
-    {
-        this.source = source;
-        this.ReInit(this.getCharStream(source));
-        SACMediaListImpl ml = new SACMediaListImpl();
-        try
-        {
-            this.mediaList(ml);
+    public SACMediaList parseMedia(final InputSource source) throws IOException {
+        source_ = source;
+        ReInit(getCharStream(source));
+        final SACMediaListImpl ml = new SACMediaListImpl();
+        try {
+            mediaList(ml);
         }
-        catch (ParseException e)
-        {
-            this.getErrorHandler().error(
-                this.toCSSParseException("invalidMediaList", e));
+        catch (final ParseException e) {
+            getErrorHandler().error(
+                toCSSParseException("invalidMediaList", e));
         }
-        catch (TokenMgrError e)
-        {
-            this.getErrorHandler().error(
-                this.toCSSParseException(e));
+        catch (final TokenMgrError e) {
+            getErrorHandler().error(
+                toCSSParseException(e));
         }
-        catch (CSSParseException e)
-        {
-            this.getErrorHandler().error(e);
+        catch (final CSSParseException e) {
+            getErrorHandler().error(e);
         }
         return ml;
     }
 
-    private CharStream getCharStream(InputSource source)
-        throws IOException
-    {
-        if (source.getCharacterStream() != null)
-        {
+    private CharStream getCharStream(final InputSource source) throws IOException {
+        if (source.getCharacterStream() != null) {
             return new ASCII_CharStream(
                 source.getCharacterStream(), 1, 1);
         }
-        else if (source.getByteStream() != null)
-        {
+        else if (source.getByteStream() != null) {
             return new ASCII_CharStream(new InputStreamReader(
                 source.getByteStream()), 1, 1);
         }
-        else if (source.getURI() != null)
-        {
+        else if (source.getURI() != null) {
             return new ASCII_CharStream(new InputStreamReader(
                 new URL(source.getURI()).openStream()), 1, 1);
         }
@@ -535,159 +439,130 @@ abstract class AbstractSACParser implements Parser
     protected abstract boolean prio() throws ParseException;
     protected abstract void mediaList(SACMediaListImpl ml) throws ParseException;
 
-    protected void handleStartDocument()
-    {
-        this.getDocumentHandler().startDocument(this.getInputSource());
+    protected void handleStartDocument() {
+        getDocumentHandler().startDocument(getInputSource());
     }
 
-    protected void handleEndDocument()
-    {
-        this.getDocumentHandler().endDocument(this.getInputSource());
+    protected void handleEndDocument() {
+        getDocumentHandler().endDocument(getInputSource());
     }
 
-    protected void handleIgnorableAtRule(String s, Locator locator)
-    {
-        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
-        {
-            ((DocumentHandlerExt) this.getDocumentHandler())
+    protected void handleIgnorableAtRule(final String s, final Locator locator) {
+        if (getDocumentHandler() instanceof DocumentHandlerExt) {
+            ((DocumentHandlerExt) getDocumentHandler())
                 .ignorableAtRule(s, locator);
         }
-        else
-        {
-            this.getDocumentHandler().ignorableAtRule(s);
+        else {
+            getDocumentHandler().ignorableAtRule(s);
         }
     }
 
-    protected void handleCharset(String characterEncoding, Locator locator)
-    {
-        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
-        {
-            ((DocumentHandlerExt) this.getDocumentHandler())
+    protected void handleCharset(final String characterEncoding, final Locator locator) {
+        if (getDocumentHandler() instanceof DocumentHandlerExt) {
+            ((DocumentHandlerExt) getDocumentHandler())
                 .charset(characterEncoding, locator);
         }
     }
 
-    protected void handleImportStyle(String uri, SACMediaList media,
-        String defaultNamespaceURI, Locator locator)
-    {
-        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
-        {
-            ((DocumentHandlerExt) this.getDocumentHandler())
+    protected void handleImportStyle(final String uri, final SACMediaList media,
+            final String defaultNamespaceURI, final Locator locator) {
+        if (getDocumentHandler() instanceof DocumentHandlerExt) {
+            ((DocumentHandlerExt) getDocumentHandler())
                 .importStyle(uri, media, defaultNamespaceURI, locator);
         }
-        else
-        {
-            this.getDocumentHandler().importStyle(uri, media, defaultNamespaceURI);
+        else {
+            getDocumentHandler().importStyle(uri, media, defaultNamespaceURI);
         }
     }
 
-    protected void handleStartMedia(SACMediaList media, Locator locator)
-    {
-        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
-        {
-            ((DocumentHandlerExt) this.getDocumentHandler())
+    protected void handleStartMedia(final SACMediaList media, final Locator locator) {
+        if (getDocumentHandler() instanceof DocumentHandlerExt) {
+            ((DocumentHandlerExt) getDocumentHandler())
                 .startMedia(media, locator);
         }
-        else
-        {
-            this.getDocumentHandler().startMedia(media);
+        else {
+            getDocumentHandler().startMedia(media);
         }
     }
 
-    protected void handleMedium(String medium, Locator locator)
-    {
+    protected void handleMedium(final String medium, final Locator locator) {
     }
 
-    protected void handleEndMedia(SACMediaList media)
-    {
-        this.getDocumentHandler().endMedia(media);
+    protected void handleEndMedia(final SACMediaList media) {
+        getDocumentHandler().endMedia(media);
     }
 
-    protected void handleStartPage(String name, String pseudo_page,
-        Locator locator)
-    {
-        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
-        {
-            ((DocumentHandlerExt) this.getDocumentHandler())
-                .startPage(name, pseudo_page, locator);
+    protected void handleStartPage(final String name, final String pseudoPage, final Locator locator) {
+        if (getDocumentHandler() instanceof DocumentHandlerExt) {
+            ((DocumentHandlerExt) getDocumentHandler())
+                .startPage(name, pseudoPage, locator);
         }
-        else
-        {
-            this.getDocumentHandler().startPage(name, pseudo_page);
+        else {
+            getDocumentHandler().startPage(name, pseudoPage);
         }
     }
 
-    protected void handleEndPage(String name, String pseudo_page)
-    {
-        this.getDocumentHandler().endPage(name, pseudo_page);
+    protected void handleEndPage(final String name, final String pseudoPage) {
+        getDocumentHandler().endPage(name, pseudoPage);
     }
 
-    protected void handleStartFontFace(Locator locator)
-    {
-        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
-        {
-            ((DocumentHandlerExt) this.getDocumentHandler())
+    protected void handleStartFontFace(final Locator locator) {
+        if (getDocumentHandler() instanceof DocumentHandlerExt) {
+            ((DocumentHandlerExt) getDocumentHandler())
                 .startFontFace(locator);
         }
-        else
-        {
-            this.getDocumentHandler().startFontFace();
+        else {
+            getDocumentHandler().startFontFace();
         }
     }
 
-    protected void handleEndFontFace()
-    {
-        this.getDocumentHandler().endFontFace();
+    protected void handleEndFontFace() {
+        getDocumentHandler().endFontFace();
     }
 
-    protected void handleSelector(Selector selector)
-    {
+    protected void handleSelector(final Selector selector) {
     }
 
-    protected void handleStartSelector(SelectorList selectors, Locator locator)
-    {
-        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
-        {
-            ((DocumentHandlerExt) this.getDocumentHandler())
+    protected void handleStartSelector(final SelectorList selectors, final Locator locator) {
+        if (getDocumentHandler() instanceof DocumentHandlerExt) {
+            ((DocumentHandlerExt) getDocumentHandler())
                 .startSelector(selectors, locator);
         }
-        else
-        {
-            this.getDocumentHandler().startSelector(selectors);
+        else {
+            getDocumentHandler().startSelector(selectors);
         }
     }
 
-    protected void handleEndSelector(SelectorList selectors)
-    {
-        this.getDocumentHandler().endSelector(selectors);
+    protected void handleEndSelector(final SelectorList selectors) {
+        getDocumentHandler().endSelector(selectors);
     }
 
-    protected void handleProperty(String name, LexicalUnit value,
-        boolean important, Locator locator)
-    {
-        if (this.getDocumentHandler() instanceof DocumentHandlerExt)
-        {
-            ((DocumentHandlerExt) this.getDocumentHandler())
+    protected void handleProperty(final String name, final LexicalUnit value,
+            final boolean important, final Locator locator) {
+        if (getDocumentHandler() instanceof DocumentHandlerExt) {
+            ((DocumentHandlerExt) getDocumentHandler())
                 .property(name, value, important, locator);
         }
-        else
-        {
-            this.getDocumentHandler().property(name, value, important);
+        else {
+            getDocumentHandler().property(name, value, important);
         }
     }
 
-    protected LexicalUnit functionInternal(LexicalUnit prev, Token t,
-        LexicalUnit params)
-    {
+    protected LexicalUnit functionInternal(final LexicalUnit prev, final Token t,
+            final LexicalUnit params) {
         if ("counter(".equalsIgnoreCase(t.image)) {
             return LexicalUnitImpl.createCounter(prev, params);
-        } else if ("counters(".equalsIgnoreCase(t.image)) {
+        }
+        else if ("counters(".equalsIgnoreCase(t.image)) {
             return LexicalUnitImpl.createCounters(prev, params);
-        } else if ("attr(".equalsIgnoreCase(t.image)) {
+        }
+        else if ("attr(".equalsIgnoreCase(t.image)) {
             return LexicalUnitImpl.createAttr(prev, params.getStringValue());
-        } else if ("rect(".equalsIgnoreCase(t.image)) {
+        }
+        else if ("rect(".equalsIgnoreCase(t.image)) {
             return LexicalUnitImpl.createRect(prev, params);
-        } else if ("rgb(".equalsIgnoreCase(t.image)) {
+        }
+        else if ("rgb(".equalsIgnoreCase(t.image)) {
             return LexicalUnitImpl.createRgbColor(prev, params);
         }
         return LexicalUnitImpl.createFunction(
@@ -696,17 +571,15 @@ abstract class AbstractSACParser implements Parser
             params);
     }
 
-    protected LexicalUnit hexcolorInternal(LexicalUnit prev, Token t)
-    {
+    protected LexicalUnit hexcolorInternal(final LexicalUnit prev, final Token t) {
         // Step past the hash at the beginning
-        int i = 1;
+        final int i = 1;
         int r = 0;
         int g = 0;
         int b = 0;
-        int len = t.image.length() - 1;
-        String pattern = this.getSACParserMessages().getString("invalidColor");
-        try
-        {
+        final int len = t.image.length() - 1;
+        final String pattern = getSACParserMessages().getString("invalidColor");
+        try {
             if (len == 3) {
                 r = Integer.parseInt(t.image.substring(i + 0, i + 1), 16);
                 g = Integer.parseInt(t.image.substring(i + 1, i + 2), 16);
@@ -714,45 +587,45 @@ abstract class AbstractSACParser implements Parser
                 r = (r << 4) | r;
                 g = (g << 4) | g;
                 b = (b << 4) | b;
-            } else if (len == 6) {
+            }
+            else if (len == 6) {
                 r = Integer.parseInt(t.image.substring(i + 0, i + 2), 16);
                 g = Integer.parseInt(t.image.substring(i + 2, i + 4), 16);
                 b = Integer.parseInt(t.image.substring(i + 4, i + 6), 16);
-            } else {
+            }
+            else {
                 throw new CSSParseException(MessageFormat.format(
                     pattern, new Object[] {t}),
-                    this.getInputSource().getURI(), t.beginLine,
+                    getInputSource().getURI(), t.beginLine,
                     t.beginColumn);
             }
 
             // Turn into an "rgb()"
-            LexicalUnit lr = LexicalUnitImpl.createNumber(null, r);
-            LexicalUnit lc1 = LexicalUnitImpl.createComma(lr);
-            LexicalUnit lg = LexicalUnitImpl.createNumber(lc1, g);
-            LexicalUnit lc2 = LexicalUnitImpl.createComma(lg);
+            final LexicalUnit lr = LexicalUnitImpl.createNumber(null, r);
+            final LexicalUnit lc1 = LexicalUnitImpl.createComma(lr);
+            final LexicalUnit lg = LexicalUnitImpl.createNumber(lc1, g);
+            final LexicalUnit lc2 = LexicalUnitImpl.createComma(lg);
             LexicalUnitImpl.createNumber(lc2, b);
 
             return LexicalUnitImpl.createRgbColor(prev, lr);
         }
-        catch (NumberFormatException ex)
-        {
+        catch (final NumberFormatException ex) {
             throw new CSSParseException(MessageFormat.format(
                 pattern, new Object[] {t}),
-                this.getInputSource().getURI(), t.beginLine,
+                getInputSource().getURI(), t.beginLine,
                 t.beginColumn, ex);
         }
     }
 
-    int intValue(char op, String s)
-    {
+    int intValue(final char op, final String s) {
         return ((op == '-') ? -1 : 1) * Integer.parseInt(s);
     }
 
-    float floatValue(char op, String s) {
+    float floatValue(final char op, final String s) {
         return ((op == '-') ? -1 : 1) * Float.parseFloat(s);
     }
 
-    int getLastNumPos(String s) {
+    int getLastNumPos(final String s) {
         int i;
         for (i = 0; i < s.length(); i++) {
             if (Character.isLetter(s.charAt(i))) {
@@ -770,9 +643,9 @@ abstract class AbstractSACParser implements Parser
      * to the parser, meaning that the grammar would no longer match the standard grammar specified
      * by the W3C. This would make the parser and lexer much less maintainable.
      */
-    String unescape(String s) {
-        int len = s.length();
-        StringBuilder buf = new StringBuilder(len);
+    String unescape(final String s) {
+        final int len = s.length();
+        final StringBuilder buf = new StringBuilder(len);
         int index = 0;
 
         while (index < len) {
@@ -781,54 +654,57 @@ abstract class AbstractSACParser implements Parser
                 if (++index < len) {
                     c = s.charAt(index);
                     switch (c) {
-                    case '0': case '1': case '2': case '3': case '4':
-                    case '5': case '6': case '7': case '8': case '9':
-                    case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
-                    case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
-                        int numValue = Character.digit(c, 16);
-                        int count = 0;
-                        int p = 16;
+                        case '0': case '1': case '2': case '3': case '4':
+                        case '5': case '6': case '7': case '8': case '9':
+                        case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
+                        case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
+                            int numValue = Character.digit(c, 16);
+                            final int count = 0;
+                            int p = 16;
 
-                        while (index + 1 < len && count < 6) {
-                            c = s.charAt(index+1);
+                            while (index + 1 < len && count < 6) {
+                                c = s.charAt(index + 1);
 
-                            if (Character.digit(c, 16) != -1) {
-                                numValue = (numValue * 16) + Character.digit(c, 16);
-                                p *= 16;
-                                index++;
-                            } else {
-                                if (Character.isWhitespace(c)) {
-                                    // skip the latest white space
+                                if (Character.digit(c, 16) != -1) {
+                                    numValue = (numValue * 16) + Character.digit(c, 16);
+                                    p *= 16;
                                     index++;
                                 }
-                                break;
+                                else {
+                                    if (Character.isWhitespace(c)) {
+                                        // skip the latest white space
+                                        index++;
+                                    }
+                                    break;
+                                }
                             }
-                        }
-                        buf.append((char) numValue);
-                        break;
-                    case '\n':
-                    case '\f':
-                        break;
-                    case '\r':
-                        if (index + 1 < len) {
-                            if (s.charAt(index + 1) == '\n') {
-                                index ++;
+                            buf.append((char) numValue);
+                            break;
+                        case '\n':
+                        case '\f':
+                            break;
+                        case '\r':
+                            if (index + 1 < len) {
+                                if (s.charAt(index + 1) == '\n') {
+                                    index++;
+                                }
                             }
-                        }
-                        break;
-                    case '\'':
-                        // strings are always enclosed in double quotes;
-                        // no need for escaping single quotes
-                        buf.append(c);
-                        break;
-                    default:
-                        c = s.charAt(--index);
-                        buf.append(c);
+                            break;
+                        case '\'':
+                            // strings are always enclosed in double quotes;
+                            // no need for escaping single quotes
+                            buf.append(c);
+                            break;
+                        default:
+                            c = s.charAt(--index);
+                            buf.append(c);
                     }
-                } else {
+                }
+                else {
                     throw new CSSParseException("invalid string " + s, getLocator());
                 }
-            } else {
+            }
+            else {
                 buf.append(c);
             }
             index++;

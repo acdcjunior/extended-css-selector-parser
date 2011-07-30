@@ -1,9 +1,7 @@
 /*
- * TestException.java
+ * CSS Parser Project
  *
- * Steady State CSS2 Parser
- *
- * Copyright (C) 1999, 2002 Steady State Software Ltd.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,15 +17,12 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * To contact the authors of the library, write to Steady State Software Ltd.,
- * 49 Littleworth, Wing, Buckinghamshire, LU7 0JX, England
+ * To contact the authors of the library:
  *
- * http://www.steadystate.com/css/
- * mailto:css@steadystate.co.uk
+ * http://cssparser.sourceforge.net/
+ * mailto:davidsch@users.sourceforge.net
  *
- * $Id: TestException.java,v 1.2 2008-03-20 02:49:41 sdanig Exp $
  */
-
 package com.steadystate.css;
 
 import java.io.Reader;
@@ -53,13 +48,13 @@ public class TestException {
 
     @Test
     public void test() throws Exception {
-        CSSOMParser parser = new CSSOMParser();
-        ErrorHandler errorHandler = new ErrorHandler();
+        final CSSOMParser parser = new CSSOMParser();
+        final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
 
-        Reader r = new StringReader("");
-        InputSource source = new InputSource(r);
-        CSSStyleSheet stylesheet = parser.parseStyleSheet(source, null, null);
+        final Reader r = new StringReader("");
+        final InputSource source = new InputSource(r);
+        final CSSStyleSheet stylesheet = parser.parseStyleSheet(source, null, null);
 
         Assert.assertEquals(0, errorHandler.getErrorCount());
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
@@ -69,7 +64,7 @@ public class TestException {
         stylesheet.insertRule("@import url(http://www.steadystate.com/primary.css);", 0);
         stylesheet.insertRule("@charset \"US-ASCII\";", 0);
 
-        CSSRuleList rules = stylesheet.getCssRules();
+        final CSSRuleList rules = stylesheet.getCssRules();
         Assert.assertEquals(3, rules.getLength());
 
         Assert.assertEquals("@charset \"US-ASCII\";", rules.item(0).getCssText());
@@ -86,7 +81,7 @@ public class TestException {
         rule.setCssText("H2 { smell: strong }");
         Assert.assertEquals("H2 { smell: strong }", rules.item(1).getCssText());
 
-        int n = stylesheet.insertRule("@media speech { H1 { voice: male } }", 1);
+        final int n = stylesheet.insertRule("@media speech { H1 { voice: male } }", 1);
         Assert.assertEquals(1, n);
 
         Assert.assertEquals(3, rules.getLength());
