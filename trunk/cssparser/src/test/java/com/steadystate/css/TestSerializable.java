@@ -58,7 +58,6 @@ public class TestSerializable {
 
     @Test
     public void test() throws Exception {
-
         InputStream is = getClass().getClassLoader().getResourceAsStream("html40.css");
         Assert.assertNotNull(is);
 

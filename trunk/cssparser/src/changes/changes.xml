@@ -6,6 +6,9 @@
   </properties>
   <body>
         <release version="0.9.6" date="?" description="Long-overdue release with lots of bugfixes.">
+            <action type="fix" issue="3198584">
+                Parser hang with missing semicolon fixed.
+            </action>
             <action type="fix" issue="1946431">
                 Method com.steadystate.css.parser.LexicalUnitImpl.createAttr(LexicalUnit, LexicalUnit) removed.
                 The impl was broken. You can use the method
