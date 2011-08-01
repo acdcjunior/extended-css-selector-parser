@@ -1,9 +1,7 @@
 /*
- * $Id: SACParserCSS21.jj,v 1.9 2010-05-19 13:26:51 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2008 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 options {
@@ -417,15 +416,17 @@ void styleSheetRuleList() :
 {
     ( charsetRule() )?
     ( <S> | <CDO> | <CDC> )*
-    ( importRule() ( <S> | <CDO> | <CDC> )* )*
-    (
-     ( styleRule() | mediaRule() | pageRule() | unknownRule() )
-     ( <S> | <CDO> | <CDC> )*
-    )*
-    (
-     ( styleRule() | mediaRule() | pageRule() | importRuleIgnored() | unknownRule() )
-     ( <S> | <CDO> | <CDC> )*
-    )*
+    (      ( importRule() ( <S> | <CDO> | <CDC> )* )*
+      (
+       ( styleRule() | mediaRule() | pageRule() | unknownRule() )
+       ( <S> | <CDO> | <CDC> )*
+      )+
+      ( importRuleIgnored() ( <S> | <CDO> | <CDC> )* )*
+      (
+       ( styleRule() | mediaRule() | pageRule() | unknownRule() )
+       ( <S> | <CDO> | <CDC> )*
+      )*
+    )?
 }
 
 //
@@ -624,7 +625,7 @@ void mediaRuleList() :
 {
 }
 {
-  ( ( styleRule() | pageRule() | unknownRule() ) ( <S> )* )+ 
+  ( ( styleRule() | pageRule() | unknownRule() | importRuleIgnored() ) ( <S> )* )+ 
 }
 
 void mediaRuleSingle() :
