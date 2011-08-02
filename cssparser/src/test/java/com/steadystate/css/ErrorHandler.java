@@ -34,33 +34,51 @@ import org.w3c.css.sac.CSSParseException;
 public class ErrorHandler implements org.w3c.css.sac.ErrorHandler {
 
     private int errorCount_;
+    private StringBuilder errorMsg_ = new StringBuilder();
+
     private int fatalErrorCount_;
+    private StringBuilder fatalErrorMsg_ = new StringBuilder();
+
     private int warningCount_;
+    private StringBuilder warningMsg_ = new StringBuilder();
 
     public void error(final CSSParseException e) throws CSSException {
-        System.out.println(e.toString());
         errorCount_++;
+        errorMsg_.append(e.getMessage()).append(" ");
     }
 
     public void fatalError(final CSSParseException e) throws CSSException {
-        System.out.println(e.toString());
         fatalErrorCount_++;
+        fatalErrorMsg_.append(e.getMessage()).append(" ");
     }
 
     public void warning(final CSSParseException e) throws CSSException {
-        System.out.println(e.toString());
         warningCount_++;
+        warningMsg_.append(e.getMessage()).append(" ");
     }
 
     public int getErrorCount() {
         return errorCount_;
     }
 
+    public String getErrorMessage() {
+        return errorMsg_.toString().trim();
+    }
+
     public int getFatalErrorCount() {
         return fatalErrorCount_;
+    }
+
+    public String getFatalErrorMessage() {
+        return fatalErrorMsg_.toString().trim();
     }
 
     public int getWarningCount() {
         return warningCount_;
     }
+
+    public String getWarningMessage() {
+        return warningMsg_.toString().trim();
+    }
+
 }
