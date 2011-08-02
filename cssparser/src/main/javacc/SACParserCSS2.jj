@@ -1,9 +1,7 @@
 /*
- * $Id: SACParserCSS2.jj,v 1.8 2010-05-19 13:26:51 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2008 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,11 +21,12 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 options {
-	IGNORE_CASE = true;
-	STATIC = false;
+    IGNORE_CASE = true;
+    STATIC = false;
 //    UNICODE_INPUT = false;
     USER_CHAR_STREAM = true;
 //    DEBUG_TOKEN_MANAGER = true;
@@ -355,7 +354,7 @@ void styleSheet() :
     }
     finally
     {
-    	this.handleEndDocument();
+        this.handleEndDocument();
     }
 }
 
@@ -1103,8 +1102,8 @@ Object pseudo(Condition pred) :
                 }
                 else
                 {
-        		    c = this.getConditionFactory().createPseudoClassCondition(null, s);
-        		}
+                    c = this.getConditionFactory().createPseudoClassCondition(null, s);
+                }
                 if (pseudoElementSel != null)
                 {
                     if (pseudoElementSel instanceof Locatable)
@@ -1137,12 +1136,12 @@ Object pseudo(Condition pred) :
                             ? c
                             : this.getConditionFactory().createAndCondition(pred, c);
                     } else {
-                    	c = this.getConditionFactory().createPseudoClassCondition(null, function + arg + ")");
+                        c = this.getConditionFactory().createPseudoClassCondition(null, function + arg + ")");
                         if (c instanceof Locatable)
                         {
                             ((Locatable) c).setLocator(locator);
                         }
-						return (pred == null)
+                        return (pred == null)
                             ? c
                             : this.getConditionFactory().createAndCondition(pred, c);
                     }
@@ -1183,8 +1182,8 @@ void styleDeclaration()  :
 {
 }
 {
-	try
-	{
+    try
+    {
         ( declaration() )?
         ( <SEMICOLON> ( <S> )* ( declaration() )? )*
     }

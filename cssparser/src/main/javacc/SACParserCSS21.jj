@@ -25,8 +25,8 @@
  */
 
 options {
-	IGNORE_CASE = true;
-	STATIC = false;
+    IGNORE_CASE = true;
+    STATIC = false;
 //    UNICODE_INPUT = false;
     USER_CHAR_STREAM = true;
 //    DEBUG_TOKEN_MANAGER = true;
@@ -79,24 +79,24 @@ TOKEN_MGR_DECLS :
     private boolean _quiet = true;
     private ErrorHandler errorHandler;
 
-	public String splitNumber(StringBuilder pattern) {
-		String regexp = "[0-9]+|[0-9]*.[0-9]+";
-		int j=1;
-		while(pattern.substring(0, j).matches(regexp)) 
-		{
-			j++;
-		}
-		if(pattern.substring(j-1, j).equals(".")) 
-		{
-			j++;
-			while(pattern.substring(0, j).matches(regexp)) 
-			{
-				j++;
-			}
-		}
-		return pattern.substring(0, j-1);
-	}
-	
+    public String splitNumber(StringBuilder pattern) {
+        String regexp = "[0-9]+|[0-9]*.[0-9]+";
+        int j=1;
+        while(pattern.substring(0, j).matches(regexp)) 
+        {
+            j++;
+        }
+        if(pattern.substring(j-1, j).equals(".")) 
+        {
+            j++;
+            while(pattern.substring(0, j).matches(regexp)) 
+            {
+                j++;
+            }
+        }
+        return pattern.substring(0, j-1);
+    }
+    
     private String trimBy(StringBuilder s, int left, int right) {
         int end = s.length();
         return s.toString().substring(left, end-right);
@@ -406,7 +406,7 @@ void styleSheet() :
     }
     finally
     {
-    	this.handleEndDocument();
+        this.handleEndDocument();
     }
 }
 
@@ -1161,12 +1161,12 @@ Object pseudo(Condition pred) :
                             ? c
                             : this.getConditionFactory().createAndCondition(pred, c);
                     } else {
-                    	c = this.getConditionFactory().createPseudoClassCondition(null, function + arg + ")");
+                        c = this.getConditionFactory().createPseudoClassCondition(null, function + arg + ")");
                         if (c instanceof Locatable)
                         {
                             ((Locatable) c).setLocator(locator);
                         }
-						return (pred == null)
+                        return (pred == null)
                             ? c
                             : this.getConditionFactory().createAndCondition(pred, c);
                     }
@@ -1208,8 +1208,8 @@ void styleDeclaration()  :
 {
 }
 {
-	try
-	{
+    try
+    {
         ( declaration() )?
         ( <SEMICOLON> ( <S> )* ( declaration() )? )*
     }
