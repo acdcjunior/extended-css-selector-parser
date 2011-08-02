@@ -26,22 +26,20 @@
  */
 package com.steadystate.css.parser;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.CSSParseException;
-import org.w3c.css.sac.ErrorHandler;
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.Parser;
+
+import com.steadystate.css.ErrorHandler;
 
 /**
  * @author rbri
  */
-public class XhtmlCssTest implements ErrorHandler {
+public class XhtmlCssTest {
 
     private static final String CSS_CODE = "<!--/*--><![CDATA[/*><!--*/ \n"
         + "body { color: #000000; background-color: #FFFFFF; }\n"
@@ -51,48 +49,36 @@ public class XhtmlCssTest implements ErrorHandler {
         + "/*]]>*/-->";
 
     @Test
-    public void xhtmlCssCSS1() {
-    	xhtmlCss(new SACParserCSS1());
+    public void xhtmlCssCSS1() throws Exception {
+        xhtmlCss(new SACParserCSS1());
     }
 
     @Test
-    public void xhtmlCssCSS2() {
-    	xhtmlCss(new SACParserCSS2());
+    public void xhtmlCssCSS2() throws Exception {
+        xhtmlCss(new SACParserCSS2());
     }
 
     @Test
-    public void xhtmlCssCSS21() {
-    	xhtmlCss(new SACParserCSS21());
+    public void xhtmlCssCSS21() throws Exception {
+        xhtmlCss(new SACParserCSS21());
     }
 
     @Test
-    public void xhtmlCssCSSmobileOKBasic1() {
-    	xhtmlCss(new SACParserCSSmobileOKBasic1());
+    public void xhtmlCssCSSmobileOKBasic1() throws Exception {
+        xhtmlCss(new SACParserCSSmobileOKBasic1());
     }
 
-    private void xhtmlCss(Parser sacParser) {
+    private void xhtmlCss(Parser sacParser) throws Exception {
+        ErrorHandler errorHandler = new ErrorHandler();
+        sacParser.setErrorHandler(errorHandler);
+
         Reader r = new StringReader(CSS_CODE);
         InputSource source = new InputSource(r);
-        try {
-            sacParser.parseStyleSheet(source);
-        }
-        catch (CSSException e) {
-        	Assert.assertFalse(e.getLocalizedMessage(), true);
-        }
-        catch (IOException e) {
-        	Assert.assertFalse(e.getLocalizedMessage(), true);
-        }
-    }
 
-    public void error(CSSParseException exception) throws CSSException {
-        Assert.assertFalse(exception.getLocalizedMessage(), true);
-    }
+        sacParser.parseStyleSheet(source);
 
-    public void fatalError(CSSParseException exception) throws CSSException {
-        Assert.assertFalse(exception.getLocalizedMessage(), true);
-    }
-
-    public void warning(CSSParseException exception) throws CSSException {
-        // ignore
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
     }
 }

@@ -37,6 +37,7 @@ import org.w3c.dom.css.CSSRuleList;
 import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.parser.CSSOMParser;
+import com.steadystate.css.parser.SACParserCSS21;
 
 /**
  * Attempts to perform some illegal operations to ensure the correct exceptions are thrown.
@@ -48,7 +49,7 @@ public class TestException {
 
     @Test
     public void test() throws Exception {
-        final CSSOMParser parser = new CSSOMParser();
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
 
