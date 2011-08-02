@@ -1,9 +1,7 @@
 /*
- * $Id: SACParserCSS1.jj,v 1.6 2010-05-19 13:26:51 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2008 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,11 +21,12 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 options {
-	IGNORE_CASE = true;
-	STATIC = false;
+    IGNORE_CASE = true;
+    STATIC = false;
 //    UNICODE_INPUT = false;
     USER_CHAR_STREAM = true;
 //    DEBUG_TOKEN_MANAGER = true;
@@ -117,7 +116,7 @@ TOKEN_MGR_DECLS :
 
 <DEFAULT> TOKEN : 
 {
-	< IDENT: <NMSTART> ( <NMCHAR> )* > 
+  < IDENT: <NMSTART> ( <NMCHAR> )* > 
 | < LINK_PSCLASS: ":link" > { matchedToken.image = trimBy(image, 1, 0); }
 | < VISITED_PSCLASS: ":visited" > { matchedToken.image = trimBy(image, 1, 0); }
 | < ACTIVE_PSCLASS: ":active" > { matchedToken.image = trimBy(image, 1, 0); }
@@ -250,7 +249,7 @@ void styleSheet() :
     }
     finally
     {
-    	this.handleEndDocument();
+        this.handleEndDocument();
     }
 }
 
@@ -528,9 +527,9 @@ Selector selector() :
 
 //
 // simple_selector
-//  : element_name id? class? pseudo_class?	/* eg: H1.subject */
-//  | class? pseudo_class?		/* eg: #xyz33 */
-//  | pseudo_class?			/* eg: .author */
+//  : element_name id? class? pseudo_class?    /* eg: H1.subject */
+//  | class? pseudo_class?        /* eg: #xyz33 */
+//  | pseudo_class?            /* eg: .author */
 //  ;
 //
 Selector simpleSelector(Selector sel, char comb) :
@@ -550,22 +549,22 @@ Selector simpleSelector(Selector sel, char comb) :
             | 
             ( { simpleSel = this.getSelectorFactory().createElementSelector(null, null); }
                 ( 
-                	( c = hash(c) ) 
-                	( c = _class(c) )? 
-                	( c = pseudoClass(c) )? 
+                    ( c = hash(c) ) 
+                    ( c = _class(c) )? 
+                    ( c = pseudoClass(c) )? 
                 )
             ) 
             | 
             ( { simpleSel = this.getSelectorFactory().createElementSelector(null, null); }
                 ( 
-                	( c = _class(c) ) 
-                	( c = pseudoClass(c) )? 
+                    ( c = _class(c) ) 
+                    ( c = pseudoClass(c) )? 
                 )
             ) 
             | 
             ( { simpleSel = this.getSelectorFactory().createElementSelector(null, null); }
                 ( 
-                	( c = pseudoClass(c) ) 
+                    ( c = pseudoClass(c) ) 
                 )
             ) 
         )
@@ -686,11 +685,11 @@ Condition pseudoClass(Condition pred) :
         )
         {
             String s = t.image;
-		    c = this.getConditionFactory().createPseudoClassCondition(null, s);
-		    if (c instanceof Locatable)
-   		    {
-   		        ((Locatable) c).setLocator(this.getLocator());
-   		    }
+            c = this.getConditionFactory().createPseudoClassCondition(null, s);
+            if (c instanceof Locatable)
+               {
+                   ((Locatable) c).setLocator(this.getLocator());
+               }
             return (pred == null)
                 ? c
                 : this.getConditionFactory().createAndCondition(pred, c);
@@ -721,7 +720,7 @@ SimpleSelector pseudoElement() :
         ) 
         {
             String s = t.image;
-		    sel = this.getSelectorFactory().createPseudoElementSelector(null, s);
+            sel = this.getSelectorFactory().createPseudoElementSelector(null, s);
             if (sel instanceof Locatable)
             {
                 ((Locatable) sel).setLocator(this.getLocator());
@@ -856,7 +855,7 @@ LexicalUnit expr() :
 // term
 //   : unary_operator?
 //     [ NUMBER S* | PERCENTAGE S* | LENGTH S* | EMS S* | EXS S* |
-//		STRING S* | URI S* | RGB S* | hexcolor ]
+//        STRING S* | URI S* | RGB S* | hexcolor ]
 //   ;
 //
 LexicalUnit term(LexicalUnit prev) :
