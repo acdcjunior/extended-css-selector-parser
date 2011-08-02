@@ -1,13 +1,13 @@
-.foo {
+.sel1 {
   padding: 0 !important;
 }
-.foo {
+.sel2 {
   font-weight: normal ! important;
 }
-.foo {
+.sel3 {
   font-weight: normal !	important;
 }
-.foo {
+.sel4 {
   font-weight: normal !
  important;
 }

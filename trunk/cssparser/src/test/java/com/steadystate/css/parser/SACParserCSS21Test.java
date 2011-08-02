@@ -219,11 +219,27 @@ public class SACParserCSS21Test {
         parser.setErrorHandler(errorHandler);
 
         final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(0, sheet.getCssRules().getLength());
         Assert.assertEquals(0, errorHandler.getErrorCount());
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        Assert.assertEquals(0, sheet.getCssRules().getLength());
+    }
+
+    @Test
+    public void whitespaceOnlyCSS() throws Exception {
+        final InputSource source = new InputSource(new StringReader("  \t \r\n \n"));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        Assert.assertEquals(0, sheet.getCssRules().getLength());
     }
 
     /**
