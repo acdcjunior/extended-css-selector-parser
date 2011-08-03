@@ -374,7 +374,7 @@ public class SACParserCSS21Test {
 
         Assert.assertEquals(1, rules.getLength());
 
-        CSSRule rule = rules.item(0);
+        final CSSRule rule = rules.item(0);
         // parser accepts this
         Assert.assertEquals("h1 { color: red; rotation: 70minutes }", rule.getCssText());
     }
@@ -554,7 +554,7 @@ public class SACParserCSS21Test {
     @Test
     public void unexpectedEndOfStyleSheet() throws Exception {
         final String css = "@media screen {\n"
-                            + "  p:before { content: 'Hello";
+                            + "  p:before { content: Hello";
 
         final InputSource source = new InputSource(new StringReader(css));
         final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
@@ -564,17 +564,65 @@ public class SACParserCSS21Test {
 
         final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
-        Assert.assertEquals(3, errorHandler.getErrorCount());
+        Assert.assertEquals(1, errorHandler.getErrorCount());
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(2, errorHandler.getWarningCount());
+        Assert.assertEquals(1, errorHandler.getWarningCount());
 
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
 
-        CSSRule rule = rules.item(0);
-        // TODO
-        Assert.assertEquals("@media screen {p before {  } }", rule.getCssText());
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("@media screen {p before { content: Hello } }", rule.getCssText());
+    }
+
+    @Test
+    public void unexpectedEndOfMediaRule() throws Exception {
+        final String css = "@media screen {\n"
+                            + "  p:before { content: Hello }";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(1, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(1, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("@media screen {p before { content: Hello } }", rule.getCssText());
+    }
+
+    @Test
+    public void unexpectedEndOfPageRule() throws Exception {
+        final String css = "@page :pageStyle { size: 21.0cm 29.7cm;";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(1, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(1, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("@page :pageStyle {size: 21cm 29.7cm}", rule.getCssText());
     }
 
     /**
@@ -605,7 +653,7 @@ public class SACParserCSS21Test {
 
         Assert.assertEquals(1, rules.getLength());
 
-        CSSRule rule = rules.item(0);
+        final CSSRule rule = rules.item(0);
         // TODO
         Assert.assertEquals("p { color: green }", rule.getCssText());
     }
