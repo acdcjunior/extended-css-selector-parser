@@ -1,9 +1,7 @@
 /*
- * $Id: XhtmlCssTest.java,v 1.1 2008-11-28 13:01:29 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2008 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,10 +21,10 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 package com.steadystate.css.parser;
 
-import java.io.Reader;
 import java.io.StringReader;
 
 import org.junit.Assert;
@@ -68,12 +66,11 @@ public class XhtmlCssTest {
         xhtmlCss(new SACParserCSSmobileOKBasic1());
     }
 
-    private void xhtmlCss(Parser sacParser) throws Exception {
-        ErrorHandler errorHandler = new ErrorHandler();
+    private void xhtmlCss(final Parser sacParser) throws Exception {
+        final ErrorHandler errorHandler = new ErrorHandler();
         sacParser.setErrorHandler(errorHandler);
 
-        Reader r = new StringReader(CSS_CODE);
-        InputSource source = new InputSource(r);
+        final InputSource source = new InputSource(new StringReader(CSS_CODE));
 
         sacParser.parseStyleSheet(source);
 
