@@ -6,6 +6,10 @@
   </properties>
   <body>
         <release version="0.9.6" date="?" description="Long-overdue release with lots of bugfixes.">
+            <action type="fix">
+                CSS 2.1 parser now ignores any '@import' rule that occurs inside a block
+                (see http://www.w3.org/TR/CSS2/syndata.html#at-rules). JUnit tests added.
+            </action>
             <action type="fix" issue="3198584">
                 Parser hang with missing semicolon fixed.
             </action>
