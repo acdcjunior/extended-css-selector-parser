@@ -243,7 +243,7 @@ public class SACParserCSS21Test {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS2/syndata.html#at-rules
+     * @see http://www.w3.org/TR/CSS21/syndata.html#at-rules
      */
     @Test
     public void atRules1() throws Exception {
@@ -275,7 +275,7 @@ public class SACParserCSS21Test {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS2/syndata.html#at-rules
+     * @see http://www.w3.org/TR/CSS21/syndata.html#at-rules
      */
     @Test
     public void atRules2() throws Exception {
@@ -349,6 +349,265 @@ public class SACParserCSS21Test {
 
         rule = rules.item(2);
         Assert.assertEquals("h1 { color: blue }", rule.getCssText());
+    }
+
+    /**
+     * @see http://www.w3.org/TR/CSS21/syndata.html#parsing-errors
+     */
+    @Test
+    public void unknownProperty() throws Exception {
+        final String css = "h1 { color: red; rotation: 70minutes }\n";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        // parser accepts this
+        Assert.assertEquals("h1 { color: red; rotation: 70minutes }", rule.getCssText());
+    }
+
+    /**
+     * @see http://www.w3.org/TR/CSS21/syndata.html#parsing-errors
+     */
+    @Test
+    public void illegalValues() throws Exception {
+        final String css = "img { float: left } /* correct CSS 2.1 */\n"
+                    + "img { float: left here } /* 'here' is not a value of 'float' */\n"
+                    + "img { background: \"red\" } /* keywords cannot be quoted */\n"
+                    + "img { background: \'red\' } /* keywords cannot be quoted */\n"
+                    + "img { border-width: 3 } /* a unit must be specified for length values */\n";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(5, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("img { float: left }", rule.getCssText());
+
+        // parser accepts this
+        rule = rules.item(1);
+        Assert.assertEquals("img { float: left here }", rule.getCssText());
+        rule = rules.item(2);
+        Assert.assertEquals("img { background: \"red\" }", rule.getCssText());
+        rule = rules.item(3);
+        Assert.assertEquals("img { background: \"red\" }", rule.getCssText());
+        rule = rules.item(4);
+        Assert.assertEquals("img { border-width: 3 }", rule.getCssText());
+    }
+
+    /**
+     * @see http://www.w3.org/TR/CSS21/syndata.html#parsing-errors
+     */
+    @Test
+    public void malformedDeclaration() throws Exception {
+        final String css = "p { color:green }\n"
+                    + "p { color:green; color } /* malformed declaration missing ':', value */\n"
+                    + "p { color:red;   color; color:green } /* same with expected recovery */\n"
+                    + "p { color:green; color: } /* malformed declaration missing value */\n"
+                    + "p { color:red;   color:; color:green } /* same with expected recovery */\n"
+                    + "p { color:green; color{;color:maroon} } /* unexpected tokens { } */\n"
+                    + "p { color:red;   color{;color:maroon}; color:green } /* same with recovery */\n";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+//        Assert.assertEquals(7, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+//        Assert.assertEquals(1, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(7, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { color: green }", rule.getCssText());
+
+        // parser accepts this
+        rule = rules.item(1);
+        Assert.assertEquals("p { color: green }", rule.getCssText());
+        rule = rules.item(2);
+        Assert.assertEquals("p { color: red; color: green }", rule.getCssText());
+        rule = rules.item(3);
+        Assert.assertEquals("p { color: green }", rule.getCssText());
+        rule = rules.item(4);
+        Assert.assertEquals("p { color: red; color: green }", rule.getCssText());
+        rule = rules.item(5);
+        Assert.assertEquals("p { color: green }", rule.getCssText());
+        rule = rules.item(6);
+        Assert.assertEquals("p { color: red; color: green }", rule.getCssText());
+    }
+
+    /**
+     * @see http://www.w3.org/TR/CSS21/syndata.html#parsing-errors
+     */
+    @Test
+    public void malformedStatements() throws Exception {
+        final String css = "p { color:green }\n"
+                    + "p @here {color:red} /* ruleset with unexpected at-keyword '@here' */\n"
+                    + "@foo @bar; /* at-rule with unexpected at-keyword '@bar' */\n"
+                    // TODO + "}} {{ - }} /* ruleset with unexpected right brace */\n"
+                    // TODO + ") ( {} ) p {color: red } /* ruleset with unexpected right parenthesis */\n"
+                    + "p { color:blue; }\n";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(1, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(1, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(3, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { color: green }", rule.getCssText());
+
+        rule = rules.item(1);
+        Assert.assertEquals("@foo @bar;", rule.getCssText());
+
+        rule = rules.item(2);
+        Assert.assertEquals("p { color: blue }", rule.getCssText());
+    }
+
+    /**
+     * @see http://www.w3.org/TR/CSS21/syndata.html#parsing-errors
+     */
+    @Test
+    public void atRulesWithUnknownAtKeywords() throws Exception {
+        final String css = "@three-dee {\n"
+                            + "  @background-lighting {\n"
+                            + "    azimuth: 30deg;\n"
+                            + "    elevation: 190deg;\n"
+                            + "  }\n"
+                            + "  h1 { color: red }\n"
+                            + "  }\n"
+                            + "  h1 { color: blue }\n";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(2, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("@three-dee {\n"
+                            + "  @background-lighting {\n"
+                            + "    azimuth: 30;\n"
+                            + "    elevation: 190;\n"
+                            + "  }\n"
+                            + "  h1 { color: red }\n"
+                            + "  }", rule.getCssText());
+
+        rule = rules.item(1);
+        Assert.assertEquals("h1 { color: blue }", rule.getCssText());
+    }
+
+    /**
+     * @see http://www.w3.org/TR/CSS21/syndata.html#parsing-errors
+     */
+    @Test
+    public void unexpectedEndOfStyleSheet() throws Exception {
+        final String css = "@media screen {\n"
+                            + "  p:before { content: 'Hello";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(3, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(2, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        // TODO
+        Assert.assertEquals("@media screen {p before {  } }", rule.getCssText());
+    }
+
+    /**
+     * @see http://www.w3.org/TR/CSS21/syndata.html#parsing-errors
+     */
+    @Test
+    public void unexpectedEndOfString() throws Exception {
+        final String css = "p {\n"
+                            + "  color: green;\n"
+                            + "  font-family: 'Courier New Times\n"
+                            + "  color: red;\n"
+                            + "  color: green;\n"
+                            + "}";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(2, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(1, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        // TODO
+        Assert.assertEquals("p { color: green }", rule.getCssText());
     }
 }
 

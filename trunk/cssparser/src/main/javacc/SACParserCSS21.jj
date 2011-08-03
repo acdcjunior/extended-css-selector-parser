@@ -59,7 +59,7 @@ public class SACParserCSS21 extends AbstractSACParser implements Parser {
     public String getParserVersion() {
         return "http://www.w3.org/TR/CSS21/";
     }
-    
+
     protected String getGrammarUri()
     {
         return "http://www.w3.org/TR/CSS21/grammar.html";
@@ -82,21 +82,21 @@ TOKEN_MGR_DECLS :
     public String splitNumber(StringBuilder pattern) {
         String regexp = "[0-9]+|[0-9]*.[0-9]+";
         int j=1;
-        while(pattern.substring(0, j).matches(regexp)) 
+        while(pattern.substring(0, j).matches(regexp))
         {
             j++;
         }
-        if(pattern.substring(j-1, j).equals(".")) 
+        if(pattern.substring(j-1, j).equals("."))
         {
             j++;
-            while(pattern.substring(0, j).matches(regexp)) 
+            while(pattern.substring(0, j).matches(regexp))
             {
                 j++;
             }
         }
         return pattern.substring(0, j-1);
     }
-    
+
     private String trimBy(StringBuilder s, int left, int right) {
         int end = s.length();
         return s.toString().substring(left, end-right);
@@ -454,7 +454,7 @@ void charsetRule() :
             locator = this.getLocator();
         }
         <S>
-        t = <STRING> 
+        t = <STRING>
         <SEMICOLON>
         {
             this.handleCharset(t.toString(), locator);
@@ -625,7 +625,7 @@ void mediaRuleList() :
 {
 }
 {
-  ( ( styleRule() | pageRule() | unknownRule() | importRuleIgnored() ) ( <S> )* )+ 
+  ( ( styleRule() | pageRule() | unknownRule() | importRuleIgnored() ) ( <S> )* )+
 }
 
 void mediaRuleSingle() :
@@ -792,7 +792,7 @@ void styleRule() :
     try {
         {
             t = this.getToken();
-        } 
+        }
         selList = selectorList()
         <LBRACE> ( <S> )*
         {
@@ -1148,7 +1148,7 @@ Object pseudo(Condition pred) :
             |
             (
                 t = <FUNCTION> { function = unescape(t.image); } ( <S> )*
-                (t = <IDENT> { arg = unescape(t.image); } ( <S> )* )? 
+                (t = <IDENT> { arg = unescape(t.image); } ( <S> )* )?
                 <RROUND>
                 {
                     if (function.equalsIgnoreCase("lang(")) {
@@ -1172,7 +1172,7 @@ Object pseudo(Condition pred) :
                     }
                 }
             )
-            
+
         )
     }
     catch (ParseException e)
@@ -1430,7 +1430,7 @@ String skip() {
   int nesting = 0;
   Token t = getToken(0);
   if (t.image != null) {
-    sb.append(t.image);    
+    sb.append(t.image);
   }
   do {
     t = getNextToken();
@@ -1481,6 +1481,11 @@ void error_skipdecl()
     if (t.kind == LBRACE)
     {
         error_skipblock();
+    }
+    else if (t.kind == RBRACE)
+    {
+        // next will be RBRACE so we are finished
+        return;
     }
     else
     {
