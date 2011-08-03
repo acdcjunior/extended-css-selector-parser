@@ -800,7 +800,8 @@ void styleRule() :
             this.handleStartSelector(selList, this.createLocator(t.next));
         }
         styleDeclaration()
-        <RBRACE>
+        (           <RBRACE> | <EOF>
+        )
     }
     catch(CSSParseException e)
     {
