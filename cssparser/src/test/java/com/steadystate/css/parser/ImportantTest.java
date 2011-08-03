@@ -1,9 +1,7 @@
 /*
- * $Id: ImportantTest.java,v 1.2 2008-11-28 13:02:18 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2008 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 package com.steadystate.css.parser;
 
@@ -65,7 +64,7 @@ public class ImportantTest {
 
     @Test
     public void css1Error() throws Exception {
-        ErrorHandler errorHandler = parserError(new SACParserCSS1());
+        final ErrorHandler errorHandler = parserError(new SACParserCSS1());
 
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(1, errorHandler.getErrorCount());
@@ -74,7 +73,7 @@ public class ImportantTest {
 
     @Test
     public void css2Error() throws Exception {
-        ErrorHandler errorHandler = parserError(new SACParserCSS2());
+        final ErrorHandler errorHandler = parserError(new SACParserCSS2());
 
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(1, errorHandler.getErrorCount());
@@ -83,7 +82,7 @@ public class ImportantTest {
 
     @Test
     public void css21Error() throws Exception {
-        ErrorHandler errorHandler = parserError(new SACParserCSS21());
+        final ErrorHandler errorHandler = parserError(new SACParserCSS21());
 
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(0, errorHandler.getErrorCount());
@@ -92,7 +91,7 @@ public class ImportantTest {
 
     @Test
     public void cssCSSmobileOKBasic1Error() throws Exception {
-        ErrorHandler errorHandler = parserError(new SACParserCSSmobileOKBasic1());
+        final ErrorHandler errorHandler = parserError(new SACParserCSSmobileOKBasic1());
 
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(1, errorHandler.getErrorCount());
@@ -100,7 +99,7 @@ public class ImportantTest {
     }
 
     private void css(final Parser sacParser) throws Exception {
-        ErrorHandler errorHandler = new ErrorHandler();
+        final ErrorHandler errorHandler = new ErrorHandler();
         sacParser.setErrorHandler(errorHandler);
 
         final InputStream is = getClass().getClassLoader().getResourceAsStream("important.css");
@@ -140,10 +139,11 @@ public class ImportantTest {
     }
 
     private ErrorHandler parserError(final Parser sacParser) throws Exception {
-        ErrorHandler errorHandler = new ErrorHandler();
+        final ErrorHandler errorHandler = new ErrorHandler();
         sacParser.setErrorHandler(errorHandler);
 
-        final InputSource source = new InputSource(new StringReader(".foo { font-weight: normal !/* comment */important; }"));
+        final InputSource source = new InputSource(
+                new StringReader(".foo { font-weight: normal !/* comment */important; }"));
 
         sacParser.parseStyleSheet(source);
         return errorHandler;
