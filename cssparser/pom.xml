@@ -19,21 +19,14 @@
 		<system>SourceForge</system>
 		<url>http://sourceforge.net/tracker/?group_id=82996</url>
 	</issueManagement>
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 	<scm>
 		<url>http://cssparser.svn.sourceforge.net/cssparser</url>
 	</scm>
-	<distributionManagement>
-		<repository>
-			<id>cssparser-m2-repo</id>
-			<name>CSS Parser Maven 2 Repository</name>
-			<url>scp://shell.sourceforge.net/home/groups/c/cs/cssparser/htdocs/m2-repo</url>
-		</repository>
-		<snapshotRepository>
-			<id>cssparser-m2-snapshot-repo</id>
-			<name>CSS Parser Maven 2 Snapshot Repository</name>
-			<url>scp://shell.sourceforge.net/home/groups/c/cs/cssparser/htdocs/m2-snapshot-repo</url>
-		</snapshotRepository>
-	</distributionManagement>
 	<build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
