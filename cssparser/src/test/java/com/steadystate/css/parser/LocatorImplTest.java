@@ -1,9 +1,7 @@
 /*
- * $Id: LocatorImplTest.java,v 1.2 2008-11-28 13:02:18 waldbaer Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2008 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +21,7 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 package com.steadystate.css.parser;
 
@@ -35,20 +34,20 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.Locator;
 
-public class LocatorImplTest
-{
+public class LocatorImplTest {
 
     @Test
     public void serializeTest() throws Exception {
-        Locator locator = new LocatorImpl("uri", 1, 2);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        final Locator locator = new LocatorImpl("uri", 1, 2);
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(locator);
         oos.flush();
         oos.close();
-        byte[] bytes = baos.toByteArray();
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
-        Object o = ois.readObject();
+        final byte[] bytes = baos.toByteArray();
+        final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
+        final Object o = ois.readObject();
+
         Assert.assertEquals(locator, o);
     }
 }
