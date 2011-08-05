@@ -1,3 +1,29 @@
+/*
+ * CSS Parser Project
+ *
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * To contact the authors of the library:
+ *
+ * http://cssparser.sourceforge.net/
+ * mailto:davidsch@users.sourceforge.net
+ *
+ */
+
 package com.steadystate.css.dom;
 
 import java.io.ByteArrayInputStream;
@@ -32,14 +58,14 @@ public class CSSStyleDeclarationImplTest {
      */
     @Test
     public void cssTextHasNoCurlyBraces() throws Exception {
-        InputStream is = getClass().getClassLoader().getResourceAsStream("basic.css");
+        final InputStream is = getClass().getClassLoader().getResourceAsStream("basic.css");
         Assert.assertNotNull(is);
 
-        CSSOMParser parser = new CSSOMParser();
+        final CSSOMParser parser = new CSSOMParser();
 
-        Reader r = new InputStreamReader(is);
-        InputSource source = new InputSource(r);
-        CSSStyleDeclarationImpl style = (CSSStyleDeclarationImpl) parser.parseStyleDeclaration(source);
+        final Reader r = new InputStreamReader(is);
+        final InputSource source = new InputSource(r);
+        final CSSStyleDeclarationImpl style = (CSSStyleDeclarationImpl) parser.parseStyleDeclaration(source);
 
         Assert.assertFalse(style.getCssText().contains("{"));
         Assert.assertFalse(style.getCssText().contains("}"));
@@ -56,11 +82,11 @@ public class CSSStyleDeclarationImplTest {
      */
     @Test
     public void emptyUrl() throws Exception {
-        CSSOMParser parser = new CSSOMParser();
+        final CSSOMParser parser = new CSSOMParser();
 
-        Reader r = new StringReader("background: url()");
-        InputSource source = new InputSource(r);
-        CSSStyleDeclarationImpl style = (CSSStyleDeclarationImpl) parser.parseStyleDeclaration(source);
+        final Reader r = new StringReader("background: url()");
+        final InputSource source = new InputSource(r);
+        final CSSStyleDeclarationImpl style = (CSSStyleDeclarationImpl) parser.parseStyleDeclaration(source);
 
         Assert.assertEquals("background: url()", style.getCssText());
         Assert.assertEquals(1, style.getLength());
@@ -70,22 +96,21 @@ public class CSSStyleDeclarationImplTest {
 
     @Test
     public void serialize() throws Exception {
-        InputStream is = getClass().getClassLoader().getResourceAsStream("basic.css");
+        final InputStream is = getClass().getClassLoader().getResourceAsStream("basic.css");
         Assert.assertNotNull(is);
 
-        CSSOMParser parser = new CSSOMParser();
+        final CSSOMParser parser = new CSSOMParser();
 
-        Reader r = new InputStreamReader(is);
-        InputSource source = new InputSource(r);
-        CSSStyleDeclarationImpl style = (CSSStyleDeclarationImpl) parser.parseStyleDeclaration(source);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        final Reader r = new InputStreamReader(is);
+        final InputSource source = new InputSource(r);
+        final CSSStyleDeclarationImpl style = (CSSStyleDeclarationImpl) parser.parseStyleDeclaration(source);
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(style);
         oos.flush();
         oos.close();
-        ObjectInputStream ois = new ObjectInputStream(
-            new ByteArrayInputStream(baos.toByteArray()));
-        Object o = ois.readObject();
+        final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()));
+        final Object o = ois.readObject();
         ois.close();
         Assert.assertEquals(style, o);
     }
