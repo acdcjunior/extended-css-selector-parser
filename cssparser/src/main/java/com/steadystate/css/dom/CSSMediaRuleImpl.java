@@ -94,7 +94,8 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
     }
 
     public void setCssText(final String cssText) throws DOMException {
-        if (parentStyleSheet_ != null && parentStyleSheet_.isReadOnly()) {
+        final CSSStyleSheetImpl parentStyleSheet = getParentStyleSheetImpl();
+        if (parentStyleSheet != null && parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -142,7 +143,8 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
     }
 
     public int insertRule(final String rule, final int index) throws DOMException {
-        if (parentStyleSheet_ != null && parentStyleSheet_.isReadOnly()) {
+        final CSSStyleSheetImpl parentStyleSheet = getParentStyleSheetImpl();
+        if (parentStyleSheet != null && parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);
@@ -151,7 +153,7 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
         try {
             final InputSource is = new InputSource(new StringReader(rule));
             final CSSOMParser parser = new CSSOMParser();
-            parser.setParentStyleSheet(parentStyleSheet_);
+            parser.setParentStyleSheet(parentStyleSheet);
             // parser._parentRule is never read
             // parser.setParentRule(_parentRule);
             final CSSRule r = parser.parseRule(is);
@@ -182,7 +184,8 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
     }
 
     public void deleteRule(final int index) throws DOMException {
-        if (parentStyleSheet_ != null && parentStyleSheet_.isReadOnly()) {
+        final CSSStyleSheetImpl parentStyleSheet = getParentStyleSheetImpl();
+        if (parentStyleSheet != null && parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);

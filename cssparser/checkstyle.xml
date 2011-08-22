@@ -64,7 +64,9 @@
     -->
 
     <module name="TreeWalker">
+        <property name="cacheFile" value=""/>
         <property name="tabWidth" value="4"/>
+
         <module name="LeftCurly">
             <property name="option" value="eol"/>
         </module>

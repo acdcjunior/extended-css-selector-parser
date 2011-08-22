@@ -97,7 +97,8 @@ public class CSSImportRuleImpl extends AbstractCSSRuleImpl implements CSSImportR
     }
 
     public void setCssText(final String cssText) throws DOMException {
-        if (parentStyleSheet_ != null && parentStyleSheet_.isReadOnly()) {
+        final CSSStyleSheetImpl parentStyleSheet = getParentStyleSheetImpl();
+        if (parentStyleSheet != null && parentStyleSheet.isReadOnly()) {
             throw new DOMExceptionImpl(
                 DOMException.NO_MODIFICATION_ALLOWED_ERR,
                 DOMExceptionImpl.READ_ONLY_STYLE_SHEET);

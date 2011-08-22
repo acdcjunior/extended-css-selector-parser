@@ -34,7 +34,7 @@ import org.w3c.dom.css.CSSStyleSheet;
  */
 public abstract class AbstractCSSRuleImpl extends CSSOMObjectImpl {
 
-    protected CSSStyleSheetImpl parentStyleSheet_;
+    private CSSStyleSheetImpl parentStyleSheet_;
     private CSSRule parentRule_;
 
     protected CSSStyleSheetImpl getParentStyleSheetImpl() {
