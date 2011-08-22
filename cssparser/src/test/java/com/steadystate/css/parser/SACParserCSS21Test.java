@@ -243,7 +243,8 @@ public class SACParserCSS21Test {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS21/syndata.html#at-rules
+     * @see "http://www.w3.org/TR/CSS21/syndata.html#at-rules"
+     * @throws Exception if the test fails
      */
     @Test
     public void atRules1() throws Exception {
@@ -275,7 +276,8 @@ public class SACParserCSS21Test {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS21/syndata.html#at-rules
+     * @see "http://www.w3.org/TR/CSS21/syndata.html#at-rules"
+     * @throws Exception if the test fails
      */
     @Test
     public void atRules2() throws Exception {
@@ -352,7 +354,8 @@ public class SACParserCSS21Test {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS21/syndata.html#parsing-errors
+     * @see "http://www.w3.org/TR/CSS21/syndata.html#parsing-errors"
+     * @throws Exception if the test fails
      */
     @Test
     public void unknownProperty() throws Exception {
@@ -380,7 +383,8 @@ public class SACParserCSS21Test {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS21/syndata.html#parsing-errors
+     * @see "http://www.w3.org/TR/CSS21/syndata.html#parsing-errors"
+     * @throws Exception if the test fails
      */
     @Test
     public void illegalValues() throws Exception {
@@ -421,7 +425,8 @@ public class SACParserCSS21Test {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS21/syndata.html#parsing-errors
+     * @see "http://www.w3.org/TR/CSS21/syndata.html#parsing-errors"
+     * @throws Exception if the test fails
      */
     @Test
     public void malformedDeclaration() throws Exception {
@@ -468,7 +473,8 @@ public class SACParserCSS21Test {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS21/syndata.html#parsing-errors
+     * @see "http://www.w3.org/TR/CSS21/syndata.html#parsing-errors"
+     * @throws Exception if the test fails
      */
     @Test
     public void malformedStatements() throws Exception {
@@ -506,7 +512,8 @@ public class SACParserCSS21Test {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS21/syndata.html#parsing-errors
+     * @see "http://www.w3.org/TR/CSS21/syndata.html#parsing-errors"
+     * @throws Exception if the test fails
      */
     @Test
     public void atRulesWithUnknownAtKeywords() throws Exception {
@@ -549,7 +556,8 @@ public class SACParserCSS21Test {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS21/syndata.html#parsing-errors
+     * @see "http://www.w3.org/TR/CSS21/syndata.html#parsing-errors"
+     * @throws Exception if the test fails
      */
     @Test
     public void unexpectedEndOfStyleSheet() throws Exception {
@@ -626,7 +634,9 @@ public class SACParserCSS21Test {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS21/syndata.html#parsing-errors
+     * @see "http://www.w3.org/TR/CSS21/syndata.html#parsing-errors"
+     *
+     * @throws Exception in case of failure
      */
     @Test
     public void unexpectedEndOfString() throws Exception {
@@ -656,6 +666,47 @@ public class SACParserCSS21Test {
         final CSSRule rule = rules.item(0);
         // TODO
         Assert.assertEquals("p { color: green }", rule.getCssText());
+    }
+
+    /**
+     * @see "http://www.w3.org/TR/CSS21/syndata.html#strings"
+     *
+     * @throws Exception in case of failure
+     */
+    @Test
+    public void strings() throws Exception {
+        final String css = "h1 { background: url(\"this is a 'string'\") }\n"
+                            + "h2 { background: url(\"this is a \"string\"\") }\n"
+                            + "h4 { background: url('this is a \"string\"') }\n"
+                            + "h5 { background: url('this is a \\'string\\'') }";
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(4, rules.getLength());
+
+        // TODO
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("h1 { background: url(this is a 'string') }", rule.getCssText());
+
+        rule = rules.item(1);
+        Assert.assertEquals("h2 { background: url(\"this is a \"string\"\") }", rule.getCssText());
+
+        rule = rules.item(2);
+        Assert.assertEquals("h4 { background: url(this is a \"string\") }", rule.getCssText());
+
+        rule = rules.item(3);
+        Assert.assertEquals("h5 { background: url(this is a \\'string\\') }", rule.getCssText());
     }
 }
 

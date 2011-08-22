@@ -418,13 +418,16 @@ void styleSheetRuleList() :
     ( <S> | <CDO> | <CDC> )*
     (      ( importRule() ( <S> | <CDO> | <CDC> )* )*
       (
-       ( styleRule() | mediaRule() | pageRule() | unknownRule() )
-       ( <S> | <CDO> | <CDC> )*
+        ( styleRule() | mediaRule() | pageRule() | unknownRule()  )
+        ( <S> | <CDO> | <CDC> )*
       )+
-      ( importRuleIgnored() ( <S> | <CDO> | <CDC> )* )*
+
       (
-       ( styleRule() | mediaRule() | pageRule() | unknownRule() )
-       ( <S> | <CDO> | <CDC> )*
+        importRuleIgnored() ( <S> | <CDO> | <CDC> )*
+        (
+          ( styleRule() | mediaRule() | pageRule() | unknownRule() )
+          ( <S> | <CDO> | <CDC> )*
+        )*
       )*
     )?
 }
