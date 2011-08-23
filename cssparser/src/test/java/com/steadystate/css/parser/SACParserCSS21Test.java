@@ -243,6 +243,65 @@ public class SACParserCSS21Test {
     }
 
     /**
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void importRuleOnly() throws Exception {
+        final String css = "@import 'subs.css';";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("@import url(subs.css);", rule.getCssText());
+    }
+
+    /**
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void importRulesOnly() throws Exception {
+        final String css = "@import 'subs.css'; @import 'subs1.css'; @import 'subs2.css';";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(3, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("@import url(subs.css);", rule.getCssText());
+
+        rule = rules.item(1);
+        Assert.assertEquals("@import url(subs1.css);", rule.getCssText());
+
+        rule = rules.item(2);
+        Assert.assertEquals("@import url(subs2.css);", rule.getCssText());
+    }
+
+    /**
      * @see "http://www.w3.org/TR/CSS21/syndata.html#at-rules"
      * @throws Exception if the test fails
      */
@@ -446,9 +505,9 @@ public class SACParserCSS21Test {
 
         final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
-//        Assert.assertEquals(7, errorHandler.getErrorCount());
+        Assert.assertEquals(7, errorHandler.getErrorCount());
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-//        Assert.assertEquals(1, errorHandler.getWarningCount());
+        Assert.assertEquals(1, errorHandler.getWarningCount());
 
         final CSSRuleList rules = sheet.getCssRules();
 
@@ -676,9 +735,10 @@ public class SACParserCSS21Test {
     @Test
     public void strings() throws Exception {
         final String css = "h1 { background: url(\"this is a 'string'\") }\n"
-                            + "h2 { background: url(\"this is a \"string\"\") }\n"
+                            + "h2 { background: url(\"this is a \\\"string\\\"\") }\n"
                             + "h4 { background: url('this is a \"string\"') }\n"
-                            + "h5 { background: url('this is a \\'string\\'') }";
+                            + "h5 { background: url('this is a \\'string\\'') }"
+                            + "h6 { background: url('this is a \\\r\n string') }";
         final InputSource source = new InputSource(new StringReader(css));
         final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
 
@@ -693,20 +753,22 @@ public class SACParserCSS21Test {
 
         final CSSRuleList rules = sheet.getCssRules();
 
-        Assert.assertEquals(4, rules.getLength());
+        Assert.assertEquals(5, rules.getLength());
 
-        // TODO
         CSSRule rule = rules.item(0);
         Assert.assertEquals("h1 { background: url(this is a 'string') }", rule.getCssText());
 
         rule = rules.item(1);
-        Assert.assertEquals("h2 { background: url(\"this is a \"string\"\") }", rule.getCssText());
+        Assert.assertEquals("h2 { background: url(this is a \"string\") }", rule.getCssText());
 
         rule = rules.item(2);
         Assert.assertEquals("h4 { background: url(this is a \"string\") }", rule.getCssText());
 
         rule = rules.item(3);
-        Assert.assertEquals("h5 { background: url(this is a \\'string\\') }", rule.getCssText());
+        Assert.assertEquals("h5 { background: url(this is a 'string') }", rule.getCssText());
+
+        rule = rules.item(4);
+        Assert.assertEquals("h6 { background: url(this is a  string) }", rule.getCssText());
     }
 }
 

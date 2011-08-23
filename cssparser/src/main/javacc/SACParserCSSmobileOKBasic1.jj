@@ -254,17 +254,22 @@ void styleSheet() :
 // should be allowed
 void styleSheetRuleList() :
 {
+  boolean ruleFound = false;
 }
 {
     ( <S> | <CDO> | <CDC> )*
-    ( importRule() ( <S> | <CDO> | <CDC> )* )*
     (
-     ( styleRule() | mediaRule() | unknownRule() )
-     ( <S> | <CDO> | <CDC> )*
-    )*
-    (
-     ( styleRule() | mediaRule() | importRuleIgnored() | unknownRule() )
-     ( <S> | <CDO> | <CDC> )*
+        (
+            importRule(ruleFound)
+            | 
+            (
+                styleRule() | mediaRule() | unknownRule()
+            )
+            {
+                ruleFound = true;
+            }
+        )
+        ( <S> | <CDO> | <CDC> )*
     )*
 }
 
@@ -276,7 +281,7 @@ void styleSheetRuleSingle() :
 }
 {
   ( <S> )*
-  ( importRule() | styleRule() | mediaRule() | unknownRule() )
+  ( importRule(false) | styleRule() | mediaRule() | unknownRule() )
 }
 
 void unknownRule() :
@@ -308,7 +313,7 @@ void unknownRule() :
 //     [STRING|URI] S* [ medium [ ',' S* medium]* ]? ';' S*
 //   ;
 //
-void importRule() :
+void importRule(final boolean nonImportRuleFoundBefore) :
 {
     Token t;
     SACMediaListImpl ml = new SACMediaListImpl();
@@ -317,6 +322,13 @@ void importRule() :
 {
     try
     {
+        {
+            ParseException e = null;
+            if (nonImportRuleFoundBefore)
+            {
+                e = generateParseException();
+            }
+        }
         <IMPORT_SYM>
         {
             locator = this.getLocator();
@@ -327,7 +339,14 @@ void importRule() :
         ( mediaList(ml) )?
         <SEMICOLON>
         {
-            this.handleImportStyle(unescape(t.image), ml, null, locator);
+            if (nonImportRuleFoundBefore)
+            {
+                this.getErrorHandler().error(this.toCSSParseException("invalidImportRuleIgnored", e));
+            }
+            else
+            {
+                this.handleImportStyle(unescape(t.image, false), ml, null, locator);
+            }
         }
     }
     catch (CSSParseException e)
@@ -340,28 +359,6 @@ void importRule() :
         this.getErrorHandler().error(
             this.toCSSParseException("invalidImportRule", e));
         this.error_skipAtRule();
-    }
-}
-
-void importRuleIgnored() :
-{
-    Token t;
-    SACMediaListImpl ml = new SACMediaListImpl();
-}
-{
-    { ParseException e = generateParseException(); }
-    try
-    {
-        <IMPORT_SYM>
-        ( <S> )*
-        ( t = <STRING>
-        | t = <URL> ) ( <S> )*
-        ( mediaList(ml) )?
-        <SEMICOLON>
-    }
-    finally
-    {
-        this.getErrorHandler().error(this.toCSSParseException("invalidImportRuleIgnored", e));
     }
 }
 
@@ -501,7 +498,7 @@ String property() :
 }
 {
     t = <IDENT> ( <S> )*
-    { return unescape(t.image); }
+    { return unescape(t.image, false); }
 }
 
 //
@@ -726,7 +723,7 @@ SimpleSelector elementName() :
     {
         t=<IDENT>
         {
-            sel = this.getSelectorFactory().createElementSelector(null, unescape(t.image));
+            sel = this.getSelectorFactory().createElementSelector(null, unescape(t.image, false));
             if (sel instanceof Locatable)
             {
                 ((Locatable) sel).setLocator(this.getLocator());
@@ -768,7 +765,7 @@ Condition pseudoClass(Condition pred) :
             | t = <ACTIVE_PSCLASS> )
             {
                 // There appears to be an issue here regarding "first-letter" & "first-line"
-                //String s = unescape(t.image);
+                //String s = unescape(t.image, false);
                 String s = t.image;
                 c = this.getConditionFactory().createPseudoClassCondition(null, s);
                 if (c instanceof Locatable)

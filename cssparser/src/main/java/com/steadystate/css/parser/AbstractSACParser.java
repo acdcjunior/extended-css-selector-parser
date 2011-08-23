@@ -643,7 +643,7 @@ abstract class AbstractSACParser implements Parser {
      * to the parser, meaning that the grammar would no longer match the standard grammar specified
      * by the W3C. This would make the parser and lexer much less maintainable.
      */
-    String unescape(final String s) {
+    String unescape(final String s, final boolean unescapeDoubleQuotes) {
         final int len = s.length();
         final StringBuilder buf = new StringBuilder(len);
         int index = 0;
@@ -691,8 +691,12 @@ abstract class AbstractSACParser implements Parser {
                             }
                             break;
                         case '\'':
-                            // strings are always enclosed in double quotes;
-                            // no need for escaping single quotes
+                            buf.append(c);
+                            break;
+                        case '\"':
+                            if (!unescapeDoubleQuotes) {
+                                buf.append('\\');
+                            }
                             buf.append(c);
                             break;
                         default:
