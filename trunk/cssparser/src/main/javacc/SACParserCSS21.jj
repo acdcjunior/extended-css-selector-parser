@@ -99,7 +99,7 @@ TOKEN_MGR_DECLS :
 
     private String trimBy(StringBuilder s, int left, int right) {
         int end = s.length();
-        return s.toString().substring(left, end-right);
+        return s.substring(left, end-right);
     }
 
     private String trimUrl(StringBuilder s) {
@@ -109,11 +109,14 @@ TOKEN_MGR_DECLS :
             return s1.toString();
         }
         int end = s1.length() - 1;
-        if ((s1.charAt(0) == '"' && s1.charAt(end) == '"')
-            || (s1.charAt(0) == '\'' && s1.charAt(end) == '\''))
-            return trimBy(s1, 1, 1);
-        else
-           return s1.toString();
+        char c0 = s1.charAt(0);
+        char c1 = s1.charAt(end);
+        if ((c0 == '"' && c1 == '"')
+            || (c0 == '\'' && c1 == '\''))
+        {            return trimBy(s1, 1, 1);
+        }
+
+        return s1.toString();
     }
 }
 
@@ -172,16 +175,10 @@ TOKEN_MGR_DECLS :
 | < #NL: "\n" | "\r\n" | "\r" | "\f" >
 
 // string1      \"([^\n\r\f\\"]|\\{nl}|{escape})*\"
-| < #STRING1: "\"" ( ~["\n","\r","\f","\\","\""] | "\\" <NL> | <ESCAPE> )* "\"" >
+| < #STRING1: ( ~["\n","\r","\f","\\","\""] | "\\" <NL> | <ESCAPE> )* >
 
 // string2      \'([^\n\r\f\\']|\\{nl}|{escape})*\'
-| < #STRING2: "\'" ( ~["\n","\r","\f","\\","\'"] | "\\" <NL> | <ESCAPE> )* "\'" >
-
-// invalid1 \"([^\n\r\f\\"]|\\{nl}|{escape})*
-| < #INVALID1: "\"" ( ~["\n","\r","\f","\\","\""] | "\\" <NL> | <ESCAPE> )* >
-
-// invalid2 \'([^\n\r\f\\']|\\{nl}|{escape})*
-| < #INVALID2: "\'" ( ~["\n","\r","\f","\\","\'"] | "\\" <NL> | <ESCAPE> )* >
+| < #STRING2: ( ~["\n","\r","\f","\\","\'"] | "\\" <NL> | <ESCAPE> )* >
 
 // comment      \/\*[^*]*\*+([^/*][^*]*\*+)*\/
 | < #COMMENT_: "/" "*" ( ~["*"] )* ("*")+ ( ~["/","*"] ( ~["*"] )* ( "*" )+ )* "/">
@@ -203,14 +200,10 @@ TOKEN_MGR_DECLS :
 
 // string       {string1}|{string2}
 // {string}        {return STRING;}
-| < STRING: <STRING1> | <STRING2> > { matchedToken.image = trimBy(image, 1, 1); }
-
-// invalid      {invalid1}|{invalid2}
-// {invalid}        {return INVALID; /* unclosed string */}
-| < INVALID: <INVALID1> | <INVALID2> >
+| < STRING: ( "\"" <STRING1> "\"" ) | ( "\'" <STRING2> "\'" ) > { matchedToken.image = trimBy(image, 1, 1); }
 
 // url      ([!#$%&*-~]|{nonascii}|{escape})*
-| < #URL: ["!","#","$","%","&","*"-"[","]"-"~"] | <NONASCII> | <ESCAPE> >
+| < #URL: ( ["!","#","$","%","&","*"-"[","]"-"~"] | <NONASCII> | <ESCAPE> )* >
 
 // A        a|\\0{0,4}(41|61)(\r\n|[ \t\r\n\f])?
 | < #A_LETTER: "a" | "\\" ( "0" | "00" | "000" | "0000" ) ( "41" | "61" ) ( "\r\n" | [ " ", "\t", "\r", "\n", "\f"])? >
@@ -358,7 +351,7 @@ TOKEN_MGR_DECLS :
 
 // "url("{w}{string}{w}")"  {return URI;}
 // "url("{w}{url}{w}")" {return URI;}
-| < URI: "url(" ( <S> )* ( <STRING> | ( <URL> )* ) ( <S> )* ")" > { matchedToken.image = trimUrl(image); }
+| < URI: "url(" ( <S> )* ( <STRING> | <URL> ) ( <S> )* ")" > { matchedToken.image = trimUrl(image); }
 
 // {ident}"(        {return FUNCTION;}
 | < FUNCTION: <IDENT> "(" >
@@ -412,24 +405,23 @@ void styleSheet() :
 
 void styleSheetRuleList() :
 {
+  boolean ruleFound = false;
 }
 {
     ( charsetRule() )?
     ( <S> | <CDO> | <CDC> )*
-    (      ( importRule() ( <S> | <CDO> | <CDC> )* )*
-      (
-        ( styleRule() | mediaRule() | pageRule() | unknownRule()  )
+    (
+        (            importRule(ruleFound)
+	        | 
+	        (
+	            styleRule() | mediaRule() | pageRule() | unknownRule()
+	        )
+            {
+                ruleFound = true;
+            }
+	    )
         ( <S> | <CDO> | <CDC> )*
-      )+
-
-      (
-        importRuleIgnored() ( <S> | <CDO> | <CDC> )*
-        (
-          ( styleRule() | mediaRule() | pageRule() | unknownRule() )
-          ( <S> | <CDO> | <CDC> )*
-        )*
-      )*
-    )?
+    )*
 }
 
 //
@@ -439,9 +431,9 @@ void styleSheetRuleSingle() :
 {
 }
 {
-  ( <S> )*
-  ( charsetRule() | importRule() | styleRule() | mediaRule() | pageRule() | unknownRule() )
-  ( <S> )*
+    ( <S> )*
+    ( charsetRule() | importRule(false) | styleRule() | mediaRule() | pageRule() | unknownRule() )
+    ( <S> )*
 }
 
 void charsetRule() :
@@ -499,7 +491,7 @@ void unknownRule() :
 //    [STRING|URI] S* [ medium [ COMMA S* medium]* ]? ';' S*
 //  ;
 //
-void importRule() :
+void importRule(final boolean nonImportRuleFoundBefore) :
 {
     Token t;
     SACMediaListImpl ml = new SACMediaListImpl();
@@ -508,17 +500,26 @@ void importRule() :
 {
     try
     {
+        {
+            ParseException e = null;
+            if (nonImportRuleFoundBefore)
+            {
+                e = generateParseException();
+            }
+        }
         <IMPORT_SYM>
         {
             locator = this.getLocator();
         }
         ( <S> )*
-        ( t = <STRING>
-        | t = <URI> ) ( <S> )*
+        ( t = <STRING> | t = <URI> ) ( <S> )*
         ( mediaList(ml) )?
         <SEMICOLON>
         {
-            this.handleImportStyle(unescape(t.image), ml, null, locator);
+            if (nonImportRuleFoundBefore)            {                getErrorHandler().error(toCSSParseException("invalidImportRuleIgnored2", e));
+            }
+            else            {                handleImportStyle(unescape(t.image, false), ml, null, locator);
+            }
         }
     }
     catch (CSSParseException e)
@@ -528,31 +529,8 @@ void importRule() :
     }
     catch (ParseException e)
     {
-        this.getErrorHandler().error(
-            this.toCSSParseException("invalidImportRule", e));
+        this.getErrorHandler().error(this.toCSSParseException("invalidImportRule", e));
         this.error_skipAtRule();
-    }
-}
-
-void importRuleIgnored() :
-{
-    Token t;
-    SACMediaListImpl ml = new SACMediaListImpl();
-}
-{
-    { ParseException e = generateParseException(); }
-    try
-    {
-        <IMPORT_SYM>
-        ( <S> )*
-        ( t = <STRING>
-        | t = <URI> ) ( <S> )*
-        ( mediaList(ml) )?
-        <SEMICOLON>
-    }
-    finally
-    {
-        this.getErrorHandler().error(this.toCSSParseException("invalidImportRuleIgnored2", e));
     }
 }
 
@@ -628,7 +606,7 @@ void mediaRuleList() :
 {
 }
 {
-  ( ( styleRule() | pageRule() | unknownRule() | importRuleIgnored() ) ( <S> )* )+
+  ( ( styleRule() | pageRule() | unknownRule() | importRule(true) ) ( <S> )* )+
 }
 
 void mediaRuleSingle() :
@@ -681,7 +659,7 @@ void pageRule() :
         <LBRACE> ( <S> )*
         {
             start = true;
-            this.handleStartPage((t != null) ? unescape(t.image) : null, s, locator);
+            this.handleStartPage((t != null) ? unescape(t.image, false) : null, s, locator);
         }
 
         ( declaration() )?
@@ -702,7 +680,7 @@ void pageRule() :
     }
     finally {
         if (start) {
-            this.handleEndPage((t != null) ? unescape(t.image) : null, s);
+            this.handleEndPage((t != null) ? unescape(t.image, false) : null, s);
         }
     }
 }
@@ -776,7 +754,7 @@ String property() :
 }
 {
     t = <IDENT> ( <S> )*
-    { return unescape(t.image); }
+    { return unescape(t.image, false); }
 }
 
 //
@@ -1005,7 +983,7 @@ SimpleSelector elementName() :
     {
         t=<IDENT>
         {
-            sel = this.getSelectorFactory().createElementSelector(null, unescape(t.image));
+            sel = this.getSelectorFactory().createElementSelector(null, unescape(t.image, false));
             if (sel instanceof Locatable)
             {
                 ((Locatable) sel).setLocator(this.getLocator());
@@ -1050,7 +1028,7 @@ Condition attrib(Condition pred) :
             locator = this.getLocator();
         }
         ( <S> )*
-        t = <IDENT> { name = unescape(t.image); } ( <S> )*
+        t = <IDENT> { name = unescape(t.image, false); } ( <S> )*
         (
             (
                 <EQUALS> { type = 1; }
@@ -1063,7 +1041,7 @@ Condition attrib(Condition pred) :
             (
                 t = <IDENT> { value = t.image; }
                 |
-                t = <STRING> { value = unescape(t.image); }
+                t = <STRING> { value = unescape(t.image, false); }
             )
             ( <S> )*
         )?
@@ -1151,12 +1129,12 @@ Object pseudo(Condition pred) :
             }
             |
             (
-                t = <FUNCTION> { function = unescape(t.image); } ( <S> )*
-                (t = <IDENT> { arg = unescape(t.image); } ( <S> )* )?
+                t = <FUNCTION> { function = unescape(t.image, false); } ( <S> )*
+                (t = <IDENT> { arg = unescape(t.image, false); } ( <S> )* )?
                 <RROUND>
                 {
                     if (function.equalsIgnoreCase("lang(")) {
-                        c = this.getConditionFactory().createLangCondition(unescape(arg));
+                        c = this.getConditionFactory().createLangCondition(unescape(arg, false));
                         if (c instanceof Locatable)
                         {
                             ((Locatable) c).setLocator(locator);
@@ -1354,9 +1332,9 @@ LexicalUnit term(LexicalUnit prev) :
         | t = <FREQ_KHZ>    { value = LexicalUnitImpl.createKiloHertz(prev, floatValue(op, t.image)); }
         | value = function(prev)
         )
-    | t = <STRING>          { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_STRING_VALUE, unescape(t.image)); }
+    | t = <STRING>          { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_STRING_VALUE, unescape(t.image, false)); }
     | t = <IDENT>           { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_IDENT, t.image); }
-    | t = <URI>             { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_URI, t.image); }
+    | t = <URI>             { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_URI, unescape(t.image, true)); }
     | value = hexcolor(prev)
     | t = <DIMENSION>
     {

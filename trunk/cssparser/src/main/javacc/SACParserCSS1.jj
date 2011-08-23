@@ -257,17 +257,21 @@ void styleSheet() :
 // should be allowed
 void styleSheetRuleList() :
 {
+  boolean ruleFound = false;
 }
 {
     ( <S> | <CDO> | <CDC> )*
-    ( importRule() ( <S> | <CDO> | <CDC> )* )*
     (
-     ( styleRule() | unknownRule() )
-     ( <S> | <CDO> | <CDC> )*
-    )*
-    (
-     ( styleRule() | importRuleIgnored() | unknownRule() )
-     ( <S> | <CDO> | <CDC> )*
+        (            importRule(ruleFound)
+            |
+            (
+	            styleRule() | unknownRule()
+	        )
+            {
+                ruleFound = true;
+            }
+        )
+        ( <S> | <CDO> | <CDC> )*
     )*
 }
 
@@ -279,7 +283,7 @@ void styleSheetRuleSingle() :
 }
 {
   ( <S> )*
-  ( importRule() | styleRule() | unknownRule() )
+  ( importRule(false) | styleRule() | unknownRule() )
 }
 
 void unknownRule() :
@@ -311,7 +315,7 @@ void unknownRule() :
 //     [STRING|URI] ';' S*
 //   ;
 //
-void importRule() :
+void importRule(final boolean nonImportRuleFoundBefore) :
 {
     Token t;
     Locator locator;
@@ -319,16 +323,29 @@ void importRule() :
 {
     try
     {
+        {
+            ParseException e = null;
+            if (nonImportRuleFoundBefore)
+            {
+                e = generateParseException();
+            }
+        }
         <IMPORT_SYM>
         {
             locator = this.getLocator();
         }
         ( <S> )*
-        ( t = <STRING>
-        | t = <URL> ) ( <S> )*
+        ( t = <STRING> | t = <URL> ) ( <S> )*
         <SEMICOLON>
         {
-            this.handleImportStyle(unescape(t.image), new SACMediaListImpl(), null, locator);
+            if (nonImportRuleFoundBefore)
+            {
+        this.getErrorHandler().error(this.toCSSParseException("invalidImportRuleIgnored", e));
+            }
+            else
+            {
+                this.handleImportStyle(unescape(t.image, false), new SACMediaListImpl(), null, locator);
+            }
         }
     }
     catch (CSSParseException e)
@@ -341,26 +358,6 @@ void importRule() :
         this.getErrorHandler().error(
             this.toCSSParseException("invalidImportRule", e));
         this.error_skipAtRule();
-    }
-}
-
-void importRuleIgnored() :
-{
-    Token t;
-}
-{
-    { ParseException e = generateParseException(); }
-    try
-    {
-        <IMPORT_SYM>
-        ( <S> )*
-        ( t = <STRING>
-        | t = <URL> ) ( <S> )*
-        <SEMICOLON>
-    }
-    finally
-    {
-        this.getErrorHandler().error(this.toCSSParseException("invalidImportRuleIgnored", e));
     }
 }
 
@@ -418,7 +415,7 @@ String property() :
 }
 {
     t = <IDENT> ( <S> )*
-    { return unescape(t.image); }
+    { return unescape(t.image, false); }
 }
 
 //
@@ -641,7 +638,7 @@ SimpleSelector elementName() :
     {
         t=<IDENT>
         {
-            sel = this.getSelectorFactory().createElementSelector(null, unescape(t.image));
+            sel = this.getSelectorFactory().createElementSelector(null, unescape(t.image, false));
             if (sel instanceof Locatable)
             {
                 ((Locatable) sel).setLocator(this.getLocator());

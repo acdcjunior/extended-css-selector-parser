@@ -360,18 +360,23 @@ void styleSheet() :
 
 void styleSheetRuleList() :
 {
+  boolean ruleFound = false;
 }
 {
     ( charsetRule() )?
     ( <S> | <CDO> | <CDC> )*
-    ( importRule() ( <S> | <CDO> | <CDC> )* )*
+
     (
-     ( styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule() )
-     ( <S> | <CDO> | <CDC> )*
-    )*
-    (
-     ( styleRule() | mediaRule() | pageRule() | fontFaceRule() | importRuleIgnored() | unknownRule() )
-     ( <S> | <CDO> | <CDC> )*
+        (
+            importRule(ruleFound)            | 
+	        (
+	            styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule()
+	        )
+            {
+                ruleFound = true;
+            }
+	    )
+        ( <S> | <CDO> | <CDC> )*
     )*
 }
 
@@ -383,7 +388,7 @@ void styleSheetRuleSingle() :
 }
 {
   ( <S> )*
-  ( charsetRule() | importRule() | styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule() )
+  ( charsetRule() | importRule(false) | styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule() )
 }
 
 void charsetRule() :
@@ -441,16 +446,22 @@ void unknownRule() :
 //     [STRING|URI] S* [ medium [ ',' S* medium]* ]? ';' S*
 //   ;
 //
-void importRule() :
+void importRule(final boolean nonImportRuleFoundBefore) :
 {
     Token t;
-//    String s;
     SACMediaListImpl ml = new SACMediaListImpl();
     Locator locator;
 }
 {
     try
     {
+        {
+            ParseException e = null;
+            if (nonImportRuleFoundBefore)
+            {
+                e = generateParseException();
+            }
+        }
         <IMPORT_SYM>
         {
             locator = this.getLocator();
@@ -461,7 +472,14 @@ void importRule() :
         ( mediaList(ml) )?
         <SEMICOLON>
         {
-            this.handleImportStyle(unescape(t.image), ml, null, locator);
+            if (nonImportRuleFoundBefore)
+            {
+                this.handleImportStyle(unescape(t.image, false), ml, null, locator);
+            }
+            else
+            {
+                this.handleImportStyle(unescape(t.image, false), ml, null, locator);
+            }
         }
     }
     catch (CSSParseException e)
@@ -474,28 +492,6 @@ void importRule() :
         this.getErrorHandler().error(
             this.toCSSParseException("invalidImportRule", e));
         this.error_skipAtRule();
-    }
-}
-
-void importRuleIgnored() :
-{
-    Token t;
-    SACMediaListImpl ml = new SACMediaListImpl();
-}
-{
-    { ParseException e = generateParseException(); }
-    try
-    {
-        <IMPORT_SYM>
-        ( <S> )*
-        ( t = <STRING>
-        | t = <URI> ) ( <S> )*
-        ( mediaList(ml) )?
-        <SEMICOLON>
-    }
-    finally
-    {
-        this.getErrorHandler().error(this.toCSSParseException("invalidImportRuleIgnored2", e));
     }
 }
 
@@ -629,7 +625,7 @@ void pageRule() :
         <LBRACE> ( <S> )*
         {
             start = true;
-            this.handleStartPage((t != null) ? unescape(t.image) : null, s, locator);
+            this.handleStartPage((t != null) ? unescape(t.image, false) : null, s, locator);
         }
 
         ( declaration() )?
@@ -642,7 +638,7 @@ void pageRule() :
     }
     finally {
         if (start) {
-            this.handleEndPage((t != null) ? unescape(t.image) : null, s);
+            this.handleEndPage((t != null) ? unescape(t.image, false) : null, s);
         }
     }
 }
@@ -748,7 +744,7 @@ String property() :
 }
 {
     t = <IDENT> ( <S> )*
-    { return unescape(t.image); }
+    { return unescape(t.image, false); }
 }
 
 //
@@ -976,7 +972,7 @@ SimpleSelector elementName() :
     {
         t=<IDENT>
         {
-            sel = this.getSelectorFactory().createElementSelector(null, unescape(t.image));
+            sel = this.getSelectorFactory().createElementSelector(null, unescape(t.image, false));
             if (sel instanceof Locatable)
             {
                 ((Locatable) sel).setLocator(this.getLocator());
@@ -1021,7 +1017,7 @@ Condition attrib(Condition pred) :
             locator = this.getLocator();
         }
         ( <S> )*
-        t = <IDENT> { name = unescape(t.image); } ( <S> )*
+        t = <IDENT> { name = unescape(t.image, false); } ( <S> )*
         (
             (
                 <EQUALS> { type = 1; }
@@ -1034,7 +1030,7 @@ Condition attrib(Condition pred) :
             (
                 t = <IDENT> { value = t.image; }
                 |
-                t = <STRING> { value = unescape(t.image); }
+                t = <STRING> { value = unescape(t.image, false); }
             )
             ( <S> )*
         )?
@@ -1122,12 +1118,12 @@ Object pseudo(Condition pred) :
             }
             |
             (
-                t = <FUNCTION> { function = unescape(t.image); } ( <S> )*
-                t = <IDENT> { arg = unescape(t.image); } ( <S> )*
+                t = <FUNCTION> { function = unescape(t.image, false); } ( <S> )*
+                t = <IDENT> { arg = unescape(t.image, false); } ( <S> )*
                 <RROUND>
                 {
                     if (function.equalsIgnoreCase("lang(")) {
-                        c = this.getConditionFactory().createLangCondition(unescape(arg));
+                        c = this.getConditionFactory().createLangCondition(unescape(arg, false));
                         if (c instanceof Locatable)
                         {
                             ((Locatable) c).setLocator(locator);
@@ -1359,7 +1355,7 @@ LexicalUnit term(LexicalUnit prev) :
         | t = <FREQ_KHZ>    { value = LexicalUnitImpl.createKiloHertz(prev, floatValue(op, t.image)); }
         | value = function(prev)
         )
-    | t = <STRING>          { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_STRING_VALUE, unescape(t.image)); }
+    | t = <STRING>          { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_STRING_VALUE, unescape(t.image, false)); }
     | t = <IDENT>           { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_IDENT, t.image); }
     | t = <URI>             { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_URI, t.image); }
     | t = <UNICODERANGE>    { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_UNICODERANGE, t.image); }
