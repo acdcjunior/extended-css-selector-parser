@@ -37,12 +37,18 @@ PARSER_BEGIN(SACParserCSS21)
 
 package com.steadystate.css.parser;
 
-import java.io.*;
-import java.net.*;
-import java.text.MessageFormat;
-import java.util.*;
-import org.w3c.css.sac.*;
-import com.steadystate.css.parser.selectors.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.w3c.css.sac.CSSParseException;
+import org.w3c.css.sac.Condition;
+import org.w3c.css.sac.ErrorHandler;
+import org.w3c.css.sac.LexicalUnit;
+import org.w3c.css.sac.Locator;
+import org.w3c.css.sac.Parser;
+import org.w3c.css.sac.Selector;
+import org.w3c.css.sac.SelectorList;
+import org.w3c.css.sac.SimpleSelector;
+
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
@@ -76,22 +82,27 @@ PARSER_END(SACParserCSS21)
 
 TOKEN_MGR_DECLS :
 {
+    private static final Pattern SPLIT_NUMBER_PATTERN = Pattern.compile("[0-9]+|[0-9]*.[0-9]+");
+
     private boolean _quiet = true;
     private ErrorHandler errorHandler;
 
     public String splitNumber(StringBuilder pattern) {
-        String regexp = "[0-9]+|[0-9]*.[0-9]+";
         int j=1;
-        while(pattern.substring(0, j).matches(regexp))
+        Matcher matcher = SPLIT_NUMBER_PATTERN.matcher(pattern.substring(0, j));
+        while(matcher.matches())
         {
             j++;
+            matcher = SPLIT_NUMBER_PATTERN.matcher(pattern.substring(0, j));
         }
         if(pattern.substring(j-1, j).equals("."))
         {
             j++;
-            while(pattern.substring(0, j).matches(regexp))
+            matcher = SPLIT_NUMBER_PATTERN.matcher(pattern.substring(0, j));
+            while(matcher.matches())
             {
                 j++;
+                matcher = SPLIT_NUMBER_PATTERN.matcher(pattern.substring(0, j));
             }
         }
         return pattern.substring(0, j-1);
