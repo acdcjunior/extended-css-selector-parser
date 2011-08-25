@@ -30,9 +30,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Locale;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.w3c.css.sac.AttributeCondition;
 import org.w3c.css.sac.CombinatorCondition;
@@ -53,6 +56,19 @@ import com.steadystate.css.ErrorHandler;
  * @author rbri
  */
 public class SACParserCSS21Test {
+
+    private Locale systemLocale_;
+
+    @Before
+    public void setUp() {
+        systemLocale_ = Locale.getDefault();
+        Locale.setDefault(Locale.ENGLISH);
+    }
+
+    @After
+    public void tearDown() {
+        Locale.setDefault(systemLocale_);
+    }
 
     @Test
     public void selectorList() throws Exception {
@@ -320,6 +336,12 @@ public class SACParserCSS21Test {
         final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
         Assert.assertEquals(1, errorHandler.getErrorCount());
+        final String expected = "@import rule must occur before all other rules, except the @charset rule."
+                + " (Invalid token \"@import\". Was expecting one of: <S>, \"<!--\", \"-->\".)";
+        Assert.assertEquals(expected, errorHandler.getErrorMessage());
+        Assert.assertEquals("3", errorHandler.getErrorLines());
+        Assert.assertEquals("1", errorHandler.getErrorColumns());
+
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(0, errorHandler.getWarningCount());
 
@@ -356,6 +378,12 @@ public class SACParserCSS21Test {
         final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
         Assert.assertEquals(1, errorHandler.getErrorCount());
+        final String expected = "@import rule must occur before all other rules, except the @charset rule."
+                + " (Invalid token \"@import\". Was expecting: <S>.)";
+        Assert.assertEquals(expected, errorHandler.getErrorMessage());
+        Assert.assertEquals("3", errorHandler.getErrorLines());
+        Assert.assertEquals("3", errorHandler.getErrorColumns());
+
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(0, errorHandler.getWarningCount());
 
@@ -395,6 +423,12 @@ public class SACParserCSS21Test {
         final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
         Assert.assertEquals(1, errorHandler.getErrorCount());
+        final String expected = "@import rule must occur before all other rules, except the @charset rule."
+                + " (Invalid token \"@import\". Was expecting: <S>.)";
+        Assert.assertEquals(expected, errorHandler.getErrorMessage());
+        Assert.assertEquals("4", errorHandler.getErrorLines());
+        Assert.assertEquals("3", errorHandler.getErrorColumns());
+
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(0, errorHandler.getWarningCount());
 
@@ -506,8 +540,28 @@ public class SACParserCSS21Test {
         final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
         Assert.assertEquals(7, errorHandler.getErrorCount());
+        final String expected = "Error in declaration. (Invalid token \"}\". Was expecting one of: <S>, \":\".)"
+                + " Error in declaration. (Invalid token \";\". Was expecting one of: <S>, \":\".)"
+                + " Error in expression. (Invalid token \"}\". Was expecting one of: <S>, <NUMBER>, \"inherit\", "
+                        + "<IDENT>, <STRING>, <PLUS>, <HASH>, <EMS>, <EXS>, <LENGTH_PX>, <LENGTH_CM>, <LENGTH_MM>, "
+                        + "<LENGTH_IN>, <LENGTH_PT>, <LENGTH_PC>, <ANGLE_DEG>, <ANGLE_RAD>, <ANGLE_GRAD>, <TIME_MS>, "
+                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <DIMENSION>, <PERCENTAGE>, <URI>, <FUNCTION>, \"-\".)"
+                + " Error in expression. (Invalid token \";\". Was expecting one of: <S>, <NUMBER>, \"inherit\", "
+                        + "<IDENT>, <STRING>, <PLUS>, <HASH>, <EMS>, <EXS>, <LENGTH_PX>, <LENGTH_CM>, <LENGTH_MM>, "
+                        + "<LENGTH_IN>, <LENGTH_PT>, <LENGTH_PC>, <ANGLE_DEG>, <ANGLE_RAD>, <ANGLE_GRAD>, <TIME_MS>, "
+                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <DIMENSION>, <PERCENTAGE>, <URI>, <FUNCTION>, \"-\".)"
+                + " Error in declaration. (Invalid token \"{\". Was expecting one of: <S>, \":\".)"
+                + " Error in style rule. (Invalid token \" \". Was expecting one of: <EOF>, \"}\", \";\".)"
+                + " Error in declaration. (Invalid token \"{\". Was expecting one of: <S>, \":\".)";
+        Assert.assertEquals(expected, errorHandler.getErrorMessage());
+        Assert.assertEquals("2 3 4 5 6 6 7", errorHandler.getErrorLines());
+        Assert.assertEquals("24 23 25 24 23 38 23", errorHandler.getErrorColumns());
+
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(1, errorHandler.getWarningCount());
+        Assert.assertEquals("Ignoring the following declarations in this rule.", errorHandler.getWarningMessage());
+        Assert.assertEquals("6", errorHandler.getWarningLines());
+        Assert.assertEquals("38", errorHandler.getWarningColumns());
 
         final CSSRuleList rules = sheet.getCssRules();
 
@@ -553,8 +607,17 @@ public class SACParserCSS21Test {
         final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
         Assert.assertEquals(1, errorHandler.getErrorCount());
+        final String expected = "Error in style rule. "
+                + "(Invalid token \"@here\". Was expecting one of: <S>, <LBRACE>, <COMMA>.)";
+        Assert.assertEquals(expected, errorHandler.getErrorMessage());
+        Assert.assertEquals("2", errorHandler.getErrorLines());
+        Assert.assertEquals("3", errorHandler.getErrorColumns());
+
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(1, errorHandler.getWarningCount());
+        Assert.assertEquals("Ignoring the following declarations in this rule.", errorHandler.getWarningMessage());
+        Assert.assertEquals("2", errorHandler.getWarningLines());
+        Assert.assertEquals("3", errorHandler.getWarningColumns());
 
         final CSSRuleList rules = sheet.getCssRules();
 
@@ -632,8 +695,17 @@ public class SACParserCSS21Test {
         final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
         Assert.assertEquals(1, errorHandler.getErrorCount());
+        final String expected = "Error in @media rule. (Invalid token \"<EOF>\". Was expecting one of: <S>, <IDENT>, "
+                + "<HASH>, <IMPORT_SYM>, <PAGE_SYM>, \"}\", \".\", \":\", \"*\", \"[\", <ATKEYWORD>.)";
+        Assert.assertEquals(expected, errorHandler.getErrorMessage());
+        Assert.assertEquals("2", errorHandler.getErrorLines());
+        Assert.assertEquals("27", errorHandler.getErrorColumns());
+
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(1, errorHandler.getWarningCount());
+        Assert.assertEquals("Ignoring the whole rule.", errorHandler.getWarningMessage());
+        Assert.assertEquals("2", errorHandler.getWarningLines());
+        Assert.assertEquals("27", errorHandler.getWarningColumns());
 
         final CSSRuleList rules = sheet.getCssRules();
 
@@ -657,8 +729,17 @@ public class SACParserCSS21Test {
         final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
         Assert.assertEquals(1, errorHandler.getErrorCount());
+        final String expected = "Error in @media rule. (Invalid token \"<EOF>\". Was expecting one of: <S>, <IDENT>, "
+                + "<HASH>, <IMPORT_SYM>, <PAGE_SYM>, \"}\", \".\", \":\", \"*\", \"[\", <ATKEYWORD>.)";
+        Assert.assertEquals(expected, errorHandler.getErrorMessage());
+        Assert.assertEquals("2", errorHandler.getErrorLines());
+        Assert.assertEquals("29", errorHandler.getErrorColumns());
+
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(1, errorHandler.getWarningCount());
+        Assert.assertEquals("Ignoring the whole rule.", errorHandler.getWarningMessage());
+        Assert.assertEquals("2", errorHandler.getWarningLines());
+        Assert.assertEquals("29", errorHandler.getWarningColumns());
 
         final CSSRuleList rules = sheet.getCssRules();
 
@@ -681,8 +762,17 @@ public class SACParserCSS21Test {
         final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
         Assert.assertEquals(1, errorHandler.getErrorCount());
+        final String expected = "Error in @page rule. "
+                + "(Invalid token \"<EOF>\". Was expecting one of: <S>, <IDENT>, \"}\", \";\".)";
+        Assert.assertEquals(expected, errorHandler.getErrorMessage());
+        Assert.assertEquals("1", errorHandler.getErrorLines());
+        Assert.assertEquals("39", errorHandler.getErrorColumns());
+
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(1, errorHandler.getWarningCount());
+        Assert.assertEquals("Ignoring the whole rule.", errorHandler.getWarningMessage());
+        Assert.assertEquals("1", errorHandler.getWarningLines());
+        Assert.assertEquals("39", errorHandler.getWarningColumns());
 
         final CSSRuleList rules = sheet.getCssRules();
 
@@ -715,8 +805,21 @@ public class SACParserCSS21Test {
         final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
         Assert.assertEquals(2, errorHandler.getErrorCount());
+        final String expected = "Error in expression. "
+                + "(Invalid token \"\\'\". Was expecting one of: <S>, <NUMBER>, \"inherit\", "
+                        + "<IDENT>, <STRING>, <PLUS>, <HASH>, <EMS>, <EXS>, <LENGTH_PX>, <LENGTH_CM>, <LENGTH_MM>, "
+                        + "<LENGTH_IN>, <LENGTH_PT>, <LENGTH_PC>, <ANGLE_DEG>, <ANGLE_RAD>, <ANGLE_GRAD>, <TIME_MS>, "
+                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <DIMENSION>, <PERCENTAGE>, <URI>, <FUNCTION>, \"-\".)"
+                + " Error in style rule. (Invalid token \"\\n  \". Was expecting one of: <EOF>, \"}\", \";\".)";
+        Assert.assertEquals(expected, errorHandler.getErrorMessage());
+        Assert.assertEquals("3 4", errorHandler.getErrorLines());
+        Assert.assertEquals("16 14", errorHandler.getErrorColumns());
+
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(1, errorHandler.getWarningCount());
+        Assert.assertEquals("Ignoring the following declarations in this rule.", errorHandler.getWarningMessage());
+        Assert.assertEquals("4", errorHandler.getWarningLines());
+        Assert.assertEquals("14", errorHandler.getWarningColumns());
 
         final CSSRuleList rules = sheet.getCssRules();
 
