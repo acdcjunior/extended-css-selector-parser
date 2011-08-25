@@ -39,6 +39,7 @@ import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.Locator;
 import org.w3c.css.sac.Parser;
+import org.w3c.dom.css.CSSCharsetRule;
 import org.w3c.dom.css.CSSFontFaceRule;
 import org.w3c.dom.css.CSSImportRule;
 import org.w3c.dom.css.CSSMediaRule;
@@ -48,6 +49,7 @@ import org.w3c.dom.css.CSSRuleList;
 import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
+import org.w3c.dom.css.CSSUnknownRule;
 import org.w3c.dom.css.CSSValue;
 import org.w3c.dom.css.CSSValueList;
 import org.w3c.dom.stylesheets.MediaList;
@@ -283,6 +285,14 @@ public class LocatorTest {
             counts.put('R', counts.get('R') + 1);
         }
         switch (cssRule.getType()) {
+            case CSSRule.UNKNOWN_RULE:
+                final CSSUnknownRule cssUnknownRule = (CSSUnknownRule) cssRule;
+                // TODO
+                break;
+            case CSSRule.CHARSET_RULE:
+                final CSSCharsetRule cssCharsetRule = (CSSCharsetRule) cssRule;
+                // TODO
+                break;
             case CSSRule.IMPORT_RULE:
                 final CSSImportRule cssImportRule = (CSSImportRule) cssRule;
                 mediaList(cssImportRule.getMedia(), positions, counts);
@@ -304,6 +314,8 @@ public class LocatorTest {
                 final CSSStyleRule cssStyleRule = (CSSStyleRule) cssRule;
                 cssStyleDeclaration(cssStyleRule.getStyle(), positions, counts);
                 break;
+            default:
+                throw new RuntimeException("Unsupported rule type (" + cssRule.getType() + ")");
         }
     }
 
