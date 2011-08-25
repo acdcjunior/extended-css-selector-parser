@@ -234,7 +234,7 @@ abstract class AbstractSACParser implements Parser {
             s = key;
         }
         final StringBuilder message = new StringBuilder(s);
-        message.append(' ');
+        message.append(" (");
         if (e.expectedTokenSequences.length == 1) {
             message.append(MessageFormat.format(
                 messagePattern1, new Object[] {invalid, expected}));
@@ -243,6 +243,7 @@ abstract class AbstractSACParser implements Parser {
             message.append(MessageFormat.format(
                 messagePattern2, new Object[] {invalid, expected}));
         }
+        message.append(")");
         return new CSSParseException(message.toString(),
             getInputSource().getURI(), e.currentToken.next.beginLine,
             e.currentToken.next.beginColumn);
