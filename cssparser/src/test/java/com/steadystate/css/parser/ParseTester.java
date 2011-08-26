@@ -1,9 +1,7 @@
 /*
- * $Id: ParseTester.java,v 1.1 2008-03-26 02:18:51 sdanig Exp $
- *
  * CSS Parser Project
  *
- * Copyright (C) 1999-2005 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,20 +21,28 @@
  *
  * http://cssparser.sourceforge.net/
  * mailto:davidsch@users.sourceforge.net
+ *
  */
 
 package com.steadystate.css.parser;
 
+import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.Writer;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.LexicalUnit;
+import org.w3c.css.sac.Locator;
 import org.w3c.css.sac.Parser;
 import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
 import org.w3c.css.sac.helpers.ParserFactory;
+
+import com.steadystate.css.util.Output;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
@@ -47,143 +53,172 @@ public class ParseTester extends HandlerBase {
 
     private static final String PARSER = "com.steadystate.css.parser.SACParserCSS21";
 
-    private int _propertyCounter = 0;
-    private int _indentSize = 0;
+    private int propertyCounter_ = 0;
+    private Output output_;
 
-    public static void main(String[] args) {
-        new ParseTester().testParsing();
+    public static void main(final String[] args) {
+        final File css = new File("src/test/resources/test.css");
+        // System.out.println(css.getAbsolutePath());
+
+        new ParseTester().testParsing(css);
     }
 
-    public void testParsing() {
+    public ParseTester() {
+        final Writer w = new OutputStreamWriter(System.out);
+        output_ = new Output(w, "    ");
+    }
+
+    public void testParsing(final File cssFile) {
         try {
             System.setProperty("org.w3c.css.sac.parser", PARSER);
-            ParserFactory factory = new ParserFactory();
-            Parser parser = factory.makeParser();
+            final ParserFactory factory = new ParserFactory();
+            final Parser parser = factory.makeParser();
             parser.setDocumentHandler(this);
 
-            Reader r = new FileReader("stylesheets/test.css");
+            final Reader r = new FileReader(cssFile);
 
-            InputSource is = new InputSource(r);
+            final InputSource is = new InputSource(r);
             parser.parseStyleSheet(is);
-
-        } catch (Exception e) {
-            System.err.println("Exception: " + e.getMessage());
+        }
+        catch (final Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public void startDocument(InputSource source) throws CSSException {
-        System.out.println("startDocument");
+    @Override
+    public void startDocument(final InputSource source) throws CSSException {
+        println("startDocument");
     }
 
-    public void endDocument(InputSource source) throws CSSException {
-        System.out.println("endDocument");
+    @Override
+    public void endDocument(final InputSource source) throws CSSException {
+        println("endDocument");
     }
 
-    public void comment(String text) throws CSSException {
+    @Override
+    public void comment(final String text) throws CSSException {
     }
 
-    public void ignorableAtRule(String atRule) throws CSSException {
-        System.out.println(atRule);
+    @Override
+    public void ignorableAtRule(final String atRule, final Locator locator) throws CSSException {
+        println(atRule);
     }
 
-    public void namespaceDeclaration(String prefix, String uri) throws CSSException {
+    @Override
+    public void namespaceDeclaration(final String prefix, final String uri) throws CSSException {
     }
 
-    public void importStyle(String uri, SACMediaList media, String defaultNamespaceURI) throws CSSException {
-        System.out.print("@import url(" + uri + ")");
+    @Override
+    public void importStyle(final String uri,
+            final SACMediaList media, final String defaultNamespaceURI, final Locator locator) throws CSSException {
+        print("@import url(" + uri + ")");
         if (media.getLength() > 0) {
-            System.out.println(" " + media.toString() + ";");
-        } else {
-            System.out.println(";");
+            println(" " + media.toString() + ";");
+        }
+        else {
+            println(";");
         }
     }
 
-    public void startMedia(SACMediaList media) throws CSSException {
-        System.out.println(indent() + "@media " + media.toString() + " {");
-        incIndent();
+    @Override
+    public void startMedia(final SACMediaList media, final Locator locator) throws CSSException {
+        println("@media " + media.toString() + " {");
+        output_.indent();
     }
 
-    public void endMedia(SACMediaList media) throws CSSException {
-        decIndent();
-        System.out.println(indent() + "}");
+    @Override
+    public void endMedia(final SACMediaList media) throws CSSException {
+        output_.unindent();
+        println("}");
     }
 
-    public void startPage(String name, String pseudo_page) throws CSSException {
-        System.out.print(indent() + "@page");
+    @Override
+    public void startPage(final String name, final String pseudoPage, final Locator locator) throws CSSException {
+        print("@page");
         if (name != null) {
-            System.out.print(" " + name);
+            print(" " + name);
         }
-        if (pseudo_page != null) {
-            System.out.println(" " + pseudo_page);
+        if (pseudoPage != null) {
+            println(" " + pseudoPage);
         }
-        System.out.println(" {");
-        this._propertyCounter = 0;
-        incIndent();
+        println(" {");
+        propertyCounter_ = 0;
+        output_.indent();
     }
 
-    public void endPage(String name, String pseudo_page) throws CSSException {
-        System.out.println();
-        decIndent();
-        System.out.println(indent() + "}");
+    @Override
+    public void endPage(final String name, final String pseudoPage) throws CSSException {
+        println("");
+        output_.unindent();
+        println("}");
     }
 
-    public void startFontFace() throws CSSException {
-        System.out.println(indent() + "@font-face {");
-        this._propertyCounter = 0;
-        incIndent();
+    @Override
+    public void startFontFace(final Locator locator) throws CSSException {
+        println("@font-face {");
+        propertyCounter_ = 0;
+        output_.indent();
     }
 
+    @Override
     public void endFontFace() throws CSSException {
-        System.out.println();
-        decIndent();
-        System.out.println(indent() + "}");
+        println("");
+        output_.unindent();
+        println("}");
     }
 
-    public void startSelector(SelectorList selectors) throws CSSException {
-        System.out.println(indent() + selectors.toString() + " {");
-        this._propertyCounter = 0;
-        incIndent();
+    @Override
+    public void startSelector(final SelectorList selectors, final Locator locator) throws CSSException {
+        println(selectors.toString() + " {");
+        propertyCounter_ = 0;
+        output_.indent();
     }
 
-    public void endSelector(SelectorList selectors) throws CSSException {
-        System.out.println();
-        decIndent();
-        System.out.println(indent() + "}");
+    @Override
+    public void endSelector(final SelectorList selectors) throws CSSException {
+        println("");
+        output_.unindent();
+        println("}");
     }
 
-    public void property(String name, LexicalUnit value, boolean important) throws CSSException {
-        if (this._propertyCounter++ > 0) {
-            System.out.println(";");
+    @Override
+    public void property(final String name,
+            final LexicalUnit value, final boolean important, final Locator locator) throws CSSException {
+        if (propertyCounter_++ > 0) {
+            println(";");
         }
-        System.out.print(indent() + name + ":");
+        print(name + ":");
 
         // Iterate through the chain of lexical units
         LexicalUnit nextVal = value;
         while (nextVal != null) {
-            // System.out.print(" " + nextVal.toString());
-            System.out.print(" " + ((LexicalUnitImpl) nextVal).toDebugString());
+            print(" " + ((LexicalUnitImpl) nextVal).toDebugString());
             nextVal = nextVal.getNextLexicalUnit();
         }
 
         // Is it important?
         if (important) {
-            System.out.print(" !important");
+            print(" !important");
         }
     }
 
-    private String indent() {
-        StringBuilder sb = new StringBuilder(16);
-        for (int i = 0; i < this._indentSize; i++) {
-            sb.append(" ");
+    private void print(final String message) {
+        try {
+            output_.print(message);
+            output_.flush();
         }
-        return sb.toString();
+        catch (final IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void incIndent() {
-        this._indentSize += 4;
-    }
-
-    private void decIndent() {
-        this._indentSize -= 4;
+    private void println(final String message) {
+        try {
+            output_.println(message);
+            output_.flush();
+        }
+        catch (final IOException e) {
+            e.printStackTrace();
+        }
     }
 }

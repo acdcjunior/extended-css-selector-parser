@@ -37,10 +37,12 @@ import org.w3c.css.sac.SelectorList;
 
 import com.steadystate.css.sac.DocumentHandlerExt;
 
+/**
+ * Empty implementation of the DocumentHandlerExt interface.
+ */
 public class HandlerBase implements DocumentHandlerExt, ErrorHandler {
 
-    public void startDocument(final InputSource source)
-        throws CSSException {
+    public void startDocument(final InputSource source) throws CSSException {
     }
 
     public void endDocument(final InputSource source) throws CSSException {
@@ -146,5 +148,4 @@ public class HandlerBase implements DocumentHandlerExt, ErrorHandler {
             .append(exception.getMessage());
         System.err.println(sb.toString());
     }
-
 }
