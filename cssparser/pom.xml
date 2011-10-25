@@ -25,7 +25,7 @@
 		<version>7</version>
 	</parent>
 	<scm>
-		<url>http://cssparser.svn.sourceforge.net/cssparser</url>
+		<url>https://cssparser.svn.sourceforge.net/svnroot/cssparser</url>
 	</scm>
 	<build>
         <sourceDirectory>src/main/java</sourceDirectory>
