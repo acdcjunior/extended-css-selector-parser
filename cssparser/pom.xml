@@ -25,6 +25,8 @@
 		<version>7</version>
 	</parent>
 	<scm>
+		<connection>scm:svn:https://cssparser.svn.sourceforge.net/svnroot/cssparser</connection>
+		<developerConnection>scm:svn:https://cssparser.svn.sourceforge.net/svnroot/cssparser</developerConnection>
 		<url>https://cssparser.svn.sourceforge.net/svnroot/cssparser</url>
 	</scm>
 	<build>
