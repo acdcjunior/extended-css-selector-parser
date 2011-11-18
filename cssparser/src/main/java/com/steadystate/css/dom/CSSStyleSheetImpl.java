@@ -48,6 +48,7 @@ import org.w3c.dom.stylesheets.StyleSheet;
 
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.util.LangUtils;
+import com.steadystate.css.util.ThrowCssExceptionErrorHandler;
 
 /**
  * Implementation of {@link CSSStyleSheet}.
@@ -143,10 +144,18 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
             final InputSource is = new InputSource(new StringReader(rule));
             final CSSOMParser parser = new CSSOMParser();
             parser.setParentStyleSheet(this);
+            parser.setErrorHandler(new ThrowCssExceptionErrorHandler());
             final CSSRule r = parser.parseRule(is);
 
-            if (getCssRules().getLength() > 0) {
+            if (r == null) {
+                // this should neven happen because of the ThrowCssExceptionErrorHandler
+                throw new DOMExceptionImpl(
+                        DOMException.SYNTAX_ERR,
+                        DOMExceptionImpl.SYNTAX_ERROR,
+                        "Parsing rule '" + rule + "' failed.");
+            }
 
+            if (getCssRules().getLength() > 0) {
                 // We need to check that this type of rule can legally go into
                 // the requested position.
                 int msg = -1;

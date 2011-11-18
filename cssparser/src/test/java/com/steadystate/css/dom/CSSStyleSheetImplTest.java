@@ -36,6 +36,7 @@ import java.io.StringReader;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.InputSource;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.parser.CSSOMParser;
@@ -64,13 +65,38 @@ public class CSSStyleSheetImplTest {
         final String expected = "*.testStyleDef { height: 42px }";
 
         ss.insertRule(" .testStyleDef { height: 42px; }", 0);
-        Assert.assertEquals(expected, ss.getCssRules().item(0).getCssText());
+        Assert.assertEquals("*.testStyleDef { height: 42px }", ss.getCssRules().item(0).getCssText());
 
-        ss.insertRule("      .testStyleDef { height: 42px;}   ", 0);
-        Assert.assertEquals(expected, ss.getCssRules().item(1).getCssText());
+        ss.insertRule("      .testStyleDef { height: 43px;}   ", 0);
+        Assert.assertEquals("*.testStyleDef { height: 43px }", ss.getCssRules().item(0).getCssText());
+        Assert.assertEquals("*.testStyleDef { height: 42px }", ss.getCssRules().item(1).getCssText());
 
-        ss.insertRule("\t.testStyleDef { height: 42px; }\r\n", 0);
-        Assert.assertEquals(expected, ss.getCssRules().item(2).getCssText());
+        ss.insertRule("\t.testStyleDef { height: 44px; }\r\n", 0);
+        Assert.assertEquals("*.testStyleDef { height: 44px }", ss.getCssRules().item(0).getCssText());
+        Assert.assertEquals("*.testStyleDef { height: 43px }", ss.getCssRules().item(1).getCssText());
+        Assert.assertEquals("*.testStyleDef { height: 42px }", ss.getCssRules().item(2).getCssText());
+    }
+
+    /**
+     * Regression test for bug 2123264.
+     *
+     * @throws Exception
+     *             if any error occurs
+     */
+    @Test
+    public void insertRuleWithoutDeclarationTest() throws Exception {
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+        final InputSource source = new InputSource(new StringReader(""));
+        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+
+        try {
+            ss.insertRule(".testStyleDef", 0);
+        }
+        catch (final DOMException e) {
+            Assert.assertTrue(e.getMessage(), e.getMessage().startsWith("Syntax error"));
+        }
+
+        Assert.assertEquals(0, ss.getCssRules().getLength());
     }
 
     @Test
