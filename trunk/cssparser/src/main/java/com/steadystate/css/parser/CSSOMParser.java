@@ -144,7 +144,7 @@ public class CSSOMParser {
         this.parser_.parseStyleSheet(source);
         final Object o = handler.getRoot();
         if (o instanceof CSSStyleSheet) {
-            return (CSSStyleSheet) handler.getRoot();
+            return (CSSStyleSheet) o;
         }
         return null;
     }
