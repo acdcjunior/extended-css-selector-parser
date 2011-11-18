@@ -35,6 +35,7 @@ import org.w3c.dom.DOMException;
  * Custom {@link DOMException} extension.
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author Ronald Brill
  */
 public class DOMExceptionImpl extends DOMException {
 
@@ -67,18 +68,23 @@ public class DOMExceptionImpl extends DOMException {
             Locale.getDefault());
 
     public DOMExceptionImpl(final short code, final int messageKey) {
-        super(code, ExceptionResource_.getString(keyString(messageKey)));
+        this(code, messageKey, null);
     }
 
     public DOMExceptionImpl(final int code, final int messageKey) {
-        super((short) code, ExceptionResource_.getString(keyString(messageKey)));
+        this(code, messageKey, null);
     }
 
-    public DOMExceptionImpl(final short code, final int messageKey, final String info) {
-        super(code, ExceptionResource_.getString(keyString(messageKey)));
+    public DOMExceptionImpl(final int code, final int messageKey, final String info) {
+        super((short) code, constructMessage(messageKey, info));
     }
 
-    private static String keyString(final int key) {
-        return "s" + String.valueOf(key);
+    private static String constructMessage(final int key, final String info) {
+        final String messageKey = "s" + String.valueOf(key);
+        String message = ExceptionResource_.getString(messageKey);
+        if (null != info && info.length() > 0) {
+            message = message + " (" + info + ")";
+        }
+        return message;
     }
 }
