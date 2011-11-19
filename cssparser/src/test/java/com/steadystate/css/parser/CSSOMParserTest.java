@@ -157,7 +157,7 @@ public class CSSOMParserTest {
 
         CSSRule rule = rl.item(0);
         CSSStyleRule sr = (CSSStyleRule) rule;
-        Assert.assertEquals("p {  }", sr.getCssText());
+        Assert.assertEquals("p { }", sr.getCssText());
 
         rule = rl.item(1);
         sr = (CSSStyleRule) rule;
@@ -179,7 +179,7 @@ public class CSSOMParserTest {
 
         CSSRule rule = rl.item(0);
         CSSStyleRule sr = (CSSStyleRule) rule;
-        Assert.assertEquals("p {  }", sr.getCssText());
+        Assert.assertEquals("p { }", sr.getCssText());
 
         rule = rl.item(1);
         sr = (CSSStyleRule) rule;
