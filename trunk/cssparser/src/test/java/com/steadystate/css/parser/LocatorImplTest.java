@@ -34,8 +34,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.Locator;
 
+/**
+ * Testcases.
+ */
 public class LocatorImplTest {
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void serializeTest() throws Exception {
         final Locator locator = new LocatorImpl("uri", 1, 2);

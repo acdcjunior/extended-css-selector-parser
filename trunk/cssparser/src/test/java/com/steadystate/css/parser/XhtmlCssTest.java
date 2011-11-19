@@ -46,21 +46,33 @@ public class XhtmlCssTest {
         + "span {font-size: smaller;}\n"
         + "/*]]>*/-->";
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void xhtmlCssCSS1() throws Exception {
         xhtmlCss(new SACParserCSS1());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void xhtmlCssCSS2() throws Exception {
         xhtmlCss(new SACParserCSS2());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void xhtmlCssCSS21() throws Exception {
         xhtmlCss(new SACParserCSS21());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void xhtmlCssCSSmobileOKBasic1() throws Exception {
         xhtmlCss(new SACParserCSSmobileOKBasic1());
