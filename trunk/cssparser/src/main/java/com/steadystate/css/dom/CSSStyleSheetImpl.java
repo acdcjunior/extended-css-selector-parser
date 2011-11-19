@@ -165,31 +165,36 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
                     if (index != 0) {
                         msg = DOMExceptionImpl.CHARSET_NOT_FIRST;
                     }
-                    else if (getCssRules().item(0).getType()
-                            == CSSRule.CHARSET_RULE) {
+                    else if (getCssRules().item(0).getType() == CSSRule.CHARSET_RULE) {
                         msg = DOMExceptionImpl.CHARSET_NOT_UNIQUE;
                     }
                 }
                 else if (r.getType() == CSSRule.IMPORT_RULE) {
-
                     // Import rules must preceed all other rules (except
                     // charset rules)
                     if (index <= getCssRules().getLength()) {
                         for (int i = 0; i < index; i++) {
                             final int rt = getCssRules().item(i).getType();
-                            if ((rt != CSSRule.CHARSET_RULE)
-                                    || (rt != CSSRule.IMPORT_RULE)) {
+                            if ((rt != CSSRule.CHARSET_RULE) && (rt != CSSRule.IMPORT_RULE)) {
                                 msg = DOMExceptionImpl.IMPORT_NOT_FIRST;
                                 break;
                             }
                         }
                     }
                 }
-
+                else {
+                    if (index <= getCssRules().getLength()) {
+                        for (int i = index; i < getCssRules().getLength(); i++) {
+                            final int rt = getCssRules().item(i).getType();
+                            if ((rt == CSSRule.CHARSET_RULE) || (rt == CSSRule.IMPORT_RULE)) {
+                                msg = DOMExceptionImpl.INSERT_BEFORE_IMPORT;
+                                break;
+                            }
+                        }
+                    }
+                }
                 if (msg > -1) {
-                    throw new DOMExceptionImpl(
-                        DOMException.HIERARCHY_REQUEST_ERR,
-                        msg);
+                    throw new DOMExceptionImpl(DOMException.HIERARCHY_REQUEST_ERR, msg);
                 }
             }
 
@@ -197,10 +202,10 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
             ((CSSRuleListImpl) getCssRules()).insert(r, index);
 
         }
-        catch (final ArrayIndexOutOfBoundsException e) {
+        catch (final IndexOutOfBoundsException e) {
             throw new DOMExceptionImpl(
                 DOMException.INDEX_SIZE_ERR,
-                DOMExceptionImpl.ARRAY_OUT_OF_BOUNDS,
+                DOMExceptionImpl.INDEX_OUT_OF_BOUNDS,
                 e.getMessage());
         }
         catch (final CSSException e) {
@@ -228,10 +233,10 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
         try {
             ((CSSRuleListImpl) getCssRules()).delete(index);
         }
-        catch (final ArrayIndexOutOfBoundsException e) {
+        catch (final IndexOutOfBoundsException e) {
             throw new DOMExceptionImpl(
                 DOMException.INDEX_SIZE_ERR,
-                DOMExceptionImpl.ARRAY_OUT_OF_BOUNDS,
+                DOMExceptionImpl.INDEX_OUT_OF_BOUNDS,
                 e.getMessage());
         }
     }
@@ -365,8 +370,7 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
             if (cssRule.getType() == CSSRule.IMPORT_RULE) {
                 final CSSImportRule cssImportRule = (CSSImportRule) cssRule;
                 try {
-                    final URI importURI = new java.net.URI(getBaseUri())
-                        .resolve(cssImportRule.getHref());
+                    final URI importURI = new URI(getBaseUri()).resolve(cssImportRule.getHref());
                     final CSSStyleSheetImpl importedCSS = (CSSStyleSheetImpl)
                         new CSSOMParser().parseStyleSheet(new InputSource(
                             importURI.toString()), null, importURI.toString());
@@ -383,9 +387,7 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
                     ((CSSRuleListImpl) getCssRules()).insert(cssMediaRule, i);
                 }
                 catch (final URISyntaxException e) {
-                    // TODO handle exception
-                    throw new DOMException(DOMException.SYNTAX_ERR,
-                        e.getLocalizedMessage());
+                    throw new DOMException(DOMException.SYNTAX_ERR, e.getLocalizedMessage());
                 }
                 catch (final IOException e) {
                     // TODO handle exception

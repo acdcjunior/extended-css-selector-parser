@@ -7,7 +7,14 @@
   <body>
     <release version="0.9.7" date="TODO, 2011" description="Long-overdue release with lots of bugfixes.">
         <action type="fix" dev="rbri">
+            Some more fixes for sanity checks done in CSSStyleSheet.insertRule.
+        </action>
+        <action type="fix" dev="rbri">
             Improved message output in class DOMExceptionImpl.
+        </action>
+        <action type="fix" dev="rbri">
+            CSSStyleSheet.deleteRule now throws a DOMException if the given index is out of bounds
+            (instead of an IndexOutOfBoundsException).
         </action>
         <action type="fix" dev="rbri">
             CSSStyleSheet.insertRule now takes care of incorrect rules. If the rule (to be added) parsing

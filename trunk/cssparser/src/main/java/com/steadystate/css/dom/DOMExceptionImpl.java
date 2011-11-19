@@ -35,14 +35,14 @@ import org.w3c.dom.DOMException;
  * Custom {@link DOMException} extension.
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
- * @author Ronald Brill
+ * @author rbri
  */
 public class DOMExceptionImpl extends DOMException {
 
     private static final long serialVersionUID = 7365733663951145145L;
 
     public static final int SYNTAX_ERROR = 0;
-    public static final int ARRAY_OUT_OF_BOUNDS = 1;
+    public static final int INDEX_OUT_OF_BOUNDS = 1;
     public static final int READ_ONLY_STYLE_SHEET = 2;
     public static final int EXPECTING_UNKNOWN_RULE = 3;
     public static final int EXPECTING_STYLE_RULE = 4;
@@ -61,6 +61,7 @@ public class DOMExceptionImpl extends DOMException {
     public static final int IMPORT_NOT_FIRST = 17;
     public static final int NOT_FOUND = 18;
     public static final int NOT_IMPLEMENTED = 19;
+    public static final int INSERT_BEFORE_IMPORT = 20;
 
     private static ResourceBundle ExceptionResource_ =
         ResourceBundle.getBundle(
