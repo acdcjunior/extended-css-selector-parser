@@ -53,8 +53,7 @@ public class CSSStyleDeclarationImplTest {
     /**
      * Regression test for bug 1874800.
      *
-     * @throws Exception
-     *             if any error occurs
+     * @throws Exception if any error occurs
      */
     @Test
     public void cssTextHasNoCurlyBraces() throws Exception {
@@ -77,8 +76,7 @@ public class CSSStyleDeclarationImplTest {
     /**
      * Regression test for bug 1691221.
      *
-     * @throws Exception
-     *             if any error occurs
+     * @throws Exception if any error occurs
      */
     @Test
     public void emptyUrl() throws Exception {
@@ -94,6 +92,11 @@ public class CSSStyleDeclarationImplTest {
         Assert.assertEquals("url()", style.getPropertyValue("background"));
     }
 
+    /**
+     * Test serialization.
+     *
+     * @throws Exception if any error occurs
+     */
     @Test
     public void serialize() throws Exception {
         final InputStream is = getClass().getClassLoader().getResourceAsStream("basic.css");

@@ -28,7 +28,6 @@ package com.steadystate.css.dom;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StringReader;
@@ -46,23 +45,48 @@ import com.steadystate.css.parser.SACParserCSS21;
 /**
  * Unit tests for {@link CSSStyleSheetImpl}.
  *
- * @author exxws
+ * @author rbri
  */
 public class CSSStyleSheetImplTest {
 
     /**
-     * Regression test for bug 2123264.
-     *
-     * @throws Exception
-     *             if any error occurs
+     * @throws Exception if any error occurs
      */
     @Test
-    public void insertRuleWithLeadingWhitespaceTest() throws Exception {
+    public void insertRule() throws Exception {
         final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
         final InputSource source = new InputSource(new StringReader(""));
         final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
 
-        final String expected = "*.testStyleDef { height: 42px }";
+        ss.insertRule(".testStyle { height: 42px; }", 0);
+        Assert.assertEquals("*.testStyle { height: 42px }", ss.getCssRules().item(0).getCssText());
+
+        ss.insertRule(".testStyle { height: 43px; }", 0);
+        Assert.assertEquals("*.testStyle { height: 43px }", ss.getCssRules().item(0).getCssText());
+        Assert.assertEquals("*.testStyle { height: 42px }", ss.getCssRules().item(1).getCssText());
+
+        ss.insertRule(".testStyle { height: 44px; }", 2);
+        Assert.assertEquals("*.testStyle { height: 43px }", ss.getCssRules().item(0).getCssText());
+        Assert.assertEquals("*.testStyle { height: 42px }", ss.getCssRules().item(1).getCssText());
+        Assert.assertEquals("*.testStyle { height: 44px }", ss.getCssRules().item(2).getCssText());
+
+        ss.insertRule(".testStyle { height: 45px; }", 2);
+        Assert.assertEquals("*.testStyle { height: 43px }", ss.getCssRules().item(0).getCssText());
+        Assert.assertEquals("*.testStyle { height: 42px }", ss.getCssRules().item(1).getCssText());
+        Assert.assertEquals("*.testStyle { height: 45px }", ss.getCssRules().item(2).getCssText());
+        Assert.assertEquals("*.testStyle { height: 44px }", ss.getCssRules().item(3).getCssText());
+    }
+
+    /**
+     * Regression test for bug 2123264.
+     *
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void insertRuleWithLeadingWhitespace() throws Exception {
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+        final InputSource source = new InputSource(new StringReader(""));
+        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
 
         ss.insertRule(" .testStyleDef { height: 42px; }", 0);
         Assert.assertEquals("*.testStyleDef { height: 42px }", ss.getCssRules().item(0).getCssText());
@@ -80,27 +104,146 @@ public class CSSStyleSheetImplTest {
     /**
      * Regression test for bug 2123264.
      *
-     * @throws Exception
-     *             if any error occurs
+     * @throws Exception if any error occurs
      */
     @Test
-    public void insertRuleWithoutDeclarationTest() throws Exception {
+    public void insertRuleWithoutDeclaration() throws Exception {
         final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
         final InputSource source = new InputSource(new StringReader(""));
         final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
 
         try {
             ss.insertRule(".testStyleDef", 0);
+            Assert.fail("DOMException expected");
         }
         catch (final DOMException e) {
             Assert.assertTrue(e.getMessage(), e.getMessage().startsWith("Syntax error"));
+            Assert.assertEquals(0, ss.getCssRules().getLength());
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void insertRuleReadOnly() throws Exception {
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+        final InputSource source = new InputSource(new StringReader(""));
+        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        ((CSSStyleSheetImpl) ss).setReadOnly(true);
+
+        try {
+            ss.insertRule(".testStyleDef", 0);
+            Assert.fail("DOMException expected");
+        }
+        catch (final DOMException e) {
+            Assert.assertTrue(e.getMessage(), e.getMessage().startsWith("This style sheet is read only"));
+            Assert.assertEquals(0, ss.getCssRules().getLength());
+        }
+
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void insertRuleRuleOrderCharset() throws Exception {
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+        final InputSource source = new InputSource(new StringReader(""));
+        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+
+        ss.insertRule("@charset \"US-ASCII\";", 0);
+        try {
+            ss.insertRule("@charset \"US-ASCII\";", 0);
+            Assert.fail("DOMException expected");
+        }
+        catch (final DOMException e) {
+            Assert.assertTrue(e.getMessage(), e.getMessage().startsWith("A charset rule already exists"));
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void insertRuleRuleImport() throws Exception {
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+        final InputSource source = new InputSource(new StringReader(""));
+        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+
+        ss.insertRule("@import \"great.css\";", 0);
+
+        ss.insertRule("@charset \"US-ASCII\";", 0);
+        ss.insertRule("@import \"great.css\";", 1);
+
+        try {
+            ss.insertRule("testStyleDef { height: 42px }", 0);
+            Assert.fail("DOMException expected");
+        }
+        catch (final DOMException e) {
+            Assert.assertTrue(e.getMessage(),
+                    e.getMessage().startsWith("Can't insert a rule before the last charset or import rule"));
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void deleteRule() throws Exception {
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+        final InputSource source = new InputSource(new StringReader("test { height: 42px }"));
+        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+
+        ss.deleteRule(0);
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void deleteRuleWrongIndex() throws Exception {
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+        final InputSource source = new InputSource(new StringReader(""));
+        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+
+        try {
+            ss.deleteRule(7);
+            Assert.fail("DOMException expected");
+        }
+        catch (final DOMException e) {
+            Assert.assertTrue(e.getMessage(), e.getMessage().startsWith("Index out of bounds error"));
+            Assert.assertEquals(0, ss.getCssRules().getLength());
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void deleteRuleReadOnly() throws Exception {
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+        final InputSource source = new InputSource(new StringReader(""));
+        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        ((CSSStyleSheetImpl) ss).setReadOnly(true);
+
+        try {
+            ss.deleteRule(0);
+        }
+        catch (final DOMException e) {
+            Assert.assertTrue(e.getMessage(), e.getMessage().startsWith("This style sheet is read only"));
         }
 
         Assert.assertEquals(0, ss.getCssRules().getLength());
     }
 
+    /**
+     * Test serialization.
+     *
+     * @throws Exception if any error occurs
+     */
     @Test
-    public void serializeTest() {
+    public void serialize() throws Exception {
         final String cssText =
             "h1 {\n"
             + "  font-size: 2em\n"
@@ -113,24 +256,18 @@ public class CSSStyleSheetImplTest {
             + "}";
         final InputSource source = new InputSource(new StringReader(cssText));
         final CSSOMParser cssomParser = new CSSOMParser();
-        try {
-            final CSSStyleSheet css = cssomParser.parseStyleSheet(source, null,
-                "http://www.example.org/css/style.css");
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            final ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(css);
-            oos.flush();
-            oos.close();
-            final byte[] bytes = baos.toByteArray();
-            final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
-            final Object o = ois.readObject();
-            Assert.assertEquals(css, o);
-        }
-        catch (final IOException e) {
-            Assert.assertFalse(e.getLocalizedMessage(), true);
-        }
-        catch (final ClassNotFoundException e) {
-            Assert.assertFalse(e.getLocalizedMessage(), true);
-        }
+        final CSSStyleSheet css = cssomParser.parseStyleSheet(source, null,
+            "http://www.example.org/css/style.css");
+
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(css);
+        oos.flush();
+        oos.close();
+
+        final byte[] bytes = baos.toByteArray();
+        final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
+        final Object o = ois.readObject();
+        Assert.assertEquals(css, o);
     }
 }

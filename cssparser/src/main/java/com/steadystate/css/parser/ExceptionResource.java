@@ -36,7 +36,7 @@ public class ExceptionResource extends ListResourceBundle {
 
     static final Object[][] contents = {
         {"s0", "Syntax error"},
-        {"s1", "Array out of bounds error"},
+        {"s1", "Index out of bounds error"},
         {"s2", "This style sheet is read only"},
         {"s3", "The text does not represent an unknown rule"},
         {"s4", "The text does not represent a style rule"},
@@ -53,6 +53,7 @@ public class ExceptionResource extends ListResourceBundle {
         {"s15", "A charset rule must be the first rule"},
         {"s16", "A charset rule already exists"},
         {"s17", "An import rule must preceed all other rules"},
-        {"s18", "The specified type was not found"}
+        {"s18", "The specified type was not found"},
+        {"s20", "Can't insert a rule before the last charset or import rule"}
     };
 }

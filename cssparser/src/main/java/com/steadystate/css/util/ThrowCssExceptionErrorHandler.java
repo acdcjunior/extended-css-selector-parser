@@ -35,10 +35,12 @@ import org.w3c.css.sac.ErrorHandler;
  * Helper implementation of {@link ErrorHandler}, which throws CssEcxeptions in case of problems.
  *
  * @version $Revision: $
- * @author Ronald Brill
+ * @author rbri
  * @see ErrorHandler
  */
 public class ThrowCssExceptionErrorHandler implements ErrorHandler, Serializable {
+    private static final long serialVersionUID = -3933638774901855095L;
+
     /**
      * {@inheritDoc}
      */

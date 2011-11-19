@@ -32,19 +32,17 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.StringReader;
 
+import org.w3c.css.sac.CSSException;
+import org.w3c.css.sac.InputSource;
 import org.w3c.dom.DOMException;
-
-import org.w3c.dom.stylesheets.MediaList;
-
 import org.w3c.dom.css.CSSMediaRule;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
-
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.InputSource;
+import org.w3c.dom.stylesheets.MediaList;
 
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.util.LangUtils;
+import com.steadystate.css.util.ThrowCssExceptionErrorHandler;
 
 /**
  * Implementation of {@link CSSMediaRule}.
@@ -154,6 +152,7 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
             final InputSource is = new InputSource(new StringReader(rule));
             final CSSOMParser parser = new CSSOMParser();
             parser.setParentStyleSheet(parentStyleSheet);
+            parser.setErrorHandler(new ThrowCssExceptionErrorHandler());
             // parser._parentRule is never read
             // parser.setParentRule(_parentRule);
             final CSSRule r = parser.parseRule(is);
@@ -162,10 +161,10 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
             ((CSSRuleListImpl) getCssRules()).insert(r, index);
 
         }
-        catch (final ArrayIndexOutOfBoundsException e) {
+        catch (final IndexOutOfBoundsException e) {
             throw new DOMExceptionImpl(
                 DOMException.INDEX_SIZE_ERR,
-                DOMExceptionImpl.ARRAY_OUT_OF_BOUNDS,
+                DOMExceptionImpl.INDEX_OUT_OF_BOUNDS,
                 e.getMessage());
         }
         catch (final CSSException e) {
@@ -193,10 +192,10 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
         try {
             ((CSSRuleListImpl) getCssRules()).delete(index);
         }
-        catch (final ArrayIndexOutOfBoundsException e) {
+        catch (final IndexOutOfBoundsException e) {
             throw new DOMExceptionImpl(
                 DOMException.INDEX_SIZE_ERR,
-                DOMExceptionImpl.ARRAY_OUT_OF_BOUNDS,
+                DOMExceptionImpl.INDEX_OUT_OF_BOUNDS,
                 e.getMessage());
         }
     }
