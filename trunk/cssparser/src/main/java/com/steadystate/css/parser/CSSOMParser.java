@@ -140,8 +140,8 @@ public class CSSOMParser {
         final CSSOMHandler handler = new CSSOMHandler();
         handler.setOwnerNode(ownerNode);
         handler.setHref(href);
-        this.parser_.setDocumentHandler(handler);
-        this.parser_.parseStyleSheet(source);
+        parser_.setDocumentHandler(handler);
+        parser_.parseStyleSheet(source);
         final Object o = handler.getRoot();
         if (o instanceof CSSStyleSheet) {
             return (CSSStyleSheet) o;
@@ -162,19 +162,17 @@ public class CSSOMParser {
         return sd;
     }
 
-    public void parseStyleDeclaration(final CSSStyleDeclaration sd, final InputSource source)
-        throws IOException {
-
+    public void parseStyleDeclaration(final CSSStyleDeclaration sd, final InputSource source) throws IOException {
         final Stack<Object> nodeStack = new Stack<Object>();
         nodeStack.push(sd);
         final CSSOMHandler handler = new CSSOMHandler(nodeStack);
-        this.parser_.setDocumentHandler(handler);
-        this.parser_.parseStyleDeclaration(source);
+        parser_.setDocumentHandler(handler);
+        parser_.parseStyleDeclaration(source);
     }
 
     public CSSValue parsePropertyValue(final InputSource source) throws IOException {
         final CSSOMHandler handler = new CSSOMHandler();
-        this.parser_.setDocumentHandler(handler);
+        parser_.setDocumentHandler(handler);
         final LexicalUnit lu = parser_.parsePropertyValue(source);
         if (null == lu) {
             return null;
@@ -184,8 +182,8 @@ public class CSSOMParser {
 
     public CSSRule parseRule(final InputSource source) throws IOException {
         final CSSOMHandler handler = new CSSOMHandler();
-        this.parser_.setDocumentHandler(handler);
-        this.parser_.parseRule(source);
+        parser_.setDocumentHandler(handler);
+        parser_.parseRule(source);
         return (CSSRule) handler.getRoot();
     }
 
