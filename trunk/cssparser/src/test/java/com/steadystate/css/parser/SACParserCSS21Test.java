@@ -59,17 +59,26 @@ public class SACParserCSS21Test {
 
     private Locale systemLocale_;
 
+    /**
+     * Set up
+     */
     @Before
     public void setUp() {
         systemLocale_ = Locale.getDefault();
         Locale.setDefault(Locale.ENGLISH);
     }
 
+    /**
+     * Tear down
+     */
     @After
     public void tearDown() {
         Locale.setDefault(systemLocale_);
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void selectorList() throws Exception {
         selectorList("h1:first-line", 1);
@@ -82,6 +91,9 @@ public class SACParserCSS21Test {
         selectorList("h1.class, h2, h3", 3);
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void selector() throws Exception {
         selectorType("a#id.class:link", Selector.SAC_CONDITIONAL_SELECTOR);
@@ -113,6 +125,9 @@ public class SACParserCSS21Test {
                 Selector.SAC_ELEMENT_NODE_SELECTOR);
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void condition() throws Exception {
         conditionType("a#id.class:link", Condition.SAC_AND_CONDITION, Condition.SAC_AND_CONDITION,
@@ -139,6 +154,9 @@ public class SACParserCSS21Test {
         conditionType(":link", Condition.SAC_PSEUDO_CLASS_CONDITION);
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void attributeCondition() throws Exception {
         attributeConditionValue(".class", "class");
@@ -206,6 +224,9 @@ public class SACParserCSS21Test {
         return conditionalSelector.getCondition();
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void dojoCSS() throws Exception {
         final InputStream is = getClass().getClassLoader().getResourceAsStream("dojo.css");
@@ -226,6 +247,9 @@ public class SACParserCSS21Test {
         Assert.assertEquals(0, errorHandler.getWarningCount());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void emptyCSS() throws Exception {
         final InputSource source = new InputSource(new StringReader(""));
@@ -242,6 +266,9 @@ public class SACParserCSS21Test {
         Assert.assertEquals(0, sheet.getCssRules().getLength());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void whitespaceOnlyCSS() throws Exception {
         final InputSource source = new InputSource(new StringReader("  \t \r\n \n"));
@@ -715,6 +742,9 @@ public class SACParserCSS21Test {
         Assert.assertEquals("@media screen {p before { content: Hello } }", rule.getCssText());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void unexpectedEndOfMediaRule() throws Exception {
         final String css = "@media screen {\n"
@@ -749,6 +779,9 @@ public class SACParserCSS21Test {
         Assert.assertEquals("@media screen {p before { content: Hello } }", rule.getCssText());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void unexpectedEndOfPageRule() throws Exception {
         final String css = "@page :pageStyle { size: 21.0cm 29.7cm;";
@@ -874,4 +907,3 @@ public class SACParserCSS21Test {
         Assert.assertEquals("h6 { background: url(this is a  string) }", rule.getCssText());
     }
 }
-
