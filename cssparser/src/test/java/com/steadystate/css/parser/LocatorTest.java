@@ -60,6 +60,9 @@ import com.steadystate.css.dom.CSSValueImpl;
 import com.steadystate.css.dom.Property;
 import com.steadystate.css.userdata.UserDataConstants;
 
+/**
+ * Testcases for correct error location reporting.
+ */
 public class LocatorTest {
 
     private static final String CHARSET_RULE = "@charset \"utf-8\";\n";

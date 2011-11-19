@@ -69,15 +69,21 @@ public class CSSOMParserTest {
         return new CSSOMParser();
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
-    public void defaultConstructor() {
+    public void defaultConstructor() throws Exception {
         final CSSOMParser parser = new CSSOMParser();
         Assert.assertNotNull(parser);
         Assert.assertEquals("com.steadystate.css.parser.SACParserCSS21", System.getProperty("org.w3c.css.sac.parser"));
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
-    public void defineParserClass() {
+    public void defineParserClass() throws Exception {
         System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS21");
         CSSOMParser parser = new CSSOMParser();
         Assert.assertNotNull(parser);
@@ -94,8 +100,11 @@ public class CSSOMParserTest {
         Assert.assertEquals("com.steadystate.css.parser.SACParserCSS1", System.getProperty("org.w3c.css.sac.parser"));
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
-    public void defineParserInstance() {
+    public void defineParserInstance() throws Exception {
         CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
         Assert.assertNotNull(parser);
         Assert.assertEquals("com.steadystate.css.parser.SACParserCSS21", System.getProperty("org.w3c.css.sac.parser"));
@@ -109,6 +118,9 @@ public class CSSOMParserTest {
         Assert.assertEquals("com.steadystate.css.parser.SACParserCSS1", System.getProperty("org.w3c.css.sac.parser"));
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parseStyleSheet() throws Exception {
         final Reader r = new StringReader(testString_);
@@ -130,6 +142,9 @@ public class CSSOMParserTest {
         Assert.assertEquals(testValue_, value.getCssText());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parseStyleSheetIgnoreProblemCss2() throws Exception {
         final String test = "p{filter:alpha(opacity=33.3);opacity:0.333}a{color:#123456;}";
@@ -149,6 +164,9 @@ public class CSSOMParserTest {
         Assert.assertEquals("a { color: rgb(18, 52, 86) }", sr.getCssText());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parseStyleSheetIgnoreProblemCss21() throws Exception {
         final String test = "p{filter:alpha(opacity=33.3);opacity:0.333}a{color:#123456;}";
@@ -168,6 +186,9 @@ public class CSSOMParserTest {
         Assert.assertEquals("a { color: rgb(18, 52, 86) }", sr.getCssText());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parseSelectors() throws Exception {
         final Reader r = new StringReader(testSelector_);
@@ -177,6 +198,9 @@ public class CSSOMParserTest {
         Assert.assertEquals(testSelector_, sl.item(0).toString());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parseSelectorsParseException() throws Exception {
         final Reader r = new StringReader("table:bogus(1) td");
@@ -186,6 +210,9 @@ public class CSSOMParserTest {
         Assert.assertNull(sl);
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parsePropertyValue() throws Exception {
         final Reader r = new StringReader(testPropertyValue_);
@@ -195,6 +222,9 @@ public class CSSOMParserTest {
         Assert.assertEquals(testPropertyValue_, pv.toString());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parsePropertyValueParseException() throws Exception {
         final Reader r = new StringReader("@a");
@@ -204,6 +234,9 @@ public class CSSOMParserTest {
         Assert.assertNull(pv);
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parseMedia() throws Exception {
         final Reader r = new StringReader(testParseMedia_);
@@ -213,6 +246,9 @@ public class CSSOMParserTest {
         Assert.assertEquals(2, ml.getLength());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parseMediaParseException() throws Exception {
         final Reader r = new StringReader("~xx");
@@ -222,6 +258,9 @@ public class CSSOMParserTest {
         Assert.assertEquals(0, ml.getLength());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parseRule() throws Exception {
         final Reader r = new StringReader(testParseRule_);
@@ -231,6 +270,9 @@ public class CSSOMParserTest {
         Assert.assertEquals(testParseRule_, rule.getCssText());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parseRuleParseException() throws Exception {
         final Reader r = new StringReader("~xx");
@@ -240,6 +282,9 @@ public class CSSOMParserTest {
         Assert.assertNull(rule);
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parseStyleDeclaration() throws Exception {
         final Reader r = new StringReader(testStyleDeclaration_);
@@ -249,6 +294,9 @@ public class CSSOMParserTest {
         Assert.assertEquals(testStyleDeclaration_, sd.toString());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parseStyleDeclarationParseException() throws Exception {
         final Reader r = new StringReader("@abc");
@@ -377,6 +425,9 @@ public class CSSOMParserTest {
                     "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat"));
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void speciaChars() throws Exception {
         Assert.assertEquals("content: \"�\"",
@@ -499,6 +550,9 @@ public class CSSOMParserTest {
         return d.getCssText();
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parsePageDeclaration() throws Exception {
         final Reader r = new StringReader("@page :pageStyle { size: 21.0cm 29.7cm; }");
@@ -520,6 +574,9 @@ public class CSSOMParserTest {
         Assert.assertEquals("size: 21cm 29.7cm", pageRule.getStyle().getCssText());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void parsePageDeclaration2() throws Exception {
         final Reader r = new StringReader("@page { size: 21.0cm 29.7cm; }");
