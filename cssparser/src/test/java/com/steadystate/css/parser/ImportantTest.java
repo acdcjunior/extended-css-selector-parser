@@ -40,28 +40,46 @@ import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.ErrorHandler;
 
+/**
+ * Testcases.
+ */
 public class ImportantTest {
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void css1() throws Exception {
         css(new SACParserCSS1());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void css2() throws Exception {
         css(new SACParserCSS2());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void css21() throws Exception {
         css(new SACParserCSS21());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void cssCSSmobileOKBasic1() throws Exception {
         css(new SACParserCSSmobileOKBasic1());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void css1Error() throws Exception {
         final ErrorHandler errorHandler = parserError(new SACParserCSS1());
@@ -71,6 +89,9 @@ public class ImportantTest {
         Assert.assertEquals(0, errorHandler.getWarningCount());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void css2Error() throws Exception {
         final ErrorHandler errorHandler = parserError(new SACParserCSS2());
@@ -80,6 +101,9 @@ public class ImportantTest {
         Assert.assertEquals(1, errorHandler.getWarningCount());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void css21Error() throws Exception {
         final ErrorHandler errorHandler = parserError(new SACParserCSS21());
@@ -89,6 +113,9 @@ public class ImportantTest {
         Assert.assertEquals(0, errorHandler.getWarningCount());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void cssCSSmobileOKBasic1Error() throws Exception {
         final ErrorHandler errorHandler = parserError(new SACParserCSSmobileOKBasic1());

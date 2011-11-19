@@ -49,6 +49,9 @@ public class SACParserCSS1Test {
 
     private static final Parser SAC_PARSER = new SACParserCSS1();
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void selectorList() throws Exception {
         selectorList("h1:first-line", 1);
@@ -61,6 +64,9 @@ public class SACParserCSS1Test {
         selectorList("h1.class, h2, h3", 3);
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void selector() throws Exception {
         selectorType("a#id.class:link", Selector.SAC_CONDITIONAL_SELECTOR);
@@ -92,6 +98,9 @@ public class SACParserCSS1Test {
                 Selector.SAC_ELEMENT_NODE_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR);
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void condition() throws Exception {
         conditionType("a#id.class:link", Condition.SAC_AND_CONDITION,
@@ -120,6 +129,9 @@ public class SACParserCSS1Test {
         conditionType(":link", Condition.SAC_PSEUDO_CLASS_CONDITION);
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
     @Test
     public void attributeCondition() throws Exception {
         attributeConditionValue(".class", "class");
