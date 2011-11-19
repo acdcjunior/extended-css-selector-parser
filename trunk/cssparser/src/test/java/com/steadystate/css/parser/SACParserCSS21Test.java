@@ -906,4 +906,66 @@ public class SACParserCSS21Test {
         rule = rules.item(4);
         Assert.assertEquals("h6 { background: url(this is a  string) }", rule.getCssText());
     }
+
+    /**
+     * Regression test for bug 1420893.
+     *
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void invalidCommaInDef() throws Exception {
+        final String css = ".a, .b, { test: 1; }";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(1, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(1, errorHandler.getWarningCount());
+
+        Assert.assertTrue(errorHandler.getErrorMessage(),
+                errorHandler.getErrorMessage().startsWith("Error in simple selector."));
+        Assert.assertEquals("Ignoring the whole rule.", errorHandler.getWarningMessage());
+    }
+
+    /**
+     * Regression test for bug 1420893.
+     *
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void missingValue() throws Exception {
+        final String css = ".a { test; }\n"
+                           + "p { color: green }";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(1, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        Assert.assertTrue(errorHandler.getErrorMessage(),
+                errorHandler.getErrorMessage().startsWith("Error in declaration."));
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(2, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("*.a { }", rule.getCssText());
+
+        rule = rules.item(1);
+        Assert.assertEquals("p { color: green }", rule.getCssText());
+    }
 }
