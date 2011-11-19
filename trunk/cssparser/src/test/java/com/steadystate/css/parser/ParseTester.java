@@ -47,7 +47,7 @@ import com.steadystate.css.util.Output;
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author sdanig
- * @author exxws
+ * @author rbri
  */
 public class ParseTester extends HandlerBase {
 

@@ -46,7 +46,7 @@ import org.w3c.dom.css.CSSValue;
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author sdanig
- * @author exxws
+ * @author rbri
  */
 public class CSSOMParserTest {
 
