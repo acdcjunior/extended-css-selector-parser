@@ -29,7 +29,6 @@ package com.steadystate.css.dom;
 import java.io.Serializable;
 
 import org.w3c.css.sac.LexicalUnit;
-
 import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.RGBColor;
@@ -46,7 +45,13 @@ public class RGBColorImpl implements RGBColor, Serializable {
     private CSSPrimitiveValue green_;
     private CSSPrimitiveValue blue_;
 
-    protected RGBColorImpl(final LexicalUnit lu) throws DOMException {
+    /**
+     * Constructor that reads the values from the given
+     * chain of LexicalUnits.
+     * @param lu the values
+     * @throws DOMException in case of error
+     */
+    public RGBColorImpl(final LexicalUnit lu) throws DOMException {
         LexicalUnit next = lu;
         red_ = new CSSValueImpl(next, true);
         next = next.getNextLexicalUnit();   // ,
@@ -79,34 +84,63 @@ public class RGBColorImpl implements RGBColor, Serializable {
         }
     }
 
+    /**
+     * Constructor.
+     * The values for the colors are null.
+     */
     public RGBColorImpl() {
         super();
     }
 
+    /**
+     * Returns the red part.
+     */
     public CSSPrimitiveValue getRed() {
         return red_;
     }
 
+    /**
+     * Sets the red part to a new value.
+     * @param red the new CSSPrimitiveValue
+     */
     public void setRed(final CSSPrimitiveValue red) {
         red_ = red;
     }
 
+    /**
+     * Returns the green part.
+     */
     public CSSPrimitiveValue getGreen() {
         return green_;
     }
 
+    /**
+     * Sets the green part to a new value.
+     * @param green the new CSSPrimitiveValue
+     */
     public void setGreen(final CSSPrimitiveValue green) {
         green_ = green;
     }
 
+    /**
+     * Returns the blue part.
+     */
     public CSSPrimitiveValue getBlue() {
         return blue_;
     }
 
+    /**
+     * Sets the blue part to a new value.
+     * @param blue the new CSSPrimitiveValue
+     */
     public void setBlue(final CSSPrimitiveValue blue) {
         blue_ = blue;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String toString() {
         return new StringBuilder("rgb(")
             .append(red_).append(", ")
