@@ -7,6 +7,9 @@
   <body>
     <release version="0.9.7" date="TODO, 2011" description="Long-overdue release with lots of bugfixes.">
         <action type="fix" dev="rbri">
+            RectImpl now expects and processes the four coordinates in the correct (top, right, bottom, left) order.
+        </action>
+        <action type="fix" dev="rbri">
             Some more fixes for sanity checks done in CSSStyleSheet.insertRule.
         </action>
         <action type="fix" dev="rbri">
