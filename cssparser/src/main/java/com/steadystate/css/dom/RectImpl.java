@@ -28,11 +28,10 @@ package com.steadystate.css.dom;
 
 import java.io.Serializable;
 
+import org.w3c.css.sac.LexicalUnit;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.Rect;
-
-import org.w3c.css.sac.LexicalUnit;
 
 /**
  * Implementation of {@link Rect}.
@@ -43,33 +42,20 @@ public class RectImpl implements Rect, Serializable {
 
     private static final long serialVersionUID = -7031248513917920621L;
 
-    private CSSPrimitiveValue left_;
     private CSSPrimitiveValue top_;
     private CSSPrimitiveValue right_;
     private CSSPrimitiveValue bottom_;
-
-    public void setLeft(final CSSPrimitiveValue left) {
-        left_ = left;
-    }
-
-    public void setTop(final CSSPrimitiveValue top) {
-        top_ = top;
-    }
-
-    public void setRight(final CSSPrimitiveValue right) {
-        right_ = right;
-    }
-
-    public void setBottom(final CSSPrimitiveValue bottom) {
-        bottom_ = bottom;
-    }
+    private CSSPrimitiveValue left_;
 
     /**
-     * Creates new RectImpl
+     * Constructor that reads the values from the given
+     * chain of LexicalUnits.
+     * @param lu the values
+     * @throws DOMException in case of error
      */
     public RectImpl(final LexicalUnit lu) throws DOMException {
         LexicalUnit next = lu;
-        left_ = new CSSValueImpl(next, true);
+        top_ = new CSSValueImpl(next, true);
         next = next.getNextLexicalUnit();  // ,
         if (next != null) {
             if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA) {
@@ -79,7 +65,7 @@ public class RectImpl implements Rect, Serializable {
             }
             next = next.getNextLexicalUnit();
             if (next != null) {
-                top_ = new CSSValueImpl(next, true);
+                right_ = new CSSValueImpl(next, true);
                 next = next.getNextLexicalUnit();   // ,
                 if (next != null) {
                     if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA) {
@@ -89,7 +75,7 @@ public class RectImpl implements Rect, Serializable {
                     }
                     next = next.getNextLexicalUnit();
                     if (next != null) {
-                        right_ = new CSSValueImpl(next, true);
+                        bottom_ = new CSSValueImpl(next, true);
                         next = next.getNextLexicalUnit();   // ,
                         if (next != null) {
                             if (next.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA) {
@@ -99,7 +85,7 @@ public class RectImpl implements Rect, Serializable {
                             }
                             next = next.getNextLexicalUnit();
                             if (next != null) {
-                                bottom_ = new CSSValueImpl(next, true);
+                                left_ = new CSSValueImpl(next, true);
                                 next = next.getNextLexicalUnit();
                                 if (next != null) {
                                     // error
@@ -114,31 +100,83 @@ public class RectImpl implements Rect, Serializable {
         }
     }
 
+    /**
+     * Constructor.
+     * The values for the coordinates are null.
+     */
     public RectImpl() {
         super();
     }
 
+    /**
+     * Returns the top part.
+     */
     public CSSPrimitiveValue getTop() {
         return top_;
     }
 
+    /**
+     * Sets the top part to a new value.
+     * @param top the new CSSPrimitiveValue
+     */
+    public void setTop(final CSSPrimitiveValue top) {
+        top_ = top;
+    }
+
+    /**
+     * Returns the right part.
+     */
     public CSSPrimitiveValue getRight() {
         return right_;
     }
 
+    /**
+     * Sets the right part to a new value.
+     * @param right the new CSSPrimitiveValue
+     */
+    public void setRight(final CSSPrimitiveValue right) {
+        right_ = right;
+    }
+
+    /**
+     * Returns the bottom part.
+     */
     public CSSPrimitiveValue getBottom() {
         return bottom_;
     }
 
+    /**
+     * Sets the bottom part to a new value.
+     * @param bottom the new CSSPrimitiveValue
+     */
+    public void setBottom(final CSSPrimitiveValue bottom) {
+        bottom_ = bottom;
+    }
+
+    /**
+     * Returns the left part.
+     */
     public CSSPrimitiveValue getLeft() {
         return left_;
     }
 
+    /**
+     * Sets the left part to a new value.
+     * @param left the new CSSPrimitiveValue
+     */
+    public void setLeft(final CSSPrimitiveValue left) {
+        left_ = left;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String toString() {
         return new StringBuilder("rect(")
-            .append(left_).append(", ")
             .append(top_).append(", ")
             .append(right_).append(", ")
-            .append(bottom_).append(")").toString();
+            .append(bottom_).append(", ")
+            .append(left_).append(")").toString();
     }
 }
