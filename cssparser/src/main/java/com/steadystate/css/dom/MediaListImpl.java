@@ -27,7 +27,6 @@
 package com.steadystate.css.dom;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,34 +42,26 @@ import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.parser.Locatable;
 import com.steadystate.css.userdata.UserDataConstants;
 import com.steadystate.css.util.LangUtils;
+import com.steadystate.css.util.ThrowCssExceptionErrorHandler;
 
 /**
  * Implements {@link MediaList}.
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  */
-public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Serializable {
-
+public class MediaListImpl extends CSSOMObjectImpl implements MediaList {
     private static final long serialVersionUID = 6662784733573034870L;
 
     private List<String> media_ = new ArrayList<String>();
 
-    public void setMedia(final List<String> media) {
-        media_ = media;
-    }
-
-    private void setMediaList(final SACMediaList mediaList) {
-        for (int i = 0; i < mediaList.getLength(); i++) {
-            media_.add(mediaList.item(i));
-        }
-    }
-
     public MediaListImpl(final SACMediaList mediaList) {
         setMediaList(mediaList);
-        final Locator locator = mediaList instanceof Locatable
-            ? ((Locatable) mediaList).getLocator() : null;
-        if (locator != null) {
-            setUserData(UserDataConstants.KEY_LOCATOR, locator);
+
+        if (mediaList instanceof Locatable) {
+            final Locator locator = ((Locatable) mediaList).getLocator();
+            if (locator != null) {
+                setUserData(UserDataConstants.KEY_LOCATOR, locator);
+            }
         }
     }
 
@@ -93,16 +84,15 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
         final InputSource source = new InputSource(new StringReader(mediaText));
         try {
             final CSSOMParser parser = new CSSOMParser();
+            parser.setErrorHandler(ThrowCssExceptionErrorHandler.INSTANCE);
             final SACMediaList sml = parser.parseMedia(source);
             setMediaList(sml);
         }
         catch (final CSSParseException e) {
-            throw new DOMException(DOMException.SYNTAX_ERR,
-                e.getLocalizedMessage());
+            throw new DOMException(DOMException.SYNTAX_ERR, e.getLocalizedMessage());
         }
         catch (final IOException e) {
-            throw new DOMException(DOMException.NOT_FOUND_ERR,
-                e.getLocalizedMessage());
+            throw new DOMException(DOMException.NOT_FOUND_ERR, e.getLocalizedMessage());
         }
     }
 
@@ -135,16 +125,14 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
         return getMediaText();
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
+    public void setMedia(final List<String> media) {
+        media_ = media;
+    }
+
+    private void setMediaList(final SACMediaList mediaList) {
+        for (int i = 0; i < mediaList.getLength(); i++) {
+            media_.add(mediaList.item(i));
         }
-        if (!(obj instanceof MediaList)) {
-            return false;
-        }
-        final MediaList ml = (MediaList) obj;
-        return super.equals(obj) && equalsMedia(ml);
     }
 
     private boolean equalsMedia(final MediaList ml) {
@@ -162,10 +150,21 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList, Seriali
     }
 
     @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof MediaList)) {
+            return false;
+        }
+        final MediaList ml = (MediaList) obj;
+        return super.equals(obj) && equalsMedia(ml);
+    }
+
+    @Override
     public int hashCode() {
         int hash = super.hashCode();
         hash = LangUtils.hashCode(hash, media_);
         return hash;
     }
-
 }

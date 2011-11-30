@@ -152,7 +152,7 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
             final InputSource is = new InputSource(new StringReader(rule));
             final CSSOMParser parser = new CSSOMParser();
             parser.setParentStyleSheet(parentStyleSheet);
-            parser.setErrorHandler(new ThrowCssExceptionErrorHandler());
+            parser.setErrorHandler(ThrowCssExceptionErrorHandler.INSTANCE);
             // parser._parentRule is never read
             // parser.setParentRule(_parentRule);
             final CSSRule r = parser.parseRule(is);
