@@ -144,7 +144,7 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
             final InputSource is = new InputSource(new StringReader(rule));
             final CSSOMParser parser = new CSSOMParser();
             parser.setParentStyleSheet(this);
-            parser.setErrorHandler(new ThrowCssExceptionErrorHandler());
+            parser.setErrorHandler(ThrowCssExceptionErrorHandler.INSTANCE);
             final CSSRule r = parser.parseRule(is);
 
             if (r == null) {

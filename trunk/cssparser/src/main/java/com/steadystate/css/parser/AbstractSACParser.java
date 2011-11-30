@@ -399,12 +399,10 @@ abstract class AbstractSACParser implements Parser {
             mediaList(ml);
         }
         catch (final ParseException e) {
-            getErrorHandler().error(
-                toCSSParseException("invalidMediaList", e));
+            getErrorHandler().error(toCSSParseException("invalidMediaList", e));
         }
         catch (final TokenMgrError e) {
-            getErrorHandler().error(
-                toCSSParseException(e));
+            getErrorHandler().error(toCSSParseException(e));
         }
         catch (final CSSParseException e) {
             getErrorHandler().error(e);
