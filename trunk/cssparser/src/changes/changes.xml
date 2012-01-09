@@ -5,7 +5,16 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
-    <release version="0.9.7" date="TODO, 2011" description="Long-overdue release with lots of bugfixes.">
+    <release version="0.9.7" date="TODO, 2012" description="Release with lots of bugfixes.">
+        <action type="fix" dev="rbri">
+            Result of LexicalUnit.toString() is now cached for performance. 
+        </action>
+        <action type="fix" dev="rbri">
+            Fix for some null handling in LexicalUnit.
+        </action>
+        <action type="add" dev="rbri">
+            Many tests written for LexicalUnit.
+        </action>
         <action type="fix" dev="rbri">
             RectImpl now expects and processes the four coordinates in the correct (top, right, bottom, left) order.
         </action>
