@@ -35,7 +35,6 @@ import org.w3c.dom.DOMException;
 import com.steadystate.css.parser.LexicalUnitImpl;
 
 /**
-/**
  * Unit tests for {@link RGBColorImpl}.
  *
  * @author rbri
