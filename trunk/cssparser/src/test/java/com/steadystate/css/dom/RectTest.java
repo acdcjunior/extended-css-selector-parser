@@ -41,6 +41,7 @@ import org.w3c.dom.css.Rect;
 
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.parser.LexicalUnitImpl;
+import com.steadystate.css.parser.SACParserCSS21;
 
 /**
 /**
@@ -182,7 +183,7 @@ public class RectTest {
         final String testRule = "img { clip: rect(1px, 2px, -3px, 4px) }";
         final Reader r = new StringReader(testRule);
         final InputSource is = new InputSource(r);
-        final CSSRule rule = new CSSOMParser().parseRule(is);
+        final CSSRule rule = new CSSOMParser(new SACParserCSS21()).parseRule(is);
 
         Assert.assertEquals(testRule, rule.getCssText());
 
