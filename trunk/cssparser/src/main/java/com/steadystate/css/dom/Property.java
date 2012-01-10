@@ -42,7 +42,10 @@ public class Property extends CSSOMObjectImpl {
     private boolean important_;
 
     /**
-     * Creates new Property
+     * Creates new Property.
+     * @param name the name
+     * @param value the value
+     * @param important true if the important flag set
      */
     public Property(final String name, final CSSValue value, final boolean important) {
         name_ = name;
@@ -60,6 +63,7 @@ public class Property extends CSSOMObjectImpl {
 
     /**
      * Returns the name.
+     * @return the name
      */
     public String getName() {
         return name_;
@@ -75,6 +79,7 @@ public class Property extends CSSOMObjectImpl {
 
     /**
      * Returns the value.
+     * @return the value
      */
     public CSSValue getValue() {
         return value_;
@@ -82,6 +87,7 @@ public class Property extends CSSOMObjectImpl {
 
     /**
      * Returns true if the important flag is set.
+     * @return true or false
      */
     public boolean isImportant() {
         return important_;

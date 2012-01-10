@@ -54,6 +54,10 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList {
 
     private List<String> media_ = new ArrayList<String>();
 
+    /**
+     * Creates new MediaList.
+     * @param mediaList the media list
+     */
     public MediaListImpl(final SACMediaList mediaList) {
         setMediaList(mediaList);
 
@@ -65,6 +69,10 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList {
         }
     }
 
+    /**
+     * Constructor.
+     * The attributes are null.
+     */
     public MediaListImpl() {
         super();
     }
