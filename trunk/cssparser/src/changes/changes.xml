@@ -7,7 +7,10 @@
   <body>
     <release version="0.9.7" date="TODO, 2012" description="Release with lots of bugfixes.">
         <action type="fix" dev="rbri">
-            Result of LexicalUnit.toString() is now cached for performance. 
+            Possible number format exception when parsing dimensions fixed.
+        </action>
+        <action type="update" dev="rbri">
+            Result of LexicalUnit.toString() is now cached for performance.
         </action>
         <action type="fix" dev="rbri">
             Fix for some null handling in LexicalUnit.

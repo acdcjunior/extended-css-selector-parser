@@ -968,4 +968,35 @@ public class SACParserCSS21Test {
         rule = rules.item(1);
         Assert.assertEquals("p { color: green }", rule.getCssText());
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void illegalDimension() throws Exception {
+        final String css = ".a { top: 0\\9; }"
+                + ".b { top: -01.234newDim; }";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(2, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("*.a { top: 0\\9 }", rule.getCssText());
+
+        rule = rules.item(1);
+        Assert.assertEquals("*.b { top: -1.234newDim }", rule.getCssText());
+    }
 }

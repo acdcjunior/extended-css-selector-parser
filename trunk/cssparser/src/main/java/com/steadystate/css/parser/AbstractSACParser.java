@@ -63,6 +63,9 @@ abstract class AbstractSACParser implements Parser {
     private SelectorFactory selectorFactory_;
     private ConditionFactory conditionFactory_;
     private ResourceBundle sacParserMessages_;
+
+    private static final String NUM_CHARS = "0123456789.";
+
     protected abstract Token getToken();
 
     protected DocumentHandler getDocumentHandler() {
@@ -577,7 +580,6 @@ abstract class AbstractSACParser implements Parser {
         int g = 0;
         int b = 0;
         final int len = t.image.length() - 1;
-        final String pattern = getSACParserMessages().getString("invalidColor");
         try {
             if (len == 3) {
                 r = Integer.parseInt(t.image.substring(i + 0, i + 1), 16);
@@ -593,6 +595,7 @@ abstract class AbstractSACParser implements Parser {
                 b = Integer.parseInt(t.image.substring(i + 4, i + 6), 16);
             }
             else {
+                final String pattern = getSACParserMessages().getString("invalidColor");
                 throw new CSSParseException(MessageFormat.format(
                     pattern, new Object[] {t}),
                     getInputSource().getURI(), t.beginLine,
@@ -609,6 +612,7 @@ abstract class AbstractSACParser implements Parser {
             return LexicalUnitImpl.createRgbColor(prev, lr);
         }
         catch (final NumberFormatException ex) {
+            final String pattern = getSACParserMessages().getString("invalidColor");
             throw new CSSParseException(MessageFormat.format(
                 pattern, new Object[] {t}),
                 getInputSource().getURI(), t.beginLine,
@@ -617,17 +621,25 @@ abstract class AbstractSACParser implements Parser {
     }
 
     int intValue(final char op, final String s) {
-        return ((op == '-') ? -1 : 1) * Integer.parseInt(s);
+        final int result = Integer.parseInt(s);
+        if (op == '-') {
+            return -1 * result;
+        }
+        return result;
     }
 
     float floatValue(final char op, final String s) {
-        return ((op == '-') ? -1 : 1) * Float.parseFloat(s);
+        final float result = Float.parseFloat(s);
+        if (op == '-') {
+            return -1 * result;
+        }
+        return result;
     }
 
     int getLastNumPos(final String s) {
-        int i;
-        for (i = 0; i < s.length(); i++) {
-            if (Character.isLetter(s.charAt(i))) {
+        int i = 0;
+        for ( ; i < s.length(); i++) {
+            if (NUM_CHARS.indexOf(s.charAt(i)) < 0) {
                 break;
             }
         }
