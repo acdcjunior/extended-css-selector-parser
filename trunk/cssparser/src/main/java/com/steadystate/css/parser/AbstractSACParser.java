@@ -701,9 +701,6 @@ abstract class AbstractSACParser implements Parser {
                                 }
                             }
                             break;
-                        case '\'':
-                            buf.append(c);
-                            break;
                         case '\"':
                             if (!unescapeDoubleQuotes) {
                                 buf.append('\\');
@@ -711,7 +708,6 @@ abstract class AbstractSACParser implements Parser {
                             buf.append(c);
                             break;
                         default:
-                            c = s.charAt(--index);
                             buf.append(c);
                     }
                 }
