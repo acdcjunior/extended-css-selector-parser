@@ -69,8 +69,7 @@ public class ConditionFactoryImpl implements ConditionFactory {
         return new AttributeConditionImpl(localName, value);
     }
 
-    public AttributeCondition createIdCondition(final String value)
-        throws CSSException {
+    public AttributeCondition createIdCondition(final String value) throws CSSException {
         return new IdConditionImpl(value);
     }
 
