@@ -1163,7 +1163,7 @@ Condition hash(Condition pred) :
     {
         t = <HASH>
         {
-            Condition c = this.getConditionFactory().createIdCondition(t.image.substring(1));
+            Condition c = this.getConditionFactory().createIdCondition(unescape(t.image.substring(1), false));
             if (c instanceof Locatable)
             {
                 ((Locatable) c).setLocator(this.getLocator());

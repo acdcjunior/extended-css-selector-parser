@@ -202,6 +202,18 @@ public class CSSOMParserTest {
      * @throws Exception if any error occurs
      */
     @Test
+    public void parseSelectorsEscapedChars() throws Exception {
+        final Reader r = new StringReader("#id\\:withColon");
+        final InputSource is = new InputSource(r);
+        final SelectorList sl = getCss21Parser().parseSelectors(is);
+
+        Assert.assertEquals("*#id:withColon", sl.item(0).toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
     public void parseSelectorsParseException() throws Exception {
         final Reader r = new StringReader("table:bogus(1) td");
         final InputSource is = new InputSource(r);
@@ -538,8 +550,10 @@ public class CSSOMParserTest {
         Assert.assertEquals("bogus: \"a\\\"bc\"", getCssTextFromDeclaration(p, "bogus: 'a\\\"bc'"));
 
         // regression for 2891851
-        Assert.assertEquals("bogus: \"NNNNN\\-NNNN\"", getCssTextFromDeclaration(p, "bogus: 'NNNNN\\-NNNN'"));
-        Assert.assertEquals("bogus: \"NNNNN\\-NNNN\"", getCssTextFromDeclaration(p, "bogus: \"NNNNN\\-NNNN\""));
+        // double backslashes are needed
+        // see http://www.developershome.com/wap/wcss/wcss_tutorial.asp?page=inputExtension2
+        Assert.assertEquals("bogus: \"NNNNN\\-NNNN\"", getCssTextFromDeclaration(p, "bogus: 'NNNNN\\\\-NNNN'"));
+        Assert.assertEquals("bogus: \"NNNNN\\-NNNN\"", getCssTextFromDeclaration(p, "bogus: \"NNNNN\\\\-NNNN\""));
     }
 
     private String getCssTextFromDeclaration(final Parser p, final String s) throws Exception {

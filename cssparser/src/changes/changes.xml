@@ -7,6 +7,9 @@
   <body>
     <release version="0.9.7" date="TODO, 2012" description="Release with lots of bugfixes.">
         <action type="fix" dev="rbri">
+            Fix handling of escaped colons in id selectors like '#form\:elem'.
+        </action>
+        <action type="fix" dev="rbri">
             Possible number format exception when parsing dimensions fixed.
         </action>
         <action type="update" dev="rbri">
