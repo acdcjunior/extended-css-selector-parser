@@ -79,10 +79,10 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
     public CSSValueImpl(final LexicalUnit value, final boolean forcePrimitive) {
         LexicalUnit parameters = null;
         try {
-            // Batik SAC parser throws IllegalStateException in some cases
             parameters = value.getParameters();
         }
         catch (final IllegalStateException e) {
+            // Batik SAC parser throws IllegalStateException in some cases
         }
 
         if (!forcePrimitive && (value.getNextLexicalUnit() != null)) {
