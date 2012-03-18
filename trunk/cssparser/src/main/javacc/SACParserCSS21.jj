@@ -56,8 +56,6 @@ import org.w3c.css.sac.SimpleSelector;
  */
 public class SACParserCSS21 extends AbstractSACParser implements Parser {
 
-    private boolean _quiet = true;
-
     public SACParserCSS21() {
         this((CharStream) null);
     }
@@ -83,9 +81,6 @@ PARSER_END(SACParserCSS21)
 TOKEN_MGR_DECLS :
 {
     private static final Pattern SPLIT_NUMBER_PATTERN = Pattern.compile("[0-9]+|[0-9]*.[0-9]+");
-
-    private boolean _quiet = true;
-    private ErrorHandler errorHandler;
 
     public String splitNumber(StringBuilder pattern) {
         int j=1;
@@ -385,9 +380,7 @@ TOKEN_MGR_DECLS :
 {
     < UNKNOWN: ~[] >
     {
-        if (!_quiet) {
-            System.err.println("Illegal character : " + image.toString());
-        }
+        // System.err.println("Illegal character : " + image.toString());
     }
 }
 

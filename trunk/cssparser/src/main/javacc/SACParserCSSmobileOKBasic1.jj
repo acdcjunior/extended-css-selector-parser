@@ -51,8 +51,6 @@ import com.steadystate.css.parser.selectors.*;
  */
 public class SACParserCSSmobileOKBasic1 extends AbstractSACParser implements Parser {
 
-    private boolean _quiet = true;
-
     public SACParserCSSmobileOKBasic1() {
         this((CharStream) null);
     }
@@ -77,9 +75,6 @@ PARSER_END(SACParserCSSmobileOKBasic1)
 
 TOKEN_MGR_DECLS :
 {
-    private boolean _quiet = true;
-    private ErrorHandler errorHandler;
-
     private String trimBy(StringBuilder s, int left, int right) {
         int end = s.length();
         return s.toString().substring(left, end-right);
@@ -222,9 +217,7 @@ TOKEN_MGR_DECLS :
 {
     < UNKNOWN: ~[] >
     {
-        if (!_quiet) {
-            System.err.println("Illegal character : " + image.toString());
-        }
+        // System.err.println("Illegal character : " + image.toString());
     }
 }
 
