@@ -51,10 +51,10 @@ public class MediaListTest {
         Assert.assertNull(ml.item(0));
 
         ml.setMediaText("MyMediaText");
-        Assert.assertEquals("MyMediaText", ml.toString());
-        Assert.assertEquals("MyMediaText", ml.getMediaText());
+        Assert.assertEquals("toString() test failed", "MyMediaText", ml.toString());
+        Assert.assertEquals("getMediaText() test failed", "MyMediaText", ml.getMediaText());
         Assert.assertEquals(1, ml.getLength());
-        Assert.assertEquals("MyMediaText", ml.item(0));
+        Assert.assertEquals("item(0) test failed", "MyMediaText", ml.item(0));
         Assert.assertNull(ml.item(1));
     }
 }
