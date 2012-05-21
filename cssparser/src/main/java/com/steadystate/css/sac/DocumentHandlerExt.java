@@ -33,6 +33,11 @@ import org.w3c.css.sac.Locator;
 import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
 
+/**
+ * Extension of the DocumentHanlder interface.
+ * This was added to support the locator parameter to
+ * inform about the code position.
+ */
 public interface DocumentHandlerExt extends DocumentHandler {
 
     /**
@@ -50,7 +55,7 @@ public interface DocumentHandlerExt extends DocumentHandler {
      *
      * @param uri The URI of the imported style sheet.
      * @param media The intended destination media for style information.
-     * @param defaultNamepaceURI The default namespace URI for the imported
+     * @param defaultNamespaceURI The default namespace URI for the imported
      *  style sheet.
      * @param locator the SAC locator
      * @exception CSSException Any CSS exception, possibly wrapping another
@@ -63,7 +68,7 @@ public interface DocumentHandlerExt extends DocumentHandler {
      * Receive notification of an unknown rule t-rule not supported by this
      * parser.
      *
-     * @param at-rule The complete ignored at-rule.
+     * @param atRule The complete ignored at-rule.
      * @param locator the SAC locator
      * @exception CSSException Any CSS exception, possibly wrapping another
      *  exception.
