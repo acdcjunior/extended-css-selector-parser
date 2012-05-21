@@ -41,6 +41,9 @@ import org.w3c.css.sac.ErrorHandler;
 public class ThrowCssExceptionErrorHandler implements ErrorHandler, Serializable {
     private static final long serialVersionUID = -3933638774901855095L;
 
+    /**
+     * Singleton.
+     */
     public static final ThrowCssExceptionErrorHandler INSTANCE = new ThrowCssExceptionErrorHandler();
 
     /**
