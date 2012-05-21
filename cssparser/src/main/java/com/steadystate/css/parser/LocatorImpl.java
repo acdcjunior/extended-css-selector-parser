@@ -45,41 +45,23 @@ public class LocatorImpl implements Locator, Serializable {
     private int lineNumber_;
     private int columnNumber_;
 
-    public String getUri() {
-        return uri_;
-    }
-
-    public void setUri(final String uri) {
-        uri_ = uri;
-    }
-
-    public void setLineNumber(final int line) {
-        lineNumber_ = line;
-    }
-
-    public void setColumnNumber(final int column) {
-        columnNumber_ = column;
-    }
-
-    /** Creates new LocatorImpl */
+    /**
+     * Creates new LocatorImpl
+     * @param uri the uri
+     * @param line the lineNumber
+     * @param column the columnNumber
+     */
     public LocatorImpl(final String uri, final int line, final int column) {
         uri_ = uri;
         lineNumber_ = line;
         columnNumber_ = column;
     }
 
-    public LocatorImpl() {
-    }
-
     /**
-     * Return the line number where the current document event ends.
-     * Note that this is the line position of the first character
-     * after the text associated with the document event.
-     * @return The line number, or -1 if none is available.
-     * @see #getColumnNumber
+     * Default constructor.
      */
-    public int getLineNumber() {
-        return lineNumber_;
+    public LocatorImpl() {
+        super();
     }
 
     /**
@@ -96,6 +78,22 @@ public class LocatorImpl implements Locator, Serializable {
     }
 
     /**
+     * @return @see #getURI()
+     */
+    public String getUri() {
+        return uri_;
+    }
+
+    /**
+     * Set the uri to a new value.
+     * @see #getURI()
+     * @param uri the new uri
+     */
+    public void setUri(final String uri) {
+        uri_ = uri;
+    }
+
+    /**
      * Return the column number where the current document event ends.
      * Note that this is the column number of the first
      * character after the text associated with the document
@@ -105,6 +103,33 @@ public class LocatorImpl implements Locator, Serializable {
      */
     public int getColumnNumber() {
         return columnNumber_;
+    }
+
+    /**
+     * Set the columnNumber to a new value.
+     * @param column the new columnNumber
+     */
+    public void setColumnNumber(final int column) {
+        columnNumber_ = column;
+    }
+
+    /**
+     * Return the line number where the current document event ends.
+     * Note that this is the line position of the first character
+     * after the text associated with the document event.
+     * @return The line number, or -1 if none is available.
+     * @see #getColumnNumber
+     */
+    public int getLineNumber() {
+        return lineNumber_;
+    }
+
+    /**
+     * Set the lineNumber to a new value.
+     * @param line the new lineNumber
+     */
+    public void setLineNumber(final int line) {
+        lineNumber_ = line;
     }
 
     @Override
