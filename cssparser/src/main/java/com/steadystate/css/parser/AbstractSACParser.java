@@ -671,14 +671,12 @@ abstract class AbstractSACParser implements Parser {
                         case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
                             int numValue = Character.digit(c, 16);
                             final int count = 0;
-                            int p = 16;
 
                             while (index + 1 < len && count < 6) {
                                 c = s.charAt(index + 1);
 
                                 if (Character.digit(c, 16) != -1) {
                                     numValue = (numValue * 16) + Character.digit(c, 16);
-                                    p *= 16;
                                     index++;
                                 }
                                 else {
