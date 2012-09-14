@@ -48,10 +48,7 @@ public class LangConditionImpl extends LocatableImpl implements LangCondition, S
     }
 
     public LangConditionImpl(final String lang) {
-        lang_ = lang;
-    }
-
-    public LangConditionImpl() {
+        setLang(lang);
     }
 
     public short getConditionType() {

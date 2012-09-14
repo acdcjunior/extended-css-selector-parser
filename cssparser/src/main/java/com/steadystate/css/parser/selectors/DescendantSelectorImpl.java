@@ -64,9 +64,6 @@ public class DescendantSelectorImpl extends LocatableImpl implements DescendantS
         setSimpleSelector(simpleSelector);
     }
 
-    public DescendantSelectorImpl() {
-    }
-
     public short getSelectorType() {
         return Selector.SAC_DESCENDANT_SELECTOR;
     }

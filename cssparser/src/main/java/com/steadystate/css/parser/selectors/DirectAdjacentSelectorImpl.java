@@ -71,9 +71,6 @@ public class DirectAdjacentSelectorImpl extends LocatableImpl implements Sibling
         setSiblingSelector(directAdjacent);
     }
 
-    public DirectAdjacentSelectorImpl() {
-    }
-
     public short getNodeType() {
         return nodeType_;
     }

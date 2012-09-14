@@ -43,14 +43,11 @@ public class IdConditionImpl extends LocatableImpl implements AttributeCondition
     private String value_;
 
     public void setValue(final String value) {
-        this.value_ = value;
+        value_ = value;
     }
 
     public IdConditionImpl(final String value) {
-        this.value_ = value;
-    }
-
-    public IdConditionImpl() {
+        setValue(value);
     }
 
     public short getConditionType() {
@@ -70,10 +67,10 @@ public class IdConditionImpl extends LocatableImpl implements AttributeCondition
     }
 
     public String getValue() {
-        return this.value_;
+        return value_;
     }
 
     public String toString() {
-        return "#" + this.getValue();
+        return "#" + getValue();
     }
 }

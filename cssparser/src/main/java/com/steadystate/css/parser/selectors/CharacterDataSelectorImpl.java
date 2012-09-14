@@ -48,10 +48,7 @@ public class CharacterDataSelectorImpl extends LocatableImpl implements Characte
     }
 
     public CharacterDataSelectorImpl(final String data) {
-        data_ = data;
-    }
-
-    public CharacterDataSelectorImpl() {
+        setData(data);
     }
 
     public short getSelectorType() {

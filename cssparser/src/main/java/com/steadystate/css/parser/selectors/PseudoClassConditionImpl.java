@@ -48,11 +48,7 @@ public class PseudoClassConditionImpl extends LocatableImpl implements Attribute
     }
 
     public PseudoClassConditionImpl(final String value) {
-        value_ = value;
-    }
-
-    public PseudoClassConditionImpl() {
-        super();
+        setValue(value);
     }
 
     public short getConditionType() {

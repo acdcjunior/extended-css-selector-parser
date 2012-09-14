@@ -52,11 +52,8 @@ public class OneOfAttributeConditionImpl extends LocatableImpl implements Attrib
     }
 
     public OneOfAttributeConditionImpl(final String localName, final String value) {
-        localName_ = localName;
-        value_ = value;
-    }
-
-    public OneOfAttributeConditionImpl() {
+        setLocalName(localName);
+        setValue(value);
     }
 
     public short getConditionType() {
@@ -72,7 +69,7 @@ public class OneOfAttributeConditionImpl extends LocatableImpl implements Attrib
     }
 
     public boolean getSpecified() {
-        return true;
+        return getValue() != null;
     }
 
     public String getValue() {
