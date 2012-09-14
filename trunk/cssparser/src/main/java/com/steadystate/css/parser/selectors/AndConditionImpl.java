@@ -64,9 +64,6 @@ public class AndConditionImpl extends LocatableImpl implements CombinatorConditi
         setSecondCondition(c2);
     }
 
-    public AndConditionImpl() {
-    }
-
     public short getConditionType() {
         return Condition.SAC_AND_CONDITION;
     }

@@ -64,9 +64,6 @@ public class ChildSelectorImpl extends LocatableImpl implements DescendantSelect
         setSimpleSelector(simpleSelector);
     }
 
-    public ChildSelectorImpl() {
-    }
-
     public short getSelectorType() {
         return Selector.SAC_CHILD_SELECTOR;
     }

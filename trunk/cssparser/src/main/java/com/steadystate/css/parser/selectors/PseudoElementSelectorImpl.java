@@ -48,10 +48,7 @@ public class PseudoElementSelectorImpl extends LocatableImpl implements ElementS
     }
 
     public PseudoElementSelectorImpl(final String localName) {
-        localName_ = localName;
-    }
-
-    public PseudoElementSelectorImpl() {
+        setLocaleName(localName);
     }
 
     public short getSelectorType() {

@@ -52,11 +52,8 @@ public class BeginHyphenAttributeConditionImpl extends LocatableImpl implements 
     }
 
     public BeginHyphenAttributeConditionImpl(final String localName, final String value) {
-        localName_ = localName;
-        value_ = value;
-    }
-
-    public BeginHyphenAttributeConditionImpl() {
+        setLocaleName(localName);
+        setValue(value);
     }
 
     public short getConditionType() {

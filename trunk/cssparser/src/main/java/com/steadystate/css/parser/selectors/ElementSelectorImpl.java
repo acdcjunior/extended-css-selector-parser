@@ -47,10 +47,7 @@ public class ElementSelectorImpl extends LocatableImpl implements ElementSelecto
     }
 
     public ElementSelectorImpl(final String localName) {
-        localName_ = localName;
-    }
-
-    public ElementSelectorImpl() {
+        setLocalName(localName);
     }
 
     public short getSelectorType() {

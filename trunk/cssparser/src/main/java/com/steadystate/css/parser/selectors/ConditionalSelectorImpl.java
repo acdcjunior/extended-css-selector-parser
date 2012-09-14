@@ -74,9 +74,6 @@ public class ConditionalSelectorImpl extends LocatableImpl implements Conditiona
         setCondition(condition);
     }
 
-    public ConditionalSelectorImpl() {
-    }
-
     public short getSelectorType() {
         return Selector.SAC_CONDITIONAL_SELECTOR;
     }

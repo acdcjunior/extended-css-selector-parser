@@ -48,10 +48,7 @@ public class ClassConditionImpl extends LocatableImpl implements AttributeCondit
     }
 
     public ClassConditionImpl(final String value) {
-        value_ = value;
-    }
-
-    public ClassConditionImpl() {
+        setValue(value);
     }
 
     public short getConditionType() {
