@@ -132,16 +132,22 @@ public class SACParserCSS2Test {
      */
     @Test
     public void attributeCondition() throws Exception {
-        attributeConditionValue(".class", "class");
-        attributeConditionValue("#id", "id");
-        attributeConditionValue("h1.class", "class");
-        attributeConditionValue("h1#id", "id");
-        attributeConditionValue("a:link", "link");
-        attributeConditionValue(":link", "link");
-        attributeConditionValue("a:visited", "visited");
-        attributeConditionValue(":visited", "visited");
-        attributeConditionValue("a:active", "active");
-        attributeConditionValue(":active", "active");
+        attributeConditionAssert(".class", null, "class", true);
+        attributeConditionAssert("#id", null, "id", true);
+        attributeConditionAssert("h1.class", null, "class", true);
+        attributeConditionAssert("h1#id", null, "id", true);
+        attributeConditionAssert("a:link", null, "link", true);
+        attributeConditionAssert(":link", null, "link", true);
+        attributeConditionAssert("a:visited", null, "visited", true);
+        attributeConditionAssert(":visited", null, "visited", true);
+        attributeConditionAssert("a:active", null, "active", true);
+        attributeConditionAssert(":active", null, "active", true);
+
+        // attribute selector
+        attributeConditionAssert("[rel]", "rel", null, false);
+        attributeConditionAssert("[rel=val]", "rel", "val", true);
+        attributeConditionAssert("[rel~=val]", "rel", "val", true);
+        attributeConditionAssert("[rel|=val]", "rel", "val", true);
     }
 
     private void selectorList(final String cssText, final int length) throws Exception {
@@ -179,10 +185,13 @@ public class SACParserCSS2Test {
         return initial;
     }
 
-    private void attributeConditionValue(final String cssText, final String value) throws Exception {
+    private void attributeConditionAssert(final String cssText, final String name,
+            final String value, final boolean specified) throws Exception {
         final Condition condition = createCondition(cssText);
         final AttributeCondition attributeCondition = (AttributeCondition) condition;
+        Assert.assertEquals(name, attributeCondition.getLocalName());
         Assert.assertEquals(value, attributeCondition.getValue());
+        Assert.assertEquals(specified, attributeCondition.getSpecified());
     }
 
     private SelectorList createSelectors(final String cssText) throws Exception {

@@ -66,7 +66,7 @@ public class ConditionFactoryImpl implements ConditionFactory {
             final String namespaceURI,
             final boolean specified,
             final String value) throws CSSException {
-        return new AttributeConditionImpl(localName, value);
+        return new AttributeConditionImpl(localName, value, specified);
     }
 
     public AttributeCondition createIdCondition(final String value) throws CSSException {

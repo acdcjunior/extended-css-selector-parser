@@ -42,6 +42,7 @@ public class AttributeConditionImpl extends LocatableImpl implements AttributeCo
 
     private String localName_;
     private String value_;
+    private boolean specified_;
 
     public void setLocaleName(final String localName) {
         localName_ = localName;
@@ -51,9 +52,14 @@ public class AttributeConditionImpl extends LocatableImpl implements AttributeCo
         value_ = value;
     }
 
-    public AttributeConditionImpl(final String localName, final String value) {
+    public void setSpecified(final boolean specified) {
+        specified_ = specified;
+    }
+
+    public AttributeConditionImpl(final String localName, final String value, final boolean specified) {
         setLocaleName(localName);
         setValue(value);
+        setSpecified(specified);
     }
 
     public short getConditionType() {
@@ -69,7 +75,7 @@ public class AttributeConditionImpl extends LocatableImpl implements AttributeCo
     }
 
     public boolean getSpecified() {
-        return getValue() != null;
+        return specified_;
     }
 
     public String getValue() {
