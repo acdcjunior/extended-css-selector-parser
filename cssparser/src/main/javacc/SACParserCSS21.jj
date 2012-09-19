@@ -1057,13 +1057,13 @@ Condition attrib(Condition pred) :
                 c = this.getConditionFactory().createAttributeCondition(name, null, false, null);
                 break;
             case 1:
-                c = this.getConditionFactory().createAttributeCondition(name, null, false, value);
+                c = this.getConditionFactory().createAttributeCondition(name, null, null != value, value);
                 break;
             case 2:
-                c = this.getConditionFactory().createOneOfAttributeCondition(name, null, false, value);
+                c = this.getConditionFactory().createOneOfAttributeCondition(name, null, null != value, value);
                 break;
             case 3:
-                c = this.getConditionFactory().createBeginHyphenAttributeCondition(name, null, false, value);
+                c = this.getConditionFactory().createBeginHyphenAttributeCondition(name, null, null != value, value);
                 break;
             }
             if (c instanceof Locatable)
