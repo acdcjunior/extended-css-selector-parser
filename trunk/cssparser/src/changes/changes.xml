@@ -5,7 +5,18 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
-    <release version="0.9.7" date="TODO, 2012" description="Release with lots of bugfixes.">
+    <release version="0.9.8" date="TODO, 2012" description="Release with lots of bugfixes.">
+        <action type="fix" dev="rbri">
+            Minor pom.xml fixes.
+        </action>
+        <action type="fix" dev="rbri">
+            AttributeconditionImpl.getSpecified() now returns false if no value specified (like '[rel]').
+        </action>
+        <action type="fix" dev="rbri">
+            More unit tests added. Unused code removed.
+        </action>
+    </release>
+    <release version="0.9.7" date="Apr 24, 2012" description="Release with lots of bugfixes.">
         <action type="fix" dev="rbri">
             Fix handling of escaped colons in id selectors like '#form\:elem'.
         </action>
