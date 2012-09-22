@@ -46,7 +46,7 @@
 				<!-- set Java 5 as the minimum requirement -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5</version>
+                <version>2.5.1</version>
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
