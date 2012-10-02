@@ -82,7 +82,7 @@ public class ConditionFactoryImpl implements ConditionFactory {
             final String namespaceURI,
             final boolean specified,
             final String value) throws CSSException {
-        return new OneOfAttributeConditionImpl(localName, value);
+        return new OneOfAttributeConditionImpl(localName, value, specified);
     }
 
     public AttributeCondition createBeginHyphenAttributeCondition(
@@ -90,7 +90,7 @@ public class ConditionFactoryImpl implements ConditionFactory {
             final String namespaceURI,
             final boolean specified,
             final String value) throws CSSException {
-        return new BeginHyphenAttributeConditionImpl(localName, value);
+        return new BeginHyphenAttributeConditionImpl(localName, value, specified);
     }
 
     public AttributeCondition createClassCondition(

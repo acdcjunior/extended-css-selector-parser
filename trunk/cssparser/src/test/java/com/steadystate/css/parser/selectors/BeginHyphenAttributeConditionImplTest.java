@@ -38,8 +38,56 @@ public class BeginHyphenAttributeConditionImplTest {
      * @throws Exception if any error occurs
      */
     @Test
-    public void withEmptyValue() throws Exception {
-        final BeginHyphenAttributeConditionImpl ac = new BeginHyphenAttributeConditionImpl("test", "");
+    public void withoutValue() throws Exception {
+        final BeginHyphenAttributeConditionImpl ac = new BeginHyphenAttributeConditionImpl("test", null, false);
+        Assert.assertEquals("test", ac.getLocalName());
+        Assert.assertNull(ac.getValue());
+        Assert.assertFalse(ac.getSpecified());
+        Assert.assertEquals("[test]", ac.toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void emptyValue() throws Exception {
+        final BeginHyphenAttributeConditionImpl ac = new BeginHyphenAttributeConditionImpl("test", "", false);
+        Assert.assertEquals("test", ac.getLocalName());
+        Assert.assertEquals("", ac.getValue());
+        Assert.assertFalse(ac.getSpecified());
+        Assert.assertEquals("[test|=\"\"]", ac.toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void withValue() throws Exception {
+        final BeginHyphenAttributeConditionImpl ac = new BeginHyphenAttributeConditionImpl("test", "value", false);
+        Assert.assertEquals("test", ac.getLocalName());
+        Assert.assertEquals("value", ac.getValue());
+        Assert.assertFalse(ac.getSpecified());
+        Assert.assertEquals("[test|=\"value\"]", ac.toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void withoutValueAndSpecified() throws Exception {
+        final BeginHyphenAttributeConditionImpl ac = new BeginHyphenAttributeConditionImpl("test", null, true);
+        Assert.assertEquals("test", ac.getLocalName());
+        Assert.assertNull(ac.getValue());
+        Assert.assertTrue(ac.getSpecified());
+        Assert.assertEquals("[test]", ac.toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void emptyValueAndSpecified() throws Exception {
+        final BeginHyphenAttributeConditionImpl ac = new BeginHyphenAttributeConditionImpl("test", "", true);
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("", ac.getValue());
         Assert.assertTrue(ac.getSpecified());
@@ -50,8 +98,8 @@ public class BeginHyphenAttributeConditionImplTest {
      * @throws Exception if any error occurs
      */
     @Test
-    public void withValue() throws Exception {
-        final BeginHyphenAttributeConditionImpl ac = new BeginHyphenAttributeConditionImpl("test", "value");
+    public void withValueAndSpecified() throws Exception {
+        final BeginHyphenAttributeConditionImpl ac = new BeginHyphenAttributeConditionImpl("test", "value", true);
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("value", ac.getValue());
         Assert.assertTrue(ac.getSpecified());

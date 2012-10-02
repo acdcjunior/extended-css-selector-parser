@@ -146,8 +146,11 @@ public class SACParserCSS2Test {
         // attribute selector
         attributeConditionAssert("[rel]", "rel", null, false);
         attributeConditionAssert("[rel=val]", "rel", "val", true);
+        Assert.assertNull(createSelectors("[rel=]")); // invalid rule
         attributeConditionAssert("[rel~=val]", "rel", "val", true);
+        Assert.assertNull(createSelectors("[rel~=]")); // invalid rule
         attributeConditionAssert("[rel|=val]", "rel", "val", true);
+        Assert.assertNull(createSelectors("[rel|=]")); // invalid rule
     }
 
     private void selectorList(final String cssText, final int length) throws Exception {

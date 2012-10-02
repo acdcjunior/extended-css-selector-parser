@@ -42,6 +42,7 @@ public class OneOfAttributeConditionImpl extends LocatableImpl implements Attrib
 
     private String localName_;
     private String value_;
+    private boolean specified_;
 
     public void setLocalName(final String localName) {
         localName_ = localName;
@@ -51,9 +52,14 @@ public class OneOfAttributeConditionImpl extends LocatableImpl implements Attrib
         value_ = value;
     }
 
-    public OneOfAttributeConditionImpl(final String localName, final String value) {
+    public void setSpecified(final boolean specified) {
+        specified_ = specified;
+    }
+
+    public OneOfAttributeConditionImpl(final String localName, final String value, final boolean specified) {
         setLocalName(localName);
         setValue(value);
+        setSpecified(specified);
     }
 
     public short getConditionType() {
@@ -69,7 +75,7 @@ public class OneOfAttributeConditionImpl extends LocatableImpl implements Attrib
     }
 
     public boolean getSpecified() {
-        return getValue() != null;
+        return specified_;
     }
 
     public String getValue() {
@@ -77,6 +83,10 @@ public class OneOfAttributeConditionImpl extends LocatableImpl implements Attrib
     }
 
     public String toString() {
-        return "[" + getLocalName() + "~=\"" + getValue() + "\"]";
+        final String value = getValue();
+        if (value != null) {
+            return "[" + getLocalName() + "~=\"" + value + "\"]";
+        }
+        return "[" + getLocalName() + "]";
     }
 }
