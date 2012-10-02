@@ -30,7 +30,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 /**
- * Testcases for AttributeConditionImpl.
+ * Testcases for {@link AttributeConditionImpl}.
  */
 public class AttributeConditionImplTest {
 

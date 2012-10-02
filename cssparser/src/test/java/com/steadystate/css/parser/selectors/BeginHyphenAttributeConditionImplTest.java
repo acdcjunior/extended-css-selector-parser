@@ -30,7 +30,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 /**
- * Testcases for OneOfAttributeConditionImpl.
+ * Testcases for {@link OneOfAttributeConditionImpl}.
  */
 public class BeginHyphenAttributeConditionImplTest {
 
