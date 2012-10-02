@@ -54,7 +54,7 @@ public class ClassConditionImplTest {
         final ClassConditionImpl c = new ClassConditionImpl("");
         Assert.assertNull(c.getLocalName());
         Assert.assertEquals("", c.getValue());
-        Assert.assertTrue(c.getSpecified());  // TODO is this correct?
+        Assert.assertTrue(c.getSpecified());
         Assert.assertEquals(".", c.toString());
     }
 
@@ -66,7 +66,7 @@ public class ClassConditionImplTest {
         final ClassConditionImpl c = new ClassConditionImpl("value");
         Assert.assertNull(c.getLocalName());
         Assert.assertEquals("value", c.getValue());
-        Assert.assertTrue(c.getSpecified());  // TODO is this correct?
+        Assert.assertTrue(c.getSpecified());
         Assert.assertEquals(".value", c.toString());
     }
 }
