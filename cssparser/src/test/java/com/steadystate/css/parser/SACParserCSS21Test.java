@@ -158,25 +158,50 @@ public class SACParserCSS21Test {
      * @throws Exception if any error occurs
      */
     @Test
-    public void attributeCondition() throws Exception {
-        attributeConditionAssert(".class", null, "class", true);
-        attributeConditionAssert("#id", null, "id", true);
-        attributeConditionAssert("h1.class", null, "class", true);
-        attributeConditionAssert("h1#id", null, "id", true);
-        attributeConditionAssert("a:link", null, "link", true);
-        attributeConditionAssert(":link", null, "link", true);
-        attributeConditionAssert("a:visited", null, "visited", true);
-        attributeConditionAssert(":visited", null, "visited", true);
-        attributeConditionAssert("a:active", null, "active", true);
-        attributeConditionAssert(":active", null, "active", true);
+    public void classCondition() throws Exception {
+        conditionAssert(".class", null, "class", true);
+        conditionAssert("h1.class", null, "class", true);
+        Assert.assertNull(createSelectors("."));
+        Assert.assertNull(createSelectors("h1."));
+    }
 
-        // attribute selector
-        attributeConditionAssert("[rel]", "rel", null, false);
-        attributeConditionAssert("[rel=val]", "rel", "val", true);
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void idCondition() throws Exception {
+        conditionAssert("#id", null, "id", true);
+        conditionAssert("h1#id", null, "id", true);
+        Assert.assertNull(createSelectors("#"));
+        Assert.assertNull(createSelectors("h1.#"));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void pseudoCondition() throws Exception {
+        conditionAssert(":link", null, "link", true);
+        conditionAssert("a:link", null, "link", true);
+        conditionAssert("a:visited", null, "visited", true);
+        conditionAssert(":visited", null, "visited", true);
+        conditionAssert("a:active", null, "active", true);
+        conditionAssert(":active", null, "active", true);
+        Assert.assertNull(createSelectors(":"));
+        Assert.assertNull(createSelectors("a:"));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void attributeCondition() throws Exception {
+        conditionAssert("[rel]", "rel", null, false);
+        conditionAssert("[rel=val]", "rel", "val", true);
         Assert.assertNull(createSelectors("[rel=]")); // invalid rule
-        attributeConditionAssert("[rel~=val]", "rel", "val", true);
+        conditionAssert("[rel~=val]", "rel", "val", true);
         Assert.assertNull(createSelectors("[rel~=]")); // invalid rule
-        attributeConditionAssert("[rel|=val]", "rel", "val", true);
+        conditionAssert("[rel|=val]", "rel", "val", true);
         Assert.assertNull(createSelectors("[rel|=]")); // invalid rule
     }
 
@@ -215,7 +240,7 @@ public class SACParserCSS21Test {
         return initial;
     }
 
-    private void attributeConditionAssert(final String cssText, final String name,
+    private void conditionAssert(final String cssText, final String name,
             final String value, final boolean specified) throws Exception {
         final Condition condition = createCondition(cssText);
         final AttributeCondition attributeCondition = (AttributeCondition) condition;
