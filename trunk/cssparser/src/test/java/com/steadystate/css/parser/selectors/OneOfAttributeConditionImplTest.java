@@ -69,10 +69,10 @@ public class OneOfAttributeConditionImplTest {
         Assert.assertFalse(ac.getSpecified());
         Assert.assertEquals("[test~=\"value\"]", ac.toString());
     }
+
     /**
      * @throws Exception if any error occurs
      */
-
     @Test
     public void withoutValueAndSpecified() throws Exception {
         final OneOfAttributeConditionImpl ac = new OneOfAttributeConditionImpl("test", null, true);
