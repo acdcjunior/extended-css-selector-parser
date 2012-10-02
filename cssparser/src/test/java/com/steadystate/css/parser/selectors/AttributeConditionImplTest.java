@@ -50,12 +50,36 @@ public class AttributeConditionImplTest {
      * @throws Exception if any error occurs
      */
     @Test
+    public void emptyValue() throws Exception {
+        final AttributeConditionImpl ac = new AttributeConditionImpl("test", "", false);
+        Assert.assertEquals("test", ac.getLocalName());
+        Assert.assertEquals("", ac.getValue());
+        Assert.assertFalse(ac.getSpecified());
+        Assert.assertEquals("[test=\"\"]", ac.toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
     public void withValue() throws Exception {
         final AttributeConditionImpl ac = new AttributeConditionImpl("test", "value", false);
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("value", ac.getValue());
         Assert.assertFalse(ac.getSpecified());
         Assert.assertEquals("[test=\"value\"]", ac.toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void emptyValueAndSpecified() throws Exception {
+        final AttributeConditionImpl ac = new AttributeConditionImpl("test", "", true);
+        Assert.assertEquals("test", ac.getLocalName());
+        Assert.assertEquals("", ac.getValue());
+        Assert.assertTrue(ac.getSpecified());
+        Assert.assertEquals("[test=\"\"]", ac.toString());
     }
 
     /**
