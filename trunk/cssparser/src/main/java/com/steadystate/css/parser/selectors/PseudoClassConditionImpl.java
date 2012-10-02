@@ -72,6 +72,10 @@ public class PseudoClassConditionImpl extends LocatableImpl implements Attribute
     }
 
     public String toString() {
-        return ":" + getValue();
+        final String value = getValue();
+        if (value != null) {
+            return ":" + value;
+        }
+        return ":";
     }
 }
