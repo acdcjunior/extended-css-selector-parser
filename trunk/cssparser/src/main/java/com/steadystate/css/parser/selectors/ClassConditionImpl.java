@@ -72,6 +72,10 @@ public class ClassConditionImpl extends LocatableImpl implements AttributeCondit
     }
 
     public String toString() {
-        return "." + getValue();
+        final String value = getValue();
+        if (value != null) {
+            return "." + value;
+        }
+        return ".";
     }
 }
