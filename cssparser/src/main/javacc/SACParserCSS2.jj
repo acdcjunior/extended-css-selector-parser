@@ -39,7 +39,6 @@ package com.steadystate.css.parser;
 
 import org.w3c.css.sac.CSSParseException;
 import org.w3c.css.sac.Condition;
-import org.w3c.css.sac.ErrorHandler;
 import org.w3c.css.sac.LexicalUnit;
 import org.w3c.css.sac.Locator;
 import org.w3c.css.sac.Parser;
