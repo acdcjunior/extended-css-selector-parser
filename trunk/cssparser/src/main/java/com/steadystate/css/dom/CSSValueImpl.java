@@ -158,20 +158,18 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
                 final CSSValueImpl cssValue = (CSSValueImpl) o;
                 if (cssValue.value_ instanceof LexicalUnit) {
                     LexicalUnit lu = (LexicalUnit) cssValue.value_;
-                    if (lu != null) {
-                        sb.append(lu.toString());
+                    sb.append(lu.toString());
 
-                        // Step to the next lexical unit, determining what spacing we
-                        // need to put around the operators
-                        final LexicalUnit prev = lu;
-                        lu = lu.getNextLexicalUnit();
-                        if ((lu != null)
-                                && ((lu.getLexicalUnitType() == LexicalUnit.SAC_OPERATOR_COMMA)
-                                || (lu.getLexicalUnitType() == LexicalUnit.SAC_OPERATOR_SLASH)
-                                || (prev.getLexicalUnitType() == LexicalUnit.SAC_OPERATOR_SLASH)
-                            )) {
-                            sb.append(lu.toString());
-                        }
+                    // Step to the next lexical unit, determining what spacing we
+                    // need to put around the operators
+                    final LexicalUnit prev = lu;
+                    lu = lu.getNextLexicalUnit();
+                    if ((lu != null)
+                            && ((lu.getLexicalUnitType() == LexicalUnit.SAC_OPERATOR_COMMA)
+                            || (lu.getLexicalUnitType() == LexicalUnit.SAC_OPERATOR_SLASH)
+                            || (prev.getLexicalUnitType() == LexicalUnit.SAC_OPERATOR_SLASH)
+                        )) {
+                        sb.append(lu.toString());
                     }
                 }
                 else {
@@ -342,7 +340,8 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
                 || (lu.getLexicalUnitType() == LexicalUnit.SAC_INHERIT)) {
                 return lu.getStringValue();
             }
-            else if (lu.getLexicalUnitType() == LexicalUnit.SAC_ATTR) {
+
+            if (lu.getLexicalUnitType() == LexicalUnit.SAC_ATTR) {
                 return lu.getParameters().getStringValue();
             }
         }
@@ -356,40 +355,48 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
     }
 
     public Counter getCounterValue() throws DOMException {
-        if ((value_ instanceof Counter) == false) {
-            throw new DOMExceptionImpl(
+        if (value_ instanceof Counter) {
+            return (Counter) value_;
+        }
+
+        throw new DOMExceptionImpl(
                 DOMException.INVALID_ACCESS_ERR,
                 DOMExceptionImpl.COUNTER_ERROR);
-        }
-        return (Counter) value_;
     }
 
     public Rect getRectValue() throws DOMException {
-        if ((value_ instanceof Rect) == false) {
-            throw new DOMExceptionImpl(
+        if (value_ instanceof Rect) {
+            return (Rect) value_;
+        }
+
+        throw new DOMExceptionImpl(
                 DOMException.INVALID_ACCESS_ERR,
                 DOMExceptionImpl.RECT_ERROR);
-        }
-        return (Rect) value_;
     }
 
     public RGBColor getRGBColorValue() throws DOMException {
-        if ((value_ instanceof RGBColor) == false) {
-            throw new DOMExceptionImpl(
-                DOMException.INVALID_ACCESS_ERR,
-                DOMExceptionImpl.RGBCOLOR_ERROR);
+        if (value_ instanceof RGBColor) {
+            return (RGBColor) value_;
         }
-        return (RGBColor) value_;
+
+        throw new DOMExceptionImpl(
+            DOMException.INVALID_ACCESS_ERR,
+            DOMExceptionImpl.RGBCOLOR_ERROR);
     }
 
     public int getLength() {
-        return (value_ instanceof List) ? ((List) value_).size() : 0;
+        if (value_ instanceof List) {
+            return ((List) value_).size();
+        }
+        return 0;
     }
 
     public CSSValue item(final int index) {
-        return (value_ instanceof List)
-            ? ((CSSValue) ((List) value_).get(index))
-            : null;
+        if (value_ instanceof List) {
+            final List<CSSValue> list = (List<CSSValue>) value_;
+            return list.get(index);
+        }
+        return null;
     }
 
     public String toString() {
