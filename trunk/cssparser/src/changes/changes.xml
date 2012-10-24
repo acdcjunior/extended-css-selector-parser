@@ -5,7 +5,10 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
-    <release version="0.9.8" date="TODO, 2012" description="Release with lots of bugfixes.">
+    <release version="0.9.8" date="24.10.2012" description="Release with one bugfixe and more code cleanup.">
+        <action type="fix" dev="rbri">
+            More code cleanup work done.
+        </action>
         <action type="fix" dev="rbri">
             Minor pom.xml fixes.
         </action>
