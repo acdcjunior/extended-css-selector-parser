@@ -415,14 +415,14 @@ void styleSheetRuleList() :
     ( <S> | <CDO> | <CDC> )*
     (
         (            importRule(ruleFound)
-	        | 
-	        (
-	            styleRule() | mediaRule() | pageRule() | unknownRule()
-	        )
+            |
+            (
+                styleRule() | mediaRule() | pageRule() | unknownRule()
+            )
             {
                 ruleFound = true;
             }
-	    )
+        )
         ( <S> | <CDO> | <CDC> )*
     )*
 }
