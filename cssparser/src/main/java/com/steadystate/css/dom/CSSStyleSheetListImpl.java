@@ -90,7 +90,7 @@ public class CSSStyleSheetListImpl implements StyleSheetList {
     public StyleSheet merge() {
         final CSSStyleSheetImpl merged = new CSSStyleSheetImpl();
         final CSSRuleListImpl cssRuleList = new CSSRuleListImpl();
-        final Iterator it = getCSSStyleSheets().iterator();
+        final Iterator<CSSStyleSheet> it = getCSSStyleSheets().iterator();
         while (it.hasNext()) {
             final CSSStyleSheetImpl cssStyleSheet = (CSSStyleSheetImpl) it.next();
             final CSSMediaRuleImpl cssMediaRule = new CSSMediaRuleImpl(merged, null, cssStyleSheet.getMedia());
