@@ -37,13 +37,14 @@ PARSER_BEGIN(SACParserCSSmobileOKBasic1)
 
 package com.steadystate.css.parser;
 
-import java.io.*;
-import java.net.*;
-import java.text.MessageFormat;
-import java.util.*;
-import org.w3c.css.sac.*;
-import com.steadystate.css.parser.*;
-import com.steadystate.css.parser.selectors.*;
+import org.w3c.css.sac.CSSParseException;
+import org.w3c.css.sac.Condition;
+import org.w3c.css.sac.LexicalUnit;
+import org.w3c.css.sac.Locator;
+import org.w3c.css.sac.Parser;
+import org.w3c.css.sac.Selector;
+import org.w3c.css.sac.SelectorList;
+import org.w3c.css.sac.SimpleSelector;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
