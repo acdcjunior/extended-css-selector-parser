@@ -59,7 +59,7 @@ public class SACParserCSS2 extends AbstractSACParser implements Parser {
     public String getParserVersion() {
         return "http://www.w3.org/TR/REC-CSS2/";
     }
-    
+
     protected String getGrammarUri()
     {
         return "http://www.w3.org/TR/REC-CSS2/grammar.html";
@@ -333,8 +333,8 @@ TOKEN_MGR_DECLS :
 //
 // stylesheet
 //  : [ CHARSET_SYM S* STRING S* ';' ]?
-//      [S|CDO|CDC]* [ import [S|CDO|CDC]* ]*
-//      [ [ ruleset | media | page | font_face ] [S|CDO|CDC]* ]*
+//    [S|CDO|CDC]* [ import [S|CDO|CDC]* ]*
+//    [ [ ruleset | media | page | font_face ] [S|CDO|CDC]* ]*
 //  ;
 //
 void styleSheet() :
@@ -360,17 +360,16 @@ void styleSheetRuleList() :
 {
     ( charsetRule() )?
     ( <S> | <CDO> | <CDC> )*
-
     (
         (
-            importRule(ruleFound)            | 
-	        (
-	            styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule()
-	        )
+            importRule(ruleFound)            |
+            (
+                styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule()
+            )
             {
                 ruleFound = true;
             }
-	    )
+        )
         ( <S> | <CDO> | <CDC> )*
     )*
 }
@@ -382,8 +381,8 @@ void styleSheetRuleSingle() :
 {
 }
 {
-  ( <S> )*
-  ( charsetRule() | importRule(false) | styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule() )
+    ( <S> )*
+    ( charsetRule() | importRule(false) | styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule() )
 }
 
 void charsetRule() :
@@ -437,9 +436,9 @@ void unknownRule() :
 
 //
 // import
-//   : IMPORT_SYM S*
-//     [STRING|URI] S* [ medium [ ',' S* medium]* ]? ';' S*
-//   ;
+//  : IMPORT_SYM S*
+//    [STRING|URI] S* [ medium [ ',' S* medium]* ]? ';' S*
+//  ;
 //
 void importRule(final boolean nonImportRuleFoundBefore) :
 {
@@ -462,8 +461,7 @@ void importRule(final boolean nonImportRuleFoundBefore) :
             locator = this.getLocator();
         }
         ( <S> )*
-        ( t = <STRING>
-        | t = <URI> ) ( <S> )*
+        ( t = <STRING> | t = <URI> ) ( <S> )*
         ( mediaList(ml) )?
         <SEMICOLON>
         {
@@ -484,16 +482,15 @@ void importRule(final boolean nonImportRuleFoundBefore) :
     }
     catch (ParseException e)
     {
-        this.getErrorHandler().error(
-            this.toCSSParseException("invalidImportRule", e));
+        this.getErrorHandler().error(this.toCSSParseException("invalidImportRule", e));
         this.error_skipAtRule();
     }
 }
 
 //
 // media
-//   : MEDIA_SYM S* medium [ ',' S* medium ]* '{' S* ruleset* '}' S*
-//   ;
+//  : MEDIA_SYM S* medium [ ',' S* medium ]* '{' S* ruleset* '}' S*
+//  ;
 //
 void mediaRule() :
 {
@@ -562,7 +559,7 @@ void mediaRuleList() :
 {
 }
 {
-  ( ( styleRule() | pageRule() | unknownRule() ) ( <S> )* )+ 
+  ( ( styleRule() | pageRule() | unknownRule() ) ( <S> )* )+
 }
 
 void mediaRuleSingle() :
@@ -591,9 +588,9 @@ String medium() :
 
 //
 // page
-//   : PAGE_SYM S* IDENT? pseudo_page? S*
-//     '{' S* declaration [ ';' S* declaration ]* '}' S*
-//   ;
+//  : PAGE_SYM S* IDENT? pseudo_page? S*
+//    '{' S* declaration [ ';' S* declaration ]* '}' S*
+//  ;
 //
 void pageRule() :
 {
@@ -687,8 +684,8 @@ void fontFaceRule() :
 
 //
 // operator
-//   : '/' S* | ',' S* |
-//   ;
+//  : '/' S* | ',' S* |
+//  ;
 //
 LexicalUnit operator(LexicalUnit prev) :
 {
@@ -701,8 +698,8 @@ LexicalUnit operator(LexicalUnit prev) :
 
 //
 // combinator
-//   : '+' S* | '>' S* |
-//   ;
+//  : '+' S* | '>' S* |
+//  ;
 //
 char combinator() :
 {
@@ -718,8 +715,8 @@ char combinator() :
 
 //
 // unary_operator
-//   : '-' | '+'
-//   ;
+//  : '-' | '+'
+//  ;
 //
 char unaryOperator() :
 {
@@ -744,9 +741,9 @@ String property() :
 
 //
 // ruleset
-//   : selector [ ',' S* selector ]*
-//     '{' S* declaration [ ';' S* declaration ]* '}' S*
-//   ;
+//  : selector [ ',' S* selector ]*
+//    '{' S* declaration [ ';' S* declaration ]* '}' S*
+//  ;
 //
 void styleRule() :
 {
@@ -758,7 +755,7 @@ void styleRule() :
     try {
         {
             t = this.getToken();
-        } 
+        }
         selList = selectorList()
         <LBRACE> ( <S> )*
         {
@@ -846,8 +843,8 @@ Selector selector() :
 
 //
 // simple_selector
-//   : element_name? [ HASH | class | attrib | pseudo ]* S*
-//   ;
+//  : element_name? [ HASH | class | attrib | pseudo ]* S*
+//  ;
 //
 Selector simpleSelector(Selector sel, char comb) :
 {
@@ -1061,8 +1058,8 @@ Condition attrib(Condition pred) :
 
 //
 // pseudo
-//   : ':' [ IDENT | FUNCTION S* IDENT S* ')' ]
-//   ;
+//  : ':' [ IDENT | FUNCTION S* IDENT S* ')' ]
+//  ;
 //
 Object pseudo(Condition pred) :
 {
@@ -1138,6 +1135,7 @@ Object pseudo(Condition pred) :
                     }
                 }
             )
+
         )
     }
     catch (ParseException e)
@@ -1228,7 +1226,6 @@ void declaration() :
 // prio
 //   : IMPORTANT_SYM S*
 //   ;
-//
 boolean prio() :
 {
 }
@@ -1264,11 +1261,11 @@ LexicalUnit expr() :
 
 //
 // term
-//   : unary_operator?
-//     [ NUMBER S* | PERCENTAGE S* | LENGTH S* | EMS S* | EXS S* | ANGLE S* |
-//       TIME S* | FREQ S* | function ]
-//   | STRING S* | IDENT S* | URI S* | RGB S* | UNICODERANGE S* | hexcolor
-//   ;
+//  : unary_operator?
+//    [ NUMBER S* | PERCENTAGE S* | LENGTH S* | EMS S* | EXS S* | ANGLE S* |
+//      TIME S* | FREQ S* | function ]
+//  | STRING S* | IDENT S* | URI S* | RGB S* | UNICODERANGE S* | hexcolor
+//  ;
 //
 LexicalUnit term(LexicalUnit prev) :
 {
@@ -1276,43 +1273,9 @@ LexicalUnit term(LexicalUnit prev) :
   char op = ' ';
   String s;
   LexicalUnit value = null;
-//  RGBColor color;
-//  HexColor h;
-//  CSSValueImpl value = null;
   Locator locator = null;
 }
 {
-/*
-  ( ( op = unaryOperator() )?
-  ( ( t = <NUMBER>    { value = new CSSValueImpl( CSSPrimitiveValue.CSS_NUMBER, new Float( op + t.image ) ); }
-    | t = <PERCENTAGE>  { value = new CSSValueImpl( CSSPrimitiveValue.CSS_PERCENTAGE, new Float( op + t.image ) ); }
-    | t = <LENGTH_PX>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_PX, new Float( op + t.image ) ); }
-    | t = <LENGTH_CM>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_CM, new Float( op + t.image ) ); }
-    | t = <LENGTH_MM>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_MM, new Float( op + t.image ) ); }
-    | t = <LENGTH_IN>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_IN, new Float( op + t.image ) ); }
-    | t = <LENGTH_PT>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_PT, new Float( op + t.image ) ); }
-    | t = <LENGTH_PC>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_PC, new Float( op + t.image ) ); }
-    | t = <EMS>     { value = new CSSValueImpl( CSSPrimitiveValue.CSS_EMS, new Float( op + t.image ) ); }
-    | t = <EXS>     { value = new CSSValueImpl( CSSPrimitiveValue.CSS_EXS, new Float( op + t.image ) ); }
-    | t = <ANGLE_DEG>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_DEG, new Float( op + t.image ) ); }
-    | t = <ANGLE_RAD>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_RAD, new Float( op + t.image ) ); }
-    | t = <ANGLE_GRAD>  { value = new CSSValueImpl( CSSPrimitiveValue.CSS_GRAD, new Float( op + t.image ) ); }
-    | t = <TIME_MS>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_MS, new Float( op + t.image ) ); }
-    | t = <TIME_S>    { value = new CSSValueImpl( CSSPrimitiveValue.CSS_S, new Float( op + t.image ) ); }
-    | t = <FREQ_HZ>   { value = new CSSValueImpl( CSSPrimitiveValue.CSS_HZ, new Float( op + t.image ) ); }
-    | t = <FREQ_KHZ>    { value = new CSSValueImpl( CSSPrimitiveValue.CSS_KHZ, new Float( op + t.image ) ); }
-    | s = function()    { value = new CSSValueImpl( CSSPrimitiveValue.CSS_IDENT, op + s ); } )
-  | t = <STRING>      { value = new CSSValueImpl( CSSPrimitiveValue.CSS_STRING, op + t.image ); }
-  | t = <IDENT>     { value = new CSSValueImpl( CSSPrimitiveValue.CSS_IDENT, op + t.image ); }
-  | t = <URI>       { value = new CSSValueImpl( CSSPrimitiveValue.CSS_URI, op + t.image ); }
-  | t = <UNICODERANGE>  { value = new CSSValueImpl( CSSPrimitiveValue.CSS_IDENT, op + t.image ); }
-  | color = rgb()     { value = new CSSValueImpl( CSSPrimitiveValue.CSS_RGBCOLOR, color ); }
-  | color = hexcolor()  { value = new CSSValueImpl( CSSPrimitiveValue.CSS_RGBCOLOR, color ); }
-  | t = <DIMEN>     { value = new CSSValueImpl( CSSPrimitiveValue.CSS_DIMENSION, new Float( op + t.image ) ); }
-  | t = <INHERIT>     { value = new CSSValueImpl( CSSPrimitiveValue.CSS_INHERIT, op + t.image ); } )
-  ( <S> )* )
-  { return value; }
-*/
     ( op = unaryOperator() )?
     {
         if (op != ' ')
@@ -1451,7 +1414,7 @@ String skip() {
   int nesting = 0;
   Token t = getToken(0);
   if (t.image != null) {
-    sb.append(t.image);    
+    sb.append(t.image);
   }
   do {
     t = getNextToken();
