@@ -58,13 +58,6 @@ public class LocatorImpl implements Locator, Serializable {
     }
 
     /**
-     * Default constructor.
-     */
-    public LocatorImpl() {
-        super();
-    }
-
-    /**
      * Return the URI for the current document event.
      *
      * <p>The parser must resolve the URI fully before passing it to the
