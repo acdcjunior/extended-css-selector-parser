@@ -650,9 +650,9 @@ String pseudoPage() :
 
 //
 // font_face
-//   : FONT_FACE_SYM S*
-//     '{' S* declaration [ ';' S* declaration ]* '}' S*
-//   ;
+//  : FONT_FACE_SYM S*
+//    '{' S* declaration [ ';' S* declaration ]* '}' S*
+//  ;
 //
 void fontFaceRule() :
 {
