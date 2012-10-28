@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.cssparser</groupId>
 	<artifactId>cssparser</artifactId>
-	<version>0.9.8</version>
+	<version>0.9.9-SNAPSHOT</version>
 	<name>CSS Parser</name>
 	<url>http://cssparser.sourceforge.net/</url>
 	<description>A CSS parser which implements SAC (the Simple API for CSS).</description>
@@ -22,9 +22,9 @@
 		<version>7</version>
 	</parent>
 	<scm>
-		<connection>scm:svn:https://cssparser.svn.sourceforge.net/svnroot/cssparser/tags/cssparser-0.9.8</connection>
-		<developerConnection>scm:svn:https://cssparser.svn.sourceforge.net/svnroot/cssparser/tags/cssparser-0.9.8</developerConnection>
-		<url>https://cssparser.svn.sourceforge.net/svnroot/cssparser/tags/cssparser-0.9.8</url>
+		<connection>scm:svn:https://cssparser.svn.sourceforge.net/svnroot/cssparser/trunk/cssparser</connection>
+		<developerConnection>scm:svn:https://cssparser.svn.sourceforge.net/svnroot/cssparser/trunk/cssparser</developerConnection>
+		<url>https://cssparser.svn.sourceforge.net/svnroot/cssparser/trunk/cssparser</url>
 	</scm>
 	<build>
         <sourceDirectory>src/main/java</sourceDirectory>
