@@ -31,8 +31,11 @@ import org.w3c.dom.css.CSSStyleSheet;
 
 /**
  * @author koch
+ * @author rbri
  */
 public abstract class AbstractCSSRuleImpl extends CSSOMObjectImpl {
+
+    private static final long serialVersionUID = 7829784704712797815L;
 
     private CSSStyleSheetImpl parentStyleSheet_;
     private CSSRule parentRule_;
