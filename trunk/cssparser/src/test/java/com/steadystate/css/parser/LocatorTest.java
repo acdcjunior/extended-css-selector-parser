@@ -278,7 +278,7 @@ public class LocatorTest {
     private void cssRule(final CSSRule cssRule, final Map<Character, List<Integer[]>> positions,
             final Map<Character, Integer> counts) {
         if (cssRule instanceof CSSOMObject) {
-            final Locator locator = this.getLocator((CSSOMObject) cssRule);
+            final Locator locator = getLocator((CSSOMObject) cssRule);
             final Integer[] expected = positions.get('R').get(counts.get('R'));
             final int expectedLine = expected[0];
             final int expectedColumn = expected[1];
@@ -338,7 +338,7 @@ public class LocatorTest {
             final Map<Character, List<Integer[]>> positions,
             final Map<Character, Integer> counts) {
         if ((mediaList.getLength() > 0) && (mediaList instanceof CSSOMObject)) {
-            final Locator locator = this.getLocator((CSSOMObject) mediaList);
+            final Locator locator = getLocator((CSSOMObject) mediaList);
             final Integer[] expected = positions.get('M').get(counts.get('M'));
             final int expectedLine = expected[0];
             final int expectedColumn = expected[1];
@@ -352,7 +352,7 @@ public class LocatorTest {
     private void property(final Property property,
             final Map<Character, List<Integer[]>> positions,
             final Map<Character, Integer> counts) {
-        final Locator locator = this.getLocator(property);
+        final Locator locator = getLocator(property);
         final Integer[] expected = positions.get('P').get(counts.get('P'));
         final int expectedLine = expected[0];
         final int expectedColumn = expected[1];
@@ -367,7 +367,7 @@ public class LocatorTest {
             final Map<Character, List<Integer[]>> positions,
             final Map<Character, Integer> counts) {
         if (cssValue instanceof CSSValueImpl) {
-            final Locator locator = this.getLocator((CSSValueImpl) cssValue);
+            final Locator locator = getLocator((CSSValueImpl) cssValue);
             final Integer[] expected = positions.get('V').get(counts.get('V'));
             final int expectedLine = expected[0];
             final int expectedColumn = expected[1];

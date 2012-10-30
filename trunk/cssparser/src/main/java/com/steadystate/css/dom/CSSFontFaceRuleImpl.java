@@ -46,6 +46,7 @@ import com.steadystate.css.util.LangUtils;
  * Implementation of {@link CSSFontFaceRule}.
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
 public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontFaceRule, Serializable {
 
@@ -136,6 +137,6 @@ public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontF
 
     @Override
     public String toString() {
-        return this.getCssText();
+        return getCssText();
     }
 }
