@@ -27,7 +27,6 @@
 package com.steadystate.css.dom;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.StringReader;
 
 import org.w3c.css.sac.CSSException;
@@ -45,7 +44,7 @@ import com.steadystate.css.util.LangUtils;
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author rbri
  */
-public class CSSCharsetRuleImpl extends AbstractCSSRuleImpl implements CSSCharsetRule, Serializable {
+public class CSSCharsetRuleImpl extends AbstractCSSRuleImpl implements CSSCharsetRule {
 
     private static final long serialVersionUID = -2472209213089007127L;
 

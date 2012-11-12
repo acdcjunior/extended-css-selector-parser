@@ -26,7 +26,6 @@
 
 package com.steadystate.css.dom;
 
-import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -58,8 +57,9 @@ import com.steadystate.css.util.LangUtils;
  * A means of checking valid primitive types for properties
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
-public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, CSSValueList, Serializable {
+public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, CSSValueList {
 
     private static final long serialVersionUID = 406281136418322579L;
 
@@ -399,6 +399,7 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
         return null;
     }
 
+    @Override
     public String toString() {
         return getCssText();
     }

@@ -29,7 +29,6 @@ package com.steadystate.css.dom;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.io.StringReader;
 
 import org.w3c.css.sac.CSSException;
@@ -48,8 +47,9 @@ import com.steadystate.css.util.ThrowCssExceptionErrorHandler;
  * Implementation of {@link CSSMediaRule}.
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
-public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRule, Serializable {
+public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRule {
 
     private static final long serialVersionUID = 6603734096445214651L;
 
@@ -204,6 +204,7 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
         cssRules_ = rules;
     }
 
+    @Override
     public String toString() {
         return getCssText();
     }

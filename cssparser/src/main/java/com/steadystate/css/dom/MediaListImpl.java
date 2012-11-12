@@ -48,6 +48,7 @@ import com.steadystate.css.util.ThrowCssExceptionErrorHandler;
  * Implements {@link MediaList}.
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
 public class MediaListImpl extends CSSOMObjectImpl implements MediaList {
     private static final long serialVersionUID = 6662784733573034870L;
@@ -129,6 +130,7 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList {
         media_.add(newMedium);
     }
 
+    @Override
     public String toString() {
         return getMediaText();
     }
