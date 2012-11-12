@@ -155,4 +155,17 @@ public class CSSMediaRuleImplTest {
             Assert.assertEquals(0, mediaRule.getCssRules().getLength());
         }
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void testToString() throws Exception {
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+        final InputSource source = new InputSource(new StringReader("@media print { body { font-size: 10pt } }"));
+        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        final CSSMediaRule mediaRule = (CSSMediaRule) ss.getCssRules().item(0);
+
+        Assert.assertEquals("@media print {body { font-size: 10pt } }", mediaRule.toString());
+    }
 }
