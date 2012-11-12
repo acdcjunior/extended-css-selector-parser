@@ -34,6 +34,7 @@ import org.w3c.css.sac.SACMediaList;
  * Implementation of {@link SACMediaList}.
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
 public class SACMediaListImpl extends LocatableImpl implements SACMediaList {
 
@@ -51,6 +52,7 @@ public class SACMediaListImpl extends LocatableImpl implements SACMediaList {
         media_.add(s);
     }
 
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         final int len = getLength();

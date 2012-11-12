@@ -36,6 +36,7 @@ import com.steadystate.css.parser.LocatableImpl;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
 public class LangConditionImpl extends LocatableImpl implements LangCondition, Serializable {
 
@@ -59,6 +60,7 @@ public class LangConditionImpl extends LocatableImpl implements LangCondition, S
         return lang_;
     }
 
+    @Override
     public String toString() {
         return ":lang(" + getLang() + ")";
     }
