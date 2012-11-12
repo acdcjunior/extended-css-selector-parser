@@ -36,6 +36,7 @@ import com.steadystate.css.parser.LocatableImpl;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
 public class CharacterDataSelectorImpl extends LocatableImpl implements CharacterDataSelector, Serializable {
 
@@ -59,6 +60,7 @@ public class CharacterDataSelectorImpl extends LocatableImpl implements Characte
         return data_;
     }
 
+    @Override
     public String toString() {
         return getData();
     }

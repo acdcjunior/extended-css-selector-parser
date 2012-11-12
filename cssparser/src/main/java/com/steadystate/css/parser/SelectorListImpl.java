@@ -37,6 +37,7 @@ import org.w3c.css.sac.SelectorList;
  * Implementation of {@link SelectorList}.
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
 public class SelectorListImpl extends LocatableImpl implements SelectorList, Serializable {
 
@@ -64,6 +65,7 @@ public class SelectorListImpl extends LocatableImpl implements SelectorList, Ser
         selectors_.add(sel);
     }
 
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         final int len = getLength();

@@ -28,8 +28,15 @@ package com.steadystate.css.parser;
 
 import java.util.ListResourceBundle;
 
+/**
+ * ExceptionResource.
+ *
+ * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
+ */
 public class ExceptionResource extends ListResourceBundle {
 
+    @Override
     public Object[][] getContents() {
         return contents;
     }

@@ -34,6 +34,7 @@ import org.w3c.css.sac.LexicalUnit;
  * Implementation of {@link LexicalUnit}.
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
 public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Serializable {
 
@@ -94,6 +95,7 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
     }
 
     protected LexicalUnitImpl(final LexicalUnit previous, final short type) {
+        this();
         lexicalUnitType_ = type;
         previousLexicalUnit_ = previous;
         if (previousLexicalUnit_ != null) {
@@ -161,7 +163,7 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
     /**
      * Default constructor.
      */
-    public LexicalUnitImpl() {
+    protected LexicalUnitImpl() {
     }
 
     public short getLexicalUnitType() {
@@ -241,6 +243,7 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
         return parameters_;
     }
 
+    @Override
     public String toString() {
         if (null != toString_) {
             return toString_;

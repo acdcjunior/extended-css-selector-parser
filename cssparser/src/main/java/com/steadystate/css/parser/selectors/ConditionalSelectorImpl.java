@@ -39,6 +39,7 @@ import com.steadystate.css.parser.LocatableImpl;
 /**
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
 public class ConditionalSelectorImpl extends LocatableImpl implements ConditionalSelector, Serializable {
 
@@ -86,6 +87,7 @@ public class ConditionalSelectorImpl extends LocatableImpl implements Conditiona
         return condition_;
     }
 
+    @Override
     public String toString() {
         return simpleSelector_.toString() + condition_.toString();
     }
