@@ -27,7 +27,6 @@
 package com.steadystate.css.dom;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.StringReader;
 
 import org.w3c.css.sac.CSSException;
@@ -45,9 +44,9 @@ import com.steadystate.css.util.LangUtils;
  * Implementation of {@link CSSStyleRule}.
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
-public class CSSStyleRuleImpl extends AbstractCSSRuleImpl
-    implements CSSStyleRule, Serializable {
+public class CSSStyleRuleImpl extends AbstractCSSRuleImpl implements CSSStyleRule {
 
     private static final long serialVersionUID = -697009251364657426L;
 
@@ -160,6 +159,8 @@ public class CSSStyleRuleImpl extends AbstractCSSRuleImpl
     public void setStyle(final CSSStyleDeclaration style) {
         style_ = style;
     }
+
+    @Override
     public String toString() {
         return getCssText();
     }

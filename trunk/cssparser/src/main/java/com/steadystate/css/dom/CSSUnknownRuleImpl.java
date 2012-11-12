@@ -26,10 +26,7 @@
 
 package com.steadystate.css.dom;
 
-import java.io.Serializable;
-
 import org.w3c.dom.DOMException;
-
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSUnknownRule;
 
@@ -41,8 +38,9 @@ import com.steadystate.css.util.LangUtils;
  * TODO: Reinstate setCssText
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
-public class CSSUnknownRuleImpl extends AbstractCSSRuleImpl implements CSSUnknownRule, Serializable {
+public class CSSUnknownRuleImpl extends AbstractCSSRuleImpl implements CSSUnknownRule {
 
     private static final long serialVersionUID = -268104019127675990L;
 
@@ -127,6 +125,7 @@ public class CSSUnknownRuleImpl extends AbstractCSSRuleImpl implements CSSUnknow
 //        return parentRule;
 //    }
 
+    @Override
     public String toString() {
         return getCssText();
     }

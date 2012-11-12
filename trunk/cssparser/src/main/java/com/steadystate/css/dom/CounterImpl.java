@@ -113,6 +113,7 @@ public class CounterImpl implements Counter, Serializable {
         return separator_;
     }
 
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         if (separator_ == null) {

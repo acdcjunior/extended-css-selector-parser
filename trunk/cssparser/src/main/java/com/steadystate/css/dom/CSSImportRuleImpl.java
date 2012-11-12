@@ -27,19 +27,15 @@
 package com.steadystate.css.dom;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.StringReader;
-
-import org.w3c.dom.DOMException;
-
-import org.w3c.dom.stylesheets.MediaList;
-
-import org.w3c.dom.css.CSSImportRule;
-import org.w3c.dom.css.CSSRule;
-import org.w3c.dom.css.CSSStyleSheet;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.css.CSSImportRule;
+import org.w3c.dom.css.CSSRule;
+import org.w3c.dom.css.CSSStyleSheet;
+import org.w3c.dom.stylesheets.MediaList;
 
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.util.LangUtils;
@@ -50,8 +46,9 @@ import com.steadystate.css.util.LangUtils;
  * TODO: Implement getStyleSheet()
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
-public class CSSImportRuleImpl extends AbstractCSSRuleImpl implements CSSImportRule, Serializable {
+public class CSSImportRuleImpl extends AbstractCSSRuleImpl implements CSSImportRule {
 
     private static final long serialVersionUID = 7807829682009179339L;
 
@@ -146,6 +143,7 @@ public class CSSImportRuleImpl extends AbstractCSSRuleImpl implements CSSImportR
         return null;
     }
 
+    @Override
     public String toString() {
         return getCssText();
     }

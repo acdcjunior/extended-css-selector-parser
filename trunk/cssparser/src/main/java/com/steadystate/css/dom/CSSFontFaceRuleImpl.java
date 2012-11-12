@@ -27,17 +27,14 @@
 package com.steadystate.css.dom;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.StringReader;
-
-import org.w3c.dom.DOMException;
-
-import org.w3c.dom.css.CSSFontFaceRule;
-import org.w3c.dom.css.CSSRule;
-import org.w3c.dom.css.CSSStyleDeclaration;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.css.CSSFontFaceRule;
+import org.w3c.dom.css.CSSRule;
+import org.w3c.dom.css.CSSStyleDeclaration;
 
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.util.LangUtils;
@@ -48,7 +45,7 @@ import com.steadystate.css.util.LangUtils;
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author rbri
  */
-public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontFaceRule, Serializable {
+public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontFaceRule {
 
     private static final long serialVersionUID = -3604191834588759088L;
 

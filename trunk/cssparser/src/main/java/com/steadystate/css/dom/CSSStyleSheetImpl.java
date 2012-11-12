@@ -54,6 +54,7 @@ import com.steadystate.css.util.ThrowCssExceptionErrorHandler;
  * Implementation of {@link CSSStyleSheet}.
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
 public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
 
@@ -285,6 +286,7 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
         cssRules_ = rules;
     }
 
+    @Override
     public String toString() {
         return getCssRules().toString();
     }
