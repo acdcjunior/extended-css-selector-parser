@@ -6,6 +6,9 @@
   </properties>
   <body>
     <release version="0.9.9" date="xx.xx.2012" description="Release with some bugfixe and more code cleanup.">
+        <action type="fix" dev="rbri">
+            com.steadystate.css.dom.CSSValueImpl.getPrimitiveType() returns wrong type for Hz and KHz.
+        </action>
         <action type="cleanup" dev="rbri">
             Class CSS2Properties removed (spec: A conformant implementation of the CSS module is not required
             to implement the CSS2Properties interface).
