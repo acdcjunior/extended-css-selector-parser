@@ -113,6 +113,7 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
             // We need to be a CSSPrimitiveValue
             value_ = value;
         }
+
         if (value instanceof LexicalUnitImpl) {
             final Locator locator = ((LexicalUnitImpl) value).getLocator();
             if (locator != null) {
@@ -240,9 +241,9 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
                     return CSS_PERCENTAGE;
                 case LexicalUnit.SAC_URI:
                     return CSS_URI;
-    //            case LexicalUnit.SAC_COUNTER_FUNCTION:
+                case LexicalUnit.SAC_COUNTER_FUNCTION:
     //            case LexicalUnit.SAC_COUNTERS_FUNCTION:
-    //                return CSS_COUNTER;
+                    return CSS_COUNTER;
     //            case LexicalUnit.SAC_RGBCOLOR:
     //                return CSS_RGBCOLOR;
                 case LexicalUnit.SAC_DEGREE:
@@ -256,9 +257,9 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
                 case LexicalUnit.SAC_SECOND:
                     return CSS_S;
                 case LexicalUnit.SAC_HERTZ:
-                    return CSS_KHZ;
-                case LexicalUnit.SAC_KILOHERTZ:
                     return CSS_HZ;
+                case LexicalUnit.SAC_KILOHERTZ:
+                    return CSS_KHZ;
                 case LexicalUnit.SAC_IDENT:
                     return CSS_IDENT;
                 case LexicalUnit.SAC_STRING_VALUE:
@@ -342,6 +343,10 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
             }
 
             if (lu.getLexicalUnitType() == LexicalUnit.SAC_ATTR) {
+                final LexicalUnit params = lu.getParameters();
+                if (null == params) {
+                    return "";
+                }
                 return lu.getParameters().getStringValue();
             }
         }
