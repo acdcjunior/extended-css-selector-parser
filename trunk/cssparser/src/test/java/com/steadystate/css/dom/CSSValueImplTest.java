@@ -250,4 +250,318 @@ public class CSSValueImplTest {
             // expected
         }
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void kiloHertz() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createKiloHertz(null, 1.2f);
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("1.2kHz", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_KHZ, value.getPrimitiveType());
+        Assert.assertEquals(1.2, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
+        try {
+            value.getStringValue();
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void millimeter() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createMillimeter(null, 1.2f);
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("1.2mm", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_MM, value.getPrimitiveType());
+        Assert.assertEquals(1.2, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
+        try {
+            value.getStringValue();
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void millisecond() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createMillisecond(null, 1.2f);
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("1.2ms", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_MS, value.getPrimitiveType());
+        Assert.assertEquals(1.2, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
+        try {
+            value.getStringValue();
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void numberFloat() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createNumber(null, 1.2f);
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("1.2", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_NUMBER, value.getPrimitiveType());
+        Assert.assertEquals(1.2, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
+        try {
+            value.getStringValue();
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void numberInt() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createNumber(null, 12);
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("12", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_NUMBER, value.getPrimitiveType());
+        Assert.assertEquals(12, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
+        try {
+            value.getStringValue();
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void pica() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createPica(null, 1.2f);
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("1.2pc", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_PC, value.getPrimitiveType());
+        Assert.assertEquals(1.2, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
+        try {
+            value.getStringValue();
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void percentage() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createPercentage(null, 1.2f);
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("1.2%", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_PERCENTAGE, value.getPrimitiveType());
+        Assert.assertEquals(1.2, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
+        try {
+            value.getStringValue();
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void point() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createPoint(null, 1.2f);
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("1.2pt", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_PT, value.getPrimitiveType());
+        Assert.assertEquals(1.2, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
+        try {
+            value.getStringValue();
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void pixel() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createPixel(null, 1.2f);
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("1.2px", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_PX, value.getPrimitiveType());
+        Assert.assertEquals(1.2, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
+        try {
+            value.getStringValue();
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void radian() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createRadian(null, 1.2f);
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("1.2rad", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_RAD, value.getPrimitiveType());
+        Assert.assertEquals(1.2, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
+        try {
+            value.getStringValue();
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void rect() throws Exception {
+        final LexicalUnit rect = LexicalUnitImpl.createNumber(null, 1);
+        LexicalUnit param = LexicalUnitImpl.createComma(rect);
+        param = LexicalUnitImpl.createNumber(param, 2);
+        param = LexicalUnitImpl.createComma(param);
+        param = LexicalUnitImpl.createNumber(param, 3);
+        param = LexicalUnitImpl.createComma(param);
+        param = LexicalUnitImpl.createNumber(param, 4);
+
+        final LexicalUnit lu = LexicalUnitImpl.createRect(null, rect);
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("rect(1, 2, 3, 4)", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_RECT, value.getPrimitiveType());
+        try {
+            value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER);
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+        try {
+            value.getStringValue();
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void rgbColor() throws Exception {
+        final LexicalUnit color = LexicalUnitImpl.createNumber(null, 255);
+        LexicalUnit param = LexicalUnitImpl.createComma(color);
+        param = LexicalUnitImpl.createNumber(param, 128);
+        param = LexicalUnitImpl.createComma(param);
+        param = LexicalUnitImpl.createNumber(param, 0);
+
+        final LexicalUnit lu = LexicalUnitImpl.createRgbColor(null, color);
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("rgb(255, 128, 0)", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_RGBCOLOR, value.getPrimitiveType());
+        try {
+            value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER);
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+        try {
+            value.getStringValue();
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void second() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createSecond(null, 1.2f);
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("1.2s", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_S, value.getPrimitiveType());
+        Assert.assertEquals(1.2, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
+        try {
+            value.getStringValue();
+            Assert.fail("DomException expected");
+        }
+        catch (final DOMException e) {
+            // expected
+        }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void string() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createString(null, "value");
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("\"value\"", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_STRING, value.getPrimitiveType());
+        Assert.assertEquals(0.0, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001); // TODO is this correct?
+        Assert.assertEquals("value", value.getStringValue());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void uri() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createURI(null, "cssparser");
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("url(cssparser)", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_URI, value.getPrimitiveType());
+        Assert.assertEquals(0.0, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
+        Assert.assertEquals("cssparser", value.getStringValue());
+    }
 }
