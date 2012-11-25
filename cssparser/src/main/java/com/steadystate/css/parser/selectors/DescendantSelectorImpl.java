@@ -79,6 +79,14 @@ public class DescendantSelectorImpl extends LocatableImpl implements DescendantS
 
     @Override
     public String toString() {
-        return getAncestorSelector().toString() + " " + getSimpleSelector().toString();
+        final StringBuilder result = new StringBuilder(getAncestorSelector().toString());
+        if (Selector.SAC_PSEUDO_ELEMENT_SELECTOR == getSimpleSelector().getSelectorType()) {
+            result.append(':');
+        }
+        else {
+            result.append(' ');
+        }
+        result.append(getSimpleSelector().toString());
+        return result.toString();
     }
 }

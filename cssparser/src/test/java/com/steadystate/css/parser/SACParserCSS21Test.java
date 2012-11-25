@@ -776,7 +776,7 @@ public class SACParserCSS21Test {
         Assert.assertEquals(1, rules.getLength());
 
         final CSSRule rule = rules.item(0);
-        Assert.assertEquals("@media screen {p before { content: Hello } }", rule.getCssText());
+        Assert.assertEquals("@media screen {p:before { content: Hello } }", rule.getCssText());
     }
 
     /**
@@ -813,7 +813,7 @@ public class SACParserCSS21Test {
         Assert.assertEquals(1, rules.getLength());
 
         final CSSRule rule = rules.item(0);
-        Assert.assertEquals("@media screen {p before { content: Hello } }", rule.getCssText());
+        Assert.assertEquals("@media screen {p:before { content: Hello } }", rule.getCssText());
     }
 
     /**
