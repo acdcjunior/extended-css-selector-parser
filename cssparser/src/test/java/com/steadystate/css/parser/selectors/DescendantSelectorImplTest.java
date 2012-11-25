@@ -28,11 +28,37 @@ package com.steadystate.css.parser.selectors;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.w3c.css.sac.Selector;
 
 /**
  * Testcases for {@link DescendantSelectorImpl}.
+ * @author rbri
  */
 public class DescendantSelectorImplTest {
+
+    @Test
+    public void ancestorSelector() {
+        final ElementSelectorImpl parent = new ElementSelectorImpl("p");
+        final ElementSelectorImpl descendant = new ElementSelectorImpl("a");
+        final DescendantSelectorImpl selector = new DescendantSelectorImpl(parent, descendant);
+        Assert.assertEquals(parent, selector.getAncestorSelector());
+    }
+
+    @Test
+    public void simpleSelector() {
+        final ElementSelectorImpl parent = new ElementSelectorImpl("p");
+        final ElementSelectorImpl descendant = new ElementSelectorImpl("a");
+        final DescendantSelectorImpl selector = new DescendantSelectorImpl(parent, descendant);
+        Assert.assertEquals(descendant, selector.getSimpleSelector());
+    }
+
+    @Test
+    public void selectorType() {
+        final ElementSelectorImpl parent = new ElementSelectorImpl("p");
+        final ElementSelectorImpl descendant = new ElementSelectorImpl("a");
+        final DescendantSelectorImpl selector = new DescendantSelectorImpl(parent, descendant);
+        Assert.assertEquals(Selector.SAC_DESCENDANT_SELECTOR, selector.getSelectorType());
+    }
 
     @Test
     public void elementDescendant() {
