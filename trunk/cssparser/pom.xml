@@ -23,30 +23,16 @@
     </parent>
     <scm>
         <connection>scm:svn:svn://svn.code.sf.net/p/cssparser/code/trunk/cssparser</connection>
-        <developerConnection>scm:svn:svn+ssh://alankrueger@svn.code.sf.net/p/cssparser/code/trunk/cssparser</developerConnection>
+        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/cssparser/code/trunk/cssparser</developerConnection>
         <url>http://svn.code.sf.net/p/cssparser/code/trunk/cssparser</url>
     </scm>
     <build>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
-        <testOutputDirectory>target/test-classes</testOutputDirectory>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-        </testResources>
         <plugins>
             <plugin>
                 <!-- set Java 5 as the minimum requirement -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>3.0</version>
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
@@ -153,7 +139,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.8.1</version>
+                <version>2.9</version>
                 <configuration>
                     <links>
                         <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
@@ -172,7 +158,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
