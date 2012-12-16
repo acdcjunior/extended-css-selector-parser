@@ -117,4 +117,11 @@ public class SelectorFactoryImpl implements SelectorFactory {
         final SimpleSelector directAdjacent) throws CSSException {
         return new DirectAdjacentSelectorImpl(nodeType, child, directAdjacent);
     }
+
+    public SiblingSelector createGeneralAdjacentSelector(
+            final short nodeType,
+            final Selector child,
+            final SimpleSelector directAdjacent) throws CSSException {
+            return new GeneralAdjacentSelectorImpl(nodeType, child, directAdjacent);
+        }
 }

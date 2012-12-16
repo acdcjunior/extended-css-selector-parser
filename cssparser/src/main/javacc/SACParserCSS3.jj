@@ -193,6 +193,22 @@ TOKEN_MGR_DECLS :
 // {num}            {return NUMBER;}
 | < NUMBER: <NUM> >
 
+// nth
+//  : S* [ ['-'|'+']? INTEGER? {N} [ S* ['-'|'+'] S* INTEGER ]? |
+//         ['-'|'+']? INTEGER | {O}{D}{D} | {E}{V}{E}{N} ] S*
+| < NTH: (<S>)*
+    (
+      ( (["-","+"])? (<NUMBER>)? <N_LETTER> ( (<S>)* (["-","+"]) (<S>)* <NUMBER> )? )
+      |
+      ( (["-","+"])? <NUMBER> )
+      |
+      (<O_LETTER> <D_LETTER> <D_LETTER>)
+      |
+      (<E_LETTER> <V_LETTER> <E_LETTER> <N_LETTER>)
+    )
+    (<S>)*
+  >
+
 | < INHERIT: "inherit" >
 
 // ident        -?{nmstart}{nmchar}*
@@ -257,6 +273,9 @@ TOKEN_MGR_DECLS :
 // T        t|\\0{0,4}(54|74)(\r\n|[ \t\r\n\f])?|\\t
 | < #T_LETTER: "t" | "\\" ( "0" | "00" | "000" | "0000" ) ( "54" | "74" ) ( "\r\n" | [ " ", "\t", "\r", "\n", "\f"])? | "\\" "t" >
 
+// V        x|\\0{0,4}(56|76)(\r\n|[ \t\r\n\f])?|\\v
+| < #V_LETTER: "v" | "\\" ( "0" | "00" | "000" | "0000" ) ( "56" | "76" ) ( "\r\n" | [ " ", "\t", "\r", "\n", "\f"])? | "\\" "v" >
+
 // X        x|\\0{0,4}(58|78)(\r\n|[ \t\r\n\f])?|\\x
 | < #X_LETTER: "x" | "\\" ( "0" | "00" | "000" | "0000" ) ( "58" | "78" ) ( "\r\n" | [ " ", "\t", "\r", "\n", "\f"])? | "\\" "x" >
 
@@ -292,6 +311,9 @@ TOKEN_MGR_DECLS :
 
 // {w}">"           {return GREATER;}
 | < GREATER: <W> ">" >
+
+// {w}"~"           {return TILDE;}
+| < TILDE: <W> "~" >
 
 // {w}","           {return COMMA;}
 | < COMMA: <W> "," >
@@ -745,7 +767,8 @@ char combinator() :
 {
   ( <PLUS> { c='+'; } ( <S> )*
   | <GREATER> { c='>'; } ( <S> )*
-  | <S> ( ( <PLUS> { c='+'; } | <GREATER> { c='>'; } ) ( <S> )* )? )
+  | <TILDE> { c='~'; } ( <S> )*
+  | <S> ( ( <PLUS> { c='+'; } | <GREATER> { c='>'; } | <TILDE> { c='~'; } ) ( <S> )* )? )
 
   { return c; }
 }
@@ -936,6 +959,10 @@ Selector simpleSelector(Selector sel, char comb) :
                     break;
                 case '>':
                     sel = this.getSelectorFactory().createChildSelector(sel, simpleSel);
+                    break;
+                case '~':
+                    sel = ((com.steadystate.css.parser.selectors.SelectorFactoryImpl) this.getSelectorFactory())
+                        .createGeneralAdjacentSelector(sel.getSelectorType(), sel, simpleSel);
                     break;
                 }
             } else {
@@ -1168,7 +1195,12 @@ Object pseudo(Condition pred) :
             |
             (
                 t = <FUNCTION> { function = unescape(t.image, false); } ( <S> )*
-                (t = <IDENT> { arg = unescape(t.image, false); } ( <S> )* )?
+                (
+                 ( t = <IDENT> | t = <NUMBER> | t = <NTH> )
+                 { arg = unescape(t.image, false); }
+                 ( <S> )*
+                )?
+                
                 <RROUND>
                 {
                     if (function.equalsIgnoreCase("lang(")) {
