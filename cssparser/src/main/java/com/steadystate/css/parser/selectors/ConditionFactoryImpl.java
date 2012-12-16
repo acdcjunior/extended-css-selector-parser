@@ -93,6 +93,30 @@ public class ConditionFactoryImpl implements ConditionFactory {
         return new BeginHyphenAttributeConditionImpl(localName, value, specified);
     }
 
+    public AttributeCondition createPrefixAttributeCondition(
+            final String localName,
+            final String namespaceURI,
+            final boolean specified,
+            final String value) throws CSSException {
+        return new PrefixAttributeConditionImpl(localName, value, specified);
+    }
+
+    public AttributeCondition createSuffixAttributeCondition(
+            final String localName,
+            final String namespaceURI,
+            final boolean specified,
+            final String value) throws CSSException {
+        return new SuffixAttributeConditionImpl(localName, value, specified);
+    }
+
+    public AttributeCondition createSubstringAttributeCondition(
+            final String localName,
+            final String namespaceURI,
+            final boolean specified,
+            final String value) throws CSSException {
+        return new SubstringAttributeConditionImpl(localName, value, specified);
+    }
+
     public AttributeCondition createClassCondition(
             final String namespaceURI,
             final String value) throws CSSException {
