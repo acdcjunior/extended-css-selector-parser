@@ -73,6 +73,36 @@ public class SACParserCSS3Test {
         Assert.assertTrue(selector.getCondition() instanceof SubstringAttributeConditionImpl);
     }
     
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void nth_child_number() throws Exception {
+        final String cssText = "div:nth-child(0)";
+        final SelectorList selectors = createSelectors(cssText);
+        Assert.assertEquals(cssText, selectors.item(0).toString());
+    }
+    
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void nth_child_equation() throws Exception {
+        final String cssText = "div:nth-child(3n+1)";
+        final SelectorList selectors = createSelectors(cssText);
+        Assert.assertEquals(cssText, selectors.item(0).toString());
+    }
+    
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void generalAdjacentSelector() throws Exception {
+        final String cssText = "div ~ hi";
+        final SelectorList selectors = createSelectors(cssText);
+        Assert.assertEquals(cssText, selectors.item(0).toString());
+    }
+    
     private SelectorList createSelectors(final String cssText) throws Exception {
         final InputSource source = new InputSource(new StringReader(cssText));
         return new SACParserCSS3().parseSelectors(source);
