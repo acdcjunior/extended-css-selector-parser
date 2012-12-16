@@ -30,16 +30,16 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 /**
- * Testcases for {@link BeginHyphenAttributeConditionImpl}.
+ * Test cases for {@link SubstringAttributeConditionImpl}.
  */
-public class BeginHyphenAttributeConditionImplTest {
+public class SubstringAttributeConditionImplTest {
 
     /**
      * @throws Exception if any error occurs
      */
     @Test
     public void withoutValue() throws Exception {
-        final BeginHyphenAttributeConditionImpl ac = new BeginHyphenAttributeConditionImpl("test", null, false);
+        final SubstringAttributeConditionImpl ac = new SubstringAttributeConditionImpl("test", null, false);
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertNull(ac.getValue());
         Assert.assertFalse(ac.getSpecified());
@@ -51,11 +51,11 @@ public class BeginHyphenAttributeConditionImplTest {
      */
     @Test
     public void emptyValue() throws Exception {
-        final BeginHyphenAttributeConditionImpl ac = new BeginHyphenAttributeConditionImpl("test", "", false);
+        final SubstringAttributeConditionImpl ac = new SubstringAttributeConditionImpl("test", "", false);
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("", ac.getValue());
         Assert.assertFalse(ac.getSpecified());
-        Assert.assertEquals("[test|=\"\"]", ac.toString());
+        Assert.assertEquals("[test*=\"\"]", ac.toString());
     }
 
     /**
@@ -63,11 +63,11 @@ public class BeginHyphenAttributeConditionImplTest {
      */
     @Test
     public void withValue() throws Exception {
-        final BeginHyphenAttributeConditionImpl ac = new BeginHyphenAttributeConditionImpl("test", "value", false);
+        final SubstringAttributeConditionImpl ac = new SubstringAttributeConditionImpl("test", "value", false);
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("value", ac.getValue());
         Assert.assertFalse(ac.getSpecified());
-        Assert.assertEquals("[test|=\"value\"]", ac.toString());
+        Assert.assertEquals("[test*=\"value\"]", ac.toString());
     }
 
     /**
@@ -75,7 +75,7 @@ public class BeginHyphenAttributeConditionImplTest {
      */
     @Test
     public void withoutValueAndSpecified() throws Exception {
-        final BeginHyphenAttributeConditionImpl ac = new BeginHyphenAttributeConditionImpl("test", null, true);
+        final SubstringAttributeConditionImpl ac = new SubstringAttributeConditionImpl("test", null, true);
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertNull(ac.getValue());
         Assert.assertTrue(ac.getSpecified());
@@ -87,11 +87,11 @@ public class BeginHyphenAttributeConditionImplTest {
      */
     @Test
     public void emptyValueAndSpecified() throws Exception {
-        final BeginHyphenAttributeConditionImpl ac = new BeginHyphenAttributeConditionImpl("test", "", true);
+        final SubstringAttributeConditionImpl ac = new SubstringAttributeConditionImpl("test", "", true);
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("", ac.getValue());
         Assert.assertTrue(ac.getSpecified());
-        Assert.assertEquals("[test|=\"\"]", ac.toString());
+        Assert.assertEquals("[test*=\"\"]", ac.toString());
     }
 
     /**
@@ -99,10 +99,10 @@ public class BeginHyphenAttributeConditionImplTest {
      */
     @Test
     public void withValueAndSpecified() throws Exception {
-        final BeginHyphenAttributeConditionImpl ac = new BeginHyphenAttributeConditionImpl("test", "value", true);
+        final SubstringAttributeConditionImpl ac = new SubstringAttributeConditionImpl("test", "value", true);
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("value", ac.getValue());
         Assert.assertTrue(ac.getSpecified());
-        Assert.assertEquals("[test|=\"value\"]", ac.toString());
+        Assert.assertEquals("[test*=\"value\"]", ac.toString());
     }
 }
