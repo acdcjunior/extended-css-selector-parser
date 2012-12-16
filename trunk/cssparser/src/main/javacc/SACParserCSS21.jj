@@ -118,7 +118,8 @@ TOKEN_MGR_DECLS :
         char c1 = s1.charAt(end);
         if ((c0 == '"' && c1 == '"')
             || (c0 == '\'' && c1 == '\''))
-        {            return trimBy(s1, 1, 1);
+        {
+            return trimBy(s1, 1, 1);
         }
 
         return s1.toString();
@@ -414,7 +415,8 @@ void styleSheetRuleList() :
     ( charsetRule() )?
     ( <S> | <CDO> | <CDC> )*
     (
-        (            importRule(ruleFound)
+        (
+            importRule(ruleFound)
             |
             (
                 styleRule() | mediaRule() | pageRule() | unknownRule()
@@ -519,9 +521,11 @@ void importRule(final boolean nonImportRuleFoundBefore) :
         ( mediaList(ml) )?
         <SEMICOLON>
         {
-            if (nonImportRuleFoundBefore)            {                getErrorHandler().error(toCSSParseException("invalidImportRuleIgnored2", e));
+            if (nonImportRuleFoundBefore)
+            {                getErrorHandler().error(toCSSParseException("invalidImportRuleIgnored2", e));
             }
-            else            {                handleImportStyle(unescape(t.image, false), ml, null, locator);
+            else
+            {                handleImportStyle(unescape(t.image, false), ml, null, locator);
             }
         }
     }
@@ -784,7 +788,8 @@ void styleRule() :
             this.handleStartSelector(selList, this.createLocator(t.next));
         }
         styleDeclaration()
-        (           <RBRACE> | <EOF>
+        (
+           <RBRACE> | <EOF>
         )
     }
     catch(CSSParseException e)

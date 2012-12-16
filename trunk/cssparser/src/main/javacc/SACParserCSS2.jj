@@ -362,7 +362,8 @@ void styleSheetRuleList() :
     ( <S> | <CDO> | <CDC> )*
     (
         (
-            importRule(ruleFound)            |
+            importRule(ruleFound)
+            |
             (
                 styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule()
             )

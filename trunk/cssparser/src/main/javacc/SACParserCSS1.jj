@@ -256,7 +256,8 @@ void styleSheetRuleList() :
 {
     ( <S> | <CDO> | <CDC> )*
     (
-        (            importRule(ruleFound)
+        (
+            importRule(ruleFound)
             |
             (
 	            styleRule() | unknownRule()
