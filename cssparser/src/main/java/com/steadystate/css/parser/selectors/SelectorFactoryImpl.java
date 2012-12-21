@@ -122,6 +122,6 @@ public class SelectorFactoryImpl implements SelectorFactory {
             final short nodeType,
             final Selector child,
             final SimpleSelector directAdjacent) throws CSSException {
-            return new GeneralAdjacentSelectorImpl(nodeType, child, directAdjacent);
-        }
+        return new GeneralAdjacentSelectorImpl(nodeType, child, directAdjacent);
+    }
 }

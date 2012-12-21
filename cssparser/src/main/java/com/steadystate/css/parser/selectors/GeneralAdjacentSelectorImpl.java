@@ -74,7 +74,7 @@ public class GeneralAdjacentSelectorImpl extends LocatableImpl implements Siblin
     }
 
     public short getSelectorType() {
-        return Selector.SAC_ANY_NODE_SELECTOR;//for now
+        return Selector.SAC_ANY_NODE_SELECTOR; //for now
     }
 
     public Selector getSelector() {
