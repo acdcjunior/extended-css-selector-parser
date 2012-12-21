@@ -67,7 +67,7 @@ public class SACParserCSS2 extends AbstractSACParser implements Parser {
 
     protected Token getToken()
     {
-        return this.token;
+        return token;
     }
 
 }
@@ -343,13 +343,13 @@ void styleSheet() :
 {
     try
     {
-        { this.handleStartDocument(); }
+        { handleStartDocument(); }
         styleSheetRuleList()
         <EOF>
     }
     finally
     {
-        this.handleEndDocument();
+        handleEndDocument();
     }
 }
 
@@ -396,19 +396,18 @@ void charsetRule() :
     {
         <CHARSET_SYM>
         {
-            locator = this.getLocator();
+            locator = getLocator();
         }
         ( <S> )*
         t = <STRING> ( <S> )*
         <SEMICOLON>
         {
-            this.handleCharset(t.toString(), locator);
+            handleCharset(t.toString(), locator);
         }
     }
     catch (ParseException e)
     {
-        this.getErrorHandler().error(
-            this.toCSSParseException("invalidCharsetRule", e));
+        getErrorHandler().error(toCSSParseException("invalidCharsetRule", e));
     }
 }
 
@@ -423,15 +422,14 @@ void unknownRule() :
     {
         t = <ATKEYWORD>
         {
-            locator = this.getLocator();
+            locator = getLocator();
             s = skip();
-            this.handleIgnorableAtRule(s, locator);
+            handleIgnorableAtRule(s, locator);
         }
     }
     catch (ParseException e)
     {
-        this.getErrorHandler().error(
-            this.toCSSParseException("invalidUnknownRule", e));
+        getErrorHandler().error(toCSSParseException("invalidUnknownRule", e));
     }
 }
 
@@ -459,7 +457,7 @@ void importRule(final boolean nonImportRuleFoundBefore) :
         }
         <IMPORT_SYM>
         {
-            locator = this.getLocator();
+            locator = getLocator();
         }
         ( <S> )*
         ( t = <STRING> | t = <URI> ) ( <S> )*
@@ -468,23 +466,23 @@ void importRule(final boolean nonImportRuleFoundBefore) :
         {
             if (nonImportRuleFoundBefore)
             {
-                this.handleImportStyle(unescape(t.image, false), ml, null, locator);
+                handleImportStyle(unescape(t.image, false), ml, null, locator);
             }
             else
             {
-                this.handleImportStyle(unescape(t.image, false), ml, null, locator);
+                handleImportStyle(unescape(t.image, false), ml, null, locator);
             }
         }
     }
     catch (CSSParseException e)
     {
-        this.getErrorHandler().error(e);
-        this.error_skipAtRule();
+        getErrorHandler().error(e);
+        error_skipAtRule();
     }
     catch (ParseException e)
     {
-        this.getErrorHandler().error(this.toCSSParseException("invalidImportRule", e));
-        this.error_skipAtRule();
+        getErrorHandler().error(toCSSParseException("invalidImportRule", e));
+        error_skipAtRule();
     }
 }
 
@@ -504,13 +502,13 @@ void mediaRule() :
     {
         <MEDIA_SYM>
         {
-            locator = this.getLocator();
+            locator = getLocator();
         }
         ( <S> )*
         mediaList(ml)
         {
             start = true;
-            this.handleStartMedia(ml, locator);
+            handleStartMedia(ml, locator);
         }
         <LBRACE> ( <S> )*
         ( mediaRuleList() )?
@@ -518,20 +516,20 @@ void mediaRule() :
     }
     catch (CSSParseException e)
     {
-        this.getErrorHandler().error(e);
-        this.error_skipblock();
+        getErrorHandler().error(e);
+        error_skipblock();
     }
     catch(ParseException e)
     {
-        CSSParseException cpe = this.toCSSParseException("invalidMediaRule", e);
-        this.getErrorHandler().error(cpe);
-        this.getErrorHandler().warning(this.createSkipWarning("ignoringRule", cpe));
-        this.error_skipblock();
+        CSSParseException cpe = toCSSParseException("invalidMediaRule", e);
+        getErrorHandler().error(cpe);
+        getErrorHandler().warning(createSkipWarning("ignoringRule", cpe));
+        error_skipblock();
     }
     finally
     {
         if (start) {
-            this.handleEndMedia(ml);
+            handleEndMedia(ml);
         }
     }
 }
@@ -545,14 +543,14 @@ void mediaList(SACMediaListImpl ml) :
     {
         s = medium()
         {
-            ml.setLocator(this.getLocator());
+            ml.setLocator(getLocator());
         }
         ( <COMMA> ( <S> )* { ml.add(s); } s = medium() )*
         { ml.add(s); }
     }
     catch(ParseException e)
     {
-        throw this.toCSSParseException("invalidMediaList", e);
+        throw toCSSParseException("invalidMediaList", e);
     }
 }
 
@@ -582,7 +580,7 @@ String medium() :
 {
     t = <IDENT> ( <S> )*
     {
-        this.handleMedium(t.image, this.createLocator(t));
+        handleMedium(t.image, createLocator(t));
         return t.image;
     }
 }
@@ -604,7 +602,7 @@ void pageRule() :
     try {
         <PAGE_SYM>
         {
-            locator = this.getLocator();
+            locator = getLocator();
         }
         ( <S> )*
 
@@ -612,13 +610,13 @@ void pageRule() :
         ( t = <IDENT> ( <S> )* ) |
         ( s = pseudoPage() ( <S> )* ) )?
 
-        //  ( t = <IDENT> { jjtThis.setIdent( t.image ); } )?
-        //  ( s = pseudoPage() { jjtThis.setPseudoPage( s ); } )? ( <S> )*
+        //  ( t = <IDENT> { jjtsetIdent( t.image ); } )?
+        //  ( s = pseudoPage() { jjtsetPseudoPage( s ); } )? ( <S> )*
 
         <LBRACE> ( <S> )*
         {
             start = true;
-            this.handleStartPage((t != null) ? unescape(t.image, false) : null, s, locator);
+            handleStartPage((t != null) ? unescape(t.image, false) : null, s, locator);
         }
 
         ( declaration() )?
@@ -627,11 +625,11 @@ void pageRule() :
     }
     catch(ParseException e)
     {
-        throw this.toCSSParseException("invalidPageRule", e);
+        throw toCSSParseException("invalidPageRule", e);
     }
     finally {
         if (start) {
-            this.handleEndPage((t != null) ? unescape(t.image, false) : null, s);
+            handleEndPage((t != null) ? unescape(t.image, false) : null, s);
         }
     }
 }
@@ -664,21 +662,21 @@ void fontFaceRule() :
     try {
         <FONT_FACE_SYM>
         {
-            locator = this.getLocator();
+            locator = getLocator();
         }
         ( <S> )*
-        <LBRACE> ( <S> )* { start = true; this.handleStartFontFace(locator); }
+        <LBRACE> ( <S> )* { start = true; handleStartFontFace(locator); }
         ( declaration() )?
         ( <SEMICOLON> ( <S> )* ( declaration() )? )*
         <RBRACE>
     }
     catch(ParseException e)
     {
-        throw this.toCSSParseException("invalidFontFaceRule", e);
+        throw toCSSParseException("invalidFontFaceRule", e);
     }
     finally {
         if (start) {
-            this.handleEndFontFace();
+            handleEndFontFace();
         }
     }
 }
@@ -755,33 +753,33 @@ void styleRule() :
 {
     try {
         {
-            t = this.getToken();
+            t = getToken();
         }
         selList = selectorList()
         <LBRACE> ( <S> )*
         {
             start = true;
-            this.handleStartSelector(selList, this.createLocator(t.next));
+            handleStartSelector(selList, createLocator(t.next));
         }
         styleDeclaration()
         <RBRACE>
     }
     catch(CSSParseException e)
     {
-        this.getErrorHandler().error(e);
-        this.getErrorHandler().warning(this.createSkipWarning("ignoringRule", e));
-        this.error_skipblock();
+        getErrorHandler().error(e);
+        getErrorHandler().warning(createSkipWarning("ignoringRule", e));
+        error_skipblock();
     }
     catch(ParseException e)
     {
-        CSSParseException cpe = this.toCSSParseException("invalidStyleRule", e);
-        this.getErrorHandler().error(cpe);
-        this.getErrorHandler().warning(this.createSkipWarning("ignoringFollowingDeclarations", cpe));
-        this.error_skipblock();
+        CSSParseException cpe = toCSSParseException("invalidStyleRule", e);
+        getErrorHandler().error(cpe);
+        getErrorHandler().warning(createSkipWarning("ignoringFollowingDeclarations", cpe));
+        error_skipblock();
     }
     finally {
         if (start) {
-            this.handleEndSelector(selList);
+            handleEndSelector(selList);
         }
     }
 }
@@ -833,11 +831,11 @@ Selector selector() :
         sel = simpleSelector(null, ' ')
         ( LOOKAHEAD(2) comb = combinator() sel = simpleSelector(sel, comb) )* ( <S> )*
         {
-            this.handleSelector(sel);
+            handleSelector(sel);
             return sel;
         }
     } catch (ParseException e) {
-        throw this.toCSSParseException("invalidSelector", e);
+        throw toCSSParseException("invalidSelector", e);
         //skipSelector();
     }
 }
@@ -866,7 +864,7 @@ Selector simpleSelector(Selector sel, char comb) :
                 )*
             )
             |
-            ( { simpleSel = this.getSelectorFactory().createElementSelector(null, null); }
+            ( { simpleSel = getSelectorFactory().createElementSelector(null, null); }
                 ( c = hash(c)
                 | c = _class(c)
                 | c = attrib(c)
@@ -885,19 +883,19 @@ Selector simpleSelector(Selector sel, char comb) :
                 c = (Condition) o;
             }
             if (c != null) {
-                simpleSel = this.getSelectorFactory().createConditionalSelector(simpleSel, c);
+                simpleSel = getSelectorFactory().createConditionalSelector(simpleSel, c);
             }
 
             if (sel != null) {
                 switch (comb) {
                 case ' ':
-                    sel = this.getSelectorFactory().createDescendantSelector(sel, simpleSel);
+                    sel = getSelectorFactory().createDescendantSelector(sel, simpleSel);
                     break;
                 case '+':
-                    sel = this.getSelectorFactory().createDirectAdjacentSelector(sel.getSelectorType(), sel, simpleSel);
+                    sel = getSelectorFactory().createDirectAdjacentSelector(sel.getSelectorType(), sel, simpleSel);
                     break;
                 case '>':
-                    sel = this.getSelectorFactory().createChildSelector(sel, simpleSel);
+                    sel = getSelectorFactory().createChildSelector(sel, simpleSel);
                     break;
                 }
             } else {
@@ -905,7 +903,7 @@ Selector simpleSelector(Selector sel, char comb) :
             }
             if (pseudoElementSel != null)
             {
-                sel = this.getSelectorFactory().createDescendantSelector(sel, pseudoElementSel);
+                sel = getSelectorFactory().createDescendantSelector(sel, pseudoElementSel);
             }
 
             return sel;
@@ -913,7 +911,7 @@ Selector simpleSelector(Selector sel, char comb) :
     }
     catch (ParseException e)
     {
-        throw this.toCSSParseException("invalidSimpleSelector", e);
+        throw toCSSParseException("invalidSimpleSelector", e);
     }
 }
 
@@ -932,21 +930,21 @@ Condition _class(Condition pred) :
     {
         <DOT>
         {
-            locator = this.getLocator();
+            locator = getLocator();
         }
         t = <IDENT>
         {
-            Condition c = this.getConditionFactory().createClassCondition(null, t.image);
+            Condition c = getConditionFactory().createClassCondition(null, t.image);
             if (c instanceof Locatable)
             {
                 ((Locatable) c).setLocator(locator);
             }
-            return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
+            return (pred == null) ? c : getConditionFactory().createAndCondition(pred, c);
         }
     }
     catch (ParseException e)
     {
-        throw this.toCSSParseException("invalidClassSelector", e);
+        throw toCSSParseException("invalidClassSelector", e);
     }
 }
 
@@ -965,26 +963,26 @@ SimpleSelector elementName() :
     {
         t=<IDENT>
         {
-            sel = this.getSelectorFactory().createElementSelector(null, unescape(t.image, false));
+            sel = getSelectorFactory().createElementSelector(null, unescape(t.image, false));
             if (sel instanceof Locatable)
             {
-                ((Locatable) sel).setLocator(this.getLocator());
+                ((Locatable) sel).setLocator(getLocator());
             }
             return sel;
         }
         | <ASTERISK>
         {
-            sel = this.getSelectorFactory().createElementSelector(null, null);
+            sel = getSelectorFactory().createElementSelector(null, null);
             if (sel instanceof Locatable)
             {
-                ((Locatable) sel).setLocator(this.getLocator());
+                ((Locatable) sel).setLocator(getLocator());
             }
             return sel;
         }
     }
     catch (ParseException e)
     {
-        throw this.toCSSParseException("invalidElementName", e);
+        throw toCSSParseException("invalidElementName", e);
     }
 }
 
@@ -1007,7 +1005,7 @@ Condition attrib(Condition pred) :
     {
         <LSQUARE>
         {
-            locator = this.getLocator();
+            locator = getLocator();
         }
         ( <S> )*
         t = <IDENT> { name = unescape(t.image, false); } ( <S> )*
@@ -1032,28 +1030,28 @@ Condition attrib(Condition pred) :
             Condition c = null;
             switch (type) {
             case 0:
-                c = this.getConditionFactory().createAttributeCondition(name, null, false, null);
+                c = getConditionFactory().createAttributeCondition(name, null, false, null);
                 break;
             case 1:
-                c = this.getConditionFactory().createAttributeCondition(name, null, null != value, value);
+                c = getConditionFactory().createAttributeCondition(name, null, null != value, value);
                 break;
             case 2:
-                c = this.getConditionFactory().createOneOfAttributeCondition(name, null, null != value, value);
+                c = getConditionFactory().createOneOfAttributeCondition(name, null, null != value, value);
                 break;
             case 3:
-                c = this.getConditionFactory().createBeginHyphenAttributeCondition(name, null, null != value, value);
+                c = getConditionFactory().createBeginHyphenAttributeCondition(name, null, null != value, value);
                 break;
             }
             if (c instanceof Locatable)
             {
                 ((Locatable) c).setLocator(locator);
             }
-            return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
+            return (pred == null) ? c : getConditionFactory().createAndCondition(pred, c);
         }
     }
     catch (ParseException e)
     {
-        throw this.toCSSParseException("invalidAttrib", e);
+        throw toCSSParseException("invalidAttrib", e);
     }
 }
 
@@ -1076,7 +1074,7 @@ Object pseudo(Condition pred) :
     {
         <COLON>
         {
-            locator = this.getLocator();
+            locator = getLocator();
         }
         (
             t = <IDENT>
@@ -1087,11 +1085,11 @@ Object pseudo(Condition pred) :
                     || "before".equals(s)
                     || "after".equals(s))
                 {
-                    pseudoElementSel = this.getSelectorFactory().createPseudoElementSelector(null, s);
+                    pseudoElementSel = getSelectorFactory().createPseudoElementSelector(null, s);
                 }
                 else
                 {
-                    c = this.getConditionFactory().createPseudoClassCondition(null, s);
+                    c = getConditionFactory().createPseudoClassCondition(null, s);
                 }
                 if (pseudoElementSel != null)
                 {
@@ -1107,7 +1105,7 @@ Object pseudo(Condition pred) :
                 }
                 return (pred == null)
                     ? c
-                    : this.getConditionFactory().createAndCondition(pred, c);
+                    : getConditionFactory().createAndCondition(pred, c);
             }
             |
             (
@@ -1116,23 +1114,23 @@ Object pseudo(Condition pred) :
                 <RROUND>
                 {
                     if (function.equalsIgnoreCase("lang(")) {
-                        c = this.getConditionFactory().createLangCondition(unescape(arg, false));
+                        c = getConditionFactory().createLangCondition(unescape(arg, false));
                         if (c instanceof Locatable)
                         {
                             ((Locatable) c).setLocator(locator);
                         }
                         return (pred == null)
                             ? c
-                            : this.getConditionFactory().createAndCondition(pred, c);
+                            : getConditionFactory().createAndCondition(pred, c);
                     } else {
-                        c = this.getConditionFactory().createPseudoClassCondition(null, function + arg + ")");
+                        c = getConditionFactory().createPseudoClassCondition(null, function + arg + ")");
                         if (c instanceof Locatable)
                         {
                             ((Locatable) c).setLocator(locator);
                         }
                         return (pred == null)
                             ? c
-                            : this.getConditionFactory().createAndCondition(pred, c);
+                            : getConditionFactory().createAndCondition(pred, c);
                     }
                 }
             )
@@ -1141,7 +1139,7 @@ Object pseudo(Condition pred) :
     }
     catch (ParseException e)
     {
-        throw this.toCSSParseException("invalidPseudo", e);
+        throw toCSSParseException("invalidPseudo", e);
     }
 }
 
@@ -1154,17 +1152,17 @@ Condition hash(Condition pred) :
     {
         t = <HASH>
         {
-            Condition c = this.getConditionFactory().createIdCondition(unescape(t.image.substring(1), false));
+            Condition c = getConditionFactory().createIdCondition(unescape(t.image.substring(1), false));
             if (c instanceof Locatable)
             {
-                ((Locatable) c).setLocator(this.getLocator());
+                ((Locatable) c).setLocator(getLocator());
             }
-            return (pred == null) ? c : this.getConditionFactory().createAndCondition(pred, c);
+            return (pred == null) ? c : getConditionFactory().createAndCondition(pred, c);
         }
     }
     catch (ParseException e)
     {
-        throw this.toCSSParseException("invalidHash", e);
+        throw toCSSParseException("invalidHash", e);
     }
 }
 
@@ -1179,7 +1177,7 @@ void styleDeclaration()  :
     }
     catch (ParseException ex)
     {
-        this.getErrorHandler().error(this.toCSSParseException("invalidDeclaration", ex));
+        getErrorHandler().error(toCSSParseException("invalidDeclaration", ex));
         error_skipdecl();
     }
 }
@@ -1202,23 +1200,23 @@ void declaration() :
     {
         p = property()
         {
-            locator = this.getLocator();
+            locator = getLocator();
         }
         <COLON> ( <S> )*
         e = expr()
         ( priority = prio() )?
         {
-            this.handleProperty(p, e, priority, locator);
+            handleProperty(p, e, priority, locator);
         }
     }
     catch (CSSParseException ex)
     {
-        this.getErrorHandler().error(ex);
+        getErrorHandler().error(ex);
         error_skipdecl();
     }
     catch (ParseException ex)
     {
-        this.getErrorHandler().error(this.toCSSParseException("invalidDeclaration", ex));
+        getErrorHandler().error(toCSSParseException("invalidDeclaration", ex));
         error_skipdecl();
     }
 }
@@ -1256,7 +1254,7 @@ LexicalUnit expr() :
     }
     catch (ParseException ex)
     {
-        throw this.toCSSParseException("invalidExpr", ex);
+        throw toCSSParseException("invalidExpr", ex);
     }
 }
 
@@ -1281,7 +1279,7 @@ LexicalUnit term(LexicalUnit prev) :
     {
         if (op != ' ')
         {
-            locator = this.getLocator();
+            locator = getLocator();
         }
     }
     (
@@ -1333,7 +1331,7 @@ LexicalUnit term(LexicalUnit prev) :
     {
         if (locator == null)
         {
-            locator = this.getLocator();
+            locator = getLocator();
         }
     }
     ( <S> )*
@@ -1361,7 +1359,7 @@ LexicalUnit function(LexicalUnit prev) :
     params = expr()
     <RROUND>
     {
-        return this.functionInternal(prev, t, params);
+        return functionInternal(prev, t, params);
     }
 }
 
@@ -1396,7 +1394,7 @@ LexicalUnit hexcolor(LexicalUnit prev) :
 {
     t = <HASH>
     {
-        return this.hexcolorInternal(prev, t);
+        return hexcolorInternal(prev, t);
     }
 }
 
