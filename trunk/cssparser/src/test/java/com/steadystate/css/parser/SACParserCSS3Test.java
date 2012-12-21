@@ -52,7 +52,7 @@ public class SACParserCSS3Test {
         final ConditionalSelector selector = (ConditionalSelector) selectors.item(0);
         Assert.assertTrue(selector.getCondition() instanceof PrefixAttributeConditionImpl);
     }
-    
+
     /**
      * @throws Exception if any error occurs
      */
@@ -62,7 +62,7 @@ public class SACParserCSS3Test {
         final ConditionalSelector selector = (ConditionalSelector) selectors.item(0);
         Assert.assertTrue(selector.getCondition() instanceof SuffixAttributeConditionImpl);
     }
-    
+
     /**
      * @throws Exception if any error occurs
      */
@@ -72,7 +72,7 @@ public class SACParserCSS3Test {
         final ConditionalSelector selector = (ConditionalSelector) selectors.item(0);
         Assert.assertTrue(selector.getCondition() instanceof SubstringAttributeConditionImpl);
     }
-    
+
     /**
      * @throws Exception if any error occurs
      */
@@ -82,7 +82,7 @@ public class SACParserCSS3Test {
         final SelectorList selectors = createSelectors(cssText);
         Assert.assertEquals(cssText, selectors.item(0).toString());
     }
-    
+
     /**
      * @throws Exception if any error occurs
      */
@@ -92,7 +92,7 @@ public class SACParserCSS3Test {
         final SelectorList selectors = createSelectors(cssText);
         Assert.assertEquals(cssText, selectors.item(0).toString());
     }
-    
+
     /**
      * @throws Exception if any error occurs
      */
@@ -102,7 +102,7 @@ public class SACParserCSS3Test {
         final SelectorList selectors = createSelectors(cssText);
         Assert.assertEquals(cssText, selectors.item(0).toString());
     }
-    
+
     private SelectorList createSelectors(final String cssText) throws Exception {
         final InputSource source = new InputSource(new StringReader(cssText));
         return new SACParserCSS3().parseSelectors(source);
