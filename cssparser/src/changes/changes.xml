@@ -6,6 +6,9 @@
   </properties>
   <body>
     <release version="0.9.9" date="xx.xx.2012" description="Release with some bugfixes and more code cleanup.">
+        <action type="add">
+            CSS3 parser added (patch from Ahmed Ashour).
+        </action>
         <action type="fix" dev="rbri" issue="35">
             DescendantSelectorImpl#toString() takes PseudoElementSelectors into account.
         </action>
