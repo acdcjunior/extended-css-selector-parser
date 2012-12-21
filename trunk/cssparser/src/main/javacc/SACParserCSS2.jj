@@ -186,7 +186,7 @@ TOKEN_MGR_DECLS :
 // "@media"        {return MEDIA_SYM;}
 | < MEDIA_SYM: "@media" >
 
-// "@font-face"        {return FONT_FACE_SYM;}
+// "@font-face"    {return FONT_FACE_SYM;}
 | < FONT_FACE_SYM: "@font-face" >
 
 // "@charset"      {return CHARSET_SYM;}
@@ -195,7 +195,7 @@ TOKEN_MGR_DECLS :
 // "@"{ident}      {return ATKEYWORD;}
 | < ATKEYWORD: "@" <IDENT> >
 
-// "!{w}important"     {return IMPORTANT_SYM;}
+// "!{w}important" {return IMPORTANT_SYM;}
 | < IMPORTANT_SYM: "!" ( <S> )? "important" >
 
 | < INHERIT: "inherit" >
@@ -206,64 +206,64 @@ TOKEN_MGR_DECLS :
 // {num}ex         {return EXS;}
 | < EXS: <NUM> "ex" > { matchedToken.image = trimBy(image, 0, 2); }
 
-// {num}px          {return LENGTH;}
+// {num}px         {return LENGTH;}
 | < LENGTH_PX: <NUM> "px" > { matchedToken.image = trimBy(image, 0, 2); }
 
-// {num}cm          {return LENGTH;}
+// {num}cm         {return LENGTH;}
 | < LENGTH_CM: <NUM> "cm" > { matchedToken.image = trimBy(image, 0, 2); }
 
-// {num}mm          {return LENGTH;}
+// {num}mm         {return LENGTH;}
 | < LENGTH_MM: <NUM> "mm" > { matchedToken.image = trimBy(image, 0, 2); }
 
-// {num}in          {return LENGTH;}
+// {num}in         {return LENGTH;}
 | < LENGTH_IN: <NUM> "in" > { matchedToken.image = trimBy(image, 0, 2); }
 
-// {num}pt          {return LENGTH;}
+// {num}pt         {return LENGTH;}
 | < LENGTH_PT: <NUM> "pt" > { matchedToken.image = trimBy(image, 0, 2); }
 
-// {num}pc          {return LENGTH;}
+// {num}pc         {return LENGTH;}
 | < LENGTH_PC: <NUM> "pc" > { matchedToken.image = trimBy(image, 0, 2); }
 
-// {num}deg     {return ANGLE;}
+// {num}deg        {return ANGLE;}
 | < ANGLE_DEG: <NUM> "deg" > { matchedToken.image = trimBy(image, 0, 3); }
 
-// {num}rad     {return ANGLE;}
+// {num}rad        {return ANGLE;}
 | < ANGLE_RAD: <NUM> "rad" > { matchedToken.image = trimBy(image, 0, 3); }
 
-// {num}grad        {return ANGLE;}
+// {num}grad       {return ANGLE;}
 | < ANGLE_GRAD: <NUM> "grad" > { matchedToken.image = trimBy(image, 0, 4); }
 
-// {num}ms          {return TIME;}
+// {num}ms         {return TIME;}
 | < TIME_MS: <NUM> "ms" > { matchedToken.image = trimBy(image, 0, 2); }
 
-// {num}s           {return TIME;}
+// {num}s          {return TIME;}
 | < TIME_S: <NUM> "s" > { matchedToken.image = trimBy(image, 0, 1); }
 
-// {num}Hz          {return FREQ;}
+// {num}Hz         {return FREQ;}
 | < FREQ_HZ: <NUM> "Hz" > { matchedToken.image = trimBy(image, 0, 2); }
 
-// {num}kHz     {return FREQ;}
+// {num}kHz        {return FREQ;}
 | < FREQ_KHZ: <NUM> "kHz" > { matchedToken.image = trimBy(image, 0, 3); }
 
-// {num}{ident}     {return DIMEN;}
+// {num}{ident}    {return DIMEN;}
 | < DIMEN: <NUM> <IDENT> >
 
-// {num}%           {return PERCENTAGE;}
+// {num}%          {return PERCENTAGE;}
 | < PERCENTAGE: <NUM> "%" > { matchedToken.image = trimBy(image, 0, 1); }
 
-// {num}            {return NUMBER;}
+// {num}           {return NUMBER;}
 | < NUMBER: <NUM> >
 
 | < RGB: "rgb(" >
 
-// {ident}"("       {return FUNCTION;}
+// {ident}"("      {return FUNCTION;}
 | < FUNCTION: <IDENT> "(" >
 
-// ident       {nmstart}{nmchar}*
+// ident           {nmstart}{nmchar}*
 // {ident}         {return IDENT;}
 | < IDENT: <NMSTART> ( <NMCHAR> )* >
 
-// name        {nmchar}+
+// name            {nmchar}+
 | < #NAME: ( <NMCHAR> )+ >
 
 // num     [0-9]+|[0-9]*"."[0-9]+

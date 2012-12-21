@@ -262,31 +262,31 @@ TOKEN_MGR_DECLS :
 // Z        z|\\0{0,4}(5a|7a)(\r\n|[ \t\r\n\f])?|\\z
 | < #Z_LETTER: "z" | "\\" ( "0" | "00" | "000" | "0000" ) ( "5a" | "7a" ) ( "\r\n" | [ " ", "\t", "\r", "\n", "\f"])? | "\\" "z" >
 
-// "<!--"       {return CDO;}
+// "<!--"               {return CDO;}
 | < CDO: "<!--" >
 
-// "-->"            {return CDC;}
+// "-->"                {return CDC;}
 | < CDC: "-->" >
 
-// "~="         {return INCLUDES;}
+// "~="                 {return INCLUDES;}
 | < INCLUDES: "~=" >
 
-// "|="         {return DASHMATCH;}
+// "|="                 {return DASHMATCH;}
 | < DASHMATCH: "|=" >
 
-// {w}"{"           {return LBRACE;}
+// {w}"{"               {return LBRACE;}
 | < LBRACE: <W> "{" >
 
-// {w}"+"           {return PLUS;}
+// {w}"+"               {return PLUS;}
 | < PLUS: <W> "+" >
 
-// {w}">"           {return GREATER;}
+// {w}">"               {return GREATER;}
 | < GREATER: <W> ">" >
 
-// {w}","           {return COMMA;}
+// {w}","               {return COMMA;}
 | < COMMA: <W> "," >
 
-// "#"{name}        {return HASH;}
+// "#"{name}            {return HASH;}
 | < HASH: "#" <NAME> >
 
 // @{I}{M}{P}{O}{R}{T}  {return IMPORT_SYM;}
@@ -295,7 +295,7 @@ TOKEN_MGR_DECLS :
 // @{P}{A}{G}{E}        {return PAGE_SYM;}
 | < PAGE_SYM: "@" <P_LETTER> <A_LETTER> <G_LETTER> <E_LETTER> >
 
-// @{M}{E}{D}{I}{A} {return MEDIA_SYM;}
+// @{M}{E}{D}{I}{A}     {return MEDIA_SYM;}
 | < MEDIA_SYM: "@" <M_LETTER> <E_LETTER> <D_LETTER> <I_LETTER> <A_LETTER> >
 
 // @{C}{H}{A}{R}{S}{E}{T}   {return CHARSET_SYM;}
@@ -304,28 +304,28 @@ TOKEN_MGR_DECLS :
 // "!"({w}|{comment})*{I}{M}{P}{O}{R}{T}{A}{N}{T}   {return IMPORTANT_SYM;}
 | < IMPORTANT_SYM: "!" ( <W> | <COMMENT_> )* <I_LETTER> <M_LETTER> <P_LETTER> <O_LETTER> <R_LETTER> <T_LETTER> <A_LETTER> <N_LETTER> <T_LETTER> >
 
-// {num}{E}{M}      {return EMS;}
+// {num}{E}{M}          {return EMS;}
 | < EMS: <NUM> <E_LETTER> <M_LETTER> > { matchedToken.image = splitNumber(image); }
 
-// {num}{E}{X}      {return EXS;}
+// {num}{E}{X}          {return EXS;}
 | < EXS: <NUM> <E_LETTER> <X_LETTER> > { matchedToken.image = splitNumber(image); }
 
-// {num}{P}{X}      {return LENGTH;}
+// {num}{P}{X}          {return LENGTH;}
 | < LENGTH_PX: <NUM> <P_LETTER> <X_LETTER> > { matchedToken.image = splitNumber(image); }
 
-// {num}{C}{M}      {return LENGTH;}
+// {num}{C}{M}          {return LENGTH;}
 | < LENGTH_CM: <NUM> <C_LETTER> <M_LETTER> > { matchedToken.image = splitNumber(image); }
 
-// {num}{M}{M}      {return LENGTH;}
+// {num}{M}{M}          {return LENGTH;}
 | < LENGTH_MM: <NUM> <M_LETTER> <M_LETTER> > { matchedToken.image = splitNumber(image); }
 
-// {num}{I}{N}      {return LENGTH;}
+// {num}{I}{N}          {return LENGTH;}
 | < LENGTH_IN: <NUM> <I_LETTER> <N_LETTER> > { matchedToken.image = splitNumber(image); }
 
-// {num}{P}{T}      {return LENGTH;}
+// {num}{P}{T}          {return LENGTH;}
 | < LENGTH_PT: <NUM> <P_LETTER> <T_LETTER> > { matchedToken.image = splitNumber(image); }
 
-// {num}{P}{C}      {return LENGTH;}
+// {num}{P}{C}          {return LENGTH;}
 | < LENGTH_PC: <NUM> <P_LETTER> <C_LETTER> > { matchedToken.image = splitNumber(image); }
 
 // {num}{D}{E}{G}       {return ANGLE;}
@@ -337,29 +337,29 @@ TOKEN_MGR_DECLS :
 // {num}{G}{R}{A}{D}    {return ANGLE;}
 | < ANGLE_GRAD: <NUM> <G_LETTER> <R_LETTER> <A_LETTER> <D_LETTER> > { matchedToken.image = splitNumber(image); }
 
-// {num}{M}{S}      {return TIME;}
+// {num}{M}{S}          {return TIME;}
 | < TIME_MS: <NUM> <M_LETTER> <S_LETTER> > { matchedToken.image = splitNumber(image); }
 
-// {num}{S}     {return TIME;}
+// {num}{S}             {return TIME;}
 | < TIME_S: <NUM> <S_LETTER> > { matchedToken.image = splitNumber(image); }
 
-// {num}{H}{Z}      {return FREQ;}
+// {num}{H}{Z}          {return FREQ;}
 | < FREQ_HZ: <NUM> <H_LETTER> <Z_LETTER> > { matchedToken.image = splitNumber(image); }
 
 // {num}{K}{H}{Z}       {return FREQ;}
 | < FREQ_KHZ: <NUM> <K_LETTER> <H_LETTER> <Z_LETTER> > { matchedToken.image = splitNumber(image); }
 
-// {num}{ident}     {return DIMENSION;}
+// {num}{ident}         {return DIMENSION;}
 | < DIMENSION: <NUM> <IDENT> >
 
-// {num}%           {return PERCENTAGE;}
+// {num}%               {return PERCENTAGE;}
 | < PERCENTAGE: <NUM> "%" > { matchedToken.image = splitNumber(image); }
 
 // "url("{w}{string}{w}")"  {return URI;}
 // "url("{w}{url}{w}")" {return URI;}
 | < URI: "url(" ( <S> )* ( <STRING> | <URL> ) ( <S> )* ")" > { matchedToken.image = trimUrl(image); }
 
-// {ident}"(        {return FUNCTION;}
+// {ident}"(            {return FUNCTION;}
 | < FUNCTION: <IDENT> "(" >
 
 | < RBRACE: "}" >
