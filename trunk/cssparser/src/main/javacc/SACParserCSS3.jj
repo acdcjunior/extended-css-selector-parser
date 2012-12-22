@@ -1124,7 +1124,7 @@ Condition attrib(Condition pred) :
 //
 // pseudo
 //  : ':' [ IDENT
-//          | FUNCTION S* ((PLUS | MINUS | NUMBER | STRING )? S*)+ ')' ]
+//          | FUNCTION S* ((PLUS | MINUS | DIMENSION | NUMBER | STRING | IDENT)? S*)+ ')' ]
 //  ;
 //
 Object pseudo(Condition pred) :
@@ -1178,7 +1178,7 @@ Object pseudo(Condition pred) :
             (
                 t = <FUNCTION> { function = unescape(t.image, false); } ( <S> )*
                 (
-                    (t = <PLUS> | t = <MINUS> | t = <NUMBER> | t = <STRING>)
+                    (t = <PLUS> | t = <MINUS> | t = <DIMENSION> | t = <NUMBER> | t = <STRING> | t = <IDENT>)
                     { arg.append(unescape(t.image, false)); }
                     ( <S> )*
                 )+
