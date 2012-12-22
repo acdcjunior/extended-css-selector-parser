@@ -193,22 +193,6 @@ TOKEN_MGR_DECLS :
 // {num}            {return NUMBER;}
 | < NUMBER: <NUM> >
 
-// nth
-//  : S* [ ['-'|'+']? INTEGER? {N} [ S* ['-'|'+'] S* INTEGER ]? |
-//         ['-'|'+']? INTEGER | {O}{D}{D} | {E}{V}{E}{N} ] S*
-| < NTH: (<S>)*
-    (
-      ( (["-","+"])? (<NUMBER>)? <N_LETTER> ( (<S>)* (["-","+"]) (<S>)* <NUMBER> )? )
-      |
-      ( (["-","+"])? <NUMBER> )
-      |
-      (<O_LETTER> <D_LETTER> <D_LETTER>)
-      |
-      (<E_LETTER> <V_LETTER> <E_LETTER> <N_LETTER>)
-    )
-    (<S>)*
-  >
-
 | < INHERIT: "inherit" >
 
 // ident        -?{nmstart}{nmchar}*
@@ -282,43 +266,43 @@ TOKEN_MGR_DECLS :
 // Z        z|\\0{0,4}(5a|7a)(\r\n|[ \t\r\n\f])?|\\z
 | < #Z_LETTER: "z" | "\\" ( "0" | "00" | "000" | "0000" ) ( "5a" | "7a" ) ( "\r\n" | [ " ", "\t", "\r", "\n", "\f"])? | "\\" "z" >
 
-// "<!--"       {return CDO;}
+// "<!--"               {return CDO;}
 | < CDO: "<!--" >
 
-// "-->"            {return CDC;}
+// "-->"                {return CDC;}
 | < CDC: "-->" >
 
-// "~="         {return INCLUDES;}
+// "~="                 {return INCLUDES;}
 | < INCLUDES: "~=" >
 
-// "|="         {return DASHMATCH;}
+// "|="                 {return DASHMATCH;}
 | < DASHMATCH: "|=" >
 
-// "^="         {return PREFIXMATCH;}
+// "^="                 {return PREFIXMATCH;}
 | < PREFIXMATCH: "^=" >
 
-// "$="         {return SUFFIXMATCH;}
+// "$="                 {return SUFFIXMATCH;}
 | < SUFFIXMATCH: "$=" >
 
-// "*="         {return SUBSTRINGMATCH;}
+// "*="                 {return SUBSTRINGMATCH;}
 | < SUBSTRINGMATCH: "*=" >
 
-// {w}"{"           {return LBRACE;}
+// {w}"{"               {return LBRACE;}
 | < LBRACE: <W> "{" >
 
-// {w}"+"           {return PLUS;}
+// {w}"+"               {return PLUS;}
 | < PLUS: <W> "+" >
 
-// {w}">"           {return GREATER;}
+// {w}">"               {return GREATER;}
 | < GREATER: <W> ">" >
 
-// {w}"~"           {return TILDE;}
+// {w}"~"               {return TILDE;}
 | < TILDE: <W> "~" >
 
-// {w}","           {return COMMA;}
+// {w}","               {return COMMA;}
 | < COMMA: <W> "," >
 
-// "#"{name}        {return HASH;}
+// "#"{name}            {return HASH;}
 | < HASH: "#" <NAME> >
 
 // @{I}{M}{P}{O}{R}{T}  {return IMPORT_SYM;}
@@ -1053,7 +1037,7 @@ SimpleSelector elementName() :
 
 //
 // attrib
-//   : '[' S* IDENT S* [ [ '=' | INCLUDES | DASHMATCH ] S*
+//   : '[' S* IDENT S* [ [ '=' | INCLUDES | DASHMATCH | PREFIXMATCH | SUFFIXMATCH | SUBSTRINGMATCH ] S*
 //     [ IDENT | STRING ] S* ]? ']'
 //   ;
 //
@@ -1137,10 +1121,10 @@ Condition attrib(Condition pred) :
         throw toCSSParseException("invalidAttrib", e);
     }
 }
-
 //
 // pseudo
-//  : ':' [ IDENT | FUNCTION S* IDENT? S* ')' ]
+//  : ':' [ IDENT
+//          | FUNCTION S* ((PLUS | MINUS | NUMBER | STRING )? S*)+ ')' ]
 //  ;
 //
 Object pseudo(Condition pred) :
@@ -1149,7 +1133,7 @@ Object pseudo(Condition pred) :
     Condition c = null;
     Token t;
     String function;
-    String arg = "";
+    StringBuilder arg = new StringBuilder();
     Locator locator;
 }
 {
@@ -1194,14 +1178,14 @@ Object pseudo(Condition pred) :
             (
                 t = <FUNCTION> { function = unescape(t.image, false); } ( <S> )*
                 (
-                    ( t = <IDENT> | t = <NUMBER> | t = <NTH> )
-                    { arg = unescape(t.image, false); }
+                    (t = <PLUS> | t = <MINUS> | t = <NUMBER> | t = <STRING>)
+                    { arg.append(unescape(t.image, false)); }
                     ( <S> )*
-                )?
+                )+
                 <RROUND>
                 {
                     if (function.equalsIgnoreCase("lang(")) {
-                        c = getConditionFactory().createLangCondition(unescape(arg, false));
+                        c = getConditionFactory().createLangCondition(unescape(arg.toString(), false));
                         if (c instanceof Locatable)
                         {
                             ((Locatable) c).setLocator(locator);
@@ -1210,7 +1194,7 @@ Object pseudo(Condition pred) :
                             ? c
                             : getConditionFactory().createAndCondition(pred, c);
                     } else {
-                        c = getConditionFactory().createPseudoClassCondition(null, function + arg + ")");
+                        c = getConditionFactory().createPseudoClassCondition(null, function + arg.toString() + ")");
                         if (c instanceof Locatable)
                         {
                             ((Locatable) c).setLocator(locator);
