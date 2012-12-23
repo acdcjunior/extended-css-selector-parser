@@ -29,8 +29,7 @@ package com.steadystate.css.dom;
 import java.io.Reader;
 import java.io.StringReader;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.LexicalUnit;

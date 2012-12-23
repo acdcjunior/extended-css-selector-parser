@@ -25,8 +25,7 @@
  */
 package com.steadystate.css.parser.selectors;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**

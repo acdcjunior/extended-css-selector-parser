@@ -26,8 +26,7 @@
 
 package com.steadystate.css.dom;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.LexicalUnit;
 import org.w3c.dom.DOMException;
