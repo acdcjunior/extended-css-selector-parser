@@ -28,8 +28,7 @@ package com.steadystate.css.parser;
 
 import java.io.StringReader;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.AttributeCondition;
 import org.w3c.css.sac.CombinatorCondition;
