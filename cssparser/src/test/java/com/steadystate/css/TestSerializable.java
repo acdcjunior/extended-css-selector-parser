@@ -69,12 +69,13 @@ public class TestSerializable {
         final FileOutputStream fo = new FileOutputStream(temp);
         final ObjectOutput oo = new ObjectOutputStream(fo);
         oo.writeObject(stylesheet);
-        oo.flush();
+        oo.close();
 
         // Read it back in
         final FileInputStream fi = new FileInputStream(temp);
         final ObjectInput oi = new ObjectInputStream(fi);
         final CSSStyleSheet stylesheet2 = (CSSStyleSheet) oi.readObject();
+        oi.close();
 
         final CSSRuleList rules = stylesheet2.getCssRules();
 
