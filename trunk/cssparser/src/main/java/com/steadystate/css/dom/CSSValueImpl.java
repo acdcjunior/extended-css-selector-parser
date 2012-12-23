@@ -389,13 +389,15 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
             DOMExceptionImpl.RGBCOLOR_ERROR);
     }
 
+    @SuppressWarnings("unchecked")
     public int getLength() {
         if (value_ instanceof List) {
-            return ((List) value_).size();
+            return ((List<CSSValue>) value_).size();
         }
         return 0;
     }
 
+    @SuppressWarnings("unchecked")
     public CSSValue item(final int index) {
         if (value_ instanceof List) {
             final List<CSSValue> list = (List<CSSValue>) value_;
