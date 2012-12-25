@@ -390,7 +390,7 @@ public class SACParserCSS3Test {
      */
     @Test
     public void atRuleFontFace() throws Exception {
-        final String css = "@font-face { font-family: Gentium; }\n";
+        final String css = "@font-face { font-family: Gentium; src: url(http://example.com/fonts/Gentium.ttf); }\n";
 
         final InputSource source = new InputSource(new StringReader(css));
         final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
@@ -408,7 +408,38 @@ public class SACParserCSS3Test {
         Assert.assertEquals(1, rules.getLength());
 
         final CSSRule rule = rules.item(0);
-        Assert.assertEquals("@font-face {font-family: Gentium}", rule.getCssText());
+        Assert.assertEquals("@font-face {font-family: Gentium; src: url(http://example.com/fonts/Gentium.ttf);}",
+                rule.getCssText());
+    }
+    /**
+     * @see "http://dev.w3.org/csswg/css3-fonts/#font-face-rule"
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void atRuleFontFaceComplex() throws Exception {
+        final String css = "@font-face {\n"
+                + "font-family: Headline;\n"
+                + "src: local(Futura-Medium), url(fonts.svg#MyGeometricModern) format(\"svg\");}";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("@font-face {font-family: Headline; "
+                + "src: local(Futura-Medium), url(fonts.svg#MyGeometricModern) format(\"svg\")}",
+                rule.getCssText());
     }
 
     /**
