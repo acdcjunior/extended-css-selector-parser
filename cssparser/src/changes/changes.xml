@@ -6,7 +6,10 @@
   </properties>
   <body>
     <release version="0.9.9" date="xx.xx.2012" description="Release with some bugfixes and more code cleanup.">
-        <action type="add">
+        <action type="add" dev="rbri">
+            @font-face support added to CSS3.
+        </action>
+        <action dev="rbri" type="add">
             CSS3 parser added (patch from Ahmed Ashour).
         </action>
         <action type="fix" dev="rbri" issue="35">
