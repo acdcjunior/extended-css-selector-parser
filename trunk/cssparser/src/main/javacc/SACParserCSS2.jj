@@ -48,6 +48,8 @@ import org.w3c.css.sac.SimpleSelector;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author waldbaer
+ * @author rbri
  * @version $Id: SACParserCSS2.jj,v 1.8 2010-05-19 13:26:51 waldbaer Exp $
  */
 public class SACParserCSS2 extends AbstractSACParser implements Parser {
