@@ -51,7 +51,9 @@ import org.w3c.css.sac.SimpleSelector;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author waldbaer
  * @author Ahmed Ashour
+ * @author rbri
  * @version $Id: SACParserCSS21.jj,v 1.9 2010-05-19 13:26:51 waldbaer Exp $
  */
 public class SACParserCSS3 extends AbstractSACParser implements Parser {
@@ -224,6 +226,9 @@ TOKEN_MGR_DECLS :
 // E        e|\\0{0,4}(45|65)(\r\n|[ \t\r\n\f])?
 | < #E_LETTER: "e" | "\\" ( "0" | "00" | "000" | "0000" ) ( "45" | "65" ) ( "\r\n" | [ " ", "\t", "\r", "\n", "\f"])? >
 
+// F        e|\\0{0,4}(46|66)(\r\n|[ \t\r\n\f])?
+| < #F_LETTER: "f" | "\\" ( "0" | "00" | "000" | "0000" ) ( "46" | "66" ) ( "\r\n" | [ " ", "\t", "\r", "\n", "\f"])? >
+
 // G        g|\\0{0,4}(47|67)(\r\n|[ \t\r\n\f])?|\\g
 | < #G_LETTER: "g" | "\\" ( "0" | "00" | "000" | "0000" ) ( "47" | "67" ) ( "\r\n" | [ " ", "\t", "\r", "\n", "\f"])? | "\\" "g" >
 
@@ -313,6 +318,9 @@ TOKEN_MGR_DECLS :
 
 // @{M}{E}{D}{I}{A}     {return MEDIA_SYM;}
 | < MEDIA_SYM: "@" <M_LETTER> <E_LETTER> <D_LETTER> <I_LETTER> <A_LETTER> >
+
+// "@{F}{O}{N}{T}-{F}{A}{C}{E}"    {return FONT_FACE_SYM;}
+| < FONT_FACE_SYM: "@" <F_LETTER> <O_LETTER> <N_LETTER> <T_LETTER> "-" <F_LETTER> <A_LETTER> <C_LETTER> <E_LETTER> >
 
 // @{C}{H}{A}{R}{S}{E}{T}   {return CHARSET_SYM;}
 | < CHARSET_SYM: "@" <C_LETTER> <H_LETTER> <A_LETTER> <R_LETTER> <S_LETTER> <E_LETTER> <T_LETTER> >
@@ -404,7 +412,7 @@ TOKEN_MGR_DECLS :
 // stylesheet
 //  : [ CHARSET_SYM STRING ';' ]?
 //    [S|CDO|CDC]* [ import [S|CDO|CDC]* ]*
-//    [ [ ruleset | media | page ] [S|CDO|CDC]* ]*
+//    [ [ ruleset | media | page | font_face ] [S|CDO|CDC]* ]*
 //  ;
 //
 void styleSheet() :
@@ -435,7 +443,7 @@ void styleSheetRuleList() :
             importRule(ruleFound)
             |
             (
-                styleRule() | mediaRule() | pageRule() | unknownRule()
+                styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule()
             )
             {
                 ruleFound = true;
@@ -453,7 +461,7 @@ void styleSheetRuleSingle() :
 }
 {
     ( <S> )*
-    ( charsetRule() | importRule(false) | styleRule() | mediaRule() | pageRule() | unknownRule() )
+    ( charsetRule() | importRule(false) | styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule() )
     ( <S> )*
 }
 
@@ -719,6 +727,40 @@ String pseudoPage() :
 }
 {
   <COLON> t = <IDENT> { return t.image; }
+}
+
+//
+// font_face
+//  : FONT_FACE_SYM S*
+//    '{' S* declaration [ ';' S* declaration ]* '}' S*
+//  ;
+//
+void fontFaceRule() :
+{
+    boolean start = false;
+    Locator locator;
+}
+{
+    try {
+        <FONT_FACE_SYM>
+        {
+            locator = getLocator();
+        }
+        ( <S> )*
+        <LBRACE> ( <S> )* { start = true; handleStartFontFace(locator); }
+        ( declaration() )?
+        ( <SEMICOLON> ( <S> )* ( declaration() )? )*
+        <RBRACE>
+    }
+    catch(ParseException e)
+    {
+        throw toCSSParseException("invalidFontFaceRule", e);
+    }
+    finally {
+        if (start) {
+            handleEndFontFace();
+        }
+    }
 }
 
 //
