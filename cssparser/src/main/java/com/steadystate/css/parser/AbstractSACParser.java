@@ -488,6 +488,7 @@ abstract class AbstractSACParser implements Parser {
     }
 
     protected void handleMedium(final String medium, final Locator locator) {
+        // empty default impl
     }
 
     protected void handleEndMedia(final SACMediaList media) {
@@ -523,6 +524,7 @@ abstract class AbstractSACParser implements Parser {
     }
 
     protected void handleSelector(final Selector selector) {
+        // empty default impl
     }
 
     protected void handleStartSelector(final SelectorList selectors, final Locator locator) {
