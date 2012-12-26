@@ -408,9 +408,10 @@ public class SACParserCSS3Test {
         Assert.assertEquals(1, rules.getLength());
 
         final CSSRule rule = rules.item(0);
-        Assert.assertEquals("@font-face {font-family: Gentium; src: url(http://example.com/fonts/Gentium.ttf);}",
+        Assert.assertEquals("@font-face {font-family: Gentium; src: url(http://example.com/fonts/Gentium.ttf)}",
                 rule.getCssText());
     }
+
     /**
      * @see "http://dev.w3.org/csswg/css3-fonts/#font-face-rule"
      * @throws Exception if the test fails
