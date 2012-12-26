@@ -52,6 +52,7 @@ import org.w3c.css.sac.SimpleSelector;
  * @author rbri
  * @version $Id: SACParserCSS2.jj,v 1.8 2010-05-19 13:26:51 waldbaer Exp $
  */
+@SuppressWarnings("all")
 public class SACParserCSS2 extends AbstractSACParser implements Parser {
 
     public SACParserCSS2() {
