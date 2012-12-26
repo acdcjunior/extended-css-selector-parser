@@ -18,6 +18,9 @@
     <suppress checks=".*" files="SACParserCSS21TokenManager.java"/>
     <suppress checks=".*" files="SACParserCSS2Constants.java"/>
     <suppress checks=".*" files="SACParserCSS2TokenManager.java"/>
+    <suppress checks=".*" files="SACParserCSS3.java"/>
+    <suppress checks=".*" files="SACParserCSS3Constants.java"/>
+    <suppress checks=".*" files="SACParserCSS3TokenManager.java"/>
     <suppress checks=".*" files="SACParserCSSmobileOKBasic1.java"/>
     <suppress checks=".*" files="SACParserCSSmobileOKBasic1Constants.java"/>
     <suppress checks=".*" files="SACParserCSSmobileOKBasic1TokenManager.java"/>
