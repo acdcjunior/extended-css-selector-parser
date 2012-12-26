@@ -271,6 +271,7 @@ public class CSSOMParser {
         }
 
         public void comment(final String text) throws CSSException {
+            // empty default impl
         }
 
         public void ignorableAtRule(final String atRule) throws CSSException {
@@ -293,6 +294,7 @@ public class CSSOMParser {
         }
 
         public void namespaceDeclaration(final String prefix, final String uri) throws CSSException {
+            // empty default impl
         }
 
         public void charset(final String characterEncoding, final Locator locator)
