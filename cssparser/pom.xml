@@ -53,6 +53,50 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.2</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>target/generated-sources/javacc/com/steadystate/css/parser/SACParserCSSmobileOKBasic1.java</include>
+                        <include>target/generated-sources/javacc/com/steadystate/css/parser/SACParserCSSmobileOKBasic1TokenManager.java</include>
+
+                        <include>target/generated-sources/javacc/com/steadystate/css/parser/SACParserCSS1.java</include>
+                        <include>target/generated-sources/javacc/com/steadystate/css/parser/SACParserCSS1TokenManager.java</include>
+
+                        <include>target/generated-sources/javacc/com/steadystate/css/parser/SACParserCSS2.java</include>
+                        <include>target/generated-sources/javacc/com/steadystate/css/parser/SACParserCSS2TokenManager.java</include>
+
+                        <include>target/generated-sources/javacc/com/steadystate/css/parser/SACParserCSS21.java</include>
+                        <include>target/generated-sources/javacc/com/steadystate/css/parser/SACParserCSS21TokenManager.java</include>
+
+                        <include>target/generated-sources/javacc/com/steadystate/css/parser/SACParserCSS3.java</include>
+                        <include>target/generated-sources/javacc/com/steadystate/css/parser/SACParserCSS3TokenManager.java</include>
+
+                        <include>target/generated-sources/javacc/com/steadystate/css/parser/Token.java</include>
+                        <include>target/generated-sources/javacc/com/steadystate/css/parser/TokenMgrError.java</include>
+                    </includes>
+                    <regex>true</regex>
+                    <regexFlags>
+                        <regexFlag>MULTILINE</regexFlag>
+                    </regexFlags>
+                    <replacements>
+                        <replacement>
+                            <token>^public class</token>
+                            <value>@SuppressWarnings("all") public class</value>
+                        </replacement>
+                    </replacements>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.9.1</version>

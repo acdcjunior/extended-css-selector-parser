@@ -52,7 +52,6 @@ import org.w3c.css.sac.SimpleSelector;
  * @author rbri
  * @version $Id: SACParserCSSmobileOKBasic1.jj,v 1.5 2010-05-19 13:26:51 waldbaer Exp $
  */
-@SuppressWarnings("all")
 public class SACParserCSSmobileOKBasic1 extends AbstractSACParser implements Parser {
 
     public SACParserCSSmobileOKBasic1() {
