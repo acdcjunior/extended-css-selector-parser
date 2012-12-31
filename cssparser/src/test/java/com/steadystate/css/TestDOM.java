@@ -38,6 +38,7 @@ import org.w3c.dom.css.CSSValue;
 import org.w3c.dom.css.CSSValueList;
 
 import com.steadystate.css.parser.CSSOMParser;
+import com.steadystate.css.parser.SACParserCSS21;
 
 /**
  * Tests the CSS DOM implementation by loading a stylesheet and performing a few operations upon it.
@@ -52,7 +53,7 @@ public class TestDOM {
         final String cssText =
             "foo: 1.5; bogus: 3, 2, 1; bar-color: #0FEED0; background: #abc; foreground: rgb( 10, 20, 30 )";
 
-        final CSSOMParser parser = new CSSOMParser();
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
 
