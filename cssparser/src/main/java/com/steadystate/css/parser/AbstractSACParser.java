@@ -554,24 +554,26 @@ abstract class AbstractSACParser implements Parser {
 
     protected LexicalUnit functionInternal(final LexicalUnit prev, final Token t,
             final LexicalUnit params) {
-        if ("counter(".equalsIgnoreCase(t.image)) {
+
+        final String funct = t.image;
+        if ("counter(".equalsIgnoreCase(funct)) {
             return LexicalUnitImpl.createCounter(prev, params);
         }
-        else if ("counters(".equalsIgnoreCase(t.image)) {
+        else if ("counters(".equalsIgnoreCase(funct)) {
             return LexicalUnitImpl.createCounters(prev, params);
         }
-        else if ("attr(".equalsIgnoreCase(t.image)) {
+        else if ("attr(".equalsIgnoreCase(funct)) {
             return LexicalUnitImpl.createAttr(prev, params.getStringValue());
         }
-        else if ("rect(".equalsIgnoreCase(t.image)) {
+        else if ("rect(".equalsIgnoreCase(funct)) {
             return LexicalUnitImpl.createRect(prev, params);
         }
-        else if ("rgb(".equalsIgnoreCase(t.image)) {
+        else if ("rgb(".equalsIgnoreCase(funct)) {
             return LexicalUnitImpl.createRgbColor(prev, params);
         }
         return LexicalUnitImpl.createFunction(
             prev,
-            t.image.substring(0, t.image.length() - 1),
+            funct.substring(0, funct.length() - 1),
             params);
     }
 
