@@ -226,7 +226,7 @@ TOKEN_MGR_DECLS :
 // E        e|\\0{0,4}(45|65)(\r\n|[ \t\r\n\f])?
 | < #E_LETTER: "e" | "\\" ( "0" | "00" | "000" | "0000" ) ( "45" | "65" ) ( "\r\n" | [ " ", "\t", "\r", "\n", "\f"])? >
 
-// F        e|\\0{0,4}(46|66)(\r\n|[ \t\r\n\f])?
+// F        f|\\0{0,4}(46|66)(\r\n|[ \t\r\n\f])?
 | < #F_LETTER: "f" | "\\" ( "0" | "00" | "000" | "0000" ) ( "46" | "66" ) ( "\r\n" | [ " ", "\t", "\r", "\n", "\f"])? >
 
 // G        g|\\0{0,4}(47|67)(\r\n|[ \t\r\n\f])?|\\g
@@ -774,7 +774,7 @@ LexicalUnit operator(LexicalUnit prev) :
 }
 {
   t = <SLASH> ( <S> )*   { return new LexicalUnitImpl(prev, LexicalUnit.SAC_OPERATOR_SLASH); }
-  | t = <COMMA> ( <S> )* { return new LexicalUnitImpl(prev, LexicalUnit.SAC_OPERATOR_COMMA); }
+  | t = <COMMA> ( <S> )* { return LexicalUnitImpl.createComma(prev); }
 }
 
 //
@@ -1163,6 +1163,7 @@ Condition attrib(Condition pred) :
         throw toCSSParseException("invalidAttrib", e);
     }
 }
+
 //
 // pseudo
 //  : ':' [ IDENT
@@ -1374,9 +1375,9 @@ LexicalUnit expr() :
 //
 // term
 //  : unary_operator?
-//    [ NUMBER S* | PERCENTAGE S* | LENGTH S* | EMS S* | EXS S* | ANGLE S* |
-//      TIME S* | FREQ S* ]
-//  | STRING S* | IDENT S* | URI S* | hexcolor | function
+//    [ NUMBER | PERCENTAGE | LENGTH | EMS | EXS | ANGLE | TIME | FREQ | function ]
+//  | STRING | IDENT | URI | hexcolor | DIMENSION
+//  S*
 //  ;
 //
 LexicalUnit term(LexicalUnit prev) :
@@ -1396,81 +1397,108 @@ LexicalUnit term(LexicalUnit prev) :
         }
     }
     (
-        ( t = <NUMBER>
-        {
-            try
+        (   t = <NUMBER>
             {
-                value = LexicalUnitImpl.createNumber(prev, intValue(op, t.image));
+                try
+                {
+                    value = LexicalUnitImpl.createNumber(prev, intValue(op, t.image));
+                }
+                catch (NumberFormatException e)
+                {
+                    value = LexicalUnitImpl.createNumber(prev, floatValue(op, t.image));
+                }
             }
-            catch (NumberFormatException e)
-            {
-                value = LexicalUnitImpl.createNumber(prev, floatValue(op, t.image));
-            }
-        }
-        | t = <PERCENTAGE>  { value = LexicalUnitImpl.createPercentage(prev, floatValue(op, t.image)); }
-        | t = <LENGTH_PX>   { value = LexicalUnitImpl.createPixel(prev, floatValue(op, t.image)); }
-        | t = <LENGTH_CM>   { value = LexicalUnitImpl.createCentimeter(prev, floatValue(op, t.image)); }
-        | t = <LENGTH_MM>   { value = LexicalUnitImpl.createMillimeter(prev, floatValue(op, t.image)); }
-        | t = <LENGTH_IN>   { value = LexicalUnitImpl.createInch(prev, floatValue(op, t.image)); }
-        | t = <LENGTH_PT>   { value = LexicalUnitImpl.createPoint(prev, floatValue(op, t.image)); }
-        | t = <LENGTH_PC>   { value = LexicalUnitImpl.createPica(prev, floatValue(op, t.image)); }
-        | t = <EMS>         { value = LexicalUnitImpl.createEm(prev, floatValue(op, t.image)); }
-        | t = <EXS>         { value = LexicalUnitImpl.createEx(prev, floatValue(op, t.image)); }
-        | t = <ANGLE_DEG>   { value = LexicalUnitImpl.createDegree(prev, floatValue(op, t.image)); }
-        | t = <ANGLE_RAD>   { value = LexicalUnitImpl.createRadian(prev, floatValue(op, t.image)); }
-        | t = <ANGLE_GRAD>  { value = LexicalUnitImpl.createGradian(prev, floatValue(op, t.image)); }
-        | t = <TIME_MS>     { value = LexicalUnitImpl.createMillisecond(prev, floatValue(op, t.image)); }
-        | t = <TIME_S>      { value = LexicalUnitImpl.createSecond(prev, floatValue(op, t.image)); }
-        | t = <FREQ_HZ>     { value = LexicalUnitImpl.createHertz(prev, floatValue(op, t.image)); }
-        | t = <FREQ_KHZ>    { value = LexicalUnitImpl.createKiloHertz(prev, floatValue(op, t.image)); }
-        | value = function(prev)
+            | t = <PERCENTAGE>  { value = LexicalUnitImpl.createPercentage(prev, floatValue(op, t.image)); }
+            | t = <LENGTH_PX>   { value = LexicalUnitImpl.createPixel(prev, floatValue(op, t.image)); }
+            | t = <LENGTH_CM>   { value = LexicalUnitImpl.createCentimeter(prev, floatValue(op, t.image)); }
+            | t = <LENGTH_MM>   { value = LexicalUnitImpl.createMillimeter(prev, floatValue(op, t.image)); }
+            | t = <LENGTH_IN>   { value = LexicalUnitImpl.createInch(prev, floatValue(op, t.image)); }
+            | t = <LENGTH_PT>   { value = LexicalUnitImpl.createPoint(prev, floatValue(op, t.image)); }
+            | t = <LENGTH_PC>   { value = LexicalUnitImpl.createPica(prev, floatValue(op, t.image)); }
+            | t = <EMS>         { value = LexicalUnitImpl.createEm(prev, floatValue(op, t.image)); }
+            | t = <EXS>         { value = LexicalUnitImpl.createEx(prev, floatValue(op, t.image)); }
+            | t = <ANGLE_DEG>   { value = LexicalUnitImpl.createDegree(prev, floatValue(op, t.image)); }
+            | t = <ANGLE_RAD>   { value = LexicalUnitImpl.createRadian(prev, floatValue(op, t.image)); }
+            | t = <ANGLE_GRAD>  { value = LexicalUnitImpl.createGradian(prev, floatValue(op, t.image)); }
+            | t = <TIME_MS>     { value = LexicalUnitImpl.createMillisecond(prev, floatValue(op, t.image)); }
+            | t = <TIME_S>      { value = LexicalUnitImpl.createSecond(prev, floatValue(op, t.image)); }
+            | t = <FREQ_HZ>     { value = LexicalUnitImpl.createHertz(prev, floatValue(op, t.image)); }
+            | t = <FREQ_KHZ>    { value = LexicalUnitImpl.createKiloHertz(prev, floatValue(op, t.image)); }
+            | value = function(prev)
         )
-    | t = <STRING>          { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_STRING_VALUE, unescape(t.image, false)); }
-    | t = <IDENT>           { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_IDENT, t.image); }
-    | t = <URI>             { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_URI, unescape(t.image, true)); }
-    | value = hexcolor(prev)
-    | t = <DIMENSION>
-    {
-        int n = getLastNumPos(t.image);
-        value = LexicalUnitImpl.createDimension(
-            prev,
-            floatValue(op, t.image.substring(0, n+1)),
-            t.image.substring(n+1));
-    }
-    | t = <INHERIT>         { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_INHERIT, t.image); }
+        | t = <STRING>          { value = LexicalUnitImpl.createString(prev, unescape(t.image, false)); }
+        | t = <IDENT>           { value = LexicalUnitImpl.createIdent(prev, t.image); }
+        | t = <URI>             { value = LexicalUnitImpl.createURI(prev, unescape(t.image, true)); }
+        | value = hexcolor(prev)
+        | t = <DIMENSION>
+            {
+                int n = getLastNumPos(t.image);
+                value = LexicalUnitImpl.createDimension(
+                    prev,
+                    floatValue(op, t.image.substring(0, n+1)),
+                    t.image.substring(n+1));
+            }
+        | t = <INHERIT>         { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_INHERIT, t.image); }
     )
-    {
-        if (locator == null)
         {
-            locator = getLocator();
+            if (locator == null)
+            {
+                locator = getLocator();
+            }
         }
-    }
     ( <S> )*
-    {
-        if (value instanceof Locatable)
         {
-            ((Locatable) value).setLocator(locator);
+            if (value instanceof Locatable)
+            {
+                ((Locatable) value).setLocator(locator);
+            }
+            return value;
         }
-        return value;
-    }
 }
 
 //
 // function
-//   : FUNCTION S* expr ')' S*
+//   : FUNCTION S* ((EQUALS | COMMA | (unaryOperator? NUMBER) | STRING | IDENT | URI)? S*)+ ')' S*
 //   ;
 //
 LexicalUnit function(LexicalUnit prev) :
 {
     Token t;
-    LexicalUnit params;
+    Token f;
+    char op = ' ';
+    LexicalUnit param = null;
 }
 {
-    t = <FUNCTION> ( <S> )*
-    params = expr()
+    f = <FUNCTION> 
+    ( <S> )*
+    (
+        (   t = <EQUALS>   { param = LexicalUnitImpl.createIdent(param, t.image); }
+            | t = <COMMA>  { param = LexicalUnitImpl.createComma(param); }
+            | ( ( op = unaryOperator() )? 
+                t = <NUMBER>
+                {
+                    try
+                    {
+                        param = LexicalUnitImpl.createNumber(param, intValue(op, t.image));
+                    }
+                    catch (NumberFormatException e)
+                    {
+                        param = LexicalUnitImpl.createNumber(param, floatValue(op, t.image));
+                    }
+                }
+              )
+            | t = <STRING>  { param = LexicalUnitImpl.createString(param, unescape(t.image, false)); }
+            | t = <IDENT>   { param = LexicalUnitImpl.createIdent(param, t.image); }
+            | t = <URI>     { param = LexicalUnitImpl.createURI(param, unescape(t.image, true)); }
+        )
+        ( <S> )*
+    )+
     <RROUND>
     {
-        return functionInternal(prev, t, params);
+        while (null != param.getPreviousLexicalUnit()) {
+            param = param.getPreviousLexicalUnit();
+        }
+        return functionInternal(prev, f, param);
     }
 }
 
