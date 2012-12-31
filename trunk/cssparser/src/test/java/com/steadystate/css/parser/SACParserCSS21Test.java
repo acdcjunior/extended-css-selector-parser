@@ -47,9 +47,11 @@ import org.w3c.css.sac.SelectorList;
 import org.w3c.css.sac.SimpleSelector;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
+import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.ErrorHandler;
+import com.steadystate.css.dom.CSSValueImpl;
 
 /**
  * @author rbri
@@ -507,6 +509,98 @@ public class SACParserCSS21Test {
 
         rule = rules.item(2);
         Assert.assertEquals("h1 { color: blue }", rule.getCssText());
+    }
+
+    /**
+     * @see "http://www.w3.org/TR/CSS21/generate.html#counters"
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void counter() throws Exception {
+        final String css = "H1:before        { content: counter(chno, upper-latin) \". \" }\n"
+                + "H2:before        { content: counter(section, upper-roman) \" - \" }\n"
+                + "BLOCKQUOTE:after { content: \" [\" counter(bq, lower-greek) \"]\" }\n"
+                + "DIV.note:before  { content: counter(notecntr, disc) \" \" }\n"
+                + "P:before         { content: counter(p, none) }";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(5, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("H1:before { content: counter(chno, upper-latin) \". \" }", rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        CSSValueImpl value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("content");
+        Assert.assertEquals("counter(chno, upper-latin)", ((CSSValueImpl) value.item(0)).getCounterValue().toString());
+
+        rule = rules.item(1);
+        Assert.assertEquals("H2:before { content: counter(section, upper-roman) \" - \" }", rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("content");
+        Assert.assertEquals("counter(section, upper-roman)",
+                ((CSSValueImpl) value.item(0)).getCounterValue().toString());
+
+        rule = rules.item(2);
+        Assert.assertEquals("BLOCKQUOTE:after { content: \" [\" counter(bq, lower-greek) \"]\" }", rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("content");
+        Assert.assertEquals("counter(bq, lower-greek)", ((CSSValueImpl) value.item(1)).getCounterValue().toString());
+
+        rule = rules.item(3);
+        Assert.assertEquals("DIV.note:before { content: counter(notecntr, disc) \" \" }", rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("content");
+        Assert.assertEquals("counter(notecntr, disc)", ((CSSValueImpl) value.item(0)).getCounterValue().toString());
+
+        rule = rules.item(4);
+        Assert.assertEquals("P:before { content: counter(p, none) }", rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("content");
+        Assert.assertEquals("counter(p, none)", (value.getCounterValue().toString()));
+    }
+
+    /**
+     * @see "http://www.w3.org/TR/CSS21/generate.html#counters"
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void counters() throws Exception {
+        final String css = "LI:before { content: counters(item, \".\") \" \"; counter-increment: item }";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("LI:before { content: counters(item, \".\") \" \"; counter-increment: item }",
+                rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        final CSSValueImpl value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("content");
+        Assert.assertEquals("counters(item, \".\")", ((CSSValueImpl) value.item(0)).getCounterValue().toString());
     }
 
     /**
