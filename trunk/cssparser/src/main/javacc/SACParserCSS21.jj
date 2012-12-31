@@ -716,7 +716,7 @@ LexicalUnit operator(LexicalUnit prev) :
 }
 {
   t = <SLASH> ( <S> )*   { return new LexicalUnitImpl(prev, LexicalUnit.SAC_OPERATOR_SLASH); }
-  | t = <COMMA> ( <S> )* { return new LexicalUnitImpl(prev, LexicalUnit.SAC_OPERATOR_COMMA); }
+  | t = <COMMA> ( <S> )* { return LexicalUnitImpl.createComma(prev); }
 }
 
 //
