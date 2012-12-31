@@ -47,6 +47,7 @@ import org.w3c.css.sac.SelectorList;
 import org.w3c.css.sac.SimpleSelector;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
+import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
 
@@ -509,6 +510,30 @@ public class SACParserCSS21Test {
 
         rule = rules.item(2);
         Assert.assertEquals("h1 { color: blue }", rule.getCssText());
+    }
+
+    @Test
+    public void rgb() throws Exception {
+        final String cssText =
+            "foreground: rgb( 10, 20, 30 )";
+
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final InputSource source = new InputSource(new StringReader(cssText));
+        final CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        // Enumerate the properties and retrieve their values
+        Assert.assertEquals(1, style.getLength());
+
+        String name = style.item(0);
+        name = style.item(0);
+        Assert.assertEquals("foreground : rgb(10, 20, 30)", name + " : " + style.getPropertyValue(name));
     }
 
     /**
