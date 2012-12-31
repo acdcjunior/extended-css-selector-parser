@@ -1354,4 +1354,22 @@ public class SACParserCSS3Test {
         final SelectorList selectors = createSelectors(cssText);
         Assert.assertEquals(cssText, selectors.item(0).toString());
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void not() throws Exception {
+        SelectorList selectors = createSelectors("input:not([type='file'])");
+        Assert.assertEquals("input:not(*[type=\"file\"])", selectors.item(0).toString());
+
+        selectors = createSelectors("input:not(.home)");
+        Assert.assertEquals("input:not(*.home)", selectors.item(0).toString());
+
+        selectors = createSelectors("input:not(.hi .home)");
+        Assert.assertEquals("input:not(*.hi *.home)", selectors.item(0).toString());
+
+        selectors = createSelectors("input:not(#test)");
+        Assert.assertEquals("input:not(*#test)", selectors.item(0).toString());
+    }
 }
