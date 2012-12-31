@@ -383,7 +383,10 @@ TOKEN_MGR_DECLS :
 // "url("{w}{url}{w}")" {return URI;}
 | < URI: "url(" ( <S> )* ( <STRING> | <URL> ) ( <S> )* ")" > { matchedToken.image = trimUrl(image); }
 
-// {ident}"(            {return FUNCTION;}
+// {N}{O}{T} "("        {return FUNCTION_NOT;}
+| < FUNCTION_NOT: <N_LETTER> <O_LETTER> <T_LETTER> "(" >
+
+// {ident} "("          {return FUNCTION;}
 | < FUNCTION: <IDENT> "(" >
 
 | < RBRACE: "}" >
@@ -1167,6 +1170,7 @@ Condition attrib(Condition pred) :
 //
 // pseudo
 //  : ':' [ IDENT
+//          | FUNCTION_NOT S* selector() S* ')' ]
 //          | FUNCTION S* ((PLUS | MINUS | DIMENSION | NUMBER | STRING | IDENT)? S*)+ ')' ]
 //  ;
 //
@@ -1176,6 +1180,7 @@ Object pseudo(Condition pred) :
     Condition c = null;
     Token t;
     String function;
+    Selector sel;
     StringBuilder arg = new StringBuilder();
     Locator locator;
 }
@@ -1219,7 +1224,25 @@ Object pseudo(Condition pred) :
             }
             |
             (
-                t = <FUNCTION> { function = unescape(t.image, false); } ( <S> )*
+                t = <FUNCTION_NOT> { function = unescape(t.image, false); }
+                ( <S> )*
+                sel = selector() { arg.append(sel.toString()); }
+                <RROUND>
+                {
+                    c = getConditionFactory().createPseudoClassCondition(null, function + arg.toString() + ")");
+                    if (c instanceof Locatable)
+                    {
+                        ((Locatable) c).setLocator(locator);
+                    }
+                    return (pred == null)
+                        ? c
+                        : getConditionFactory().createAndCondition(pred, c);
+                }
+            )
+            |
+            (
+                t = <FUNCTION> { function = unescape(t.image, false); }
+                ( <S> )*
                 (
                     (t = <PLUS> | t = <MINUS> | t = <DIMENSION> | t = <NUMBER> | t = <STRING> | t = <IDENT>)
                     { arg.append(unescape(t.image, false)); }
