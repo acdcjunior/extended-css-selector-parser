@@ -361,7 +361,7 @@ TOKEN_MGR_DECLS :
 // "url("{w}{url}{w}")" {return URI;}
 | < URI: "url(" ( <S> )* ( <STRING> | <URL> ) ( <S> )* ")" > { matchedToken.image = trimUrl(image); }
 
-// {ident}"(            {return FUNCTION;}
+// {ident}"("           {return FUNCTION;}
 | < FUNCTION: <IDENT> "(" >
 
 | < RBRACE: "}" >
