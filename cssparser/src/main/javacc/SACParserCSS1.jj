@@ -846,8 +846,9 @@ LexicalUnit expr() :
 //
 // term
 //   : unary_operator?
-//     [ NUMBER S* | PERCENTAGE S* | LENGTH S* | EMS S* | EXS S* |
-//        STRING S* | URI S* | RGB S* | hexcolor ]
+//     [ NUMBER | PERCENTAGE | LENGTH | EMS | EXS ]
+//   | STRING | IDENT| URL | UNICODERANGE | RGB | hexcolor
+//  S*
 //   ;
 //
 LexicalUnit term(LexicalUnit prev) :
@@ -888,9 +889,9 @@ LexicalUnit term(LexicalUnit prev) :
         | t = <EMS>         { value = LexicalUnitImpl.createEm(prev, floatValue(op, t.image)); }
         | t = <EXS>         { value = LexicalUnitImpl.createEx(prev, floatValue(op, t.image)); }
         )
-    | t = <STRING>          { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_STRING_VALUE, t.image); }
-    | t = <IDENT>           { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_IDENT, t.image); }
-    | t = <URL>             { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_URI, t.image); }
+    | t = <STRING>          { value = LexicalUnitImpl.createString(prev, t.image); }
+    | t = <IDENT>           { value = LexicalUnitImpl.createIdent(prev, t.image); }
+    | t = <URL>             { value = LexicalUnitImpl.createURI(prev, t.image); }
     | t = <UNICODERANGE>    { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_UNICODERANGE, t.image); }
     | value = rgb(prev)
     | value = hexcolor(prev)

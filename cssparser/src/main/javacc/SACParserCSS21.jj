@@ -1289,9 +1289,9 @@ LexicalUnit expr() :
 //
 // term
 //  : unary_operator?
-//    [ NUMBER S* | PERCENTAGE S* | LENGTH S* | EMS S* | EXS S* | ANGLE S* |
-//      TIME S* | FREQ S* ]
-//  | STRING S* | IDENT S* | URI S* | hexcolor | function
+//    [ NUMBER | PERCENTAGE | LENGTH | EMS | EXS | ANGLE | TIME | FREQ | function ]
+//  | STRING | IDENT | URI | hexcolor | DIMENSION
+//  S*
 //  ;
 //
 LexicalUnit term(LexicalUnit prev) :
@@ -1340,9 +1340,9 @@ LexicalUnit term(LexicalUnit prev) :
         | t = <FREQ_KHZ>    { value = LexicalUnitImpl.createKiloHertz(prev, floatValue(op, t.image)); }
         | value = function(prev)
         )
-    | t = <STRING>          { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_STRING_VALUE, unescape(t.image, false)); }
-    | t = <IDENT>           { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_IDENT, t.image); }
-    | t = <URI>             { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_URI, unescape(t.image, true)); }
+    | t = <STRING>          { value = LexicalUnitImpl.createString(prev, unescape(t.image, false)); }
+    | t = <IDENT>           { value = LexicalUnitImpl.createIdent(prev, t.image); }
+    | t = <URI>             { value = LexicalUnitImpl.createURI(prev, unescape(t.image, true)); }
     | value = hexcolor(prev)
     | t = <DIMENSION>
     {
