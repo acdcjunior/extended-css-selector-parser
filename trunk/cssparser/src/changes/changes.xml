@@ -5,7 +5,10 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
-    <release version="0.9.9" date="xx.xx.2012" description="Release with some bugfixes and more code cleanup.">
+    <release version="0.9.9" date="xx.xx.2012" description="Release with new CSS3 parser, some bugfixes and more code cleanup.">
+        <action type="fix" dev="rbri">
+            Improved parsing of the lang selector.
+        </action>
         <action type="add" dev="rbri">
             @font-face support added to CSS3.
         </action>
