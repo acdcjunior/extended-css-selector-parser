@@ -39,9 +39,15 @@ import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SelectorList;
 import org.w3c.css.sac.SimpleSelector;
+import org.w3c.dom.css.CSSRule;
+import org.w3c.dom.css.CSSRuleList;
 import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.ErrorHandler;
+import com.steadystate.css.dom.CSSStyleRuleImpl;
+import com.steadystate.css.parser.selectors.ChildSelectorImpl;
+import com.steadystate.css.parser.selectors.ConditionalSelectorImpl;
+import com.steadystate.css.parser.selectors.LangConditionImpl;
 
 /**
  * @author rbri
@@ -86,15 +92,86 @@ public class SACParserCSS2Test {
         selectorType("a:visited", Selector.SAC_CONDITIONAL_SELECTOR);
         selectorType("a:active", Selector.SAC_CONDITIONAL_SELECTOR);
 
-        selectorType("h1:first-line", Selector.SAC_DESCENDANT_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR,
-                Selector.SAC_PSEUDO_ELEMENT_SELECTOR);
-        selectorType("a:first-letter", Selector.SAC_DESCENDANT_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR,
-                Selector.SAC_PSEUDO_ELEMENT_SELECTOR);
-
         selectorType("h1 a", Selector.SAC_DESCENDANT_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR,
                 Selector.SAC_ELEMENT_NODE_SELECTOR);
         selectorType("h1  a", Selector.SAC_DESCENDANT_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR,
                 Selector.SAC_ELEMENT_NODE_SELECTOR);
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void selectorPseudo() throws Exception {
+        selectorType("h1:first-line", Selector.SAC_DESCENDANT_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR,
+                Selector.SAC_PSEUDO_ELEMENT_SELECTOR);
+        selectorType("a:first-letter", Selector.SAC_DESCENDANT_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR,
+                Selector.SAC_PSEUDO_ELEMENT_SELECTOR);
+        selectorType("a:before", Selector.SAC_DESCENDANT_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR,
+                Selector.SAC_PSEUDO_ELEMENT_SELECTOR);
+        selectorType("a:after", Selector.SAC_DESCENDANT_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR,
+                Selector.SAC_PSEUDO_ELEMENT_SELECTOR);
+
+        selectorType("h1:lang(en)", Selector.SAC_CONDITIONAL_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR,
+                Selector.SAC_PSEUDO_ELEMENT_SELECTOR);
+    }
+
+    /**
+     * @see http://www.w3.org/TR/CSS21/selector.html#lang
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void selectorLang() throws Exception {
+        final String css = "html:lang(fr-ca) { }\n"
+                + "html:lang(de) { }\n"
+                + ":lang(fr) > Q { }\n"
+                + ":lang(de) > Q { }";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(4, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("html:lang(fr-ca) { }", rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        ConditionalSelectorImpl selector = (ConditionalSelectorImpl) ((CSSStyleRuleImpl) rule).getSelectors().item(0);
+        Assert.assertEquals(Condition.SAC_LANG_CONDITION, selector.getCondition().getConditionType());
+        Assert.assertEquals("fr-ca", ((LangConditionImpl) selector.getCondition()).getLang());
+
+        rule = rules.item(1);
+        Assert.assertEquals("html:lang(de) { }", rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        selector = (ConditionalSelectorImpl) ((CSSStyleRuleImpl) rule).getSelectors().item(0);
+        Assert.assertEquals(Condition.SAC_LANG_CONDITION, selector.getCondition().getConditionType());
+        Assert.assertEquals("de", ((LangConditionImpl) selector.getCondition()).getLang());
+
+        rule = rules.item(2);
+        Assert.assertEquals("*:lang(fr) > Q { }", rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        ChildSelectorImpl childSelector = (ChildSelectorImpl) ((CSSStyleRuleImpl) rule).getSelectors().item(0);
+        selector = (ConditionalSelectorImpl) childSelector.getAncestorSelector();
+        Assert.assertEquals(Condition.SAC_LANG_CONDITION, selector.getCondition().getConditionType());
+        Assert.assertEquals("fr", ((LangConditionImpl) selector.getCondition()).getLang());
+
+        rule = rules.item(3);
+        Assert.assertEquals("*:lang(de) > Q { }", rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        childSelector = (ChildSelectorImpl) ((CSSStyleRuleImpl) rule).getSelectors().item(0);
+        selector = (ConditionalSelectorImpl) childSelector.getAncestorSelector();
+        Assert.assertEquals(Condition.SAC_LANG_CONDITION, selector.getCondition().getConditionType());
+        Assert.assertEquals("de", ((LangConditionImpl) selector.getCondition()).getLang());
     }
 
     /**
