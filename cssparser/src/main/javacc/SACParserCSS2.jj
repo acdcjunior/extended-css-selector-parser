@@ -258,6 +258,9 @@ TOKEN_MGR_DECLS :
 
 | < RGB: "rgb(" >
 
+// "lang("        {return FUNCTION_LANG;}
+| < FUNCTION_LANG: "lang(" >
+
 // {ident}"("      {return FUNCTION;}
 | < FUNCTION: <IDENT> "(" >
 
@@ -1044,8 +1047,7 @@ Condition attrib(Condition pred) :
                 c = getConditionFactory().createBeginHyphenAttributeCondition(name, null, null != value, value);
                 break;
             }
-            if (c instanceof Locatable)
-            {
+            if (c instanceof Locatable) {
                 ((Locatable) c).setLocator(locator);
             }
             return (pred == null) ? c : getConditionFactory().createAndCondition(pred, c);
@@ -1059,7 +1061,10 @@ Condition attrib(Condition pred) :
 
 //
 // pseudo
-//  : ':' [ IDENT | FUNCTION S* IDENT S* ')' ]
+//  : ':' [ IDENT
+//          | FUNCTION_LANG S* IDENT S* ')'
+//          | FUNCTION S* IDENT S* ')'
+//        ]
 //  ;
 //
 Object pseudo(Condition pred) :
@@ -1095,14 +1100,12 @@ Object pseudo(Condition pred) :
                 }
                 if (pseudoElementSel != null)
                 {
-                    if (pseudoElementSel instanceof Locatable)
-                    {
+                    if (pseudoElementSel instanceof Locatable) {
                         ((Locatable) pseudoElementSel).setLocator(locator);
                     }
                     return pseudoElementSel;
                 }
-                if (c instanceof Locatable)
-                {
+                if (c instanceof Locatable) {
                     ((Locatable) c).setLocator(locator);
                 }
                 return (pred == null)
@@ -1111,29 +1114,34 @@ Object pseudo(Condition pred) :
             }
             |
             (
+                t = <FUNCTION_LANG> { function = unescape(t.image, false); }
+                ( <S> )*
+                t = <IDENT> { String lang = unescape(t.image, false); }
+                ( <S> )*
+                <RROUND>
+                {
+                    c = getConditionFactory().createLangCondition(lang);
+                    if (c instanceof Locatable) {
+                        ((Locatable) c).setLocator(locator);
+                    }
+                    return (pred == null)
+                        ? c
+                        : getConditionFactory().createAndCondition(pred, c);
+                }
+            )
+            |
+            (
                 t = <FUNCTION> { function = unescape(t.image, false); } ( <S> )*
                 t = <IDENT> { arg = unescape(t.image, false); } ( <S> )*
                 <RROUND>
                 {
-                    if (function.equalsIgnoreCase("lang(")) {
-                        c = getConditionFactory().createLangCondition(unescape(arg, false));
-                        if (c instanceof Locatable)
-                        {
-                            ((Locatable) c).setLocator(locator);
-                        }
-                        return (pred == null)
-                            ? c
-                            : getConditionFactory().createAndCondition(pred, c);
-                    } else {
-                        c = getConditionFactory().createPseudoClassCondition(null, function + arg + ")");
-                        if (c instanceof Locatable)
-                        {
-                            ((Locatable) c).setLocator(locator);
-                        }
-                        return (pred == null)
-                            ? c
-                            : getConditionFactory().createAndCondition(pred, c);
+                    c = getConditionFactory().createPseudoClassCondition(null, function + arg + ")");
+                    if (c instanceof Locatable) {
+                        ((Locatable) c).setLocator(locator);
                     }
+                    return (pred == null)
+                        ? c
+                        : getConditionFactory().createAndCondition(pred, c);
                 }
             )
 

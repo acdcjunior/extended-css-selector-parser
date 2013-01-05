@@ -241,6 +241,9 @@ TOKEN_MGR_DECLS :
 // K        k|\\0{0,4}(4b|6b)(\r\n|[ \t\r\n\f])?|\\k
 | < #K_LETTER: "k" | "\\" ( "0" | "00" | "000" | "0000" ) ( "4b" | "6b" ) ( "\r\n" | [ " ", "\t", "\r", "\n", "\f"])? | "\\" "k" >
 
+// L        l|\\0{0,4}(4c|6c)(\r\n|[ \t\r\n\f])?|\\l
+| < #L_LETTER: "l" | "\\" ( "0" | "00" | "000" | "0000" ) ( "4c" | "6c" ) ( "\r\n" | [ " ", "\t", "\r", "\n", "\f"])? | "\\" "l" >
+
 // M        m|\\0{0,4}(4d|6d)(\r\n|[ \t\r\n\f])?|\\m
 | < #M_LETTER: "m" | "\\" ( "0" | "00" | "000" | "0000" ) ( "4d" | "6d" ) ( "\r\n" | [ " ", "\t", "\r", "\n", "\f"])? | "\\" "m" >
 
@@ -385,6 +388,9 @@ TOKEN_MGR_DECLS :
 
 // {N}{O}{T} "("        {return FUNCTION_NOT;}
 | < FUNCTION_NOT: <N_LETTER> <O_LETTER> <T_LETTER> "(" >
+
+// {L}{A}{N}{G} "("        {return FUNCTION_LANG;}
+| < FUNCTION_LANG: <L_LETTER> <A_LETTER> <N_LETTER> <G_LETTER> "(" >
 
 // {ident} "("          {return FUNCTION;}
 | < FUNCTION: <IDENT> "(" >
@@ -1154,8 +1160,7 @@ Condition attrib(Condition pred) :
                     .createSubstringAttributeCondition(name, null, null != value, value);
                 break;
             }
-            if (c instanceof Locatable)
-            {
+            if (c instanceof Locatable) {
                 ((Locatable) c).setLocator(locator);
             }
             return (pred == null) ? c : getConditionFactory().createAndCondition(pred, c);
@@ -1170,8 +1175,10 @@ Condition attrib(Condition pred) :
 //
 // pseudo
 //  : ':' [ IDENT
-//          | FUNCTION_NOT S* selector() S* ')' ]
-//          | FUNCTION S* ((PLUS | MINUS | DIMENSION | NUMBER | STRING | IDENT)? S*)+ ')' ]
+//          | FUNCTION_NOT S* selector() S* ')'
+//          | FUNCTION_LANG S* IDENT S* ')'
+//          | FUNCTION S* ((PLUS | MINUS | DIMENSION | NUMBER | STRING | IDENT)? S*)+ ')'
+//        ]
 //  ;
 //
 Object pseudo(Condition pred) :
@@ -1181,7 +1188,6 @@ Object pseudo(Condition pred) :
     Token t;
     String function;
     Selector sel;
-    StringBuilder arg = new StringBuilder();
     Locator locator;
 }
 {
@@ -1226,12 +1232,11 @@ Object pseudo(Condition pred) :
             (
                 t = <FUNCTION_NOT> { function = unescape(t.image, false); }
                 ( <S> )*
-                sel = selector() { arg.append(sel.toString()); }
+                sel = selector() { String arg = sel.toString(); }
                 <RROUND>
                 {
-                    c = getConditionFactory().createPseudoClassCondition(null, function + arg.toString() + ")");
-                    if (c instanceof Locatable)
-                    {
+                    c = getConditionFactory().createPseudoClassCondition(null, function + arg + ")");
+                    if (c instanceof Locatable) {
                         ((Locatable) c).setLocator(locator);
                     }
                     return (pred == null)
@@ -1241,34 +1246,39 @@ Object pseudo(Condition pred) :
             )
             |
             (
-                t = <FUNCTION> { function = unescape(t.image, false); }
+                t = <FUNCTION_LANG> { function = unescape(t.image, false); }
+                ( <S> )*
+                t = <IDENT> { String lang = unescape(t.image, false); }
+                ( <S> )*
+                <RROUND>
+                {
+                    c = getConditionFactory().createLangCondition(lang);
+                    if (c instanceof Locatable) {
+                        ((Locatable) c).setLocator(locator);
+                    }
+                    return (pred == null)
+                        ? c
+                        : getConditionFactory().createAndCondition(pred, c);
+                }
+            )
+            |
+            (
+                t = <FUNCTION> { function = unescape(t.image, false); StringBuilder args = new StringBuilder(); }
                 ( <S> )*
                 (
                     (t = <PLUS> | t = <MINUS> | t = <DIMENSION> | t = <NUMBER> | t = <STRING> | t = <IDENT>)
-                    { arg.append(unescape(t.image, false)); }
+                    { args.append(unescape(t.image, false)); }
                     ( <S> )*
                 )+
                 <RROUND>
                 {
-                    if (function.equalsIgnoreCase("lang(")) {
-                        c = getConditionFactory().createLangCondition(unescape(arg.toString(), false));
-                        if (c instanceof Locatable)
-                        {
-                            ((Locatable) c).setLocator(locator);
-                        }
-                        return (pred == null)
-                            ? c
-                            : getConditionFactory().createAndCondition(pred, c);
-                    } else {
-                        c = getConditionFactory().createPseudoClassCondition(null, function + arg.toString() + ")");
-                        if (c instanceof Locatable)
-                        {
-                            ((Locatable) c).setLocator(locator);
-                        }
-                        return (pred == null)
-                            ? c
-                            : getConditionFactory().createAndCondition(pred, c);
+                    c = getConditionFactory().createPseudoClassCondition(null, function + args.toString() + ")");
+                    if (c instanceof Locatable) {
+                        ((Locatable) c).setLocator(locator);
                     }
+                    return (pred == null)
+                        ? c
+                        : getConditionFactory().createAndCondition(pred, c);
                 }
             )
 
