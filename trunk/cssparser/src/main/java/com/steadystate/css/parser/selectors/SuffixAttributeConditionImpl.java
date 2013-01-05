@@ -38,6 +38,8 @@ import com.steadystate.css.parser.LocatableImpl;
  */
 public class SuffixAttributeConditionImpl extends LocatableImpl implements AttributeCondition, Serializable {
 
+    private static final long serialVersionUID = -957389472252773926L;
+
     private String localName_;
     private String value_;
     private boolean specified_;
