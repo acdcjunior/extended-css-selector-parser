@@ -175,6 +175,33 @@ public class SACParserCSS2Test {
     }
 
     /**
+     * @see http://www.w3.org/TR/CSS21/selector.html#lang
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void selectorLangInvalid() throws Exception {
+        final String css = "html:lang() { background: red }\n"
+                    + "p { color:green; }";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(1, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(1, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+        Assert.assertEquals("p { color: green }", rules.toString().trim());
+    }
+
+    /**
      * @throws Exception if any error occurs
      */
     @Test
