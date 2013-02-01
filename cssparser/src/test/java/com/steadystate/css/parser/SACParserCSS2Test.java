@@ -355,4 +355,14 @@ public class SACParserCSS2Test {
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(0, errorHandler.getWarningCount());
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void selectorTrimWhitespace() throws Exception {
+        final String cssText = "  \t\r\n  div > hi  \t\r\n  ";
+        final SelectorList selectors = createSelectors(cssText);
+        Assert.assertEquals(cssText.trim(), selectors.item(0).toString());
+    }
 }

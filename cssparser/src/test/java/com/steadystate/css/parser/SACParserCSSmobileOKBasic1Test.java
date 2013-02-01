@@ -203,4 +203,14 @@ public class SACParserCSSmobileOKBasic1Test {
         final ConditionalSelector conditionalSelector = (ConditionalSelector) selector;
         return conditionalSelector.getCondition();
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void selectorTrimWhitespace() throws Exception {
+        final String cssText = "  \t\r\n  div \t\r\n  ";
+        final SelectorList selectors = createSelectors(cssText);
+        Assert.assertEquals(cssText.trim(), selectors.item(0).toString());
+    }
 }
