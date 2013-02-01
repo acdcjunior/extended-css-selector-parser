@@ -547,6 +547,7 @@ SelectorList parseSelectorsInternal() :
     SelectorList selectors;
 }
 {
+    ( <S> )*
     selectors = selectorList()
     <EOF>
     {

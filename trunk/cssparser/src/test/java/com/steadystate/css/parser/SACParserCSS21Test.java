@@ -1256,4 +1256,14 @@ public class SACParserCSS21Test {
         rule = rules.item(1);
         Assert.assertEquals("*.b { top: -1.234newDim }", rule.getCssText());
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void selectorTrimWhitespace() throws Exception {
+        final String cssText = "  \t\r\n  div > hi  \t\r\n  ";
+        final SelectorList selectors = createSelectors(cssText);
+        Assert.assertEquals(cssText.trim(), selectors.item(0).toString());
+    }
 }
