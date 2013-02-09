@@ -7,6 +7,9 @@
   <body>
     <release version="0.9.9" date="xx.xx.2012" description="Release with new CSS3 parser, some bugfixes and more code cleanup.">
         <action type="fix" dev="rbri">
+            Simplified unit parsing for CSS21 and CSS3. Maybe this makes the parser a bit faster.
+        </action>
+        <action type="fix" dev="rbri">
             Parser.parseSelectors(InputSource) now handles leading whitespace properly.
         </action>
         <action type="fix" dev="rbri">
