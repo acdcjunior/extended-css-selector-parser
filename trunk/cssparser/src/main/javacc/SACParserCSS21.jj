@@ -354,11 +354,11 @@ TOKEN_MGR_DECLS :
 // {num}{K}{H}{Z}       {return FREQ;}
 | < FREQ_KHZ: <NUM> <K_LETTER> <H_LETTER> <Z_LETTER> > { matchedToken.image = splitNumber(image); }
 
-// {num}{ident}         {return DIMENSION;}
-| < DIMENSION: <NUM> <IDENT> >
-
 // {num}%               {return PERCENTAGE;}
 | < PERCENTAGE: <NUM> "%" > { matchedToken.image = splitNumber(image); }
+
+// {num}{ident}         {return DIMENSION;}
+| < DIMENSION: <NUM> <IDENT> >
 
 // "url("{w}{string}{w}")"  {return URI;}
 // "url("{w}{url}{w}")" {return URI;}
