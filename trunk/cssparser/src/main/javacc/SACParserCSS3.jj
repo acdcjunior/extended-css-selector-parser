@@ -82,31 +82,8 @@ PARSER_END(SACParserCSS3)
 
 TOKEN_MGR_DECLS :
 {
-    private static final Pattern SPLIT_NUMBER_PATTERN = Pattern.compile("[0-9]+|[0-9]*.[0-9]+");
-
-    public String splitNumber(StringBuilder pattern) {
-        int j=1;
-        Matcher matcher = SPLIT_NUMBER_PATTERN.matcher(pattern.substring(0, j));
-        while(matcher.matches())
-        {
-            j++;
-            matcher = SPLIT_NUMBER_PATTERN.matcher(pattern.substring(0, j));
-        }
-        if(pattern.substring(j-1, j).equals("."))
-        {
-            j++;
-            matcher = SPLIT_NUMBER_PATTERN.matcher(pattern.substring(0, j));
-            while(matcher.matches())
-            {
-                j++;
-                matcher = SPLIT_NUMBER_PATTERN.matcher(pattern.substring(0, j));
-            }
-        }
-        return pattern.substring(0, j-1);
-    }
-
-    private String trimBy(StringBuilder s, int left, int right) {
-        int end = s.length();
+    private String trimBy(final StringBuilder s, final int left, final int right) {
+        final int end = s.length();
         return s.substring(left, end-right);
     }
 
@@ -332,52 +309,52 @@ TOKEN_MGR_DECLS :
 | < IMPORTANT_SYM: "!" ( <W> | <COMMENT_> )* <I_LETTER> <M_LETTER> <P_LETTER> <O_LETTER> <R_LETTER> <T_LETTER> <A_LETTER> <N_LETTER> <T_LETTER> >
 
 // {num}{E}{M}          {return EMS;}
-| < EMS: <NUM> <E_LETTER> <M_LETTER> > { matchedToken.image = splitNumber(image); }
+| < EMS: <NUM> <E_LETTER> <M_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
 
 // {num}{E}{X}          {return EXS;}
-| < EXS: <NUM> <E_LETTER> <X_LETTER> > { matchedToken.image = splitNumber(image); }
+| < EXS: <NUM> <E_LETTER> <X_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
 
 // {num}{P}{X}          {return LENGTH;}
-| < LENGTH_PX: <NUM> <P_LETTER> <X_LETTER> > { matchedToken.image = splitNumber(image); }
+| < LENGTH_PX: <NUM> <P_LETTER> <X_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
 
 // {num}{C}{M}          {return LENGTH;}
-| < LENGTH_CM: <NUM> <C_LETTER> <M_LETTER> > { matchedToken.image = splitNumber(image); }
+| < LENGTH_CM: <NUM> <C_LETTER> <M_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
 
 // {num}{M}{M}          {return LENGTH;}
-| < LENGTH_MM: <NUM> <M_LETTER> <M_LETTER> > { matchedToken.image = splitNumber(image); }
+| < LENGTH_MM: <NUM> <M_LETTER> <M_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
 
 // {num}{I}{N}          {return LENGTH;}
-| < LENGTH_IN: <NUM> <I_LETTER> <N_LETTER> > { matchedToken.image = splitNumber(image); }
+| < LENGTH_IN: <NUM> <I_LETTER> <N_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
 
 // {num}{P}{T}          {return LENGTH;}
-| < LENGTH_PT: <NUM> <P_LETTER> <T_LETTER> > { matchedToken.image = splitNumber(image); }
+| < LENGTH_PT: <NUM> <P_LETTER> <T_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
 
 // {num}{P}{C}          {return LENGTH;}
-| < LENGTH_PC: <NUM> <P_LETTER> <C_LETTER> > { matchedToken.image = splitNumber(image); }
+| < LENGTH_PC: <NUM> <P_LETTER> <C_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
 
 // {num}{D}{E}{G}       {return ANGLE;}
-| < ANGLE_DEG: <NUM> <D_LETTER> <E_LETTER> <G_LETTER> > { matchedToken.image = splitNumber(image); }
+| < ANGLE_DEG: <NUM> <D_LETTER> <E_LETTER> <G_LETTER> > { matchedToken.image = trimBy(image, 0, 3); }
 
 // {num}{R}{A}{D}       {return ANGLE;}
-| < ANGLE_RAD: <NUM> <R_LETTER> <A_LETTER> <D_LETTER> > { matchedToken.image = splitNumber(image); }
+| < ANGLE_RAD: <NUM> <R_LETTER> <A_LETTER> <D_LETTER> > { matchedToken.image = trimBy(image, 0, 3); }
 
 // {num}{G}{R}{A}{D}    {return ANGLE;}
-| < ANGLE_GRAD: <NUM> <G_LETTER> <R_LETTER> <A_LETTER> <D_LETTER> > { matchedToken.image = splitNumber(image); }
+| < ANGLE_GRAD: <NUM> <G_LETTER> <R_LETTER> <A_LETTER> <D_LETTER> > { matchedToken.image = trimBy(image, 0, 4); }
 
 // {num}{M}{S}          {return TIME;}
-| < TIME_MS: <NUM> <M_LETTER> <S_LETTER> > { matchedToken.image = splitNumber(image); }
+| < TIME_MS: <NUM> <M_LETTER> <S_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
 
 // {num}{S}             {return TIME;}
-| < TIME_S: <NUM> <S_LETTER> > { matchedToken.image = splitNumber(image); }
+| < TIME_S: <NUM> <S_LETTER> > { matchedToken.image = trimBy(image, 0, 1); }
 
 // {num}{H}{Z}          {return FREQ;}
-| < FREQ_HZ: <NUM> <H_LETTER> <Z_LETTER> > { matchedToken.image = splitNumber(image); }
+| < FREQ_HZ: <NUM> <H_LETTER> <Z_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
 
 // {num}{K}{H}{Z}       {return FREQ;}
-| < FREQ_KHZ: <NUM> <K_LETTER> <H_LETTER> <Z_LETTER> > { matchedToken.image = splitNumber(image); }
+| < FREQ_KHZ: <NUM> <K_LETTER> <H_LETTER> <Z_LETTER> > { matchedToken.image = trimBy(image, 0, 3); }
 
 // {num}%               {return PERCENTAGE;}
-| < PERCENTAGE: <NUM> "%" > { matchedToken.image = splitNumber(image); }
+| < PERCENTAGE: <NUM> "%" > { matchedToken.image = trimBy(image, 0, 1); }
 
 // {num}{ident}         {return DIMENSION;}
 | < DIMENSION: <NUM> <IDENT> >
