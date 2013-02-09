@@ -247,11 +247,11 @@ TOKEN_MGR_DECLS :
 // {num}kHz        {return FREQ;}
 | < FREQ_KHZ: <NUM> "kHz" > { matchedToken.image = trimBy(image, 0, 3); }
 
-// {num}{ident}    {return DIMEN;}
-| < DIMEN: <NUM> <IDENT> >
-
 // {num}%          {return PERCENTAGE;}
 | < PERCENTAGE: <NUM> "%" > { matchedToken.image = trimBy(image, 0, 1); }
+
+// {num}{ident}    {return DIMEN;}
+| < DIMEN: <NUM> <IDENT> >
 
 // {num}           {return NUMBER;}
 | < NUMBER: <NUM> >
