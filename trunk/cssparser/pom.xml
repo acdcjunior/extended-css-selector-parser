@@ -22,8 +22,8 @@
         <version>7</version>
     </parent>
     <scm>
-        <connection>scm:svn:svn://alankrueger@svn.code.sf.net/p/cssparser/code/trunk/cssparser</connection>
-        <developerConnection>scm:svn:svn+ssh://alankrueger@svn.code.sf.net/p/cssparser/code/trunk/cssparser</developerConnection>
+        <connection>scm:svn:svn://svn.code.sf.net/p/cssparser/code/trunk/cssparser</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/cssparser/code/trunk/cssparser</developerConnection>
         <url>http://svn.code.sf.net/p/cssparser/code/trunk/cssparser</url>
     </scm>
     <build>
