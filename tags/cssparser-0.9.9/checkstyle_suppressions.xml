@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+    "-//Puppy Crawl//DTD Suppressions 1.0//EN"
+    "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
+
+<suppressions>
+    <suppress checks=".*" files="ASCII_CharStream.java"/>
+
+    <suppress checks=".*" files="CharStream.java"/>
+    <suppress checks=".*" files="ParseException.java"/>
+    <suppress checks=".*" files="SACParserCSS1.java"/>
+    <suppress checks=".*" files="SACParserCSS1Constants.java"/>
+    <suppress checks=".*" files="SACParserCSS1TokenManager.java"/>
+    <suppress checks=".*" files="SACParserCSS2.java"/>
+    <suppress checks=".*" files="SACParserCSS21.java"/>
+    <suppress checks=".*" files="SACParserCSS21Constants.java"/>
+    <suppress checks=".*" files="SACParserCSS21TokenManager.java"/>
+    <suppress checks=".*" files="SACParserCSS2Constants.java"/>
+    <suppress checks=".*" files="SACParserCSS2TokenManager.java"/>
+    <suppress checks=".*" files="SACParserCSS3.java"/>
+    <suppress checks=".*" files="SACParserCSS3Constants.java"/>
+    <suppress checks=".*" files="SACParserCSS3TokenManager.java"/>
+    <suppress checks=".*" files="SACParserCSSmobileOKBasic1.java"/>
+    <suppress checks=".*" files="SACParserCSSmobileOKBasic1Constants.java"/>
+    <suppress checks=".*" files="SACParserCSSmobileOKBasic1TokenManager.java"/>
+    <suppress checks=".*" files="Token.java"/>
+    <suppress checks=".*" files="TokenMgrError.java"/>
+
+    <suppress checks="MethodLength" files="LexicalUnitImpl.java"/>
+
+    <suppress checks="Header" files=".+.properties"/>
+
+    <!-- JUnit Rules require the rules field to have public visibility. -->
+    <!-- See http://checkstyle.sourceforge.net/config_design.html#VisibilityModifier -->
+    <suppress files=".*(?:Test|TestBase)\.java$" checks="VisibilityModifier"/>
+</suppressions>
