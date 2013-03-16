@@ -1451,6 +1451,27 @@ public class SACParserCSS3Test {
      * @throws Exception if any error occurs
      */
     @Test
+    public void nth_preserveInnerWhitespace() throws Exception {
+        SelectorList selectors = createSelectors("div:nth-child( 0 )");
+        Assert.assertEquals("div:nth-child(0)", selectors.item(0).toString());
+
+        selectors = createSelectors("div:nth-child( + 4 n )");
+        Assert.assertEquals("div:nth-child(+ 4 n)", selectors.item(0).toString());
+
+        selectors = createSelectors("div:nth-child( - 5 n + 2 )");
+        Assert.assertEquals("div:nth-child(- 5 n + 2)", selectors.item(0).toString());
+
+        selectors = createSelectors("div:nth-child( - 5     n\t\t+ \t 2 )");
+        Assert.assertEquals("div:nth-child(- 5     n\t\t+ \t 2)", selectors.item(0).toString());
+
+        selectors = createSelectors("div:nth-child( odd )");
+        Assert.assertEquals("div:nth-child(odd)", selectors.item(0).toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
     public void generalAdjacentSelector() throws Exception {
         final String cssText = "div ~ hi";
         final SelectorList selectors = createSelectors(cssText);

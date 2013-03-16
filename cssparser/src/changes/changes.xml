@@ -5,6 +5,11 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
+    <release version="0.9.10" date="xx.xx.2012" description="Release with some CSS3 parser bugfixes and the usual code cleanup.">
+        <action type="fix" dev="rbri">
+            CSS3: When parsing function arguments now the (inner) whitespace is preserved.
+        </action>
+    </release>
     <release version="0.9.9" date="16.02.2012" description="Release with new CSS3 parser, some bugfixes and more code cleanup.">
         <action type="fix" dev="rbri">
             Simplified unit parsing for CSS21 and CSS3. Maybe this makes the parser a bit faster.

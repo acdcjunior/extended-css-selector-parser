@@ -1246,11 +1246,13 @@ Object pseudo(Condition pred) :
                 (
                     (t = <PLUS> | t = <MINUS> | t = <DIMENSION> | t = <NUMBER> | t = <STRING> | t = <IDENT>)
                     { args.append(unescape(t.image, false)); }
-                    ( <S> )*
+                    ( t = <S>
+                        { args.append(unescape(t.image, false)); }
+                    )*
                 )+
                 <RROUND>
                 {
-                    c = getConditionFactory().createPseudoClassCondition(null, function + args.toString() + ")");
+                    c = getConditionFactory().createPseudoClassCondition(null, function + args.toString().trim() + ")");
                     if (c instanceof Locatable) {
                         ((Locatable) c).setLocator(locator);
                     }
