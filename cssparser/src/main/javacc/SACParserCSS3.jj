@@ -1152,7 +1152,8 @@ Condition attrib(Condition pred) :
 
 //
 // pseudo
-//  : ':' [ IDENT
+//  : ':' (':')?
+//        [ IDENT
 //          | FUNCTION_NOT S* selector() S* ')'
 //          | FUNCTION_LANG S* IDENT S* ')'
 //          | FUNCTION S* ((PLUS | MINUS | DIMENSION | NUMBER | STRING | IDENT)? S*)+ ')'
@@ -1171,10 +1172,8 @@ Object pseudo(Condition pred) :
 {
     try
     {
-        <COLON>
-        {
-            locator = getLocator();
-        }
+        <COLON> { locator = getLocator(); }
+        (<COLON>)?
         (
             t = <IDENT>
             {
@@ -1185,22 +1184,17 @@ Object pseudo(Condition pred) :
                     || "after".equals(s))
                 {
                     pseudoElementSel = getSelectorFactory().createPseudoElementSelector(null, s);
-                }
-                else
-                {
-                    c = getConditionFactory().createPseudoClassCondition(null, s);
-                }
-                if (pseudoElementSel != null)
-                {
-                    if (pseudoElementSel instanceof Locatable)
-                    {
+                    if (pseudoElementSel instanceof Locatable) {
                         ((Locatable) pseudoElementSel).setLocator(locator);
                     }
                     return pseudoElementSel;
                 }
-                if (c instanceof Locatable)
+                else
                 {
-                    ((Locatable) c).setLocator(locator);
+                    c = getConditionFactory().createPseudoClassCondition(null, s);
+                    if (c instanceof Locatable) {
+                        ((Locatable) c).setLocator(locator);
+                    }
                 }
                 return (pred == null)
                     ? c

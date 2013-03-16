@@ -6,6 +6,9 @@
   </properties>
   <body>
     <release version="0.9.10" date="xx.xx.2013" description="Release with some CSS3 parser bugfixes and the usual code cleanup.">
+        <action type="fix" dev="rbri" issue="37">
+            CSS3: support double colon notation for pseudo selectors.
+        </action>
         <action type="fix" dev="rbri">
             CSS3: When parsing function arguments now the (inner) whitespace is preserved.
         </action>
