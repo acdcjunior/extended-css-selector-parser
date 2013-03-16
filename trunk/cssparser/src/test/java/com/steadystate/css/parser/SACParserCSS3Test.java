@@ -149,6 +149,24 @@ public class SACParserCSS3Test {
     }
 
     /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void selectorPseudoDoubleColon() throws Exception {
+        selectorType("h1::first-line", Selector.SAC_DESCENDANT_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR,
+                Selector.SAC_PSEUDO_ELEMENT_SELECTOR);
+        selectorType("a::first-letter", Selector.SAC_DESCENDANT_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR,
+                Selector.SAC_PSEUDO_ELEMENT_SELECTOR);
+        selectorType("a::before", Selector.SAC_DESCENDANT_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR,
+                Selector.SAC_PSEUDO_ELEMENT_SELECTOR);
+        selectorType("a::after", Selector.SAC_DESCENDANT_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR,
+                Selector.SAC_PSEUDO_ELEMENT_SELECTOR);
+
+        selectorType("h1::lang(en)", Selector.SAC_CONDITIONAL_SELECTOR, Selector.SAC_ELEMENT_NODE_SELECTOR,
+                Selector.SAC_PSEUDO_ELEMENT_SELECTOR);
+    }
+
+    /**
      * @see http://www.w3.org/TR/CSS21/selector.html#lang
      * @throws Exception if any error occurs
      */
