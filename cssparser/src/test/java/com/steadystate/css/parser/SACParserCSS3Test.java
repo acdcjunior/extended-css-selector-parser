@@ -1372,13 +1372,69 @@ public class SACParserCSS3Test {
         Assert.assertEquals("\"progid:DXImageTransform.Microsoft.Alpha(Opacity=90)\"", value.getCssText());
 
         value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("filter");
-        Assert.assertEquals("alpha(opacity,=,90)", value.getCssText());
+        Assert.assertEquals("alpha(opacity=90)", value.getCssText());
 
         value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("-moz-opacity");
         Assert.assertEquals("0.9", value.getCssText());
 
         value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("opacity");
         Assert.assertEquals("0.9", value.getCssText());
+    }
+
+    @Test
+    public void transformRotate() throws Exception {
+        final String css = ".flipped {\n"
+                + "  transform: rotateY(180deg);\n"
+                + "}";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+        
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+        
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+
+        CSSValueImpl value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("transform");
+        Assert.assertEquals("rotateY(180deg)", value.getCssText());
+    }
+
+    @Test
+    public void rgba() throws Exception {
+        final String css = "p {\n"
+                + "  background-color: rgba(0,0,0,0.2);\n"
+                + "}";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+        
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+        
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+
+        CSSValueImpl value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("background-color");
+        Assert.assertEquals("rgba(0,0,0,0.2)", value.getCssText());
     }
 
     /**
