@@ -371,7 +371,11 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
                     sb.append(functName);
                 }
                 sb.append('(');
-                appendParams(sb, parameters_);
+                LexicalUnit l = parameters_;
+                while (l != null) {
+                    sb.append(l.toString());
+                    l = l.getNextLexicalUnit();
+                }
                 sb.append(")");
                 break;
             default:
@@ -589,7 +593,11 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
                 sb.append("SAC_FUNCTION(")
                     .append(getFunctionName())
                     .append("(");
-                appendParams(sb, parameters_);
+                LexicalUnit l = parameters_;
+                while (l != null) {
+                    sb.append(l.toString());
+                    l = l.getNextLexicalUnit();
+                }
                 sb.append("))");
                 break;
             default:

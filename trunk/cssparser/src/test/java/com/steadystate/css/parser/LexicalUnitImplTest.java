@@ -875,6 +875,31 @@ public class LexicalUnitImplTest {
      * @throws Exception if any error occurs
      */
     @Test
+    public void createFunctionTwoParams() throws Exception {
+        final LexicalUnit x = LexicalUnitImpl.createNumber(null, 10);
+        final LexicalUnit c = LexicalUnitImpl.createComma(x);
+        LexicalUnitImpl.createNumber(c, 11);
+
+        final LexicalUnit unit = LexicalUnitImpl.createFunction(null, "foo", x);
+
+        Assert.assertEquals(LexicalUnit.SAC_FUNCTION, unit.getLexicalUnitType());
+        Assert.assertEquals(0f, unit.getFloatValue(), 0.0001f);
+        Assert.assertEquals(0, unit.getIntegerValue());
+        Assert.assertEquals("", unit.getDimensionUnitText());
+        Assert.assertEquals("foo", unit.getFunctionName());
+        Assert.assertEquals("10", unit.getParameters().toString());
+        Assert.assertNull(unit.getStringValue());
+
+        Assert.assertNull(unit.getNextLexicalUnit());
+        Assert.assertNull(unit.getPreviousLexicalUnit());
+
+        Assert.assertEquals("foo(10,11)", unit.toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
     public void createString() throws Exception {
         final LexicalUnit unit = LexicalUnitImpl.createString(null, "RBRi");
 

@@ -1494,6 +1494,23 @@ LexicalUnit function(LexicalUnit prev) :
                     }
                 }
               )
+            | t = <PERCENTAGE>  { param = LexicalUnitImpl.createPercentage(param, floatValue(op, t.image)); }
+            | t = <LENGTH_PX>   { param = LexicalUnitImpl.createPixel(param, floatValue(op, t.image)); }
+            | t = <LENGTH_CM>   { param = LexicalUnitImpl.createCentimeter(param, floatValue(op, t.image)); }
+            | t = <LENGTH_MM>   { param = LexicalUnitImpl.createMillimeter(param, floatValue(op, t.image)); }
+            | t = <LENGTH_IN>   { param = LexicalUnitImpl.createInch(param, floatValue(op, t.image)); }
+            | t = <LENGTH_PT>   { param = LexicalUnitImpl.createPoint(param, floatValue(op, t.image)); }
+            | t = <LENGTH_PC>   { param = LexicalUnitImpl.createPica(param, floatValue(op, t.image)); }
+            | t = <EMS>         { param = LexicalUnitImpl.createEm(param, floatValue(op, t.image)); }
+            | t = <EXS>         { param = LexicalUnitImpl.createEx(param, floatValue(op, t.image)); }
+            | t = <ANGLE_DEG>   { param = LexicalUnitImpl.createDegree(param, floatValue(op, t.image)); }
+            | t = <ANGLE_RAD>   { param = LexicalUnitImpl.createRadian(param, floatValue(op, t.image)); }
+            | t = <ANGLE_GRAD>  { param = LexicalUnitImpl.createGradian(param, floatValue(op, t.image)); }
+            | t = <TIME_MS>     { param = LexicalUnitImpl.createMillisecond(param, floatValue(op, t.image)); }
+            | t = <TIME_S>      { param = LexicalUnitImpl.createSecond(param, floatValue(op, t.image)); }
+            | t = <FREQ_HZ>     { param = LexicalUnitImpl.createHertz(param, floatValue(op, t.image)); }
+            | t = <FREQ_KHZ>    { param = LexicalUnitImpl.createKiloHertz(param, floatValue(op, t.image)); }
+
             | t = <STRING>  { param = LexicalUnitImpl.createString(param, unescape(t.image, false)); }
             | t = <IDENT>   { param = LexicalUnitImpl.createIdent(param, t.image); }
             | t = <URI>     { param = LexicalUnitImpl.createURI(param, unescape(t.image, true)); }
