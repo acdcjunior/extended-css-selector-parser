@@ -397,6 +397,7 @@ void styleSheetRuleList() :
   boolean ruleFound = false;
 }
 {
+    ( <S> )*
     ( charsetRule() )?
     ( <S> | <CDO> | <CDC> )*
     (
