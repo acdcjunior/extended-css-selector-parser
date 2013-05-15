@@ -430,6 +430,66 @@ public class SACParserCSS21Test {
      * @throws Exception if the test fails
      */
     @Test
+    public void charset() throws Exception {
+        final String css = "@charset 'UTF-8';\n"
+            + "h1 { color: blue }\n";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(2, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("@charset \"UTF-8\";", rule.getCssText());
+
+        rule = rules.item(1);
+        Assert.assertEquals("h1 { color: blue }", rule.getCssText());
+    }
+
+    /**
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void charsetWhitespaceBefore() throws Exception {
+        final String css = "/* comment */ \n @charset 'UTF-8';\n"
+            + "h1 { color: blue }\n";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(2, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("@charset \"UTF-8\";", rule.getCssText());
+
+        rule = rules.item(1);
+        Assert.assertEquals("h1 { color: blue }", rule.getCssText());
+    }
+
+    /**
+     * @throws Exception if the test fails
+     */
+    @Test
     public void importRuleOnly() throws Exception {
         final String css = "@import 'subs.css';";
 

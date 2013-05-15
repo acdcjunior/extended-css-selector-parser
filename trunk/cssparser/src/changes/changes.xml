@@ -6,6 +6,9 @@
   </properties>
   <body>
     <release version="0.9.10" date="xx.xx.2013" description="Release with some CSS3 parser bugfixes and the usual code cleanup.">
+        <action type="fix" dev="rbri" issue="39">
+            CSS2/CSS21/CSS3: Permit comments and whitespace before the @charset rule.
+        </action>
         <action type="fix" dev="rbri">
             CSS3: Support dimensions (20px, 40deg) as function arguments.
         </action>
