@@ -104,6 +104,25 @@ public class CSSOMParserTest {
      * @throws Exception if any error occurs
      */
     @Test
+    public void defineParserClassWrongClass() throws Exception {
+        System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS0");
+        CSSOMParser parser = new CSSOMParser();
+        Assert.assertNotNull(parser);
+        Assert.assertEquals("com.steadystate.css.parser.SACParserCSS0", System.getProperty("org.w3c.css.sac.parser"));
+
+        // this creates a working parser
+        final String test = "p{filter:alpha(opacity=33.3);opacity:0.333}a{color:#123456;}";
+        final Reader r = new StringReader(test);
+        final InputSource is = new InputSource(r);
+        final CSSStyleSheet ss = parser.parseStyleSheet(is, null, null);
+        final CSSRuleList rl = ss.getCssRules();
+        Assert.assertEquals(2, rl.getLength());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
     public void defineParserInstance() throws Exception {
         CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
         Assert.assertNotNull(parser);
