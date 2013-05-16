@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Stack;
+import java.util.logging.Logger;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.ErrorHandler;
@@ -111,9 +112,10 @@ public class CSSOMParser {
                 }
             }
             catch (final Exception e) {
-                System.err.println(e.getMessage());
-                e.printStackTrace();
-                System.err.println("using the default parser instead");
+                final Logger log = Logger.getLogger("com.steadystate.css");
+                log.warning(e.toString());
+                log.warning("using the default 'SACParserCSS21' instead");
+                log.throwing("CSSOMParser", "consturctor", e);
                 LastFailed_ = currentParser;
                 parser_ = new SACParserCSS21();
             }
