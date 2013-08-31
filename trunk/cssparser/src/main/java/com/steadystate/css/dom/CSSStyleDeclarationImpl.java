@@ -28,14 +28,11 @@ package com.steadystate.css.dom;
 
 import java.io.Serializable;
 import java.io.StringReader;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.w3c.css.sac.InputSource;
-
 import org.w3c.dom.DOMException;
-
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSValue;
@@ -47,10 +44,13 @@ import com.steadystate.css.util.LangUtils;
  * Implementation of {@link CSSStyleDeclaration}.
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author rbri
  */
 public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializable
 {
     private static final long serialVersionUID = -2373755821317100189L;
+
+    private static final String PRIORITY_IMPORTANT = "important";
 
     private CSSRule parentRule_;
     private List<Property> properties_ = new ArrayList<Property>();
@@ -106,18 +106,21 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
 
     public String getPropertyValue(final String propertyName) {
         final Property p = getPropertyDeclaration(propertyName);
-        return (p != null) ? p.getValue().toString() : "";
+        return (p == null) ? "" : p.getValue().toString();
     }
 
     public CSSValue getPropertyCSSValue(final String propertyName) {
         final Property p = getPropertyDeclaration(propertyName);
-        return (p != null) ? p.getValue() : null;
+        return (p == null) ? null : p.getValue();
     }
 
     public String removeProperty(final String propertyName) throws DOMException {
+        if (null == propertyName) {
+            return "";
+        }
         for (int i = 0; i < properties_.size(); i++) {
             final Property p = properties_.get(i);
-            if (p.getName().equalsIgnoreCase(propertyName)) {
+            if (p != null && propertyName.equalsIgnoreCase(p.getName())) {
                 properties_.remove(i);
                 return p.getValue().toString();
             }
@@ -127,10 +130,10 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
 
     public String getPropertyPriority(final String propertyName) {
         final Property p = getPropertyDeclaration(propertyName);
-        if (p != null) {
-            return p.isImportant() ? "important" : "";
+        if (p == null) {
+            return "";
         }
-        return "";
+        return p.isImportant() ? PRIORITY_IMPORTANT : "";
     }
 
     public void setProperty(
@@ -143,7 +146,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
             final CSSValue expr = parser.parsePropertyValue(is);
             Property p = getPropertyDeclaration(propertyName);
             final boolean important = (priority != null)
-                ? "important".equalsIgnoreCase(priority)
+                ? PRIORITY_IMPORTANT.equalsIgnoreCase(priority)
                 : false;
             if (p == null) {
                 p = new Property(propertyName, expr, important);
@@ -168,7 +171,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
 
     public String item(final int index) {
         final Property p = properties_.get(index);
-        return (p != null) ? p.getName() : "";
+        return (p == null) ? "" : p.getName();
     }
 
     public CSSRule getParentRule() {
@@ -179,10 +182,13 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
         properties_.add(p);
     }
 
-    public Property getPropertyDeclaration(final String name) {
+    public Property getPropertyDeclaration(final String propertyName) {
+        if (null == propertyName) {
+            return null;
+        }
         for (int i = 0; i < properties_.size(); i++) {
             final Property p = properties_.get(i);
-            if (p.getName().equalsIgnoreCase(name)) {
+            if (p != null && propertyName.equalsIgnoreCase(p.getName())) {
                 return p;
             }
         }
