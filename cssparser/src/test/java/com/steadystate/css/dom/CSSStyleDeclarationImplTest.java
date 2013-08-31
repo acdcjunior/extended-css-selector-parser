@@ -38,6 +38,7 @@ import java.io.StringReader;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.InputSource;
+import org.w3c.dom.css.CSSStyleDeclaration;
 
 import com.steadystate.css.parser.CSSOMParser;
 
@@ -49,6 +50,146 @@ import com.steadystate.css.parser.CSSOMParser;
  * @author rbri
  */
 public class CSSStyleDeclarationImplTest {
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void defaultConstructor() throws Exception {
+        final CSSStyleDeclaration style = new CSSStyleDeclarationImpl();
+
+        Assert.assertEquals("", style.getCssText());
+        Assert.assertEquals(0, style.getLength());
+
+        Assert.assertNull(style.getParentRule());
+        Assert.assertEquals("", style.getPropertyValue("unknown"));
+        Assert.assertEquals("", style.getPropertyPriority("unknown"));
+        Assert.assertNull(style.getPropertyCSSValue("unknown"));
+
+        Assert.assertEquals("", style.getPropertyValue(null));
+        Assert.assertEquals("", style.getPropertyPriority(null));
+        Assert.assertNull(style.getPropertyCSSValue(null));
+
+        // remove
+        Assert.assertEquals("", style.removeProperty("unknown"));
+        Assert.assertEquals(0, style.getLength());
+
+        Assert.assertEquals("", style.removeProperty(null));
+        Assert.assertEquals(0, style.getLength());
+    }
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void emptyRule() throws Exception {
+        final CSSOMParser parser = new CSSOMParser();
+
+        final InputSource source = new InputSource(new StringReader(""));
+        final CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
+
+        Assert.assertEquals("", style.getCssText());
+        Assert.assertEquals(0, style.getLength());
+
+        Assert.assertNull(style.getParentRule());
+        Assert.assertEquals("", style.getPropertyValue("unknown"));
+        Assert.assertEquals("", style.getPropertyPriority("unknown"));
+        Assert.assertNull(style.getPropertyCSSValue("unknown"));
+
+        Assert.assertEquals("", style.getPropertyValue(null));
+        Assert.assertEquals("", style.getPropertyPriority(null));
+        Assert.assertNull(style.getPropertyCSSValue(null));
+
+        // remove
+        Assert.assertEquals("", style.removeProperty("unknown"));
+        Assert.assertEquals(0, style.getLength());
+
+        Assert.assertEquals("", style.removeProperty(null));
+        Assert.assertEquals(0, style.getLength());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void simpleRule() throws Exception {
+        final CSSOMParser parser = new CSSOMParser();
+
+        final InputSource source = new InputSource(new StringReader("prop: value"));
+        final CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
+
+        Assert.assertEquals("prop: value", style.getCssText());
+        Assert.assertEquals(1, style.getLength());
+
+        Assert.assertNull(style.getParentRule());
+        Assert.assertEquals("value", style.getPropertyValue("prop"));
+        Assert.assertEquals("", style.getPropertyPriority("prop"));
+        Assert.assertEquals("value", style.getPropertyCSSValue("prop").getCssText());
+
+        Assert.assertEquals("", style.getPropertyValue("unknown"));
+        Assert.assertEquals("", style.getPropertyPriority("unknown"));
+        Assert.assertNull(style.getPropertyCSSValue("unknown"));
+
+        Assert.assertEquals("", style.getPropertyValue(null));
+        Assert.assertEquals("", style.getPropertyPriority(null));
+        Assert.assertNull(style.getPropertyCSSValue(null));
+
+        // remove
+        Assert.assertEquals("", style.removeProperty("unknown"));
+        Assert.assertEquals(1, style.getLength());
+
+        Assert.assertEquals("", style.removeProperty(null));
+        Assert.assertEquals(1, style.getLength());
+
+        Assert.assertEquals("value", style.removeProperty("prop"));
+        Assert.assertEquals(0, style.getLength());
+        Assert.assertEquals("", style.getPropertyValue("prop"));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void twoRules() throws Exception {
+        final CSSOMParser parser = new CSSOMParser();
+
+        final InputSource source = new InputSource(new StringReader("prop: value; color: red !important;"));
+        final CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
+
+        Assert.assertEquals("prop: value; color: red !important", style.getCssText());
+        Assert.assertEquals(2, style.getLength());
+
+        Assert.assertNull(style.getParentRule());
+        Assert.assertEquals("value", style.getPropertyValue("prop"));
+        Assert.assertEquals("", style.getPropertyPriority("prop"));
+        Assert.assertEquals("value", style.getPropertyCSSValue("prop").getCssText());
+
+        Assert.assertEquals("red", style.getPropertyValue("color"));
+        Assert.assertEquals("important", style.getPropertyPriority("color"));
+        Assert.assertEquals("red", style.getPropertyCSSValue("color").getCssText());
+
+        Assert.assertEquals("", style.getPropertyValue("unknown"));
+        Assert.assertEquals("", style.getPropertyPriority("unknown"));
+        Assert.assertNull(style.getPropertyCSSValue("unknown"));
+
+        Assert.assertEquals("", style.getPropertyValue(null));
+        Assert.assertEquals("", style.getPropertyPriority(null));
+        Assert.assertNull(style.getPropertyCSSValue(null));
+
+        // remove
+        Assert.assertEquals("", style.removeProperty("unknown"));
+        Assert.assertEquals(2, style.getLength());
+
+        Assert.assertEquals("", style.removeProperty(null));
+        Assert.assertEquals(2, style.getLength());
+
+        Assert.assertEquals("value", style.removeProperty("prop"));
+        Assert.assertEquals(1, style.getLength());
+        Assert.assertEquals("", style.getPropertyValue("prop"));
+
+        Assert.assertEquals("red", style.removeProperty("color"));
+        Assert.assertEquals(0, style.getLength());
+        Assert.assertEquals("", style.getPropertyValue("color"));
+    }
 
     /**
      * Regression test for bug 1874800.
