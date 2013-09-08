@@ -12,10 +12,6 @@
             <url>http://www.gnu.org/licenses/lgpl.txt</url>
         </license>
     </licenses>
-    <issueManagement>
-        <system>SourceForge</system>
-        <url>http://sourceforge.net/p/cssparser/bugs/</url>
-    </issueManagement>
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
@@ -128,6 +124,13 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>
                 <version>2.9</version>
                 <configuration>
@@ -182,7 +185,9 @@
                     </reportSet>
                 </reportSets>
                 <configuration>
-                    <issueLinkTemplate>%URL%?group_id=82996&amp;func=detail&amp;atid=567969&amp;aid=%ISSUE%</issueLinkTemplate>
+                    <issueLinkTemplate>
+                        http://sourceforge.net/p/cssparser/bugs/%ISSUE%
+                    </issueLinkTemplate>
                 </configuration>
             </plugin>
             <plugin>
@@ -198,6 +203,54 @@
             </plugin>
         </plugins>
     </reporting>
+    <issueManagement>
+        <system>SourceForge</system>
+        <url>http://sourceforge.net/p/cssparser/bugs/</url>
+    </issueManagement>
+    <mailingLists>
+        <mailingList>
+            <name>CSSParser Developers</name>
+            <subscribe>https://lists.sourceforge.net/lists/listinfo/cssparser-developers</subscribe>
+            <unsubscribe>https://lists.sourceforge.net/lists/listinfo/cssparser-developers</unsubscribe>
+            <archive>http://sourceforge.net/p/cssparser/mailman/cssparser-developers</archive>
+            <post>cssparser-develops@lists.sourceforge.net</post>
+        </mailingList>
+    </mailingLists>
+    <developers>
+        <developer>
+            <name>David Schweinsberg</name>
+            <id>davidsch</id>
+            <email>davidsch@users.sourceforge.net</email>
+        </developer>
+        <developer>
+            <name>Alan Krueger</name>
+            <id>alankrueger</id>
+        </developer>
+        <developer>
+            <name>Daniel Gredler</name>
+            <id>sdanig</id>
+            <email>sdanig@users.sourceforge.net</email>
+            <url>http://daniel.gredler.net/</url>
+            <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <name>Johannes Koch</name>
+            <id>waldbaer</id>
+            <email>waldbaer@users.sourceforge.net</email>
+        </developer>
+        <developer>
+            <name>Ronald Brill</name>
+            <id>rbri</id>
+            <email>rbri@rbri.de</email>
+            <url>http://www.wetator.org/</url>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Ahmed Ashour</name>
+        </contributor>
+    </contributors>
     <dependencies>
         <dependency>
             <groupId>org.w3c.css</groupId>
