@@ -5,7 +5,7 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
-    <release version="0.9.10" date="xx.xx.2013" description="Release with some CSS3 parser bugfixes and the usual code cleanup.">
+    <release version="0.9.10" date="13.09.2013" description="Release with more CSS3 parser bugfixes and the usual code cleanup.">
         <action type="fix" dev="rbri" issue="39">
             CSS2/CSS21/CSS3: Permit comments and whitespace before the @charset rule.
         </action>
@@ -63,7 +63,7 @@
             More unit tests added. Unused code removed.
         </action>
     </release>
-    <release version="0.9.7" date="Apr 24, 2012" description="Release with lots of bugfixes.">
+    <release version="0.9.7" date="24.04.2012" description="Release with lots of bugfixes.">
         <action type="fix" dev="rbri">
             Fix handling of escaped colons in id selectors like '#form\:elem'.
         </action>
@@ -97,7 +97,7 @@
             failes, insertRule now throws an exception (instead of adding a null as rule).
         </action>
     </release>
-    <release version="0.9.6" date="Oct 25, 2011" description="Long-overdue release with lots of bugfixes.">
+    <release version="0.9.6" date="25.10.2011" description="Long-overdue release with lots of bugfixes.">
         <action type="fix">
             CSS 2.1 parser now ignores any '@import' rule that occurs inside a block
             (see http://www.w3.org/TR/CSS2/syndata.html#at-rules). JUnit tests added.
@@ -162,7 +162,7 @@
             JavaCC (and the maven plugin) updated.
         </action>
     </release>
-    <release version="0.9.5" date="?" description="Long-overdue release with lots of bugfixes.">
+    <release version="0.9.5" date="27.03.2008" description="Long-overdue release with lots of bugfixes.">
       <action type="remove">
         Removed the deprecated classes com.steadystate.css.CSS2Parser, com.steadystate.css.RGBColorImpl
         and com.steadystate.css.HexColor.
@@ -201,7 +201,7 @@
         Initial JUnit tests added.
       </action>
     </release>
-    <release version="0.9.4" date="?">
+    <release version="0.9.4" date="22.11.2004">
       <action type="add">
         Ant buildfile added.
       </action>

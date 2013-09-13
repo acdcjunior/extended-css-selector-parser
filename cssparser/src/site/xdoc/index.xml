@@ -17,9 +17,13 @@
                 <a href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113">Document Object Model Level 2 Style</a>
                 tree.  Alternatively, applications can use <a href="http://www.w3.org/Style/CSS/SAC/">
                 SAC: The Simple API for CSS</a>.  Its purpose is to allow developers working with Java to incorporate
-                Cascading Style Sheet information, primarily in conjunction with XML application developments.</p>
+                Cascading Style Sheet information, primarily in conjunction with XML application developments.
+            </p>
+            <p>
+                Starting with version 0.9.9 a CSS3 parser is also available.
+            </p>
                 
-                <p>The parser is freely available and without charge and is licenced under the terms of the
+            <p>The parser is freely available and without charge and is licenced under the terms of the
                 <a href="http://www.gnu.org/copyleft/lesser.html">GNU Lesser General Public License</a>.
             </p>
         </section>
@@ -27,13 +31,19 @@
         <section name="Requirements">
                 <p>To use the pre-packaged JAR file:</p>
                 <ul>
-                    <li>The parser requires JDK 1.1 or greater.</li>
-                    <li>Sample code requires JDK 1.2 or greater.</li>
+                    <li>The parser requires JDK 1.5 or greater.</li>
                 </ul>
                 <p>To compile the source:</p>
                 <ul>
-                    <li>The <a href="https://javacc.dev.java.net/">Java Compiler Compiler (JavaCC)</a></li>
+                    <li>The <a href="http://javacc.java.net/">Java Compiler Compiler (JavaCC)</a></li>
                 </ul>
+        </section>
+
+        <section name="Download latest release 0.9.10 (13.09.2013)">
+
+            <p>from the <a href="http://sourceforge.net/projects/cssparser/">SourceForge Project Page</a>
+                <a href="changes-report.html">Change history</a>.
+            </p>
         </section>
 
         <section name="Support">
@@ -43,10 +53,6 @@
             <a href="http://www.w3.org/TR/DOM-Level-2-Style">Document Object Model Level 2 Style</a>
             Recommendation for details of the DOM interfaces provided.  For more information on using the SAC interface, go to
             the <a href="http://www.w3.org/Style/CSS/SAC/">SAC: The Simple API for CSS</a> Home Page.</p>
-        </section>
-
-        <section name="Download">
-            <p>Download from the <a href="http://sourceforge.net/projects/cssparser/">SourceForge Project Page</a>.</p>
         </section>
     </body>
 </document>
