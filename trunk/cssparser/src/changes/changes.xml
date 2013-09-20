@@ -98,67 +98,67 @@
         </action>
     </release>
     <release version="0.9.6" date="25.10.2011" description="Long-overdue release with lots of bugfixes.">
-        <action type="fix">
+        <action type="fix" dev="rbri">
             CSS 2.1 parser now ignores any '@import' rule that occurs inside a block
             (see http://www.w3.org/TR/CSS2/syndata.html#at-rules). JUnit tests added.
         </action>
-        <action type="fix" issue="3198584">
+        <action type="fix" issue="32" dev="rbri">
             Parser hang with missing semicolon fixed.
         </action>
-        <action type="fix" issue="1946431">
+        <action type="fix" issue="24" dev="rbri">
             Method com.steadystate.css.parser.LexicalUnitImpl.createAttr(LexicalUnit, LexicalUnit) removed.
             The impl was broken. You can use the method
             com.steadystate.css.parser.LexicalUnitImpl.createAttr(LexicalUnit, String) instead.
         </action>
-        <action type="fix">
+        <action type="fix" dev="rbri">
             Improved error handling for methods parseStyleDeclaration, parseRule,
             parseSelectors, parsePropertyValue, parsePriority and parseMedia in
             class AbstractSACParser. All CSSParseException are now catched and
             processed by the error handler.
         </action>
-        <action type="fix">
+        <action type="fix" dev="rbri">
             Class TestCSSParseException removed.
         </action>
-        <action type="fix" issue="2891851">
+        <action type="fix" issue="29" dev="rbri">
             Another unescaping problem fixed.
         </action>
-        <action type="update">
+        <action type="update" dev="rbri">
             Class CSOMParser now takes care of the system property 'org.w3c.css.sac.parser'.
             The effect is, that the class uses the same parser as long as this property is unchanged.
             You can change the property from the outside (System.setProperty()) or by calling
             the CSOMParser(Parser) constructor.
         </action>
-        <action type="update">
+        <action type="update" dev="rbri">
             Default parser changed from CSS2 to CSS21.
         </action>
-        <action type="fix" issue="2796824">
+        <action type="fix" issue="27" dev="rbri">
             Always check for EOF if skipping something.
         </action>
-        <action type="fix" issue="1659992">
+        <action type="fix" issue="18" dev="rbri">
             Improved error handling for incorrect rules.
         </action>
-        <action type="fix" issue="2123264">
+        <action type="fix" issue="26" dev="rbri">
             Ignore leading and trailing whitespace in method com.steadystate.css.dom.CSSStyleSheetImpl.insertRule(String, int).
         </action>
-        <action type="add">
+        <action type="add" dev="waldbaer">
             Many more JUnit tests added.
         </action>
-        <action type="add">
+        <action type="add" dev="waldbaer">
             Locatable and friends added.
         </action>
-        <action type="add">
+        <action type="add" dev="waldbaer">
             Many equals and hashCode implementations added.
         </action>
-        <action type="fix" issue="3293695">
+        <action type="fix" issue="33" dev="waldbaer">
             String parser was too greedy.
         </action>
-        <action type="fix" issue="1931563">
+        <action type="fix" issue="22" dev="waldbaer">
             Wrong processing of some chars.
         </action>
-        <action type="update">
+        <action type="update" dev="waldbaer">
             Major updates on the grammars.
         </action>
-        <action type="update" issue="3293695">
+        <action type="update" issue="33" dev="waldbaer">
             JavaCC (and the maven plugin) updated.
         </action>
     </release>
@@ -167,42 +167,42 @@
         Removed the deprecated classes com.steadystate.css.CSS2Parser, com.steadystate.css.RGBColorImpl
         and com.steadystate.css.HexColor.
       </action>
-      <action type="fix" issue="1226128">
+      <action type="fix" issue="11" dev="sdanig">
         Correctly unescape escaped characters in strings.
       </action>
-      <action type="fix" issue="1874800">
+      <action type="fix" issue="20" dev="sdanig">
         CSSStyleDeclarationImpl.getCssText() fixed to not return curly braces (as per the spec).
       </action>
-      <action type="remove" issue="1337730">
+      <action type="remove" issue="15" dev="sdanig">
         Removed unused class ParseException (one of two classes with this name).
       </action>
-      <action type="update">
+      <action type="update" dev="sdanig">
         Updated the minimum required Java version to Java 5.
       </action>
-      <action type="remove">
+      <action type="remove" dev="sdanig">
         Removed the W3C DOM and SAC classes, using instead the classes in the JDK and the official SAC JAR.
       </action>
-      <action type="update">
+      <action type="update" dev="sdanig">
         Moved build system to Maven 2.
       </action>
-      <action type="add">
+      <action type="add" dev="sdanig">
         Added parseMedia() to SACParser.
       </action>
-      <action type="update">
+      <action type="update" dev="sdanig">
         Modified CSSOMParser to allow parser creation within the sandbox.
       </action>
-      <action type="remove">
+      <action type="remove" dev="sdanig">
         JavaCC-generated files removed from the repository.
       </action>
-      <action type="update">
+      <action type="update" dev="sdanig">
         css2.jj renamed to SACParser.jj.
       </action>
-      <action type="add">
+      <action type="add" dev="sdanig">
         Initial JUnit tests added.
       </action>
     </release>
     <release version="0.9.4" date="22.11.2004">
-      <action type="add">
+      <action type="add" dev="davidsch">
         Ant buildfile added.
       </action>
     </release>

@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.sourceforge.cssparser</groupId>
     <artifactId>cssparser</artifactId>
-    <version>0.9.10</version>
+    <version>0.9.11-SNAPSHOT</version>
     <name>CSS Parser</name>
     <url>http://cssparser.sourceforge.net/</url>
     <description>A CSS parser which implements SAC (the Simple API for CSS).</description>
@@ -185,9 +185,9 @@
                     </reportSet>
                 </reportSets>
                 <configuration>
-                    <issueLinkTemplate>
-                        http://sourceforge.net/p/cssparser/bugs/%ISSUE%
-                    </issueLinkTemplate>
+                    <issueLinkTemplatePerSystem>
+                        <features>http://sourceforge.net/p/htmlunit/feature-requests/%ISSUE%</features>
+                    </issueLinkTemplatePerSystem>
                 </configuration>
             </plugin>
             <plugin>
@@ -204,7 +204,7 @@
         </plugins>
     </reporting>
     <issueManagement>
-        <system>SourceForge</system>
+        <system>SourceForge2</system>
         <url>http://sourceforge.net/p/cssparser/bugs/</url>
     </issueManagement>
     <mailingLists>
