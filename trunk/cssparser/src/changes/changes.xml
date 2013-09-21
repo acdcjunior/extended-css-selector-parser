@@ -5,6 +5,11 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
+    <release version="0.9.11" date="??.09.2013" description="Again a release with CSS3 parser bugfixes and the usual code cleanup.">
+        <action type="fix" dev="rbri">
+            CSS3: Fix selector parsing for more than one pseudo condition.
+        </action>
+    </release>
     <release version="0.9.10" date="13.09.2013" description="Release with more CSS3 parser bugfixes and the usual code cleanup.">
         <action type="fix" dev="rbri" issue="39">
             CSS2/CSS21/CSS3: Permit comments and whitespace before the @charset rule.
