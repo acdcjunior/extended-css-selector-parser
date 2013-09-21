@@ -26,6 +26,7 @@
 
 package com.steadystate.css.parser;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -1638,5 +1639,51 @@ public class SACParserCSS3Test {
 
         selectors = createSelectors("input:not(#test)");
         Assert.assertEquals("input:not(*#test)", selectors.item(0).toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void twoPseudo() throws Exception {
+        SelectorList selectors = createSelectors("input:not(#test):not(#rest)");
+        Assert.assertEquals("input:not(*#test):not(*#rest)", selectors.item(0).toString());
+
+        selectors = createSelectors("input:not(#test):nth-child(even)");
+        Assert.assertEquals("input:not(*#test):nth-child(even)", selectors.item(0).toString());
+
+        selectors = createSelectors("input:not(#test):before");
+        Assert.assertEquals("input:not(*#test):before", selectors.item(0).toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void pseudoElementsErrors() throws Exception {
+        // two pseudo elements
+        checkError("input:before:after", "Error in pseudo class or element. (Invalid token \"after\". Was expecting: \":\".)");
+
+        // pseudo element not at end
+        checkError("input:before:not(#test)", "Error in pseudo class or element. (Invalid token \"not(\". Was expecting: \":\".)");
+        checkError("input:before[type='file']", "Error in attribute selector. (Invalid token \"type\". Was expecting: <S>.)");
+        checkError("input:before.styleClass", "Error in class selector. (Invalid token \"\". Was expecting one of: .)");
+        checkError("input:before#hash", "Error in hash. (Invalid token \"\". Was expecting one of: .)");
+    }
+
+    private void checkError(String input, String errorMsg) throws IOException {
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final InputSource source = new InputSource(new StringReader(input));
+        final SelectorList selectors = parser.parseSelectors(source);
+
+        Assert.assertEquals(1, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        Assert.assertEquals(errorMsg, errorHandler.getErrorMessage());
+        Assert.assertNull(selectors);
     }
 }
