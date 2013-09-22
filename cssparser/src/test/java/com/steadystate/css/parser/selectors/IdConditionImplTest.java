@@ -39,6 +39,7 @@ public class IdConditionImplTest {
     @Test
     public void withoutValue() throws Exception {
         final IdConditionImpl c = new IdConditionImpl(null);
+        Assert.assertNull(c.getNamespaceURI());
         Assert.assertNull(c.getLocalName());
         Assert.assertNull(c.getValue());
         Assert.assertTrue(c.getSpecified());  // TODO is this correct?
@@ -51,6 +52,7 @@ public class IdConditionImplTest {
     @Test
     public void emptyValue() throws Exception {
         final IdConditionImpl c = new IdConditionImpl("");
+        Assert.assertNull(c.getNamespaceURI());
         Assert.assertNull(c.getLocalName());
         Assert.assertEquals("", c.getValue());
         Assert.assertTrue(c.getSpecified());
@@ -63,6 +65,7 @@ public class IdConditionImplTest {
     @Test
     public void withValue() throws Exception {
         final IdConditionImpl c = new IdConditionImpl("value");
+        Assert.assertNull(c.getNamespaceURI());
         Assert.assertNull(c.getLocalName());
         Assert.assertEquals("value", c.getValue());
         Assert.assertTrue(c.getSpecified());

@@ -39,6 +39,7 @@ public class ClassConditionImplTest {
     @Test
     public void withoutValue() throws Exception {
         final ClassConditionImpl c = new ClassConditionImpl(null);
+        Assert.assertNull(c.getNamespaceURI());
         Assert.assertNull(c.getLocalName());
         Assert.assertNull(c.getValue());
         Assert.assertTrue(c.getSpecified());  // TODO is this correct?
@@ -51,6 +52,7 @@ public class ClassConditionImplTest {
     @Test
     public void emptyValue() throws Exception {
         final ClassConditionImpl c = new ClassConditionImpl("");
+        Assert.assertNull(c.getNamespaceURI());
         Assert.assertNull(c.getLocalName());
         Assert.assertEquals("", c.getValue());
         Assert.assertTrue(c.getSpecified());
@@ -63,6 +65,7 @@ public class ClassConditionImplTest {
     @Test
     public void withValue() throws Exception {
         final ClassConditionImpl c = new ClassConditionImpl("value");
+        Assert.assertNull(c.getNamespaceURI());
         Assert.assertNull(c.getLocalName());
         Assert.assertEquals("value", c.getValue());
         Assert.assertTrue(c.getSpecified());

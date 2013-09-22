@@ -27,23 +27,23 @@ package com.steadystate.css.parser.selectors;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.w3c.css.sac.Selector;
 
 /**
- * Testcases for {@link PseudoClassConditionImpl}.
+ * Testcases for {@link PseudoElementSelectorImpl}.
  */
-public class PseudoClassConditionImplTest {
+public class PseudoElementSelectorImplTest {
 
     /**
      * @throws Exception if any error occurs
      */
     @Test
     public void withoutValue() throws Exception {
-        final PseudoClassConditionImpl c = new PseudoClassConditionImpl(null);
+        final PseudoElementSelectorImpl c = new PseudoElementSelectorImpl(null);
         Assert.assertNull(c.getNamespaceURI());
         Assert.assertNull(c.getLocalName());
-        Assert.assertNull(c.getValue());
-        Assert.assertTrue(c.getSpecified());  // TODO is this correct?
-        Assert.assertEquals(":", c.toString());
+        Assert.assertEquals(Selector.SAC_PSEUDO_ELEMENT_SELECTOR, c.getSelectorType());
+        Assert.assertNull(c.toString());
     }
 
     /**
@@ -51,12 +51,11 @@ public class PseudoClassConditionImplTest {
      */
     @Test
     public void emptyValue() throws Exception {
-        final PseudoClassConditionImpl c = new PseudoClassConditionImpl("");
+        final PseudoElementSelectorImpl c = new PseudoElementSelectorImpl("");
         Assert.assertNull(c.getNamespaceURI());
-        Assert.assertNull(c.getLocalName());
-        Assert.assertEquals("", c.getValue());
-        Assert.assertTrue(c.getSpecified());
-        Assert.assertEquals(":", c.toString());
+        Assert.assertEquals("", c.getLocalName());
+        Assert.assertEquals(Selector.SAC_PSEUDO_ELEMENT_SELECTOR, c.getSelectorType());
+        Assert.assertEquals("", c.toString());
     }
 
     /**
@@ -64,11 +63,10 @@ public class PseudoClassConditionImplTest {
      */
     @Test
     public void withValue() throws Exception {
-        final PseudoClassConditionImpl c = new PseudoClassConditionImpl("value");
+        final PseudoElementSelectorImpl c = new PseudoElementSelectorImpl("value");
         Assert.assertNull(c.getNamespaceURI());
-        Assert.assertNull(c.getLocalName());
-        Assert.assertEquals("value", c.getValue());
-        Assert.assertTrue(c.getSpecified());
-        Assert.assertEquals(":value", c.toString());
+        Assert.assertEquals("value", c.getLocalName());
+        Assert.assertEquals(Selector.SAC_PSEUDO_ELEMENT_SELECTOR, c.getSelectorType());
+        Assert.assertEquals("value", c.toString());
     }
 }
