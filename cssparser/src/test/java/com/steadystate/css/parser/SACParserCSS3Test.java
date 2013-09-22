@@ -1646,7 +1646,16 @@ public class SACParserCSS3Test {
      */
     @Test
     public void twoPseudo() throws Exception {
-        SelectorList selectors = createSelectors("input:not(#test):not(#rest)");
+        SelectorList selectors = createSelectors("input:lang(en):lang(de)");
+        Assert.assertEquals("input:lang(en):lang(de)", selectors.item(0).toString());
+
+        selectors = createSelectors("input:foo(test):foo(rest)");
+        Assert.assertEquals("input:foo(test):foo(rest)", selectors.item(0).toString());
+
+        selectors = createSelectors("input:foo(test):before");
+        Assert.assertEquals("input:foo(test):before", selectors.item(0).toString());
+
+        selectors = createSelectors("input:not(#test):not(#rest)");
         Assert.assertEquals("input:not(*#test):not(*#rest)", selectors.item(0).toString());
 
         selectors = createSelectors("input:not(#test):nth-child(even)");
