@@ -27,6 +27,7 @@ package com.steadystate.css.parser.selectors;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.w3c.css.sac.Condition;
 
 /**
  * Test cases for {@link PrefixAttributeConditionImpl}.
@@ -39,6 +40,8 @@ public class PrefixAttributeConditionImplTest {
     @Test
     public void withoutValue() throws Exception {
         final PrefixAttributeConditionImpl ac = new PrefixAttributeConditionImpl("test", null, false);
+        Assert.assertNull(ac.getNamespaceURI());
+        Assert.assertEquals(Condition.SAC_ATTRIBUTE_CONDITION, ac.getConditionType());
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertNull(ac.getValue());
         Assert.assertFalse(ac.getSpecified());
@@ -51,6 +54,8 @@ public class PrefixAttributeConditionImplTest {
     @Test
     public void emptyValue() throws Exception {
         final PrefixAttributeConditionImpl ac = new PrefixAttributeConditionImpl("test", "", false);
+        Assert.assertNull(ac.getNamespaceURI());
+        Assert.assertEquals(Condition.SAC_ATTRIBUTE_CONDITION, ac.getConditionType());
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("", ac.getValue());
         Assert.assertFalse(ac.getSpecified());
@@ -63,6 +68,8 @@ public class PrefixAttributeConditionImplTest {
     @Test
     public void withValue() throws Exception {
         final PrefixAttributeConditionImpl ac = new PrefixAttributeConditionImpl("test", "value", false);
+        Assert.assertNull(ac.getNamespaceURI());
+        Assert.assertEquals(Condition.SAC_ATTRIBUTE_CONDITION, ac.getConditionType());
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("value", ac.getValue());
         Assert.assertFalse(ac.getSpecified());
@@ -75,6 +82,8 @@ public class PrefixAttributeConditionImplTest {
     @Test
     public void withoutValueAndSpecified() throws Exception {
         final PrefixAttributeConditionImpl ac = new PrefixAttributeConditionImpl("test", null, true);
+        Assert.assertNull(ac.getNamespaceURI());
+        Assert.assertEquals(Condition.SAC_ATTRIBUTE_CONDITION, ac.getConditionType());
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertNull(ac.getValue());
         Assert.assertTrue(ac.getSpecified());
@@ -87,6 +96,8 @@ public class PrefixAttributeConditionImplTest {
     @Test
     public void emptyValueAndSpecified() throws Exception {
         final PrefixAttributeConditionImpl ac = new PrefixAttributeConditionImpl("test", "", true);
+        Assert.assertNull(ac.getNamespaceURI());
+        Assert.assertEquals(Condition.SAC_ATTRIBUTE_CONDITION, ac.getConditionType());
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("", ac.getValue());
         Assert.assertTrue(ac.getSpecified());
@@ -99,6 +110,8 @@ public class PrefixAttributeConditionImplTest {
     @Test
     public void withValueAndSpecified() throws Exception {
         final PrefixAttributeConditionImpl ac = new PrefixAttributeConditionImpl("test", "value", true);
+        Assert.assertNull(ac.getNamespaceURI());
+        Assert.assertEquals(Condition.SAC_ATTRIBUTE_CONDITION, ac.getConditionType());
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("value", ac.getValue());
         Assert.assertTrue(ac.getSpecified());
