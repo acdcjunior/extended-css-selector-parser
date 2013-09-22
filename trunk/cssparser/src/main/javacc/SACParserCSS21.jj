@@ -870,36 +870,46 @@ Selector simpleSelector(Selector sel, char comb) :
     {
         (
             ( simpleSel = elementName()
-                ( c = hash(c)
-                | c = _class(c)
-                | c = attrib(c)
-                | o = pseudo(c)
+                ( c = hash(c, null != pseudoElementSel)
+                | c = _class(c, null != pseudoElementSel)
+                | c = attrib(c, null != pseudoElementSel)
+                | (
+                    o = pseudo(c, null != pseudoElementSel)
+                    {  if (o instanceof Condition)
+                       {   c = (Condition) o;
+                       } else {
+                           pseudoElementSel = (SimpleSelector) o;
+                       }
+                    }
+                  )
                 )*
             )
             |
             ( { simpleSel = getSelectorFactory().createElementSelector(null, null); }
-                ( c = hash(c)
-                | c = _class(c)
-                | c = attrib(c)
-                | o = pseudo(c)
+                ( c = hash(c, null != pseudoElementSel)
+                | c = _class(c, null != pseudoElementSel)
+                | c = attrib(c, null != pseudoElementSel)
+                | (
+                    o = pseudo(c, null != pseudoElementSel)
+                    {  if (o instanceof Condition)
+                       {   c = (Condition) o;
+                       } else {
+                           pseudoElementSel = (SimpleSelector) o;
+                       }
+                    }
+                  )
                 )+
             )
         )
 
         {
-            if (o instanceof SimpleSelector)
-            {
-                pseudoElementSel = (SimpleSelector) o;
-            }
-            else if (o instanceof Condition)
-            {
-                c = (Condition) o;
-            }
             if (c != null) {
                 simpleSel = getSelectorFactory().createConditionalSelector(simpleSel, c);
             }
 
-            if (sel != null) {
+            if (sel == null) {
+                sel = simpleSel;
+            } else {
                 switch (comb) {
                 case ' ':
                     sel = getSelectorFactory().createDescendantSelector(sel, simpleSel);
@@ -911,8 +921,6 @@ Selector simpleSelector(Selector sel, char comb) :
                     sel = getSelectorFactory().createChildSelector(sel, simpleSel);
                     break;
                 }
-            } else {
-                sel = simpleSel;
             }
             if (pseudoElementSel != null)
             {
@@ -933,20 +941,23 @@ Selector simpleSelector(Selector sel, char comb) :
 //   : '.' IDENT
 //   ;
 //
-Condition _class(Condition pred) :
+Condition _class(Condition pred, boolean pseudoElementFound) :
 {
     Token t;
     Locator locator;
+    ParseException pe = null;
 }
 {
     try
     {
+        { if (pseudoElementFound) { pe = generateParseException(); } }
         <DOT>
         {
             locator = getLocator();
         }
         t = <IDENT>
         {
+            if (pseudoElementFound) { throw pe; }
             Condition c = getConditionFactory().createClassCondition(null, t.image);
             if (c instanceof Locatable)
             {
@@ -1005,7 +1016,7 @@ SimpleSelector elementName() :
 //     [ IDENT | STRING ] S* ]? ']'
 //   ;
 //
-Condition attrib(Condition pred) :
+Condition attrib(Condition pred, boolean pseudoElementFound) :
 {
     Token t;
     String name = null;
@@ -1021,6 +1032,8 @@ Condition attrib(Condition pred) :
             locator = getLocator();
         }
         ( <S> )*
+        { if (pseudoElementFound) { throw generateParseException(); } }
+
         t = <IDENT> { name = unescape(t.image, false); } ( <S> )*
         (
             (
@@ -1075,22 +1088,22 @@ Condition attrib(Condition pred) :
 //        ]
 //  ;
 //
-Object pseudo(Condition pred) :
+Object pseudo(Condition pred, boolean pseudoElementFound) :
 {
     SimpleSelector pseudoElementSel = null;
     Condition c = null;
     Token t;
     String function;
+    Selector sel;
     String arg = "";
     Locator locator;
 }
 {
     try
     {
-        <COLON>
-        {
-            locator = getLocator();
-        }
+        <COLON> { locator = getLocator(); }
+
+        { if (pseudoElementFound) { throw generateParseException(); } }
         (
             t = <IDENT>
             {
@@ -1101,18 +1114,12 @@ Object pseudo(Condition pred) :
                     || "after".equals(s))
                 {
                     pseudoElementSel = getSelectorFactory().createPseudoElementSelector(null, s);
-                }
-                else
-                {
-                    c = getConditionFactory().createPseudoClassCondition(null, s);
-                }
-                if (pseudoElementSel != null)
-                {
                     if (pseudoElementSel instanceof Locatable) {
                         ((Locatable) pseudoElementSel).setLocator(locator);
                     }
                     return pseudoElementSel;
                 }
+                c = getConditionFactory().createPseudoClassCondition(null, s);
                 if (c instanceof Locatable) {
                     ((Locatable) c).setLocator(locator);
                 }
@@ -1139,7 +1146,8 @@ Object pseudo(Condition pred) :
             )
             |
             (
-                t = <FUNCTION> { function = unescape(t.image, false); } ( <S> )*
+                t = <FUNCTION> { function = unescape(t.image, false); }
+                ( <S> )*
                 (t = <IDENT> { arg = unescape(t.image, false); } ( <S> )* )?
                 <RROUND>
                 {
@@ -1161,15 +1169,18 @@ Object pseudo(Condition pred) :
     }
 }
 
-Condition hash(Condition pred) :
+Condition hash(Condition pred, boolean pseudoElementFound) :
 {
     Token t;
+    ParseException pe = null;
 }
 {
     try
     {
+        { if (pseudoElementFound) { pe = generateParseException(); } }
         t = <HASH>
         {
+            if (pseudoElementFound) { throw pe; }
             Condition c = getConditionFactory().createIdCondition(unescape(t.image.substring(1), false));
             if (c instanceof Locatable)
             {
