@@ -5,7 +5,7 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
-    <release version="0.9.11" date="??.09.2013" description="Again a release with CSS3 parser bugfixes and the usual code cleanup.">
+    <release version="0.9.11" date="08.10.2013" description="CSS parser bugfix for pseudo conditions.">
         <action type="fix" dev="rbri">
             CSS2/CSS21/CSS3: Fix selector parsing for more than one pseudo condition.
         </action>
