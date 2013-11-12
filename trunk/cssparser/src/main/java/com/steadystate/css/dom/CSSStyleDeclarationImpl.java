@@ -45,6 +45,7 @@ import com.steadystate.css.util.LangUtils;
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author rbri
+ * @author Ahmed Ashour
  */
 public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializable
 {
@@ -106,7 +107,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
 
     public String getPropertyValue(final String propertyName) {
         final Property p = getPropertyDeclaration(propertyName);
-        return (p == null) ? "" : p.getValue().toString();
+        return (p == null || p.getValue() == null) ? "" : p.getValue().toString();
     }
 
     public CSSValue getPropertyCSSValue(final String propertyName) {
@@ -122,7 +123,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
             final Property p = properties_.get(i);
             if (p != null && propertyName.equalsIgnoreCase(p.getName())) {
                 properties_.remove(i);
-                return p.getValue().toString();
+                return (p.getValue() == null) ? "" : p.getValue().toString();
             }
         }
         return "";
@@ -141,13 +142,14 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
             final String value,
             final String priority) throws DOMException {
         try {
-            final InputSource is = new InputSource(new StringReader(value));
-            final CSSOMParser parser = new CSSOMParser();
-            final CSSValue expr = parser.parsePropertyValue(is);
+            CSSValue expr = null;
+            if (!value.isEmpty()) {
+                final CSSOMParser parser = new CSSOMParser();
+                final InputSource is = new InputSource(new StringReader(value));
+                expr = parser.parsePropertyValue(is);
+            }
             Property p = getPropertyDeclaration(propertyName);
-            final boolean important = (priority != null)
-                ? PRIORITY_IMPORTANT.equalsIgnoreCase(priority)
-                : false;
+            boolean important = PRIORITY_IMPORTANT.equalsIgnoreCase(priority);
             if (p == null) {
                 p = new Property(propertyName, expr, important);
                 addProperty(p);
