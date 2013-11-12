@@ -5,6 +5,11 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
+    <release version="0.9.12" date="xx.xx.2013" description="Bugfixes.">
+        <action type="fix" dev="rbri" issue="42">
+            Some NPE fixed for class CSSStyleDeclarationImpl (based on patch from Ahmed Ashour). More unit tests written.
+        </action>
+    </release>
     <release version="0.9.11" date="08.10.2013" description="CSS parser bugfix for pseudo conditions.">
         <action type="fix" dev="rbri">
             CSS2/CSS21/CSS3: Fix selector parsing for more than one pseudo condition.
