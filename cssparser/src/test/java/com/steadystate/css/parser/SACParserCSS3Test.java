@@ -46,6 +46,7 @@ import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SelectorList;
 import org.w3c.css.sac.SimpleSelector;
+import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
 import org.w3c.dom.css.CSSStyleDeclaration;
@@ -53,8 +54,10 @@ import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.ErrorHandler;
+import com.steadystate.css.dom.CSSStyleDeclarationImpl;
 import com.steadystate.css.dom.CSSStyleRuleImpl;
 import com.steadystate.css.dom.CSSValueImpl;
+import com.steadystate.css.dom.Property;
 import com.steadystate.css.parser.selectors.ChildSelectorImpl;
 import com.steadystate.css.parser.selectors.ConditionalSelectorImpl;
 import com.steadystate.css.parser.selectors.LangConditionImpl;
@@ -1366,6 +1369,178 @@ public class SACParserCSS3Test {
 
         rule = rules.item(1);
         Assert.assertEquals("p { color: green }", rule.getCssText());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionPercent() throws Exception {
+        CSSValueImpl value = dimension("2%");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_PERCENTAGE, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionPX() throws Exception {
+        CSSValueImpl value = dimension("3px");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_PX, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionCM() throws Exception {
+        CSSValueImpl value = dimension("5cm");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_CM, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionMM() throws Exception {
+        CSSValueImpl value = dimension("7mm");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_MM, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionIN() throws Exception {
+        CSSValueImpl value = dimension("11in");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_IN, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionPT() throws Exception {
+        CSSValueImpl value = dimension("13pt");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_PT, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionEMS() throws Exception {
+        CSSValueImpl value = dimension("17em");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_EMS, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionEXS() throws Exception {
+        CSSValueImpl value = dimension("19ex");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_EXS, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionDEG() throws Exception {
+        CSSValueImpl value = dimension("13deg");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_DEG, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionRAD() throws Exception {
+        CSSValueImpl value = dimension("99rad");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_RAD, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionGRAD() throws Exception {
+        CSSValueImpl value = dimension("31grad");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_GRAD, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionMS() throws Exception {
+        CSSValueImpl value = dimension("37ms");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_MS, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionS() throws Exception {
+        CSSValueImpl value = dimension("41s");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_S, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionHZ() throws Exception {
+        CSSValueImpl value = dimension("43Hz");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_HZ, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionKHZ() throws Exception {
+        CSSValueImpl value = dimension("47kHz");
+        Assert.assertEquals(CSSPrimitiveValue.CSS_KHZ, value.getPrimitiveType());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void dimensionPC() throws Exception {
+        dimension("5pc");
+    }
+
+    private CSSValueImpl dimension(String dim) throws Exception {
+        final String css = ".dim { top: " + dim + " }";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+        
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+        
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+        
+        final CSSRuleList rules = sheet.getCssRules();
+        
+        Assert.assertEquals(1, rules.getLength());
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("*" + css, rule.getCssText());
+
+        CSSStyleRuleImpl ruleImpl = (CSSStyleRuleImpl)rule;
+        CSSStyleDeclarationImpl declImpl = (CSSStyleDeclarationImpl)ruleImpl.getStyle();
+        Property prop = declImpl.getPropertyDeclaration("top");
+        CSSValueImpl valueImpl = (CSSValueImpl)prop.getValue();
+
+        return valueImpl;
     }
 
     /**
