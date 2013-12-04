@@ -28,11 +28,8 @@ package com.steadystate.css.parser;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Locale;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.w3c.css.sac.AttributeCondition;
 import org.w3c.css.sac.CombinatorCondition;
@@ -56,25 +53,11 @@ import com.steadystate.css.parser.selectors.LangConditionImpl;
 /**
  * @author rbri
  */
-public class SACParserCSS2Test {
+public class SACParserCSS2Test extends AbstractSACParserTest {
 
-    private Locale systemLocale_;
-
-    /**
-     * Set up
-     */
-    @Before
-    public void setUp() {
-        systemLocale_ = Locale.getDefault();
-        Locale.setDefault(Locale.ENGLISH);
-    }
-
-    /**
-     * Tear down
-     */
-    @After
-    public void tearDown() {
-        Locale.setDefault(systemLocale_);
+    @Override
+    protected CSSOMParser parser() {
+        return new CSSOMParser(new SACParserCSS2());
     }
 
     /**
@@ -150,18 +133,7 @@ public class SACParserCSS2Test {
                 + ":lang(fr) > Q { }\n"
                 + ":lang(de) > Q { }";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS2());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(4, rules.getLength());
@@ -206,18 +178,7 @@ public class SACParserCSS2Test {
         final String css = "html:lang() { background: red }\n"
                     + "p { color:green; }";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS2());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(1, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(1, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css, 1, 0, 1);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
@@ -365,18 +326,9 @@ public class SACParserCSS2Test {
      */
     @Test
     public void emptyCSS() throws Exception {
-        final InputSource source = new InputSource(new StringReader(""));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS2());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+        final CSSStyleSheet sheet = parse("");
 
         Assert.assertEquals(0, sheet.getCssRules().getLength());
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
     }
 
 
@@ -388,17 +340,7 @@ public class SACParserCSS2Test {
         final String css = "@charset 'UTF-8';\n"
             + "h1 { color: blue }\n";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS2());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(2, rules.getLength());
@@ -418,17 +360,7 @@ public class SACParserCSS2Test {
         final String css = "/* comment */ \n @charset 'UTF-8';\n"
             + "h1 { color: blue }\n";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS2());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(2, rules.getLength());
