@@ -28,14 +28,9 @@ package com.steadystate.css.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.StringReader;
-import java.util.Locale;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.w3c.css.sac.AttributeCondition;
 import org.w3c.css.sac.CombinatorCondition;
@@ -69,25 +64,11 @@ import com.steadystate.css.parser.selectors.SuffixAttributeConditionImpl;
  * @author Ahmed Ashour
  * @author rbri
  */
-public class SACParserCSS3Test {
+public class SACParserCSS3Test  extends AbstractSACParserTest {
 
-    private Locale systemLocale_;
-
-    /**
-     * Set up
-     */
-    @Before
-    public void setUp() {
-        systemLocale_ = Locale.getDefault();
-        Locale.setDefault(Locale.ENGLISH);
-    }
-
-    /**
-     * Tear down
-     */
-    @After
-    public void tearDown() {
-        Locale.setDefault(systemLocale_);
+    @Override
+    protected CSSOMParser parser() {
+        return new CSSOMParser(new SACParserCSS3());
     }
 
     /**
@@ -181,18 +162,7 @@ public class SACParserCSS3Test {
                 + ":lang(fr) > Q { }\n"
                 + ":lang(de) > Q { }";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(4, rules.getLength());
@@ -237,18 +207,7 @@ public class SACParserCSS3Test {
         final String css = "html:lang() { background: red }\n"
                     + "p { color:green; }";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(1, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(1, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css, 1, 0, 1);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
@@ -399,19 +358,8 @@ public class SACParserCSS3Test {
         final InputStream is = getClass().getClassLoader().getResourceAsStream("dojo.css");
         Assert.assertNotNull(is);
 
-        final Reader r = new InputStreamReader(is);
-        final InputSource source = new InputSource(r);
-
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
+        final CSSStyleSheet sheet = parse(is);
         Assert.assertEquals(17, sheet.getCssRules().getLength());
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
     }
 
     /**
@@ -419,17 +367,7 @@ public class SACParserCSS3Test {
      */
     @Test
     public void emptyCSS() throws Exception {
-        final InputSource source = new InputSource(new StringReader(""));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse("");
         Assert.assertEquals(0, sheet.getCssRules().getLength());
     }
 
@@ -438,17 +376,7 @@ public class SACParserCSS3Test {
      */
     @Test
     public void whitespaceOnlyCSS() throws Exception {
-        final InputSource source = new InputSource(new StringReader("  \t \r\n \n"));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse("  \t \r\n \n");
         Assert.assertEquals(0, sheet.getCssRules().getLength());
     }
 
@@ -460,17 +388,7 @@ public class SACParserCSS3Test {
         final String css = "@charset 'UTF-8';\n"
             + "h1 { color: blue }\n";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(2, rules.getLength());
@@ -490,17 +408,7 @@ public class SACParserCSS3Test {
         final String css = "/* comment */ \n @charset 'UTF-8';\n"
             + "h1 { color: blue }\n";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(2, rules.getLength());
@@ -519,17 +427,7 @@ public class SACParserCSS3Test {
     public void importRuleOnly() throws Exception {
         final String css = "@import 'subs.css';";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
@@ -545,18 +443,7 @@ public class SACParserCSS3Test {
     public void importRulesOnly() throws Exception {
         final String css = "@import 'subs.css'; @import 'subs1.css'; @import 'subs2.css';";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(3, rules.getLength());
@@ -579,17 +466,7 @@ public class SACParserCSS3Test {
     public void atRuleFontFace() throws Exception {
         final String css = "@font-face { font-family: Gentium; src: url(http://example.com/fonts/Gentium.ttf); }\n";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
@@ -609,17 +486,7 @@ public class SACParserCSS3Test {
                 + "font-family: Headline;\n"
                 + "src: local(Futura-Medium), url(fonts.svg#MyGeometricModern) format(\"svg\");}";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
@@ -641,7 +508,7 @@ public class SACParserCSS3Test {
             + "@import 'list.css';\n";
 
         final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final CSSOMParser parser = parser();
 
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
@@ -683,7 +550,7 @@ public class SACParserCSS3Test {
             + "h1 {color: blue }\n";
 
         final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final CSSOMParser parser = parser();
 
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
@@ -728,7 +595,7 @@ public class SACParserCSS3Test {
             + "h1 {color: blue }\n";
 
         final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final CSSOMParser parser = parser();
 
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
@@ -764,7 +631,7 @@ public class SACParserCSS3Test {
         final String cssText =
             "foreground: rgb( 10, 20, 30 )";
 
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final CSSOMParser parser = parser();
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
 
@@ -795,18 +662,7 @@ public class SACParserCSS3Test {
                 + "DIV.note:before  { content: counter(notecntr, disc) \" \" }\n"
                 + "P:before         { content: counter(p, none) }";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(5, rules.getLength());
@@ -851,18 +707,7 @@ public class SACParserCSS3Test {
     public void counters() throws Exception {
         final String css = "LI:before { content: counters(item, \".\") \" \"; counter-increment: item }";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
@@ -883,18 +728,7 @@ public class SACParserCSS3Test {
     public void unknownProperty() throws Exception {
         final String css = "h1 { color: red; rotation: 70minutes }\n";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
@@ -916,18 +750,7 @@ public class SACParserCSS3Test {
                     + "img { background: \'red\' } /* keywords cannot be quoted */\n"
                     + "img { border-width: 3 } /* a unit must be specified for length values */\n";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(5, rules.getLength());
@@ -961,7 +784,7 @@ public class SACParserCSS3Test {
                     + "p { color:red;   color{;color:maroon}; color:green } /* same with recovery */\n";
 
         final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final CSSOMParser parser = parser();
 
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
@@ -1028,7 +851,7 @@ public class SACParserCSS3Test {
                     + "p { color:blue; }\n";
 
         final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final CSSOMParser parser = parser();
 
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
@@ -1077,18 +900,7 @@ public class SACParserCSS3Test {
                             + "  }\n"
                             + "  h1 { color: blue }\n";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(2, rules.getLength());
@@ -1116,7 +928,7 @@ public class SACParserCSS3Test {
                             + "  p:before { content: Hello";
 
         final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final CSSOMParser parser = parser();
 
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
@@ -1153,7 +965,7 @@ public class SACParserCSS3Test {
                             + "  p:before { content: Hello }";
 
         final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final CSSOMParser parser = parser();
 
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
@@ -1189,7 +1001,7 @@ public class SACParserCSS3Test {
         final String css = "@page :pageStyle { size: 21.0cm 29.7cm;";
 
         final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final CSSOMParser parser = parser();
 
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
@@ -1232,7 +1044,7 @@ public class SACParserCSS3Test {
                             + "}";
 
         final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final CSSOMParser parser = parser();
 
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
@@ -1277,18 +1089,8 @@ public class SACParserCSS3Test {
                             + "h4 { background: url('this is a \"string\"') }\n"
                             + "h5 { background: url('this is a \\'string\\'') }"
                             + "h6 { background: url('this is a \\\r\n string') }";
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
 
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(5, rules.getLength());
@@ -1319,7 +1121,7 @@ public class SACParserCSS3Test {
         final String css = ".a, .b, { test: 1; }";
 
         final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final CSSOMParser parser = parser();
 
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
@@ -1346,7 +1148,7 @@ public class SACParserCSS3Test {
                            + "p { color: green }";
 
         final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final CSSOMParser parser = parser();
 
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
@@ -1517,18 +1319,7 @@ public class SACParserCSS3Test {
     private CSSValueImpl dimension(String dim) throws Exception {
         final String css = ".dim { top: " + dim + " }";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-        
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-        
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-        
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-        
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
         
         Assert.assertEquals(1, rules.getLength());
@@ -1551,18 +1342,7 @@ public class SACParserCSS3Test {
         final String css = ".a { top: 0\\9; }"
                 + ".b { top: -01.234newDim; }";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(2, rules.getLength());
@@ -1586,18 +1366,7 @@ public class SACParserCSS3Test {
                             + "opacity: 0.9;\n"
                             + "}";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
@@ -1623,18 +1392,7 @@ public class SACParserCSS3Test {
                 + "  transform: rotateY(180deg);\n"
                 + "}";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-        
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-        
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-        
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
@@ -1651,18 +1409,7 @@ public class SACParserCSS3Test {
                 + "  background-color: rgba(0,0,0,0.2);\n"
                 + "}";
 
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
-        
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-        
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-        
-        Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
+        final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
@@ -1856,7 +1603,7 @@ public class SACParserCSS3Test {
     }
 
     private void checkError(String input, String errorMsg) throws IOException {
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final CSSOMParser parser = parser();
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
 
