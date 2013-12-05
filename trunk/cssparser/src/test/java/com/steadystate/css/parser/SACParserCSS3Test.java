@@ -26,21 +26,16 @@
 
 package com.steadystate.css.parser;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.w3c.css.sac.AttributeCondition;
-import org.w3c.css.sac.CombinatorCondition;
 import org.w3c.css.sac.Condition;
 import org.w3c.css.sac.ConditionalSelector;
-import org.w3c.css.sac.DescendantSelector;
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SelectorList;
-import org.w3c.css.sac.SimpleSelector;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
@@ -49,10 +44,8 @@ import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.ErrorHandler;
-import com.steadystate.css.dom.CSSStyleDeclarationImpl;
 import com.steadystate.css.dom.CSSStyleRuleImpl;
 import com.steadystate.css.dom.CSSValueImpl;
-import com.steadystate.css.dom.Property;
 import com.steadystate.css.parser.selectors.ChildSelectorImpl;
 import com.steadystate.css.parser.selectors.ConditionalSelectorImpl;
 import com.steadystate.css.parser.selectors.LangConditionImpl;
@@ -66,9 +59,10 @@ import com.steadystate.css.parser.selectors.SuffixAttributeConditionImpl;
  */
 public class SACParserCSS3Test  extends AbstractSACParserTest {
 
+
     @Override
-    protected CSSOMParser parser() {
-        return new CSSOMParser(new SACParserCSS3());
+    protected AbstractSACParser sacParser() {
+        return new SACParserCSS3();
     }
 
     /**
@@ -292,62 +286,6 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertNull(createSelectors("[rel~=]")); // invalid rule
         conditionAssert("[rel|=val]", "rel", "val", true);
         Assert.assertNull(createSelectors("[rel|=]")); // invalid rule
-    }
-
-    private void selectorList(final String cssText, final int length) throws Exception {
-        final SelectorList selectors = createSelectors(cssText);
-        Assert.assertEquals(length, selectors.getLength());
-    }
-
-    private void selectorType(final String cssText, final int... selectorTypes) throws Exception {
-        final SelectorList selectors = createSelectors(cssText);
-        final Selector selector = selectors.item(0);
-        Assert.assertEquals(selectorTypes[0], selector.getSelectorType());
-        if (selectorTypes[0] == Selector.SAC_DESCENDANT_SELECTOR) {
-            final DescendantSelector descendantSelector = (DescendantSelector) selector;
-            final Selector ancestor = descendantSelector.getAncestorSelector();
-            Assert.assertEquals(selectorTypes[1], ancestor.getSelectorType());
-            final SimpleSelector simple = descendantSelector.getSimpleSelector();
-            Assert.assertEquals(selectorTypes[2], simple.getSelectorType());
-        }
-    }
-
-    private void conditionType(final String cssText, final int... conditionTypes) throws Exception {
-        final Condition condition = createCondition(cssText);
-        conditionType(condition, 0, conditionTypes);
-    }
-
-    private int conditionType(final Condition condition, int initial, final int... conditionTypes) {
-        Assert.assertEquals(conditionTypes[initial], condition.getConditionType());
-        if (conditionTypes[initial] == Condition.SAC_AND_CONDITION) {
-            final CombinatorCondition combinatorCondition = (CombinatorCondition) condition;
-            final Condition first = combinatorCondition.getFirstCondition();
-            final Condition second = combinatorCondition.getSecondCondition();
-            initial = conditionType(first, ++initial, conditionTypes);
-            initial = conditionType(second, ++initial, conditionTypes);
-        }
-        return initial;
-    }
-
-    private void conditionAssert(final String cssText, final String name,
-            final String value, final boolean specified) throws Exception {
-        final Condition condition = createCondition(cssText);
-        final AttributeCondition attributeCondition = (AttributeCondition) condition;
-        Assert.assertEquals(name, attributeCondition.getLocalName());
-        Assert.assertEquals(value, attributeCondition.getValue());
-        Assert.assertEquals(specified, attributeCondition.getSpecified());
-    }
-
-    private SelectorList createSelectors(final String cssText) throws Exception {
-        final InputSource source = new InputSource(new StringReader(cssText));
-        return new SACParserCSS3().parseSelectors(source);
-    }
-
-    private Condition createCondition(final String cssText) throws Exception {
-        final SelectorList selectors = createSelectors(cssText);
-        final Selector selector = selectors.item(0);
-        final ConditionalSelector conditionalSelector = (ConditionalSelector) selector;
-        return conditionalSelector.getCondition();
     }
 
     /**
@@ -1316,24 +1254,6 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         dimension("5pc");
     }
 
-    private CSSValueImpl dimension(String dim) throws Exception {
-        final String css = ".dim { top: " + dim + " }";
-
-        final CSSStyleSheet sheet = parse(css);
-        final CSSRuleList rules = sheet.getCssRules();
-        
-        Assert.assertEquals(1, rules.getLength());
-        CSSRule rule = rules.item(0);
-        Assert.assertEquals("*" + css, rule.getCssText());
-
-        CSSStyleRuleImpl ruleImpl = (CSSStyleRuleImpl)rule;
-        CSSStyleDeclarationImpl declImpl = (CSSStyleDeclarationImpl)ruleImpl.getStyle();
-        Property prop = declImpl.getPropertyDeclaration("top");
-        CSSValueImpl valueImpl = (CSSValueImpl)prop.getValue();
-
-        return valueImpl;
-    }
-
     /**
      * @throws Exception if any error occurs
      */
@@ -1593,28 +1513,13 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     @Test
     public void pseudoElementsErrors() throws Exception {
         // two pseudo elements
-        checkError("input:before:after", "Error in pseudo class or element. (Invalid token \"after\". Was expecting: \":\".)");
+        checkError("input:before:after", "Duplicate pseudo class or pseudo class not at end.");
+        checkError("input::before::after", "Duplicate pseudo class or pseudo class not at end.");
 
         // pseudo element not at end
-        checkError("input:before:not(#test)", "Error in pseudo class or element. (Invalid token \"not(\". Was expecting: \":\".)");
+        checkError("input:before:not(#test)", "Duplicate pseudo class or pseudo class not at end.");
         checkError("input:before[type='file']", "Error in attribute selector. (Invalid token \"type\". Was expecting: <S>.)");
         checkError("input:before.styleClass", "Error in class selector. (Invalid token \"\". Was expecting one of: .)");
         checkError("input:before#hash", "Error in hash. (Invalid token \"\". Was expecting one of: .)");
-    }
-
-    private void checkError(String input, String errorMsg) throws IOException {
-        final CSSOMParser parser = parser();
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final InputSource source = new InputSource(new StringReader(input));
-        final SelectorList selectors = parser.parseSelectors(source);
-
-        Assert.assertEquals(1, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
-        Assert.assertEquals(errorMsg, errorHandler.getErrorMessage());
-        Assert.assertNull(selectors);
     }
 }

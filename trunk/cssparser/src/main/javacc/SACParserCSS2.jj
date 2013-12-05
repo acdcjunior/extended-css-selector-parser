@@ -1097,7 +1097,7 @@ Object pseudo(Condition pred, boolean pseudoElementFound) :
     {
         <COLON> { locator = getLocator(); }
 
-        { if (pseudoElementFound) { throw generateParseException(); } }
+        { if (pseudoElementFound) { throw toCSSParseException("duplicatePseudo", locator); } }
         (
             t = <IDENT>
             {
