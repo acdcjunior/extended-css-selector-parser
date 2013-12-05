@@ -258,6 +258,11 @@ abstract class AbstractSACParser implements Parser {
             getInputSource().getURI(), 1, 1);
     }
 
+    protected CSSParseException toCSSParseException(final String messageKey, final Locator locator) {
+        final String messagePattern = getSACParserMessages().getString(messageKey);
+        return new CSSParseException(messagePattern, getInputSource().getURI(), locator.getLineNumber(), locator.getColumnNumber());
+    }
+
     protected CSSParseException createSkipWarning(final String key, final CSSParseException e) {
         String s = null;
         try {
