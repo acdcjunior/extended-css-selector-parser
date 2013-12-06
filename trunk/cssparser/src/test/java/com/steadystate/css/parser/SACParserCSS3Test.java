@@ -1513,11 +1513,16 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     @Test
     public void pseudoElementsErrors() throws Exception {
         // two pseudo elements
-        checkError("input:before:after", "Duplicate pseudo class or pseudo class not at end.");
-        checkError("input::before::after", "Duplicate pseudo class or pseudo class not at end.");
+        checkError("input:before:after", "Duplicate pseudo class \":after\" or pseudo class \":after\" not at end.");
+        checkError("input::before::after", "Duplicate pseudo class \":after\" or pseudo class \":after\" not at end.");
 
+        checkError("input:before:lang(de)", "Duplicate pseudo class \":lang(de)\" or pseudo class \":lang(de)\" not at end.");
+        checkError("input:before:foo(ab)", "Duplicate pseudo class \":foo(ab)\" or pseudo class \":foo(ab)\" not at end.");
+        checkError("input:before:", "Error in pseudo class or element. (Invalid token \"<EOF>\". Was expecting one of: <IDENT>, <FUNCTION_NOT>, <FUNCTION_LANG>, <FUNCTION>, \":\".)");
+
+        
         // pseudo element not at end
-        checkError("input:before:not(#test)", "Duplicate pseudo class or pseudo class not at end.");
+        checkError("input:before:not(#test)", "Duplicate pseudo class \":not(*#test)\" or pseudo class \":not(*#test)\" not at end.");
         checkError("input:before[type='file']", "Error in attribute selector. (Invalid token \"type\". Was expecting: <S>.)");
         checkError("input:before.styleClass", "Error in class selector. (Invalid token \"\". Was expecting one of: .)");
         checkError("input:before#hash", "Error in hash. (Invalid token \"\". Was expecting one of: .)");
