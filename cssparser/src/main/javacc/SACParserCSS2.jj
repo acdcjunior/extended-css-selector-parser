@@ -1097,10 +1097,10 @@ Object pseudo(Condition pred, boolean pseudoElementFound) :
     {
         <COLON> { locator = getLocator(); }
 
-        { if (pseudoElementFound) { throw toCSSParseException("duplicatePseudo", locator); } }
         (
             t = <IDENT>
             {
+                if (pseudoElementFound) { throw toCSSParseException("duplicatePseudo", new String[] { t.image }, locator); }
                 String s = t.image;
                 if ("first-line".equals(s)
                     || "first-letter".equals(s)
@@ -1129,6 +1129,7 @@ Object pseudo(Condition pred, boolean pseudoElementFound) :
                 ( <S> )*
                 <RROUND>
                 {
+                    if (pseudoElementFound) { throw toCSSParseException("duplicatePseudo", new String[] { "lang(" + lang + ")" }, locator); }
                     c = getConditionFactory().createLangCondition(lang);
                     if (c instanceof Locatable) {
                         ((Locatable) c).setLocator(locator);
@@ -1144,6 +1145,7 @@ Object pseudo(Condition pred, boolean pseudoElementFound) :
                 t = <IDENT> { arg = unescape(t.image, false); } ( <S> )*
                 <RROUND>
                 {
+                    if (pseudoElementFound) { throw toCSSParseException("duplicatePseudo", new String[] { function + arg + ")" }, locator); }
                     c = getConditionFactory().createPseudoClassCondition(null, function + arg + ")");
                     if (c instanceof Locatable) {
                         ((Locatable) c).setLocator(locator);

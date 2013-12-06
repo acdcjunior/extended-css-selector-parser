@@ -1190,10 +1190,10 @@ Object pseudo(Condition pred, boolean pseudoElementFound) :
         <COLON> { locator = getLocator(); }
         (<COLON>)?
 
-        { if (pseudoElementFound) { throw toCSSParseException("duplicatePseudo", locator); } }
         (
             t = <IDENT>
             {
+                if (pseudoElementFound) { throw toCSSParseException("duplicatePseudo", new String[] { t.image }, locator); }
                 String s = t.image;
                 if ("first-line".equals(s)
                     || "first-letter".equals(s)
@@ -1221,6 +1221,7 @@ Object pseudo(Condition pred, boolean pseudoElementFound) :
                 sel = selector() { String arg = sel.toString(); }
                 <RROUND>
                 {
+                    if (pseudoElementFound) { throw toCSSParseException("duplicatePseudo", new String[] { function + arg + ")" }, locator); }
                     c = getConditionFactory().createPseudoClassCondition(null, function + arg + ")");
                     if (c instanceof Locatable) {
                         ((Locatable) c).setLocator(locator);
@@ -1238,6 +1239,7 @@ Object pseudo(Condition pred, boolean pseudoElementFound) :
                 ( <S> )*
                 <RROUND>
                 {
+                    if (pseudoElementFound) { throw toCSSParseException("duplicatePseudo", new String[] { "lang(" + lang + ")" }, locator); }
                     c = getConditionFactory().createLangCondition(lang);
                     if (c instanceof Locatable) {
                         ((Locatable) c).setLocator(locator);
@@ -1260,6 +1262,7 @@ Object pseudo(Condition pred, boolean pseudoElementFound) :
                 )+
                 <RROUND>
                 {
+                    if (pseudoElementFound) { throw toCSSParseException("duplicatePseudo", new String[] { function + args.toString().trim() + ")" }, locator); }
                     c = getConditionFactory().createPseudoClassCondition(null, function + args.toString().trim() + ")");
                     if (c instanceof Locatable) {
                         ((Locatable) c).setLocator(locator);
