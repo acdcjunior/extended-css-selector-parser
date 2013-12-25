@@ -338,16 +338,9 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
             if ((lu.getLexicalUnitType() == LexicalUnit.SAC_IDENT)
                 || (lu.getLexicalUnitType() == LexicalUnit.SAC_STRING_VALUE)
                 || (lu.getLexicalUnitType() == LexicalUnit.SAC_URI)
-                || (lu.getLexicalUnitType() == LexicalUnit.SAC_INHERIT)) {
+                || (lu.getLexicalUnitType() == LexicalUnit.SAC_INHERIT)
+                || (lu.getLexicalUnitType() == LexicalUnit.SAC_ATTR)) {
                 return lu.getStringValue();
-            }
-
-            if (lu.getLexicalUnitType() == LexicalUnit.SAC_ATTR) {
-                final LexicalUnit params = lu.getParameters();
-                if (null == params) {
-                    return "";
-                }
-                return lu.getParameters().getStringValue();
             }
         }
         else if (value_ instanceof List) {

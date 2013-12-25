@@ -791,7 +791,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getNextLexicalUnit());
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
-        Assert.assertEquals("attr()", unit.toString());
+        Assert.assertEquals("attr(attrValue)", unit.toString());
     }
 
     /**
