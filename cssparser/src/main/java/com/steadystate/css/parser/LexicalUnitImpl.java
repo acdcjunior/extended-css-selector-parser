@@ -344,9 +344,9 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
                 sb.append("\"").append(getStringValue()).append("\"");
                 break;
             case SAC_ATTR:
-                sb.append("attr(");
-                appendParams(sb, parameters_);
-                sb.append(")");
+                sb.append("attr(")
+                    .append(getStringValue())
+                    .append(")");
                 break;
             case SAC_RECT_FUNCTION:
                 sb.append("rect(");
@@ -570,9 +570,9 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
                     .append("\")");
                 break;
             case SAC_ATTR:
-                sb.append("SAC_ATTR(attr(");
-                appendParams(sb, parameters_);
-                sb.append("))");
+                sb.append("SAC_ATTR(attr(")
+                    .append(getStringValue())
+                    .append("))");
                 break;
             case SAC_RECT_FUNCTION:
                 sb.append("SAC_RECT_FUNCTION(rect(");

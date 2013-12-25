@@ -26,16 +26,23 @@
 
 package com.steadystate.css.parser;
 
+import java.io.StringReader;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.Condition;
+import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SelectorList;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
+import org.w3c.dom.css.CSSStyleDeclaration;
+import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
 
+import com.steadystate.css.ErrorHandler;
 import com.steadystate.css.dom.CSSStyleRuleImpl;
+import com.steadystate.css.dom.CSSValueImpl;
 import com.steadystate.css.parser.selectors.ChildSelectorImpl;
 import com.steadystate.css.parser.selectors.ConditionalSelectorImpl;
 import com.steadystate.css.parser.selectors.LangConditionImpl;
@@ -348,5 +355,145 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
         checkError("input:before[type='file']", "Error in attribute selector. (Invalid token \"type\". Was expecting: <S>.)");
         checkError("input:before.styleClass", "Error in class selector. (Invalid token \"\". Was expecting one of: .)");
         checkError("input:before#hash", "Error in hash. (Invalid token \"\". Was expecting one of: .)");
+    }
+
+    @Test
+    public void rgb() throws Exception {
+        final String cssText = "foreground: rgb( 10, 20, 30 )";
+
+        final CSSOMParser parser = parser();
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final InputSource source = new InputSource(new StringReader(cssText));
+        final CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        // Enumerate the properties and retrieve their values
+        Assert.assertEquals(1, style.getLength());
+
+        String name = style.item(0);
+        name = style.item(0);
+        Assert.assertEquals("foreground : rgb(10, 20, 30)", name + " : " + style.getPropertyValue(name));
+    }
+
+    @Test
+    public void rect() throws Exception {
+        final String cssText = "clip: rect( 10px, 20px, 30px, 40px )";
+
+        final CSSOMParser parser = parser();
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final InputSource source = new InputSource(new StringReader(cssText));
+        final CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        // Enumerate the properties and retrieve their values
+        Assert.assertEquals(1, style.getLength());
+
+        String name = style.item(0);
+        name = style.item(0);
+        Assert.assertEquals("clip : rect(10px, 20px, 30px, 40px)", name + " : " + style.getPropertyValue(name));
+    }
+
+    @Test
+    public void attr() throws Exception {
+        final String cssText = "content: attr( data-foo )";
+
+        final CSSOMParser parser = parser();
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final InputSource source = new InputSource(new StringReader(cssText));
+        final CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        // Enumerate the properties and retrieve their values
+        Assert.assertEquals(1, style.getLength());
+
+        String name = style.item(0);
+        name = style.item(0);
+        Assert.assertEquals("content : attr(data-foo)", name + " : " + style.getPropertyValue(name));
+    }
+
+    /**
+     * @see "http://www.w3.org/TR/CSS21/generate.html#counters"
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void counter() throws Exception {
+        final String css =
+                  "H1:before        { content: counter(chno, upper-latin) \". \" }\n"
+                + "H2:before        { content: counter(section, upper-roman) \" - \" }\n"
+                + "BLOCKQUOTE:after { content: \" [\" counter(bq, lower-greek) \"]\" }\n"
+                + "DIV.note:before  { content: counter(notecntr, disc) \" \" }\n"
+                + "P:before         { content: counter(p, none) }";
+
+        final CSSStyleSheet sheet = parse(css);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(5, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("H1:before { content: counter(chno, upper-latin) \". \" }", rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        CSSValueImpl value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("content");
+        Assert.assertEquals("counter(chno, upper-latin)", ((CSSValueImpl) value.item(0)).getCounterValue().toString());
+
+        rule = rules.item(1);
+        Assert.assertEquals("H2:before { content: counter(section, upper-roman) \" - \" }", rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("content");
+        Assert.assertEquals("counter(section, upper-roman)",
+                ((CSSValueImpl) value.item(0)).getCounterValue().toString());
+
+        rule = rules.item(2);
+        Assert.assertEquals("BLOCKQUOTE:after { content: \" [\" counter(bq, lower-greek) \"]\" }", rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("content");
+        Assert.assertEquals("counter(bq, lower-greek)", ((CSSValueImpl) value.item(1)).getCounterValue().toString());
+
+        rule = rules.item(3);
+        Assert.assertEquals("DIV.note:before { content: counter(notecntr, disc) \" \" }", rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("content");
+        Assert.assertEquals("counter(notecntr, disc)", ((CSSValueImpl) value.item(0)).getCounterValue().toString());
+
+        rule = rules.item(4);
+        Assert.assertEquals("P:before { content: counter(p, none) }", rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("content");
+        Assert.assertEquals("counter(p, none)", (value.getCounterValue().toString()));
+    }
+
+    /**
+     * @see "http://www.w3.org/TR/CSS21/generate.html#counters"
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void counters() throws Exception {
+        final String css = "LI:before { content: counters(item, \".\") \" \"; counter-increment: item }";
+
+        final CSSStyleSheet sheet = parse(css);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("LI:before { content: counters(item, \".\") \" \"; counter-increment: item }",
+                rule.getCssText());
+        Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
+        final CSSValueImpl value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("content");
+        Assert.assertEquals("counters(item, \".\")", ((CSSValueImpl) value.item(0)).getCounterValue().toString());
     }
 }

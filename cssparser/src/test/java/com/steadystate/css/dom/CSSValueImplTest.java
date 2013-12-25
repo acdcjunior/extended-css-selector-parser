@@ -47,13 +47,13 @@ public class CSSValueImplTest {
      */
     @Test
     public void attr() throws Exception {
-        final LexicalUnit lu = LexicalUnitImpl.createAttr(null, "attr");
+        final LexicalUnit lu = LexicalUnitImpl.createAttr(null, "attrValue");
         final CSSValueImpl value = new CSSValueImpl(lu, false);
 
-        Assert.assertEquals("attr()", value.getCssText());
+        Assert.assertEquals("attr(attrValue)", value.getCssText());
         Assert.assertEquals(CSSPrimitiveValue.CSS_ATTR, value.getPrimitiveType());
         Assert.assertEquals(0.0, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
-        Assert.assertEquals("", value.getStringValue());
+        Assert.assertEquals("attrValue", value.getStringValue());
     }
 
     /**

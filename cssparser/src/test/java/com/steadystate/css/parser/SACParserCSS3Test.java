@@ -566,8 +566,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
 
     @Test
     public void rgb() throws Exception {
-        final String cssText =
-            "foreground: rgb( 10, 20, 30 )";
+        final String cssText = "foreground: rgb( 10, 20, 30 )";
 
         final CSSOMParser parser = parser();
         final ErrorHandler errorHandler = new ErrorHandler();
@@ -586,6 +585,52 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         String name = style.item(0);
         name = style.item(0);
         Assert.assertEquals("foreground : rgb(10, 20, 30)", name + " : " + style.getPropertyValue(name));
+    }
+
+    @Test
+    public void rect() throws Exception {
+        final String cssText = "clip: rect( 10px, 20px, 30px, 40px )";
+
+        final CSSOMParser parser = parser();
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final InputSource source = new InputSource(new StringReader(cssText));
+        final CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        // Enumerate the properties and retrieve their values
+        Assert.assertEquals(1, style.getLength());
+
+        String name = style.item(0);
+        name = style.item(0);
+        Assert.assertEquals("clip : rect(10px, 20px, 30px, 40px)", name + " : " + style.getPropertyValue(name));
+    }
+
+    @Test
+    public void attr() throws Exception {
+        final String cssText = "content: attr( data-foo )";
+
+        final CSSOMParser parser = parser();
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final InputSource source = new InputSource(new StringReader(cssText));
+        final CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        // Enumerate the properties and retrieve their values
+        Assert.assertEquals(1, style.getLength());
+
+        String name = style.item(0);
+        name = style.item(0);
+        Assert.assertEquals("content : attr(data-foo)", name + " : " + style.getPropertyValue(name));
     }
 
     /**
