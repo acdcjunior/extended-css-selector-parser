@@ -565,6 +565,33 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     @Test
+    public void hexColor() throws Exception {
+        final String cssText = "color: #ccc; background: #1c1d00;";
+
+        final CSSOMParser parser = parser();
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final InputSource source = new InputSource(new StringReader(cssText));
+        final CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        // Enumerate the properties and retrieve their values
+        Assert.assertEquals(2, style.getLength());
+
+        String name = style.item(0);
+        name = style.item(0);
+        Assert.assertEquals("color : rgb(204, 204, 204)", name + " : " + style.getPropertyValue(name));
+
+        name = style.item(1);
+        name = style.item(1);
+        Assert.assertEquals("background : rgb(28, 29, 0)", name + " : " + style.getPropertyValue(name));
+    }
+
+    @Test
     public void rgb() throws Exception {
         final String cssText = "foreground: rgb( 10, 20, 30 )";
 
