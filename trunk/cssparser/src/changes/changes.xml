@@ -6,8 +6,11 @@
   </properties>
   <body>
     <release version="0.9.12" date="xx.xx.2013" description="Bugfixes.">
+        <action type="fix" dev="rbri" issue="41">
+            Processing of the rect(), counter(), counters() and rgb() function parameter fixed (CSS2, CSS21, CSS3).
+        </action>
         <action type="fix" dev="rbri">
-            Processing of the attr() function parameter fixed (CSS2, CSS21, CSS3).
+            Processing of the attr() function parameters fixed (CSS2, CSS21, CSS3).
         </action>
         <action type="fix" dev="rbri">
             NPE fixed if duplicate pseudo selector found (CSS2, CSS21, CSS3).
