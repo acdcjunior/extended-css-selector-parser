@@ -324,17 +324,17 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
                 break;
             case SAC_COUNTER_FUNCTION:
                 sb.append("counter(");
-                appendParams(sb, parameters_);
+                appendParams(sb);
                 sb.append(")");
                 break;
             case SAC_COUNTERS_FUNCTION:
                 sb.append("counters(");
-                appendParams(sb, parameters_);
+                appendParams(sb);
                 sb.append(")");
                 break;
             case SAC_RGBCOLOR:
                 sb.append("rgb(");
-                appendParams(sb, parameters_);
+                appendParams(sb);
                 sb.append(")");
                 break;
             case SAC_IDENT:
@@ -350,7 +350,8 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
                 break;
             case SAC_RECT_FUNCTION:
                 sb.append("rect(");
-                appendParams(sb, parameters_);
+                appendParams(sb);
+                // appendParams(sb, parameters_);
                 sb.append(")");
                 break;
             case SAC_UNICODERANGE:
@@ -371,11 +372,7 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
                     sb.append(functName);
                 }
                 sb.append('(');
-                LexicalUnit l = parameters_;
-                while (l != null) {
-                    sb.append(l.toString());
-                    l = l.getNextLexicalUnit();
-                }
+                appendParams(sb);
                 sb.append(")");
                 break;
             default:
@@ -546,17 +543,17 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
                 break;
             case SAC_COUNTER_FUNCTION:
                 sb.append("SAC_COUNTER_FUNCTION(counter(");
-                appendParams(sb, parameters_);
+                appendParams(sb);
                 sb.append("))");
                 break;
             case SAC_COUNTERS_FUNCTION:
                 sb.append("SAC_COUNTERS_FUNCTION(counters(");
-                appendParams(sb, parameters_);
+                appendParams(sb);
                 sb.append("))");
                 break;
             case SAC_RGBCOLOR:
                 sb.append("SAC_RGBCOLOR(rgb(");
-                appendParams(sb, parameters_);
+                appendParams(sb);
                 sb.append("))");
                 break;
             case SAC_IDENT:
@@ -576,7 +573,7 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
                 break;
             case SAC_RECT_FUNCTION:
                 sb.append("SAC_RECT_FUNCTION(rect(");
-                appendParams(sb, parameters_);
+                appendParams(sb);
                 sb.append("))");
                 break;
             case SAC_UNICODERANGE:
@@ -606,14 +603,9 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
         return sb.toString();
     }
 
-    private void appendParams(final StringBuilder sb, final LexicalUnit first) {
-        LexicalUnit l = first;
-        boolean comma = false;
+    private void appendParams(final StringBuilder sb) {
+        LexicalUnit l = parameters_;
         while (l != null) {
-            if (comma) {
-                sb.append(",");
-            }
-            comma = true;
             sb.append(l.toString());
             l = l.getNextLexicalUnit();
         }

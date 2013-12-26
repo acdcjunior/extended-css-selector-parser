@@ -211,6 +211,30 @@ public class LexicalUnitImplTest {
      * @throws Exception if any error occurs
      */
     @Test
+    public void setStringValueNull() throws Exception {
+        final LexicalUnitImpl unit = new LexicalUnitImpl();
+        unit.setLexicalUnitType(LexicalUnit.SAC_UNICODERANGE);
+        unit.setStringValue(null);
+
+        Assert.assertEquals(LexicalUnit.SAC_UNICODERANGE, unit.getLexicalUnitType());
+        Assert.assertEquals(0f, unit.getFloatValue(), 0.0001f);
+        Assert.assertEquals(0, unit.getIntegerValue());
+        Assert.assertNull(unit.getDimension());
+        Assert.assertEquals("", unit.getDimensionUnitText());
+        Assert.assertNull(unit.getFunctionName());
+        Assert.assertNull(unit.getParameters());
+        Assert.assertNull(unit.getStringValue());
+
+        Assert.assertNull(unit.getNextLexicalUnit());
+        Assert.assertNull(unit.getPreviousLexicalUnit());
+
+        Assert.assertEquals("", unit.toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
     public void nextLexicalUnit() throws Exception {
         final LexicalUnitImpl unit = new LexicalUnitImpl();
         Assert.assertNull(unit.getNextLexicalUnit());
@@ -733,20 +757,42 @@ public class LexicalUnitImplTest {
      */
     @Test
     public void createCounter() throws Exception {
-        final LexicalUnit unit = LexicalUnitImpl.createCounter(null, LexicalUnitImpl.createNumber(null, 4));
+        final LexicalUnit value = LexicalUnitImpl.createIdent(null, "CounterValue");
+        final LexicalUnit unit = LexicalUnitImpl.createCounter(null, value);
 
         Assert.assertEquals(LexicalUnit.SAC_COUNTER_FUNCTION, unit.getLexicalUnitType());
         Assert.assertEquals(0f, unit.getFloatValue(), 0.0001f);
         Assert.assertEquals(0, unit.getIntegerValue());
         Assert.assertEquals("", unit.getDimensionUnitText());
         Assert.assertEquals("counter", unit.getFunctionName());
-        Assert.assertEquals("4", unit.getParameters().toString());
+        Assert.assertEquals("CounterValue", unit.getParameters().toString());
         Assert.assertNull(unit.getStringValue());
 
         Assert.assertNull(unit.getNextLexicalUnit());
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
-        Assert.assertEquals("counter(4)", unit.toString());
+        Assert.assertEquals("counter(CounterValue)", unit.toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void createCounterNoValue() throws Exception {
+        final LexicalUnit unit = LexicalUnitImpl.createCounter(null, null);
+
+        Assert.assertEquals(LexicalUnit.SAC_COUNTER_FUNCTION, unit.getLexicalUnitType());
+        Assert.assertEquals(0f, unit.getFloatValue(), 0.0001f);
+        Assert.assertEquals(0, unit.getIntegerValue());
+        Assert.assertEquals("", unit.getDimensionUnitText());
+        Assert.assertEquals("counter", unit.getFunctionName());
+        Assert.assertNull(unit.getParameters());
+        Assert.assertNull(unit.getStringValue());
+
+        Assert.assertNull(unit.getNextLexicalUnit());
+        Assert.assertNull(unit.getPreviousLexicalUnit());
+
+        Assert.assertEquals("counter()", unit.toString());
     }
 
     /**
@@ -754,23 +800,43 @@ public class LexicalUnitImplTest {
      */
     @Test
     public void createCounters() throws Exception {
-        final LexicalUnit x1 = LexicalUnitImpl.createNumber(null, 1);
-        final LexicalUnit x2 = LexicalUnitImpl.createNumber(null, 2);
-        ((LexicalUnitImpl) x1).setNextLexicalUnit(x2);
-        final LexicalUnit unit = LexicalUnitImpl.createCounters(null, x1);
+        final LexicalUnit value1 = LexicalUnitImpl.createIdent(null, "CounterValue");
+        LexicalUnitImpl.createIdent(LexicalUnitImpl.createComma(value1), "Second");
+        final LexicalUnit unit = LexicalUnitImpl.createCounters(null, value1);
 
         Assert.assertEquals(LexicalUnit.SAC_COUNTERS_FUNCTION, unit.getLexicalUnitType());
         Assert.assertEquals(0f, unit.getFloatValue(), 0.0001f);
         Assert.assertEquals(0, unit.getIntegerValue());
         Assert.assertEquals("", unit.getDimensionUnitText());
         Assert.assertEquals("counters", unit.getFunctionName());
-        Assert.assertEquals("1", unit.getParameters().toString());
+        Assert.assertEquals("CounterValue", unit.getParameters().toString());
         Assert.assertNull(unit.getStringValue());
 
         Assert.assertNull(unit.getNextLexicalUnit());
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
-        Assert.assertEquals("counters(1,2)", unit.toString());
+        Assert.assertEquals("counters(CounterValue,Second)", unit.toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void createCountersNoValue() throws Exception {
+        final LexicalUnit unit = LexicalUnitImpl.createCounters(null, null);
+
+        Assert.assertEquals(LexicalUnit.SAC_COUNTERS_FUNCTION, unit.getLexicalUnitType());
+        Assert.assertEquals(0f, unit.getFloatValue(), 0.0001f);
+        Assert.assertEquals(0, unit.getIntegerValue());
+        Assert.assertEquals("", unit.getDimensionUnitText());
+        Assert.assertEquals("counters", unit.getFunctionName());
+        Assert.assertNull(unit.getParameters());
+        Assert.assertNull(unit.getStringValue());
+
+        Assert.assertNull(unit.getNextLexicalUnit());
+        Assert.assertNull(unit.getPreviousLexicalUnit());
+
+        Assert.assertEquals("counters()", unit.toString());
     }
 
     /**
@@ -799,13 +865,11 @@ public class LexicalUnitImplTest {
      */
     @Test
     public void createRect() throws Exception {
+        // rect() function impl assumes the commas are part of the declaration
         final LexicalUnit x1 = LexicalUnitImpl.createNumber(null, 1);
-        final LexicalUnit y1 = LexicalUnitImpl.createNumber(null, 2);
-        final LexicalUnit x2 = LexicalUnitImpl.createNumber(null, 3);
-        final LexicalUnit y2 = LexicalUnitImpl.createNumber(null, 4);
-        ((LexicalUnitImpl) x1).setNextLexicalUnit(y1);
-        ((LexicalUnitImpl) y1).setNextLexicalUnit(x2);
-        ((LexicalUnitImpl) x2).setNextLexicalUnit(y2);
+        final LexicalUnit y1 = LexicalUnitImpl.createNumber(LexicalUnitImpl.createComma(x1), 2);
+        final LexicalUnit x2 = LexicalUnitImpl.createNumber(LexicalUnitImpl.createComma(y1), 3);
+        LexicalUnitImpl.createNumber(LexicalUnitImpl.createComma(x2), 4);
 
         final LexicalUnit unit = LexicalUnitImpl.createRect(null, x1);
 
@@ -829,10 +893,8 @@ public class LexicalUnitImplTest {
     @Test
     public void createRgbColor() throws Exception {
         final LexicalUnit r = LexicalUnitImpl.createNumber(null, 255);
-        final LexicalUnit g = LexicalUnitImpl.createNumber(null, 128);
-        final LexicalUnit b = LexicalUnitImpl.createNumber(null, 0);
-        ((LexicalUnitImpl) r).setNextLexicalUnit(g);
-        ((LexicalUnitImpl) g).setNextLexicalUnit(b);
+        final LexicalUnit g = LexicalUnitImpl.createNumber(LexicalUnitImpl.createComma(r), 128);
+        LexicalUnitImpl.createNumber(LexicalUnitImpl.createComma(g), 0);
         final LexicalUnit unit = LexicalUnitImpl.createRgbColor(null, r);
 
         Assert.assertEquals(LexicalUnit.SAC_RGBCOLOR, unit.getLexicalUnitType());
