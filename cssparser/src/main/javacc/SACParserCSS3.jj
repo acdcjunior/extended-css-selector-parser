@@ -31,6 +31,7 @@ options {
     USER_CHAR_STREAM = true;
 //    DEBUG_TOKEN_MANAGER = true;
 //    DEBUG_PARSER = true;
+    FORCE_LA_CHECK = true;
 }
 
 PARSER_BEGIN(SACParserCSS3)
@@ -422,9 +423,11 @@ void styleSheetRuleList() :
   boolean ruleFound = false;
 }
 {
-    ( <S> )*
-    ( charsetRule() )?
     ( <S> | <CDO> | <CDC> )*
+    (
+        charsetRule()
+        ( <S> | <CDO> | <CDC> )*
+    )?
     (
         (
             importRule(ruleFound)
