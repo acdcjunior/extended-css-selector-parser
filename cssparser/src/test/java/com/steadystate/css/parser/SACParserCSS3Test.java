@@ -465,7 +465,8 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     public void atRules1() throws Exception {
         final String css = "@import 'subs.css';\n"
             + "h1 { color: blue }\n"
-            + "@import 'list.css';\n";
+            + "@import 'list.css';\n"
+            + "h2 { color: red }\n";
 
         final InputSource source = new InputSource(new StringReader(css));
         final CSSOMParser parser = parser();
@@ -487,13 +488,16 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
 
         final CSSRuleList rules = sheet.getCssRules();
 
-        Assert.assertEquals(2, rules.getLength());
+        Assert.assertEquals(3, rules.getLength());
 
         CSSRule rule = rules.item(0);
         Assert.assertEquals("@import url(subs.css);", rule.getCssText());
 
         rule = rules.item(1);
         Assert.assertEquals("h1 { color: blue }", rule.getCssText());
+
+        rule = rules.item(2);
+        Assert.assertEquals("h2 { color: red }", rule.getCssText());
     }
 
     /**
