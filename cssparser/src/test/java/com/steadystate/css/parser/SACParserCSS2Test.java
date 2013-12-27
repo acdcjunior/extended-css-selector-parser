@@ -523,4 +523,107 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
         final CSSValueImpl value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("content");
         Assert.assertEquals("counters(item, \".\")", ((CSSValueImpl) value.item(0)).getCounterValue().toString());
     }
+
+    /**
+     * The CDO (<!--) and CDC (-->) symbols may appear in certain locations of a stylesheet.
+     * In other locations, they should cause parts of the stylesheet to be ignored.
+     * @see http://www.hixie.ch/tests/evil/mixed/cdocdc.html
+     * @see https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void cdoCdc() throws Exception {
+        String css = "\n"
+                + "    OL { list-style-type: lower-alpha; }\n"
+                + "\n"
+                + "<!--\n"
+                + "\n"
+                + "    .a { color: green; background: white none; }\n"
+                + "<!--.b { color: green; background: white none; } --> <!-- --> <!--\n"
+                + "    .c { color: green; background: white none; }\n"
+                + "\n"
+                + "<!--\n"
+                + ".d { color: green; background: white none; }\n"
+                + "-->\n"
+                + "\n"
+                + "    .e { color: green; background: white none; }\n"
+                + "\n"
+                + "\n"
+                + "    <!--    .f { color: green; background: white none; }-->\n"
+                + "-->.g { color: green; background: white none; }<!--\n"
+                + "    .h { color: green; background: white none; }\n"
+                + "-->-->-->-->-->-->.i { color: green; background: white none; }-->-->-->-->\n"
+                + "\n"
+                + "<!-- .j { color: green; background: white none; } -->\n"
+                + "\n"
+                + "<!--\n"
+                + "     .k { color: green; background: white none; }\n"
+                + "-->\n"
+                + "\n"
+                + "    .xa <!-- { color: yellow; background: red none; }\n"
+                + "\n"
+                + "    .xb { color: yellow -->; background: red none <!--; }\n"
+                + "\n"
+                + "    .xc { <!-- color: yellow; --> background: red none; }\n"
+                + "\n"
+                + "    .xd { <!-- color: yellow; background: red none -->; }\n"
+                + "\n"
+                + " <! -- .xe { color: yellow; background: red none; }\n"
+                + "\n"
+                + "--> <!--       --> <!-- -- >\n"
+                + "\n"
+                + "  .xf { color: yellow; background: red none; }\n";
+        final CSSStyleSheet sheet = parse(css, 5, 0, 4);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(15, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("OL { list-style-type: lower-alpha }", rule.getCssText());
+
+        rule = rules.item(1);
+        Assert.assertEquals("*.a { color: green; background: white none }", rule.getCssText());
+
+        rule = rules.item(1);
+        Assert.assertEquals("*.a { color: green; background: white none }", rule.getCssText());
+
+        rule = rules.item(2);
+        Assert.assertEquals("*.b { color: green; background: white none }", rule.getCssText());
+
+        rule = rules.item(3);
+        Assert.assertEquals("*.c { color: green; background: white none }", rule.getCssText());
+
+        rule = rules.item(4);
+        Assert.assertEquals("*.d { color: green; background: white none }", rule.getCssText());
+
+        rule = rules.item(5);
+        Assert.assertEquals("*.e { color: green; background: white none }", rule.getCssText());
+
+        rule = rules.item(6);
+        Assert.assertEquals("*.f { color: green; background: white none }", rule.getCssText());
+
+        rule = rules.item(7);
+        Assert.assertEquals("*.g { color: green; background: white none }", rule.getCssText());
+
+        rule = rules.item(8);
+        Assert.assertEquals("*.h { color: green; background: white none }", rule.getCssText());
+
+        rule = rules.item(9);
+        Assert.assertEquals("*.i { color: green; background: white none }", rule.getCssText());
+
+        rule = rules.item(10);
+        Assert.assertEquals("*.j { color: green; background: white none }", rule.getCssText());
+
+        rule = rules.item(11);
+        Assert.assertEquals("*.k { color: green; background: white none }", rule.getCssText());
+
+        rule = rules.item(12);
+//         Assert.assertEquals("*.xb { }", rule.getCssText());
+
+        rule = rules.item(13);
+        Assert.assertEquals("*.xc { }", rule.getCssText());
+
+        rule = rules.item(14);
+        Assert.assertEquals("*.xd { }", rule.getCssText());
+    }
 }
