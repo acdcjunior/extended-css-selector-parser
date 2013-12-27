@@ -5,7 +5,11 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
-    <release version="0.9.12" date="xx.xx.2013" description="Bugfixes.">
+    <release version="0.9.12" date="xx.xx.2013" description="Bugfixes, rewritten function support for CSS3.">
+        <action type="fix" dev="rbri" issue="44">
+            Parsing of functions rewritten, now we have working support for functions with 
+            parameters calculated by functions (CSS3).
+        </action>
         <action type="fix" dev="rbri" issue="41">
             Processing of the rect(), counter(), counters() and rgb() function parameter fixed (CSS2, CSS21, CSS3).
         </action>

@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.w3c.css.sac.Condition;
 import org.w3c.css.sac.ConditionalSelector;
 import org.w3c.css.sac.InputSource;
+import org.w3c.css.sac.LexicalUnit;
 import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SelectorList;
 import org.w3c.dom.css.CSSPrimitiveValue;
@@ -362,6 +363,27 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      * @throws Exception if the test fails
      */
     @Test
+    public void charsetWhitespaceAfter() throws Exception {
+        final String css = "@charset 'UTF-8';\n"
+            + " \t \n "
+            + "h1 { color: blue }\n";
+
+        final CSSStyleSheet sheet = parse(css);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(2, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("@charset \"UTF-8\";", rule.getCssText());
+
+        rule = rules.item(1);
+        Assert.assertEquals("h1 { color: blue }", rule.getCssText());
+    }
+
+    /**
+     * @throws Exception if the test fails
+     */
+    @Test
     public void importRuleOnly() throws Exception {
         final String css = "@import 'subs.css';";
 
@@ -612,6 +634,121 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         String name = style.item(0);
         name = style.item(0);
         Assert.assertEquals("foreground : rgb(10, 20, 30)", name + " : " + style.getPropertyValue(name));
+    }
+
+    @Test
+    public void rgbInsidefunction() throws Exception {
+        final String cssText = "color: foo(#cd4);";
+
+        final CSSOMParser parser = parser();
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final InputSource source = new InputSource(new StringReader(cssText));
+        final CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        // Enumerate the properties and retrieve their values
+        Assert.assertEquals(1, style.getLength());
+
+        String name = style.item(0);
+        name = style.item(0);
+        Assert.assertEquals("color: foo(rgb(204,221,68))", name + ": " + style.getPropertyValue(name));
+    }
+
+    @Test
+    public void funct() throws Exception {
+        final String cssText = "clip: foo(rect( 10px, 20em, 30px, max(40, blue(rgb(1,2,3))) ) )";
+
+        final CSSOMParser parser = parser();
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final InputSource source = new InputSource(new StringReader(cssText));
+        final CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        // Enumerate the properties and retrieve their values
+        Assert.assertEquals(1, style.getLength());
+
+        String name = style.item(0);
+        name = style.item(0);
+        Assert.assertEquals("clip : foo(rect(10px,20em,30px,max(40,blue(rgb(1,2,3)))))", name + " : " + style.getPropertyValue(name));
+
+        CSSValueImpl value = (CSSValueImpl) style.getPropertyCSSValue(name);
+        LexicalUnitImpl unit  = (LexicalUnitImpl) value.getValue();
+        Assert.assertEquals(LexicalUnit.SAC_FUNCTION, unit.getLexicalUnitType());
+        Assert.assertEquals("foo", unit.getFunctionName());
+
+        unit  = (LexicalUnitImpl) unit.getParameters();
+        Assert.assertEquals(LexicalUnit.SAC_RECT_FUNCTION, unit.getLexicalUnitType());
+        Assert.assertEquals("rect", unit.getFunctionName());
+
+        unit  = (LexicalUnitImpl) unit.getParameters();
+        Assert.assertEquals(LexicalUnit.SAC_PIXEL, unit.getLexicalUnitType());
+        Assert.assertEquals(10f, unit.getFloatValue(), 0.00001);
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_OPERATOR_COMMA, unit.getLexicalUnitType());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_EM, unit.getLexicalUnitType());
+        Assert.assertEquals(20f, unit.getFloatValue(), 0.00001);
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_OPERATOR_COMMA, unit.getLexicalUnitType());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_PIXEL, unit.getLexicalUnitType());
+        Assert.assertEquals(30f, unit.getFloatValue(), 0.00001);
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_OPERATOR_COMMA, unit.getLexicalUnitType());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_FUNCTION, unit.getLexicalUnitType());
+        Assert.assertEquals("max", unit.getFunctionName());
+
+        unit  = (LexicalUnitImpl) unit.getParameters();
+        Assert.assertEquals(LexicalUnit.SAC_INTEGER, unit.getLexicalUnitType());
+        Assert.assertEquals(40, unit.getIntegerValue());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_OPERATOR_COMMA, unit.getLexicalUnitType());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_FUNCTION, unit.getLexicalUnitType());
+        Assert.assertEquals("blue", unit.getFunctionName());
+
+        unit  = (LexicalUnitImpl) unit.getParameters();
+        Assert.assertEquals(LexicalUnit.SAC_RGBCOLOR, unit.getLexicalUnitType());
+        Assert.assertEquals("rgb", unit.getFunctionName());
+
+        unit  = (LexicalUnitImpl) unit.getParameters();
+        Assert.assertEquals(LexicalUnit.SAC_INTEGER, unit.getLexicalUnitType());
+        Assert.assertEquals(1, unit.getIntegerValue());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_OPERATOR_COMMA, unit.getLexicalUnitType());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_INTEGER, unit.getLexicalUnitType());
+        Assert.assertEquals(2, unit.getIntegerValue());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_OPERATOR_COMMA, unit.getLexicalUnitType());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_INTEGER, unit.getLexicalUnitType());
+        Assert.assertEquals(3, unit.getIntegerValue());
+
+        Assert.assertNull(unit.getNextLexicalUnit());
     }
 
     @Test
@@ -1411,6 +1548,35 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         CSSValueImpl value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("background-color");
         Assert.assertEquals("rgba(0,0,0,0.2)", value.getCssText());
     }
+
+    @Test
+    public void linearGradient() throws Exception {
+        final String css = "h1 { background: linear-gradient(top, #fff, #f2f2f2); }\n"
+                + "h2 { background: linear-gradient( 45deg, blue, red ); }\n"
+                + "h3 { background: linear-gradient( to left top, #00f, red); }\n"
+                + "h4 { background: linear-gradient( 0deg, blue, green 40%, red ); }\n";
+
+        final CSSStyleSheet sheet = parse(css);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(4, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        CSSValueImpl value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("background");
+        Assert.assertEquals("linear-gradient(top,rgb(255,255,255),rgb(242,242,242))", value.getCssText());
+
+        rule = rules.item(1);
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("background");
+        Assert.assertEquals("linear-gradient(45deg,blue,red)", value.getCssText());
+
+        rule = rules.item(2);
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("background");
+        Assert.assertEquals("linear-gradient(tolefttop,rgb(0,0,255),red)", value.getCssText());
+
+        rule = rules.item(3);
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("background");
+        Assert.assertEquals("linear-gradient(0deg,blue,green40%,red)", value.getCssText());
+}
 
     /**
      * @throws Exception if any error occurs
