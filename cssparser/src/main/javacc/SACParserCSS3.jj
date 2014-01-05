@@ -1507,10 +1507,11 @@ LexicalUnit function(LexicalUnit prev) :
         param = term(null) { body = param; }
         (
             (
-                t = <COMMA>    { body = LexicalUnitImpl.createComma(body); }
-                | t = <EQUALS>   { body = LexicalUnitImpl.createIdent(body, t.image); }
+                (                  t = <COMMA>    { body = LexicalUnitImpl.createComma(body); }
+                  | t = <EQUALS>   { body = LexicalUnitImpl.createIdent(body, t.image); }
+                )
+                ( <S> )*
             )?
-            ( <S> )*
             body = term(body)
         )*
     )? 
