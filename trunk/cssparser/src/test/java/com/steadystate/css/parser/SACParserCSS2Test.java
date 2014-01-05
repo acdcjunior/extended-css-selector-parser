@@ -121,7 +121,7 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS21/selector.html#lang
+     * @see <a href="http://www.w3.org/TR/CSS2/selector.html#lang">http://www.w3.org/TR/CSS2/selector.html#lang</a>
      * @throws Exception if any error occurs
      */
     @Test
@@ -168,7 +168,7 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS21/selector.html#lang
+     * @see <a href="http://www.w3.org/TR/CSS2/selector.html#lang">http://www.w3.org/TR/CSS2/selector.html#lang</a>
      * @throws Exception if any error occurs
      */
     @Test
@@ -454,7 +454,7 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://www.w3.org/TR/CSS21/generate.html#counters"
+     * @see <a href="http://www.w3.org/TR/CSS2/generate.html#counters">http://www.w3.org/TR/CSS2/generate.html#counters</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -504,7 +504,7 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://www.w3.org/TR/CSS21/generate.html#counters"
+     * @see <a href="http://www.w3.org/TR/CSS2/generate.html#counters">http://www.w3.org/TR/CSS2/generate.html#counters</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -527,8 +527,8 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
     /**
      * The CDO (<!--) and CDC (-->) symbols may appear in certain locations of a stylesheet.
      * In other locations, they should cause parts of the stylesheet to be ignored.
-     * @see http://www.hixie.ch/tests/evil/mixed/cdocdc.html
-     * @see https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm
+     * @see <a href="http://www.hixie.ch/tests/evil/mixed/cdocdc.html">http://www.hixie.ch/tests/evil/mixed/cdocdc.html</a>
+     * @see <a href="https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm">https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm</a>
      * @throws Exception if any error occurs
      */
     @Test

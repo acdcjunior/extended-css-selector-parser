@@ -147,7 +147,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS21/selector.html#lang
+     * @see <a href="http://www.w3.org/TR/CSS21/selector.html#lang">http://www.w3.org/TR/CSS21/selector.html#lang</a>
      * @throws Exception if any error occurs
      */
     @Test
@@ -194,7 +194,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see http://www.w3.org/TR/CSS21/selector.html#lang
+     * @see <a href="http://www.w3.org/TR/CSS21/selector.html#lang">http://www.w3.org/TR/CSS21/selector.html#lang</a>
      * @throws Exception if any error occurs
      */
     @Test
@@ -419,7 +419,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://dev.w3.org/csswg/css3-fonts/#font-face-rule"
+     * @see <a href="http://dev.w3.org/csswg/css3-fonts/#font-face-rule">http://dev.w3.org/csswg/css3-fonts/#font-face-rule</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -437,7 +437,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://dev.w3.org/csswg/css3-fonts/#font-face-rule"
+     * @see <a href="http://dev.w3.org/csswg/css3-fonts/#font-face-rule">http://dev.w3.org/csswg/css3-fonts/#font-face-rule</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -458,7 +458,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://www.w3.org/TR/CSS21/syndata.html#at-rules"
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#at-rules">http://www.w3.org/TR/CSS21/syndata.html#at-rules</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -501,7 +501,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://www.w3.org/TR/CSS21/syndata.html#at-rules"
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#at-rules">http://www.w3.org/TR/CSS21/syndata.html#at-rules</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -546,7 +546,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @import after rule
+     * Test for {@literal @}import after a rule
      * @throws Exception
      */
     @Test
@@ -802,7 +802,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://www.w3.org/TR/CSS21/generate.html#counters"
+     * @see <a href="http://www.w3.org/TR/CSS21/generate.html#counters">http://www.w3.org/TR/CSS21/generate.html#counters</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -851,7 +851,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://www.w3.org/TR/CSS21/generate.html#counters"
+     * @see <a href="http://www.w3.org/TR/CSS21/generate.html#counters">http://www.w3.org/TR/CSS21/generate.html#counters</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -872,7 +872,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://www.w3.org/TR/CSS21/syndata.html#parsing-errors"
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -890,7 +890,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://www.w3.org/TR/CSS21/syndata.html#parsing-errors"
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -921,7 +921,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://www.w3.org/TR/CSS21/syndata.html#parsing-errors"
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -989,7 +989,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://www.w3.org/TR/CSS21/syndata.html#parsing-errors"
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -1037,7 +1037,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://www.w3.org/TR/CSS21/syndata.html#parsing-errors"
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -1070,7 +1070,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://www.w3.org/TR/CSS21/syndata.html#parsing-errors"
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -1181,7 +1181,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://www.w3.org/TR/CSS21/syndata.html#parsing-errors"
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
      *
      * @throws Exception in case of failure
      */
@@ -1229,7 +1229,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * @see "http://www.w3.org/TR/CSS21/syndata.html#strings"
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#strings">http://www.w3.org/TR/CSS21/syndata.html#strings</a>
      *
      * @throws Exception in case of failure
      */
@@ -1773,8 +1773,8 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     /**
      * The CDO (<!--) and CDC (-->) symbols may appear in certain locations of a stylesheet.
      * In other locations, they should cause parts of the stylesheet to be ignored.
-     * @see http://www.hixie.ch/tests/evil/mixed/cdocdc.html
-     * @see https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm
+     * @see <a href="http://www.hixie.ch/tests/evil/mixed/cdocdc.html">http://www.hixie.ch/tests/evil/mixed/cdocdc.html</a>
+     * @see <a href="https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm">https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm</a>
      * @throws Exception if any error occurs
      */
     @Test
