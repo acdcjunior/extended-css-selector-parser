@@ -60,7 +60,6 @@ import com.steadystate.css.parser.selectors.SuffixAttributeConditionImpl;
  */
 public class SACParserCSS3Test  extends AbstractSACParserTest {
 
-
     @Override
     protected AbstractSACParser sacParser() {
         return new SACParserCSS3();
@@ -1580,7 +1579,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         rule = rules.item(3);
         value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("background");
         Assert.assertEquals("linear-gradient(0deg,blue,green40%,red)", value.getCssText());
-}
+    }
 
     /**
      * @throws Exception if any error occurs
@@ -1762,7 +1761,6 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         checkError("input:before:foo(ab)", "Duplicate pseudo class \":foo(ab)\" or pseudo class \":foo(ab)\" not at end.");
         checkError("input:before:", "Error in pseudo class or element. (Invalid token \"<EOF>\". Was expecting one of: <IDENT>, <FUNCTION_NOT>, <FUNCTION_LANG>, <FUNCTION>, \":\".)");
 
-        
         // pseudo element not at end
         checkError("input:before:not(#test)", "Duplicate pseudo class \":not(*#test)\" or pseudo class \":not(*#test)\" not at end.");
         checkError("input:before[type='file']", "Error in attribute selector. (Invalid token \"type\". Was expecting: <S>.)");
