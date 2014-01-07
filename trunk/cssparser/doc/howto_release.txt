@@ -1,0 +1,56 @@
+This document is intended for committers who are packaging a release.
+
+1. Check all your files are checked in
+2. Execute "mvn test" to be sure all tests are passing
+
+3. Update the version number in pom.xml
+4. Update the version number and release date in src/site/xdoc/index.xml
+5. Update the release date in src/changes/changes.xml
+6. Execute "mvn test" to be sure all tests are passing
+7. Commit the changes
+
+8. Build and deploy the artifacts 
+   mvn -up clean site package
+   mvn source:jar
+   mvn javadoc:jar
+   mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/cssparser-0.9.12.jar
+   mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/cssparser-0.9.12-sources.jar -Dclassifier=sources
+   mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/cssparser-0.9.12-javadoc.jar -Dclassifier=javadoc
+9. Go to https://oss.sonatype.org/index.html#stagingRepositories and process the deploy
+   * select the repository and close it - wait until the close is processed
+   * release the package and wait until it is processed
+
+10. Upload the files to sourcforge http://sourceforge.net/projects/cssparser/files/?source=navbar
+   * create new folder cssparser-0.9.xx
+   * upload file
+       cssparser-0.9.xx-sources.jar
+       cssparser-0.9.xx-sources.jar.asc
+       cssparser-0.9.xx-javadoc.jar
+       cssparser-0.9.xx-javadoc.jar.asc
+       cssparser-0.9.xx.jar.asc
+       cssparser-0.9.xx.jar
+   * make sure, the new cssparser-0.9.xx.jar is the default download (click on the i icon at the right of the file)
+
+11. Mark the version in SVN
+   * create tag 'cssparser-0.9.xx'
+   * copy folder trunk/cssparser into the new tags folder
+
+12. Update website
+   * connect via sftp to
+     url: web.sourceforge.net
+     user: your sourceforge user id
+     password: your sourceforge password
+     start dir: /home/project-web/cssparser/htdocs
+   * uploade the directory 'cssparser\target\site\'
+   * verify the sites at http://cssparser.sourceforge.net/ was updated (new release date, history changed)
+
+13. update sourceforge project bugtracker
+   * close old milestone
+   * open a new one and mark as default
+
+14. start new development cycle
+   * Update the version number in pom.xml
+   * Update the release date in src/changes/changes.xml
+   * commit
+
+15. inform about the release via mailing list
