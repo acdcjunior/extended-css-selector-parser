@@ -5,7 +5,7 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
-    <release version="0.9.12" date="xx.xx.2013" description="Bugfixes, rewritten function support for CSS3.">
+    <release version="0.9.12" date="07.01.2014" description="Bugfixes, rewritten function support for CSS3.">
         <action type="fix" dev="rbri" issue="44">
             Parsing of functions rewritten, now we have working support for functions with 
             parameters calculated by functions (CSS3).
