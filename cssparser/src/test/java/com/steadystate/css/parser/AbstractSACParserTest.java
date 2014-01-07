@@ -84,7 +84,6 @@ public abstract class AbstractSACParserTest {
         return new CSSOMParser(sacParser());
     }
 
-
     protected CSSStyleSheet parse(final String css) throws IOException {
         return parse(css, 0, 0, 0);
     }
@@ -194,15 +193,15 @@ public abstract class AbstractSACParserTest {
 
         final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
-        
+
         Assert.assertEquals(1, rules.getLength());
         CSSRule rule = rules.item(0);
         Assert.assertEquals("*" + css, rule.getCssText());
 
-        CSSStyleRuleImpl ruleImpl = (CSSStyleRuleImpl)rule;
-        CSSStyleDeclarationImpl declImpl = (CSSStyleDeclarationImpl)ruleImpl.getStyle();
+        CSSStyleRuleImpl ruleImpl = (CSSStyleRuleImpl) rule;
+        CSSStyleDeclarationImpl declImpl = (CSSStyleDeclarationImpl) ruleImpl.getStyle();
         Property prop = declImpl.getPropertyDeclaration("top");
-        CSSValueImpl valueImpl = (CSSValueImpl)prop.getValue();
+        CSSValueImpl valueImpl = (CSSValueImpl) prop.getValue();
 
         return valueImpl;
     }

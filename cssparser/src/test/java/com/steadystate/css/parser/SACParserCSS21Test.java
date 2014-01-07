@@ -1127,7 +1127,6 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
         Assert.assertEquals("p { color: green }", rule.getCssText());
     }
 
-
     /**
      * @throws Exception if any error occurs
      */

@@ -52,7 +52,6 @@ import com.steadystate.css.parser.selectors.LangConditionImpl;
  */
 public class SACParserCSS2Test extends AbstractSACParserTest {
 
-
     @Override
     protected AbstractSACParser sacParser() {
         return new SACParserCSS2();
@@ -272,7 +271,6 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
 
         Assert.assertEquals(0, sheet.getCssRules().getLength());
     }
-
 
     /**
      * @throws Exception if the test fails
