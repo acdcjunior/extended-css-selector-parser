@@ -1517,9 +1517,6 @@ LexicalUnit function(LexicalUnit prev) :
     )? 
     <RROUND>
     {
-        while (null != param.getPreviousLexicalUnit()) {
-            param = param.getPreviousLexicalUnit();
-        }
         return functionInternal(prev, f, param);
     }
 }
