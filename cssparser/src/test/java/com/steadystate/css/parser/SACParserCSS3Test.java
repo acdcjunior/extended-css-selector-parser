@@ -760,6 +760,37 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     @Test
+    public void beforeAfter() throws Exception {
+        final String cssText = "heading:before { content: attr(test) \"testData\" }";
+
+        final CSSOMParser parser = parser();
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final InputSource source = new InputSource(new StringReader(cssText));
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSStyleRuleImpl rule = (CSSStyleRuleImpl) rules.item(0);
+        Assert.assertEquals("heading:before { content: attr(test) \"testData\" }", rule.getCssText());
+
+        final CSSStyleDeclaration style = rule.getStyle();
+
+        Assert.assertEquals(1, style.getLength());
+
+        String name = style.item(0);
+        name = style.item(0);
+        Assert.assertEquals("content : attr(test) \"testData\"", name + " : " + style.getPropertyValue(name));
+    }
+
+    @Test
     public void rect() throws Exception {
         final String cssText = "clip: rect( 10px, 20px, 30px, 40px )";
 
