@@ -351,7 +351,6 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
             case SAC_RECT_FUNCTION:
                 sb.append("rect(");
                 appendParams(sb);
-                // appendParams(sb, parameters_);
                 sb.append(")");
                 break;
             case SAC_UNICODERANGE:
@@ -605,9 +604,16 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
 
     private void appendParams(final StringBuilder sb) {
         LexicalUnit l = parameters_;
-        while (l != null) {
+        if (l != null) {
             sb.append(l.toString());
             l = l.getNextLexicalUnit();
+            while (l != null) {
+                if (l.getLexicalUnitType() != SAC_OPERATOR_COMMA) {
+                    sb.append(" ");
+                }
+                sb.append(l.toString());
+                l = l.getNextLexicalUnit();
+            }
         }
     }
 

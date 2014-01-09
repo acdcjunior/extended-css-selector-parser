@@ -815,7 +815,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getNextLexicalUnit());
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
-        Assert.assertEquals("counters(CounterValue,Second)", unit.toString());
+        Assert.assertEquals("counters(CounterValue, Second)", unit.toString());
     }
 
     /**
@@ -884,7 +884,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getNextLexicalUnit());
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
-        Assert.assertEquals("rect(1,2,3,4)", unit.toString());
+        Assert.assertEquals("rect(1, 2, 3, 4)", unit.toString());
     }
 
     /**
@@ -908,7 +908,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getNextLexicalUnit());
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
-        Assert.assertEquals("rgb(255,128,0)", unit.toString());
+        Assert.assertEquals("rgb(255, 128, 0)", unit.toString());
     }
 
     /**
@@ -955,7 +955,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getNextLexicalUnit());
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
-        Assert.assertEquals("foo(10,11)", unit.toString());
+        Assert.assertEquals("foo(10, 11)", unit.toString());
     }
 
     /**
