@@ -286,7 +286,7 @@ public class CSSStyleDeclarationImplTest {
     @Test
     public void setPropertyValue() throws Exception {
         final CSSStyleDeclarationImpl style = new CSSStyleDeclarationImpl();
-        CSSValue value = parsePropertyValue("none");
+        final CSSValue value = parsePropertyValue("none");
         style.addProperty(new Property("display", value, false));
         style.setProperty("display", "newValue", "false");
         Assert.assertEquals("newValue", style.getPropertyValue("display"));
@@ -298,7 +298,7 @@ public class CSSStyleDeclarationImplTest {
     @Test
     public void setPropertyValueToEmpty() throws Exception {
         final CSSStyleDeclarationImpl style = new CSSStyleDeclarationImpl();
-        CSSValue value = parsePropertyValue("none");
+        final CSSValue value = parsePropertyValue("none");
         style.addProperty(new Property("display", value, false));
         style.setProperty("display", "", "false");
         Assert.assertEquals("", style.getPropertyValue("display"));
@@ -310,7 +310,7 @@ public class CSSStyleDeclarationImplTest {
     @Test
     public void setPropertyValueToBlank() throws Exception {
         final CSSStyleDeclarationImpl style = new CSSStyleDeclarationImpl();
-        CSSValue value = parsePropertyValue("none");
+        final CSSValue value = parsePropertyValue("none");
         style.addProperty(new Property("display", value, false));
         style.setProperty("display", " \t \r \n", "false");
         Assert.assertEquals("", style.getPropertyValue("display"));
@@ -322,7 +322,7 @@ public class CSSStyleDeclarationImplTest {
     @Test
     public void removeProperty() throws Exception {
         final CSSStyleDeclarationImpl style = new CSSStyleDeclarationImpl();
-        CSSValue value = parsePropertyValue("none");
+        final CSSValue value = parsePropertyValue("none");
         style.addProperty(new Property("display", value, false));
         Assert.assertEquals("none", style.removeProperty("display"));
     }
@@ -333,7 +333,7 @@ public class CSSStyleDeclarationImplTest {
     @Test
     public void removePropertyEmpty() throws Exception {
         final CSSStyleDeclarationImpl style = new CSSStyleDeclarationImpl();
-        CSSValue value = parsePropertyValue("");
+        final CSSValue value = parsePropertyValue("");
         style.addProperty(new Property("display", value, false));
         Assert.assertEquals("", style.removeProperty("display"));
     }
@@ -344,18 +344,18 @@ public class CSSStyleDeclarationImplTest {
     @Test
     public void removePropertyBlank() throws Exception {
         final CSSStyleDeclarationImpl style = new CSSStyleDeclarationImpl();
-        CSSValue value = parsePropertyValue("  \t  ");
+        final CSSValue value = parsePropertyValue("  \t  ");
         style.addProperty(new Property("display", value, false));
         Assert.assertEquals("", style.removeProperty("display"));
     }
 
-    private CSSStyleDeclaration parseStyleDeclaration(String value) throws IOException {
+    private CSSStyleDeclaration parseStyleDeclaration(final String value) throws IOException {
         final CSSOMParser parser = new CSSOMParser();
         final InputSource is = new InputSource(new StringReader(value));
         return parser.parseStyleDeclaration(is);
     }
 
-    private CSSValue parsePropertyValue(String value) throws IOException {
+    private CSSValue parsePropertyValue(final String value) throws IOException {
         final CSSOMParser parser = new CSSOMParser();
         final InputSource is = new InputSource(new StringReader(value));
         return parser.parsePropertyValue(is);

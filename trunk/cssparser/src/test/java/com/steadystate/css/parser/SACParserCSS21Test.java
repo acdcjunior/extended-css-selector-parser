@@ -375,7 +375,8 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#at-rules">http://www.w3.org/TR/CSS21/syndata.html#at-rules</a>
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#at-rules">
+     *          http://www.w3.org/TR/CSS21/syndata.html#at-rules</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -418,7 +419,8 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#at-rules">http://www.w3.org/TR/CSS21/syndata.html#at-rules</a>
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#at-rules">
+     *          http://www.w3.org/TR/CSS21/syndata.html#at-rules</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -604,7 +606,8 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see <a href="http://www.w3.org/TR/CSS21/generate.html#counters">http://www.w3.org/TR/CSS21/generate.html#counters</a>
+     * @see <a href="http://www.w3.org/TR/CSS21/generate.html#counters">
+     *          http://www.w3.org/TR/CSS21/generate.html#counters</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -654,7 +657,8 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see <a href="http://www.w3.org/TR/CSS21/generate.html#counters">http://www.w3.org/TR/CSS21/generate.html#counters</a>
+     * @see <a href="http://www.w3.org/TR/CSS21/generate.html#counters">
+     *          http://www.w3.org/TR/CSS21/generate.html#counters</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -675,7 +679,8 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">
+     *          http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -693,7 +698,8 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">
+     *          http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -724,7 +730,8 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">
+     *          http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -792,7 +799,8 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">
+     *          http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -840,7 +848,8 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">
+     *          http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -873,7 +882,8 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">
+     *          http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -984,7 +994,8 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#parsing-errors">
+     *          http://www.w3.org/TR/CSS21/syndata.html#parsing-errors</a>
      *
      * @throws Exception in case of failure
      */
@@ -1032,7 +1043,8 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#strings">http://www.w3.org/TR/CSS21/syndata.html#strings</a>
+     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#strings">
+     *          http://www.w3.org/TR/CSS21/syndata.html#strings</a>
      *
      * @throws Exception in case of failure
      */
@@ -1132,7 +1144,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionPercent() throws Exception {
-        CSSValueImpl value = dimension("2%");
+        final CSSValueImpl value = dimension("2%");
         Assert.assertEquals(CSSPrimitiveValue.CSS_PERCENTAGE, value.getPrimitiveType());
     }
 
@@ -1141,7 +1153,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionPX() throws Exception {
-        CSSValueImpl value = dimension("3px");
+        final CSSValueImpl value = dimension("3px");
         Assert.assertEquals(CSSPrimitiveValue.CSS_PX, value.getPrimitiveType());
     }
 
@@ -1150,7 +1162,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionCM() throws Exception {
-        CSSValueImpl value = dimension("5cm");
+        final CSSValueImpl value = dimension("5cm");
         Assert.assertEquals(CSSPrimitiveValue.CSS_CM, value.getPrimitiveType());
     }
 
@@ -1159,7 +1171,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionMM() throws Exception {
-        CSSValueImpl value = dimension("7mm");
+        final CSSValueImpl value = dimension("7mm");
         Assert.assertEquals(CSSPrimitiveValue.CSS_MM, value.getPrimitiveType());
     }
 
@@ -1168,7 +1180,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionIN() throws Exception {
-        CSSValueImpl value = dimension("11in");
+        final CSSValueImpl value = dimension("11in");
         Assert.assertEquals(CSSPrimitiveValue.CSS_IN, value.getPrimitiveType());
     }
 
@@ -1177,7 +1189,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionPT() throws Exception {
-        CSSValueImpl value = dimension("13pt");
+        final CSSValueImpl value = dimension("13pt");
         Assert.assertEquals(CSSPrimitiveValue.CSS_PT, value.getPrimitiveType());
     }
 
@@ -1186,7 +1198,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionEMS() throws Exception {
-        CSSValueImpl value = dimension("17em");
+        final CSSValueImpl value = dimension("17em");
         Assert.assertEquals(CSSPrimitiveValue.CSS_EMS, value.getPrimitiveType());
     }
 
@@ -1195,7 +1207,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionEXS() throws Exception {
-        CSSValueImpl value = dimension("19ex");
+        final CSSValueImpl value = dimension("19ex");
         Assert.assertEquals(CSSPrimitiveValue.CSS_EXS, value.getPrimitiveType());
     }
 
@@ -1204,7 +1216,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionDEG() throws Exception {
-        CSSValueImpl value = dimension("13deg");
+        final CSSValueImpl value = dimension("13deg");
         Assert.assertEquals(CSSPrimitiveValue.CSS_DEG, value.getPrimitiveType());
     }
 
@@ -1213,7 +1225,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionRAD() throws Exception {
-        CSSValueImpl value = dimension("99rad");
+        final CSSValueImpl value = dimension("99rad");
         Assert.assertEquals(CSSPrimitiveValue.CSS_RAD, value.getPrimitiveType());
     }
 
@@ -1222,7 +1234,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionGRAD() throws Exception {
-        CSSValueImpl value = dimension("31grad");
+        final CSSValueImpl value = dimension("31grad");
         Assert.assertEquals(CSSPrimitiveValue.CSS_GRAD, value.getPrimitiveType());
     }
 
@@ -1231,7 +1243,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionMS() throws Exception {
-        CSSValueImpl value = dimension("37ms");
+        final CSSValueImpl value = dimension("37ms");
         Assert.assertEquals(CSSPrimitiveValue.CSS_MS, value.getPrimitiveType());
     }
 
@@ -1240,7 +1252,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionS() throws Exception {
-        CSSValueImpl value = dimension("41s");
+        final CSSValueImpl value = dimension("41s");
         Assert.assertEquals(CSSPrimitiveValue.CSS_S, value.getPrimitiveType());
     }
 
@@ -1249,7 +1261,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionHZ() throws Exception {
-        CSSValueImpl value = dimension("43Hz");
+        final CSSValueImpl value = dimension("43Hz");
         Assert.assertEquals(CSSPrimitiveValue.CSS_HZ, value.getPrimitiveType());
     }
 
@@ -1258,7 +1270,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      */
     @Test
     public void dimensionKHZ() throws Exception {
-        CSSValueImpl value = dimension("47kHz");
+        final CSSValueImpl value = dimension("47kHz");
         Assert.assertEquals(CSSPrimitiveValue.CSS_KHZ, value.getPrimitiveType());
     }
 
@@ -1322,13 +1334,20 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     public void pseudoElementsErrors() throws Exception {
         // two pseudo elements
         checkError("input:before:after", "Duplicate pseudo class \":after\" or pseudo class \":after\" not at end.");
-        checkError("input:before:lang(de)", "Duplicate pseudo class \":lang(de)\" or pseudo class \":lang(de)\" not at end.");
-        checkError("input:before:foo(ab)", "Duplicate pseudo class \":foo(ab)\" or pseudo class \":foo(ab)\" not at end.");
-        checkError("input:before:", "Error in pseudo class or element. (Invalid token \"<EOF>\". Was expecting one of: <IDENT>, <FUNCTION_LANG>, <FUNCTION>.)");
+        checkError("input:before:lang(de)",
+                "Duplicate pseudo class \":lang(de)\" or pseudo class \":lang(de)\" not at end.");
+        checkError("input:before:foo(ab)",
+                "Duplicate pseudo class \":foo(ab)\" or pseudo class \":foo(ab)\" not at end.");
+        checkError("input:before:",
+                "Error in pseudo class or element. (Invalid token \"<EOF>\". "
+                + "Was expecting one of: <IDENT>, <FUNCTION_LANG>, <FUNCTION>.)");
 
         // pseudo element not at end
-        checkError("input:before:not(#test)", "Error in pseudo class or element. (Invalid token \"#test\". Was expecting one of: <S>, <IDENT>, \")\".)");
-        checkError("input:before[type='file']", "Error in attribute selector. (Invalid token \"type\". Was expecting: <S>.)");
+        checkError("input:before:not(#test)",
+                "Error in pseudo class or element. "
+                + "(Invalid token \"#test\". Was expecting one of: <S>, <IDENT>, \")\".)");
+        checkError("input:before[type='file']",
+                "Error in attribute selector. (Invalid token \"type\". Was expecting: <S>.)");
         checkError("input:before.styleClass", "Error in class selector. (Invalid token \"\". Was expecting one of: .)");
         checkError("input:before#hash", "Error in hash. (Invalid token \"\". Was expecting one of: .)");
     }
@@ -1336,13 +1355,15 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     /**
      * The CDO (<!--) and CDC (-->) symbols may appear in certain locations of a stylesheet.
      * In other locations, they should cause parts of the stylesheet to be ignored.
-     * @see <a href="http://www.hixie.ch/tests/evil/mixed/cdocdc.html">http://www.hixie.ch/tests/evil/mixed/cdocdc.html</a>
-     * @see <a href="https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm">https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm</a>
+     * @see <a href="http://www.hixie.ch/tests/evil/mixed/cdocdc.html">
+     *          http://www.hixie.ch/tests/evil/mixed/cdocdc.html</a>
+     * @see <a href="https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm">
+     *          https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm</a>
      * @throws Exception if any error occurs
      */
     @Test
     public void cdoCdc() throws Exception {
-        String css = "\n"
+        final String css = "\n"
                 + "    OL { list-style-type: lower-alpha; }\n"
                 + "\n"
                 + "<!--\n"

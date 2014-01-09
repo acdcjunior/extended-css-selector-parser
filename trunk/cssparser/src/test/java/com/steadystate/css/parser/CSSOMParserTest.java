@@ -106,7 +106,7 @@ public class CSSOMParserTest {
     @Test
     public void defineParserClassWrongClass() throws Exception {
         System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS0");
-        CSSOMParser parser = new CSSOMParser();
+        final CSSOMParser parser = new CSSOMParser();
         Assert.assertNotNull(parser);
         Assert.assertEquals("com.steadystate.css.parser.SACParserCSS0", System.getProperty("org.w3c.css.sac.parser"));
 
