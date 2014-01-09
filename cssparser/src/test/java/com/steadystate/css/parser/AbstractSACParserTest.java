@@ -97,12 +97,14 @@ public abstract class AbstractSACParserTest {
         return parse(source, err, fatal, warn);
     }
 
-    protected CSSStyleSheet parse(final InputStream css, final int err, final int fatal, final int warn) throws IOException {
+    protected CSSStyleSheet parse(final InputStream css,
+            final int err, final int fatal, final int warn) throws IOException {
         final InputSource source = new InputSource(new InputStreamReader(css));
         return parse(source, err, fatal, warn);
     }
 
-    protected CSSStyleSheet parse(final InputSource source, final int err, final int fatal, final int warn) throws IOException {
+    protected CSSStyleSheet parse(final InputSource source,
+            final int err, final int fatal, final int warn) throws IOException {
         final CSSOMParser parser = parser();
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
@@ -172,7 +174,7 @@ public abstract class AbstractSACParserTest {
         }
     }
 
-    protected void checkError(String input, String errorMsg) throws IOException {
+    protected void checkError(final String input, final String errorMsg) throws IOException {
         final CSSOMParser parser = parser();
         final ErrorHandler errorHandler = new ErrorHandler();
         parser.setErrorHandler(errorHandler);
@@ -188,20 +190,20 @@ public abstract class AbstractSACParserTest {
         Assert.assertNull(selectors);
     }
 
-    protected CSSValueImpl dimension(String dim) throws Exception {
+    protected CSSValueImpl dimension(final String dim) throws Exception {
         final String css = ".dim { top: " + dim + " }";
 
         final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
-        CSSRule rule = rules.item(0);
+        final CSSRule rule = rules.item(0);
         Assert.assertEquals("*" + css, rule.getCssText());
 
-        CSSStyleRuleImpl ruleImpl = (CSSStyleRuleImpl) rule;
-        CSSStyleDeclarationImpl declImpl = (CSSStyleDeclarationImpl) ruleImpl.getStyle();
-        Property prop = declImpl.getPropertyDeclaration("top");
-        CSSValueImpl valueImpl = (CSSValueImpl) prop.getValue();
+        final CSSStyleRuleImpl ruleImpl = (CSSStyleRuleImpl) rule;
+        final CSSStyleDeclarationImpl declImpl = (CSSStyleDeclarationImpl) ruleImpl.getStyle();
+        final Property prop = declImpl.getPropertyDeclaration("top");
+        final CSSValueImpl valueImpl = (CSSValueImpl) prop.getValue();
 
         return valueImpl;
     }

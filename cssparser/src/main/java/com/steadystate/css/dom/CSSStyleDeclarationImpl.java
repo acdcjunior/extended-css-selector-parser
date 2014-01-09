@@ -149,7 +149,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
                 expr = parser.parsePropertyValue(is);
             }
             Property p = getPropertyDeclaration(propertyName);
-            boolean important = PRIORITY_IMPORTANT.equalsIgnoreCase(priority);
+            final boolean important = PRIORITY_IMPORTANT.equalsIgnoreCase(priority);
             if (p == null) {
                 p = new Property(propertyName, expr, important);
                 addProperty(p);

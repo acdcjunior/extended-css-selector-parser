@@ -344,13 +344,19 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
     public void pseudoElementsErrors() throws Exception {
         // two pseudo elements
         checkError("input:before:after", "Duplicate pseudo class \":after\" or pseudo class \":after\" not at end.");
-        checkError("input:before:lang(de)", "Duplicate pseudo class \":lang(de)\" or pseudo class \":lang(de)\" not at end.");
-        checkError("input:before:foo(ab)", "Duplicate pseudo class \":foo(ab)\" or pseudo class \":foo(ab)\" not at end.");
-        checkError("input:before:", "Error in pseudo class or element. (Invalid token \"<EOF>\". Was expecting one of: \"lang(\", <FUNCTION>, <IDENT>.)");
+        checkError("input:before:lang(de)",
+                "Duplicate pseudo class \":lang(de)\" or pseudo class \":lang(de)\" not at end.");
+        checkError("input:before:foo(ab)",
+                "Duplicate pseudo class \":foo(ab)\" or pseudo class \":foo(ab)\" not at end.");
+        checkError("input:before:",
+                "Error in pseudo class or element. (Invalid token \"<EOF>\". "
+                + "Was expecting one of: \"lang(\", <FUNCTION>, <IDENT>.)");
 
         // pseudo element not at end
-        checkError("input:before:not(#test)", "Error in pseudo class or element. (Invalid token \"#test\". Was expecting one of: <S>, <IDENT>.)");
-        checkError("input:before[type='file']", "Error in attribute selector. (Invalid token \"type\". Was expecting: <S>.)");
+        checkError("input:before:not(#test)",
+                "Error in pseudo class or element. (Invalid token \"#test\". Was expecting one of: <S>, <IDENT>.)");
+        checkError("input:before[type='file']",
+                "Error in attribute selector. (Invalid token \"type\". Was expecting: <S>.)");
         checkError("input:before.styleClass", "Error in class selector. (Invalid token \"\". Was expecting one of: .)");
         checkError("input:before#hash", "Error in hash. (Invalid token \"\". Was expecting one of: .)");
     }
@@ -452,7 +458,8 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see <a href="http://www.w3.org/TR/CSS2/generate.html#counters">http://www.w3.org/TR/CSS2/generate.html#counters</a>
+     * @see <a href="http://www.w3.org/TR/CSS2/generate.html#counters">
+     *          http://www.w3.org/TR/CSS2/generate.html#counters</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -502,7 +509,8 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
     }
 
     /**
-     * @see <a href="http://www.w3.org/TR/CSS2/generate.html#counters">http://www.w3.org/TR/CSS2/generate.html#counters</a>
+     * @see <a href="http://www.w3.org/TR/CSS2/generate.html#counters">
+     *          http://www.w3.org/TR/CSS2/generate.html#counters</a>
      * @throws Exception if the test fails
      */
     @Test
@@ -525,13 +533,15 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
     /**
      * The CDO (<!--) and CDC (-->) symbols may appear in certain locations of a stylesheet.
      * In other locations, they should cause parts of the stylesheet to be ignored.
-     * @see <a href="http://www.hixie.ch/tests/evil/mixed/cdocdc.html">http://www.hixie.ch/tests/evil/mixed/cdocdc.html</a>
-     * @see <a href="https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm">https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm</a>
+     * @see <a href="http://www.hixie.ch/tests/evil/mixed/cdocdc.html">
+     *          http://www.hixie.ch/tests/evil/mixed/cdocdc.html</a>
+     * @see <a href="https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm">
+     *          https://test.csswg.org/suites/css2.1/20101027/html4/sgml-comments-002.htm</a>
      * @throws Exception if any error occurs
      */
     @Test
     public void cdoCdc() throws Exception {
-        String css = "\n"
+        final String css = "\n"
                 + "    OL { list-style-type: lower-alpha; }\n"
                 + "\n"
                 + "<!--\n"
