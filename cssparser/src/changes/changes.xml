@@ -6,6 +6,9 @@
   </properties>
   <body>
     <release version="0.9.13" date="xx.xx.2014" description="Bugfixes">
+        <action type="fix" dev="rbri" issue="45">
+            Fix the toString method for functions to insert a blank at the right places (CSS3).
+        </action>
     </release>
     <release version="0.9.12" date="07.01.2014" description="Bugfixes, rewritten function support for CSS3.">
         <action type="fix" dev="rbri" issue="44">
