@@ -256,11 +256,18 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     @Test
     public void attributeCondition() throws Exception {
         conditionAssert("[rel]", "rel", null, false);
+        conditionAssert("[ rel ]", "rel", null, false);
+
         conditionAssert("[rel=val]", "rel", "val", true);
+        conditionAssert("[rel =val ]", "rel", "val", true);
         Assert.assertNull(createSelectors("[rel=]")); // invalid rule
+
         conditionAssert("[rel~=val]", "rel", "val", true);
+        conditionAssert("[ rel ~= val ]", "rel", "val", true);
         Assert.assertNull(createSelectors("[rel~=]")); // invalid rule
+
         conditionAssert("[rel|=val]", "rel", "val", true);
+        conditionAssert("[ rel |= val]", "rel", "val", true);
         Assert.assertNull(createSelectors("[rel|=]")); // invalid rule
     }
 

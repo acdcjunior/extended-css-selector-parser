@@ -6,6 +6,12 @@
   </properties>
   <body>
     <release version="0.9.13" date="xx.xx.2014" description="Bugfixes">
+        <action type="fix" dev="rbri">
+            Only simple selectors are valid as parameter for the :not pseudo class (CSS3).
+        </action>
+        <action type="fix" dev="rbri">
+            Whitespace before the includes operator was not handled correctly (e.g.[rel ~=val]) (CSS3).
+        </action>
         <action type="fix" dev="rbri" issue="45">
             Fix the toString method for functions to insert a blank at the right places (CSS3).
         </action>

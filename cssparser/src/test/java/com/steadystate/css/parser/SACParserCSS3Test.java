@@ -280,12 +280,31 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     @Test
     public void attributeCondition() throws Exception {
         conditionAssert("[rel]", "rel", null, false);
+        conditionAssert("[ rel ]", "rel", null, false);
+
         conditionAssert("[rel=val]", "rel", "val", true);
+        conditionAssert("[ rel = val ]", "rel", "val", true);
         Assert.assertNull(createSelectors("[rel=]")); // invalid rule
+
         conditionAssert("[rel~=val]", "rel", "val", true);
+        conditionAssert("[ rel ~= val ]", "rel", "val", true);
         Assert.assertNull(createSelectors("[rel~=]")); // invalid rule
+
         conditionAssert("[rel|=val]", "rel", "val", true);
+        conditionAssert("[ rel |= val]", "rel", "val", true);
         Assert.assertNull(createSelectors("[rel|=]")); // invalid rule
+
+        conditionAssert("[rel^=val]", "rel", "val", true);
+        conditionAssert("[ rel ^= val]", "rel", "val", true);
+        Assert.assertNull(createSelectors("[rel^=]")); // invalid rule
+
+        conditionAssert("[rel$=val]", "rel", "val", true);
+        conditionAssert("[ rel $= val]", "rel", "val", true);
+        Assert.assertNull(createSelectors("[rel$=]")); // invalid rule
+
+        conditionAssert("[rel*=val]", "rel", "val", true);
+        conditionAssert("[ rel *= val]", "rel", "val", true);
+        Assert.assertNull(createSelectors("[rel*=]")); // invalid rule
     }
 
     /**
@@ -1758,17 +1777,54 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      */
     @Test
     public void not() throws Exception {
-        SelectorList selectors = createSelectors("input:not([type='file'])");
-        Assert.assertEquals("input:not(*[type=\"file\"])", selectors.item(0).toString());
+        // element name
+        SelectorList selectors = createSelectors("input:not(abc)");
+        Assert.assertEquals("input:not(abc)", selectors.item(0).toString());
 
+        selectors = createSelectors("input:not(*)");
+        Assert.assertEquals("input:not(*)", selectors.item(0).toString());
+
+        // hash
+        selectors = createSelectors("input:not(#test)");
+        Assert.assertEquals("input:not(*#test)", selectors.item(0).toString());
+
+        // class
         selectors = createSelectors("input:not(.home)");
         Assert.assertEquals("input:not(*.home)", selectors.item(0).toString());
 
-        selectors = createSelectors("input:not(.hi .home)");
-        Assert.assertEquals("input:not(*.hi *.home)", selectors.item(0).toString());
+        // attrib
+        selectors = createSelectors("input:not([title])");
+        Assert.assertEquals("input:not(*[title])", selectors.item(0).toString());
 
-        selectors = createSelectors("input:not(#test)");
-        Assert.assertEquals("input:not(*#test)", selectors.item(0).toString());
+        selectors = createSelectors("input:not([type = 'file'])");
+        Assert.assertEquals("input:not(*[type=\"file\"])", selectors.item(0).toString());
+
+        selectors = createSelectors("input:not([type ~= 'file'])");
+        Assert.assertEquals("input:not(*[type~=\"file\"])", selectors.item(0).toString());
+
+        // pseudo
+        selectors = createSelectors("input:not(:last)");
+        Assert.assertEquals("input:not(*:last)", selectors.item(0).toString());
+
+        // whitespace
+        selectors = createSelectors("input:not( .hi \t)");
+        Assert.assertEquals("input:not(*.hi)", selectors.item(0).toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void invalid_not() throws Exception {
+        checkError("input:not(.home:visited)",
+                "Error in pseudo class or element. (Invalid token \":\". Was expecting one of: <S>, \")\".)");
+
+        checkError("input:not(.home p)",
+                "Error in pseudo class or element. (Invalid token \"p\". Was expecting one of: <S>, \")\".)");
+
+        checkError("input:not()",
+                "Error in pseudo class or element. (Invalid token \")\"."
+                + " Was expecting one of: <S>, <IDENT>, <HASH>, \".\", \":\", \"*\", \"[\".)");
     }
 
     /**
