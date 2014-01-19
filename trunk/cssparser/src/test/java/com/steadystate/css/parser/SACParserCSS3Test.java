@@ -51,6 +51,7 @@ import com.steadystate.css.parser.selectors.ChildSelectorImpl;
 import com.steadystate.css.parser.selectors.ConditionalSelectorImpl;
 import com.steadystate.css.parser.selectors.LangConditionImpl;
 import com.steadystate.css.parser.selectors.PrefixAttributeConditionImpl;
+import com.steadystate.css.parser.selectors.PseudoClassConditionImpl;
 import com.steadystate.css.parser.selectors.SubstringAttributeConditionImpl;
 import com.steadystate.css.parser.selectors.SuffixAttributeConditionImpl;
 
@@ -1811,6 +1812,116 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals("input:not(*.hi)", selectors.item(0).toString());
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void not_elementName() throws Exception {
+        final SelectorList selectors = createSelectors("p:not(abc)");
+        Assert.assertEquals("p:not(abc)", selectors.item(0).toString());
+
+        Assert.assertEquals(1, selectors.getLength());
+        final Selector selector = selectors.item(0);
+
+        Assert.assertEquals(Selector.SAC_CONDITIONAL_SELECTOR, selector.getSelectorType());
+
+        final ConditionalSelector condSel = (ConditionalSelector) selector;
+        final Condition condition = condSel.getCondition();
+
+        Assert.assertEquals(Condition.SAC_PSEUDO_CLASS_CONDITION, condition.getConditionType());
+
+        final PseudoClassConditionImpl pseudo = (PseudoClassConditionImpl) condition;
+        Assert.assertEquals("not(abc)", pseudo.getValue());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void not_hash() throws Exception {
+        final SelectorList selectors = createSelectors("p:not( #test)");
+        Assert.assertEquals("p:not(*#test)", selectors.item(0).toString());
+
+        Assert.assertEquals(1, selectors.getLength());
+        final Selector selector = selectors.item(0);
+
+        Assert.assertEquals(Selector.SAC_CONDITIONAL_SELECTOR, selector.getSelectorType());
+
+        final ConditionalSelector condSel = (ConditionalSelector) selector;
+        final Condition condition = condSel.getCondition();
+
+        Assert.assertEquals(Condition.SAC_PSEUDO_CLASS_CONDITION, condition.getConditionType());
+
+        final PseudoClassConditionImpl pseudo = (PseudoClassConditionImpl) condition;
+        Assert.assertEquals("not(*#test)", pseudo.getValue());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void not_class() throws Exception {
+        // element name
+        final SelectorList selectors = createSelectors("p:not(.klass)");
+        Assert.assertEquals("p:not(*.klass)", selectors.item(0).toString());
+
+        Assert.assertEquals(1, selectors.getLength());
+        final Selector selector = selectors.item(0);
+
+        Assert.assertEquals(Selector.SAC_CONDITIONAL_SELECTOR, selector.getSelectorType());
+
+        final ConditionalSelector condSel = (ConditionalSelector) selector;
+        final Condition condition = condSel.getCondition();
+
+        Assert.assertEquals(Condition.SAC_PSEUDO_CLASS_CONDITION, condition.getConditionType());
+
+        final PseudoClassConditionImpl pseudo = (PseudoClassConditionImpl) condition;
+        Assert.assertEquals("not(*.klass)", pseudo.getValue());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void not_attrib() throws Exception {
+        final SelectorList selectors = createSelectors("p:not([type='file'])");
+        Assert.assertEquals("p:not(*[type=\"file\"])", selectors.item(0).toString());
+
+        Assert.assertEquals(1, selectors.getLength());
+        final Selector selector = selectors.item(0);
+
+        Assert.assertEquals(Selector.SAC_CONDITIONAL_SELECTOR, selector.getSelectorType());
+
+        final ConditionalSelector condSel = (ConditionalSelector) selector;
+        final Condition condition = condSel.getCondition();
+
+        Assert.assertEquals(Condition.SAC_PSEUDO_CLASS_CONDITION, condition.getConditionType());
+
+        final PseudoClassConditionImpl pseudo = (PseudoClassConditionImpl) condition;
+        Assert.assertEquals("not(*[type=\"file\"])", pseudo.getValue());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void not_pseudo() throws Exception {
+        final SelectorList selectors = createSelectors("p:not(:first)");
+        Assert.assertEquals("p:not(*:first)", selectors.item(0).toString());
+
+        Assert.assertEquals(1, selectors.getLength());
+        final Selector selector = selectors.item(0);
+
+        Assert.assertEquals(Selector.SAC_CONDITIONAL_SELECTOR, selector.getSelectorType());
+
+        final ConditionalSelector condSel = (ConditionalSelector) selector;
+        final Condition condition = condSel.getCondition();
+
+        Assert.assertEquals(Condition.SAC_PSEUDO_CLASS_CONDITION, condition.getConditionType());
+
+        final PseudoClassConditionImpl pseudo = (PseudoClassConditionImpl) condition;
+        Assert.assertEquals("not(*:first)", pseudo.getValue());
+    }
     /**
      * @throws Exception if any error occurs
      */
