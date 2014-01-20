@@ -5,6 +5,8 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
+    <release version="0.9.14" date="xx.01.2014" description="Bugfixes">
+    </release>
     <release version="0.9.13" date="20.01.2014" description="Bugfixes">
         <action type="fix" dev="rbri">
             Only simple selectors are valid as parameter for the :not pseudo class (CSS3).
