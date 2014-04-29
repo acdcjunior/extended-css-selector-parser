@@ -1588,15 +1588,6 @@ LexicalUnit hexcolor(LexicalUnit prev) :
 }
 
 JAVACODE
-void skipSelector() {
-    Token t = getToken(1);
-    while (t.kind != COMMA && t.kind != SEMICOLON && t.kind != LBRACE && t.kind != EOF ) {
-        getNextToken();
-        t = getToken(1);
-    }
-}
-
-JAVACODE
 String skip() {
   StringBuilder sb = new StringBuilder();
   int nesting = 0;
