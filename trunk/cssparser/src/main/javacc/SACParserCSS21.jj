@@ -1389,7 +1389,7 @@ LexicalUnit function(LexicalUnit prev) :
     params = expr()
     <RROUND>
     {
-        return functionInternal(prev, t, params);
+        return functionInternal(prev, t.image, params);
     }
 }
 

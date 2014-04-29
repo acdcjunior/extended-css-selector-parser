@@ -1495,13 +1495,15 @@ LexicalUnit term(LexicalUnit prev) :
 LexicalUnit function(LexicalUnit prev) :
 {
     Token t;
-    Token f;
-    char op = ' ';
     LexicalUnit param = null;
     LexicalUnit body = null;
+    String funct = "";
 }
 {
-    f = <FUNCTION> 
+    (
+        t = "progid:DXImageTransform.Microsoft."  { funct = t.image; }    )?
+
+    t = <FUNCTION> { funct = funct + t.image; }
     ( <S> )*
     (
         param = term(null) { body = param; }
@@ -1517,7 +1519,7 @@ LexicalUnit function(LexicalUnit prev) :
     )? 
     <RROUND>
     {
-        return functionInternal(prev, f, param);
+        return functionInternal(prev, funct, param);
     }
 }
 
