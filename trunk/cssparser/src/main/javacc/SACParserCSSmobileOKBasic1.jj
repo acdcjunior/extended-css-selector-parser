@@ -282,14 +282,13 @@ void styleSheetRuleSingle() :
 
 void unknownRule() :
 {
-    Token t;
     String s;
     Locator locator;
 }
 {
     try
     {
-        t = <ATKEYWORD>
+        <ATKEYWORD>
         {
             locator = this.getLocator();
             s = skip();
@@ -464,11 +463,10 @@ String medium() :
 //
 LexicalUnit operator(LexicalUnit prev) :
 {
-  Token t;
 }
 {
-  t = <SLASH> ( <S> )*   { return new LexicalUnitImpl(prev, LexicalUnit.SAC_OPERATOR_SLASH); }
-  | t = <COMMA> ( <S> )* { return LexicalUnitImpl.createComma(prev); }
+  <SLASH> ( <S> )*   { return new LexicalUnitImpl(prev, LexicalUnit.SAC_OPERATOR_SLASH); }
+  | <COMMA> ( <S> )* { return LexicalUnitImpl.createComma(prev); }
 }
 
 //
@@ -935,7 +933,6 @@ LexicalUnit term(LexicalUnit prev) :
 {
   Token t;
   char op = ' ';
-  String s;
   LexicalUnit value = null;
   Locator locator = null;
 }
@@ -1000,11 +997,10 @@ LexicalUnit term(LexicalUnit prev) :
 //
 LexicalUnit rgb(LexicalUnit prev) :
 {
-    Token t;
     LexicalUnit params;
 }
 {
-    t = <RGB> ( <S> )*
+    <RGB> ( <S> )*
     params = expr()
     <RROUND>
     {
@@ -1080,7 +1076,6 @@ void error_skipblock()
 JAVACODE
 void error_skipdecl()
 {
-    int nesting = 0;
     Token t = getToken(1);
     if (t.kind == LBRACE)
     {
