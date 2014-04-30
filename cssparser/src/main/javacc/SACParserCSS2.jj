@@ -421,14 +421,13 @@ void charsetRule() :
 
 void unknownRule() :
 {
-    Token t;
     String s;
     Locator locator;
 }
 {
     try
     {
-        t = <ATKEYWORD>
+        <ATKEYWORD>
         {
             locator = getLocator();
             s = skip();
@@ -456,13 +455,6 @@ void importRule(final boolean nonImportRuleFoundBefore) :
 {
     try
     {
-        {
-            ParseException e = null;
-            if (nonImportRuleFoundBefore)
-            {
-                e = generateParseException();
-            }
-        }
         <IMPORT_SYM>
         {
             locator = getLocator();
@@ -696,11 +688,10 @@ void fontFaceRule() :
 //
 LexicalUnit operator(LexicalUnit prev) :
 {
-  Token t;
 }
 {
-  t = <SLASH> ( <S> )*   { return new LexicalUnitImpl(prev, LexicalUnit.SAC_OPERATOR_SLASH); }
-  | t = <COMMA> ( <S> )* { return LexicalUnitImpl.createComma(prev); }
+  <SLASH> ( <S> )*   { return new LexicalUnitImpl(prev, LexicalUnit.SAC_OPERATOR_SLASH); }
+  | <COMMA> ( <S> )* { return LexicalUnitImpl.createComma(prev); }
 }
 
 //
@@ -1089,7 +1080,6 @@ Object pseudo(Condition pred, boolean pseudoElementFound) :
     Condition c = null;
     Token t;
     String function;
-    Selector sel;
     String arg = "";
     Locator locator;
 }
@@ -1295,7 +1285,6 @@ LexicalUnit term(LexicalUnit prev) :
 {
   Token t;
   char op = ' ';
-  String s;
   LexicalUnit value = null;
   Locator locator = null;
 }
@@ -1395,11 +1384,10 @@ LexicalUnit function(LexicalUnit prev) :
 //
 LexicalUnit rgb(LexicalUnit prev) :
 {
-    Token t;
     LexicalUnit params;
 }
 {
-    t = <RGB> ( <S> )*
+    <RGB> ( <S> )*
     params = expr()
     <RROUND>
     {
@@ -1475,7 +1463,6 @@ void error_skipblock()
 JAVACODE
 void error_skipdecl()
 {
-    int nesting = 0;
     Token t = getToken(1);
     if (t.kind == LBRACE)
     {
