@@ -1650,13 +1650,13 @@ void error_skipdecl()
     }
     else
     {
-        Token oldToken = t;
+        Token oldToken = token;
         while (t.kind != SEMICOLON && t.kind != RBRACE && t.kind != EOF )
         {
             oldToken = t;
             t = getNextToken();
         }
-        if (t.kind == RBRACE)
+        if (t.kind != EOF)
         {
             token = oldToken;
         }
