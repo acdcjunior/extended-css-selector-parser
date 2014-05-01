@@ -1268,31 +1268,26 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
 
         final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
-        Assert.assertEquals(2, errorHandler.getErrorCount());
+        Assert.assertEquals(1, errorHandler.getErrorCount());
         final String expected = "Error in expression. "
                 + "(Invalid token \"\\'\". Was expecting one of: <S>, <NUMBER>, \"inherit\", "
                         + "<IDENT>, <STRING>, <PLUS>, <HASH>, <EMS>, <EXS>, <LENGTH_PX>, <LENGTH_CM>, <LENGTH_MM>, "
                         + "<LENGTH_IN>, <LENGTH_PT>, <LENGTH_PC>, <ANGLE_DEG>, <ANGLE_RAD>, <ANGLE_GRAD>, <TIME_MS>, "
                         + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <PERCENTAGE>, <DIMENSION>, <URI>, <FUNCTION>, \"-\""
-                        + ", \"progid:DXImageTransform.Microsoft.\".)"
-                + " Error in style rule. (Invalid token \"\\n  \". Was expecting one of: <EOF>, \"}\", \";\".)";
+                        + ", \"progid:DXImageTransform.Microsoft.\".)";
         Assert.assertEquals(expected, errorHandler.getErrorMessage());
-        Assert.assertEquals("3 4", errorHandler.getErrorLines());
-        Assert.assertEquals("16 14", errorHandler.getErrorColumns());
+        Assert.assertEquals("3", errorHandler.getErrorLines());
+        Assert.assertEquals("16", errorHandler.getErrorColumns());
 
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(1, errorHandler.getWarningCount());
-        Assert.assertEquals("Ignoring the following declarations in this rule.", errorHandler.getWarningMessage());
-        Assert.assertEquals("4", errorHandler.getWarningLines());
-        Assert.assertEquals("14", errorHandler.getWarningColumns());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
 
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
 
         final CSSRule rule = rules.item(0);
-        // TODO
-        Assert.assertEquals("p { color: green }", rule.getCssText());
+        Assert.assertEquals("p { color: green; color: green }", rule.getCssText());
     }
 
     /**
@@ -1390,6 +1385,66 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
 
         rule = rules.item(1);
         Assert.assertEquals("p { color: green }", rule.getCssText());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void skipDeklarationsErrorBefore() throws Exception {
+        final String css = ".a { test; color: green }";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = parser();
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(1, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        Assert.assertTrue(errorHandler.getErrorMessage(),
+                errorHandler.getErrorMessage().startsWith("Error in declaration."));
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("*.a { color: green }", rule.getCssText());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void skipDeklarationsErrorBetween() throws Exception {
+        final String css = ".a { color: blue; test; color: green }";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = parser();
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(1, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        Assert.assertTrue(errorHandler.getErrorMessage(),
+                errorHandler.getErrorMessage().startsWith("Error in declaration."));
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("*.a { color: blue; color: green }", rule.getCssText());
     }
 
     /**
@@ -1612,6 +1667,39 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
 
         value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("color");
         Assert.assertEquals("green", value.getCssText());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void evalIEStyle() throws Exception {
+        final String css = ".a {\n"
+                            + "top: expression((eval(document.documentElement||document.body).scrollTop));\n"
+                            + "color: green;"
+                            + "}";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = parser();
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(1, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+//        Assert.assertTrue(errorHandler.getErrorMessage(),
+//                errorHandler.getErrorMessage().startsWith("Error in declaration."));
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("*.a { color: green }", rule.getCssText());
     }
 
     /**

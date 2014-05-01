@@ -65,7 +65,7 @@ public class CSSOMParserTest {
     }
 
     private CSSOMParser getCss2Parser() {
-        System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS20");
+        System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS2");
         return new CSSOMParser();
     }
 
@@ -176,7 +176,7 @@ public class CSSOMParserTest {
 
         CSSRule rule = rl.item(0);
         CSSStyleRule sr = (CSSStyleRule) rule;
-        Assert.assertEquals("p { }", sr.getCssText());
+        Assert.assertEquals("p { opacity: 0.333 }", sr.getCssText());
 
         rule = rl.item(1);
         sr = (CSSStyleRule) rule;
@@ -198,7 +198,7 @@ public class CSSOMParserTest {
 
         CSSRule rule = rl.item(0);
         CSSStyleRule sr = (CSSStyleRule) rule;
-        Assert.assertEquals("p { }", sr.getCssText());
+        Assert.assertEquals("p { opacity: 0.333 }", sr.getCssText());
 
         rule = rl.item(1);
         sr = (CSSStyleRule) rule;

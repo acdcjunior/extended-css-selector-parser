@@ -1023,30 +1023,25 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
 
         final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 
-        Assert.assertEquals(2, errorHandler.getErrorCount());
+        Assert.assertEquals(1, errorHandler.getErrorCount());
         final String expected = "Error in expression. "
                 + "(Invalid token \"\\'\". Was expecting one of: <S>, <NUMBER>, \"inherit\", "
                         + "<IDENT>, <STRING>, <PLUS>, <HASH>, <EMS>, <EXS>, <LENGTH_PX>, <LENGTH_CM>, <LENGTH_MM>, "
                         + "<LENGTH_IN>, <LENGTH_PT>, <LENGTH_PC>, <ANGLE_DEG>, <ANGLE_RAD>, <ANGLE_GRAD>, <TIME_MS>, "
-                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <PERCENTAGE>, <DIMENSION>, <URI>, <FUNCTION>, \"-\".)"
-                + " Error in style rule. (Invalid token \"\\n  \". Was expecting one of: <EOF>, \"}\", \";\".)";
+                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <PERCENTAGE>, <DIMENSION>, <URI>, <FUNCTION>, \"-\".)";
         Assert.assertEquals(expected, errorHandler.getErrorMessage());
-        Assert.assertEquals("3 4", errorHandler.getErrorLines());
-        Assert.assertEquals("16 14", errorHandler.getErrorColumns());
+        Assert.assertEquals("3", errorHandler.getErrorLines());
+        Assert.assertEquals("16", errorHandler.getErrorColumns());
 
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(1, errorHandler.getWarningCount());
-        Assert.assertEquals("Ignoring the following declarations in this rule.", errorHandler.getWarningMessage());
-        Assert.assertEquals("4", errorHandler.getWarningLines());
-        Assert.assertEquals("14", errorHandler.getWarningColumns());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
 
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
 
         final CSSRule rule = rules.item(0);
-        // TODO
-        Assert.assertEquals("p { color: green }", rule.getCssText());
+        Assert.assertEquals("p { color: green; color: green }", rule.getCssText());
     }
 
     /**
