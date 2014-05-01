@@ -259,7 +259,7 @@ void styleSheetRuleList() :
             importRule(ruleFound)
             | 
             (
-                styleRule() | mediaRule() | unknownRule()
+                styleRule() | mediaRule() | unknownAtRule()
             )
             {
                 ruleFound = true;
@@ -277,10 +277,10 @@ void styleSheetRuleSingle() :
 }
 {
   ( <S> )*
-  ( importRule(false) | styleRule() | mediaRule() | unknownRule() )
+  ( importRule(false) | styleRule() | mediaRule() | unknownAtRule() )
 }
 
-void unknownRule() :
+void unknownAtRule() :
 {
     String s;
     Locator locator;
@@ -429,14 +429,14 @@ void mediaRuleList() :
 {
 }
 {
-  ( ( styleRule() | unknownRule() ) ( <S> )* )+ 
+  ( ( styleRule() | unknownAtRule() ) ( <S> )* )+ 
 }
 
 void mediaRuleSingle() :
 {
 }
 {
-  ( styleRule() | unknownRule() )
+  ( styleRule() | unknownAtRule() )
 }
 
 //

@@ -262,7 +262,7 @@ void styleSheetRuleList() :
             importRule(ruleFound)
             |
             (
-	            styleRule() | unknownRule()
+	            styleRule() | unknownAtRule()
 	        )
             {
                 ruleFound = true;
@@ -280,10 +280,10 @@ void styleSheetRuleSingle() :
 }
 {
   ( <S> )*
-  ( importRule(false) | styleRule() | unknownRule() )
+  ( importRule(false) | styleRule() | unknownAtRule() )
 }
 
-void unknownRule() :
+void unknownAtRule() :
 {
     String s;
     Locator locator;

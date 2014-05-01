@@ -373,7 +373,7 @@ void styleSheetRuleList() :
             importRule(ruleFound)
             |
             (
-                styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule()
+                styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownAtRule()
             )
             {
                 ruleFound = true;
@@ -391,7 +391,7 @@ void styleSheetRuleSingle() :
 }
 {
     ( <S> )*
-    ( charsetRule() | importRule(false) | styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownRule() )
+    ( charsetRule() | importRule(false) | styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownAtRule() )
 }
 
 void charsetRule() :
@@ -419,7 +419,7 @@ void charsetRule() :
     }
 }
 
-void unknownRule() :
+void unknownAtRule() :
 {
     String s;
     Locator locator;
@@ -558,14 +558,14 @@ void mediaRuleList() :
 {
 }
 {
-  ( ( styleRule() | pageRule() | unknownRule() ) ( <S> )* )+
+  ( ( styleRule() | pageRule() | unknownAtRule() ) ( <S> )* )+
 }
 
 void mediaRuleSingle() :
 {
 }
 {
-  ( styleRule() | pageRule() | unknownRule() )
+  ( styleRule() | pageRule() | unknownAtRule() )
 }
 
 //
