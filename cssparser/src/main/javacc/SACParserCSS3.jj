@@ -625,7 +625,7 @@ void mediaRuleList() :
 {
 }
 {
-  ( ( styleRule() | pageRule() | unknownRule() | importRule(true) ) ( <S> )* )+
+  ( ( styleRule() | pageRule() | importRule(true) | unknownRule() ) ( <S> )* )+
 }
 
 void mediaRuleSingle() :
