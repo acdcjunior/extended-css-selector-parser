@@ -879,7 +879,9 @@ void declaration() :
     }
     catch (ParseException ex)
     {
-        this.getErrorHandler().error(this.toCSSParseException("invalidDeclaration", ex));
+        CSSParseException cpe = toCSSParseException("invalidDeclaration", ex);
+        getErrorHandler().error(cpe);
+        getErrorHandler().warning(createSkipWarning("ignoringFollowingDeclarations", cpe));
         error_skipdecl();
     }
 }
