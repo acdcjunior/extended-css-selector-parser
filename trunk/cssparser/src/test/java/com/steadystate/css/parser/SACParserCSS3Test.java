@@ -1008,13 +1008,11 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
                 + " Error in expression. (Invalid token \"}\". Was expecting one of: <S>, <NUMBER>, \"inherit\", "
                         + "<IDENT>, <STRING>, <PLUS>, <HASH>, <EMS>, <EXS>, <LENGTH_PX>, <LENGTH_CM>, <LENGTH_MM>, "
                         + "<LENGTH_IN>, <LENGTH_PT>, <LENGTH_PC>, <ANGLE_DEG>, <ANGLE_RAD>, <ANGLE_GRAD>, <TIME_MS>, "
-                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <PERCENTAGE>, <DIMENSION>, <URI>, <FUNCTION>, \"-\""
-                        + ", \"progid:DXImageTransform.Microsoft.\".)"
+                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <PERCENTAGE>, <DIMENSION>, <URI>, <FUNCTION>, \"-\".)"
                 + " Error in expression. (Invalid token \";\". Was expecting one of: <S>, <NUMBER>, \"inherit\", "
                         + "<IDENT>, <STRING>, <PLUS>, <HASH>, <EMS>, <EXS>, <LENGTH_PX>, <LENGTH_CM>, <LENGTH_MM>, "
                         + "<LENGTH_IN>, <LENGTH_PT>, <LENGTH_PC>, <ANGLE_DEG>, <ANGLE_RAD>, <ANGLE_GRAD>, <TIME_MS>, "
-                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <PERCENTAGE>, <DIMENSION>, <URI>, <FUNCTION>, \"-\""
-                        + ", \"progid:DXImageTransform.Microsoft.\".)"
+                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <PERCENTAGE>, <DIMENSION>, <URI>, <FUNCTION>, \"-\".)"
                 + " Error in declaration. (Invalid token \"{\". Was expecting one of: <S>, \":\".)"
                 + " Error in style rule. (Invalid token \" \". Was expecting one of: <EOF>, \"}\", \";\".)"
                 + " Error in declaration. (Invalid token \"{\". Was expecting one of: <S>, \":\".)";
@@ -1274,8 +1272,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
                 + "(Invalid token \"\\'\". Was expecting one of: <S>, <NUMBER>, \"inherit\", "
                         + "<IDENT>, <STRING>, <PLUS>, <HASH>, <EMS>, <EXS>, <LENGTH_PX>, <LENGTH_CM>, <LENGTH_MM>, "
                         + "<LENGTH_IN>, <LENGTH_PT>, <LENGTH_PC>, <ANGLE_DEG>, <ANGLE_RAD>, <ANGLE_GRAD>, <TIME_MS>, "
-                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <PERCENTAGE>, <DIMENSION>, <URI>, <FUNCTION>, \"-\""
-                        + ", \"progid:DXImageTransform.Microsoft.\".)";
+                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <PERCENTAGE>, <DIMENSION>, <URI>, <FUNCTION>, \"-\".)";
         Assert.assertEquals(expected, errorHandler.getErrorMessage());
         Assert.assertEquals("3", errorHandler.getErrorLines());
         Assert.assertEquals("16", errorHandler.getErrorColumns());
@@ -1660,7 +1657,24 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
                             + "color: green;"
                             + "}";
 
-        final CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = parser();
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(1, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(1, errorHandler.getWarningCount());
+
+        Assert.assertTrue(errorHandler.getErrorMessage(),
+                errorHandler.getErrorMessage().
+                startsWith("Error in expression; ':' found after identifier \"progid\"."));
+        Assert.assertTrue(errorHandler.getWarningMessage(),
+                errorHandler.getWarningMessage().startsWith("Ignoring the following declarations in this rule."));
+
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
@@ -1668,9 +1682,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         final CSSRule rule = rules.item(0);
 
         CSSValueImpl value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("filter");
-        Assert.assertEquals("progid:DXImageTransform.Microsoft."
-                + "gradient(GradientType = 0, startColorstr = rgb(97, 145, 191), endColorstr = rgb(205, 230, 249))",
-                value.getCssText());
+        Assert.assertNull(value);
 
         value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("color");
         Assert.assertEquals("green", value.getCssText());
