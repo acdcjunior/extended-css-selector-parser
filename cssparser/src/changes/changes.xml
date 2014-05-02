@@ -5,7 +5,20 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
-    <release version="0.9.14" date="xx.01.2014" description="Bugfixes">
+    <release version="0.9.14" date="xx.01.2014" description="Bugfixes and parser cleanup">
+        <action type="fix" dev="rbri" issue="46">
+            Fix the error processing for expression 'filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);'.
+            This is an old IE6 syntax; CSSParser will handle this as error but the parsing
+            will continue directly after this.
+        </action>
+        <action type="fix" dev="rbri">
+            Fix the skipping of invalid rules. As a result, the parser now recognizes following
+            expressions inside the same declaration instead of jumping to the next declaration.
+        </action>
+        <action type="fix" dev="rbri">
+            Many small fixes for the parser; remove some unsed variables and correct some
+            statement order.
+        </action>
     </release>
     <release version="0.9.13" date="20.01.2014" description="Bugfixes">
         <action type="fix" dev="rbri">
