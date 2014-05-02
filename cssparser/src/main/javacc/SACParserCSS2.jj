@@ -1194,7 +1194,6 @@ void styleDeclaration()  :
     {
         CSSParseException cpe = toCSSParseException("invalidDeclaration", ex);
         getErrorHandler().error(cpe);
-        getErrorHandler().warning(createSkipWarning("ignoringFollowingDeclarations", cpe));
         error_skipdecl();
     }
 }
@@ -1236,7 +1235,6 @@ void declaration() :
     {
         CSSParseException cpe = toCSSParseException("invalidDeclaration", ex);
         getErrorHandler().error(cpe);
-        getErrorHandler().warning(createSkipWarning("ignoringFollowingDeclarations", cpe));
         error_skipdecl();
     }
 }

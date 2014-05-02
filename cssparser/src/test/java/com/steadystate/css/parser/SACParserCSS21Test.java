@@ -778,11 +778,11 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
         Assert.assertEquals("24 23 25 24 23 38 23", errorHandler.getErrorColumns());
 
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(7, errorHandler.getWarningCount());
+        Assert.assertEquals(3, errorHandler.getWarningCount());
         Assert.assertTrue(errorHandler.getWarningMessage(),
                 errorHandler.getWarningMessage().startsWith("Ignoring the following declarations in this rule."));
-        Assert.assertEquals("2 3 4 5 6 6 7", errorHandler.getWarningLines());
-        Assert.assertEquals("24 23 25 24 23 38 23", errorHandler.getWarningColumns());
+        Assert.assertEquals("4 5 6", errorHandler.getWarningLines());
+        Assert.assertEquals("25 24 38", errorHandler.getWarningColumns());
 
         final CSSRuleList rules = sheet.getCssRules();
 
@@ -1126,12 +1126,10 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
 
         Assert.assertEquals(1, errorHandler.getErrorCount());
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(1, errorHandler.getWarningCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
 
         Assert.assertTrue(errorHandler.getErrorMessage(),
                 errorHandler.getErrorMessage().startsWith("Error in declaration."));
-        Assert.assertTrue(errorHandler.getWarningMessage(),
-                errorHandler.getWarningMessage().startsWith("Ignoring the following declarations in this rule."));
 
         final CSSRuleList rules = sheet.getCssRules();
 
