@@ -1,12 +1,12 @@
 This document is intended for committers who are packaging a release.
 
 1. Check all your files are checked in
-2. Execute "mvn test" to be sure all tests are passing
+2. Execute "mvn clean test" to be sure all tests are passing
 
 3. Update the version number in pom.xml
 4. Update the version number and release date in src/site/xdoc/index.xml
 5. Update the release date in src/changes/changes.xml
-6. Execute "mvn test" to be sure all tests are passing
+6. Execute "mvn clean test" to be sure all tests are passing
 7. Commit the changes
 
 8. Build and deploy the artifacts 
