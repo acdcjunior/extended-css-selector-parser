@@ -5,7 +5,7 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
-    <release version="0.9.14" date="xx.01.2014" description="Bugfixes and parser cleanup">
+    <release version="0.9.14" date="08.05.2014" description="Bugfixes and parser cleanup">
         <action type="fix" dev="rbri" issue="46">
             Fix the error processing for expression 'filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);'.
             This is an old IE6 syntax; CSSParser will handle this as error but the parsing
