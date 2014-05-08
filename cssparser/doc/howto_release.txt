@@ -13,9 +13,9 @@ This document is intended for committers who are packaging a release.
    mvn -up clean site package
    mvn source:jar
    mvn javadoc:jar
-   mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/cssparser-0.9.13.jar
-   mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/cssparser-0.9.13-sources.jar -Dclassifier=sources
-   mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/cssparser-0.9.13-javadoc.jar -Dclassifier=javadoc
+   mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/cssparser-0.9.14.jar
+   mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/cssparser-0.9.14-sources.jar -Dclassifier=sources
+   mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/cssparser-0.9.14-javadoc.jar -Dclassifier=javadoc
 9. Go to https://oss.sonatype.org/index.html#stagingRepositories and process the deploy
    * select the repository and close it - wait until the close is processed
    * release the package and wait until it is processed
