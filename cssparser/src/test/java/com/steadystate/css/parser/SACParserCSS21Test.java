@@ -33,6 +33,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.Condition;
 import org.w3c.css.sac.InputSource;
+import org.w3c.css.sac.LexicalUnit;
 import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SelectorList;
 import org.w3c.dom.css.CSSPrimitiveValue;
@@ -43,8 +44,10 @@ import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.ErrorHandler;
+import com.steadystate.css.dom.CSSStyleDeclarationImpl;
 import com.steadystate.css.dom.CSSStyleRuleImpl;
 import com.steadystate.css.dom.CSSValueImpl;
+import com.steadystate.css.dom.Property;
 import com.steadystate.css.parser.selectors.ChildSelectorImpl;
 import com.steadystate.css.parser.selectors.ConditionalSelectorImpl;
 import com.steadystate.css.parser.selectors.LangConditionImpl;
@@ -564,6 +567,153 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
         String name = style.item(0);
         name = style.item(0);
         Assert.assertEquals("foreground : rgb(10, 20, 30)", name + " : " + style.getPropertyValue(name));
+    }
+
+    @Test
+    public void rgbInsidefunction() throws Exception {
+        final String cssText = "color: foo(#cd4);";
+
+        final CSSOMParser parser = parser();
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final InputSource source = new InputSource(new StringReader(cssText));
+        final CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        // Enumerate the properties and retrieve their values
+        Assert.assertEquals(1, style.getLength());
+
+        String name = style.item(0);
+        name = style.item(0);
+        Assert.assertEquals("color: foo(rgb(204, 221, 68))", name + ": " + style.getPropertyValue(name));
+    }
+
+    @Test
+    public void funct() throws Exception {
+        final String cssText = "clip: foo(rect( 10px, 20em, 30px, max(40, blue(rgb(1,2,3))) ) )";
+
+        final CSSOMParser parser = parser();
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final InputSource source = new InputSource(new StringReader(cssText));
+        final CSSStyleDeclaration style = parser.parseStyleDeclaration(source);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        // Enumerate the properties and retrieve their values
+        Assert.assertEquals(1, style.getLength());
+
+        String name = style.item(0);
+        name = style.item(0);
+        Assert.assertEquals("clip : foo(rect(10px, 20em, 30px, max(40, blue(rgb(1, 2, 3)))))",
+                name + " : " + style.getPropertyValue(name));
+
+        final CSSValueImpl value = (CSSValueImpl) style.getPropertyCSSValue(name);
+        LexicalUnitImpl unit  = (LexicalUnitImpl) value.getValue();
+        Assert.assertEquals(LexicalUnit.SAC_FUNCTION, unit.getLexicalUnitType());
+        Assert.assertEquals("foo", unit.getFunctionName());
+
+        unit  = (LexicalUnitImpl) unit.getParameters();
+        Assert.assertEquals(LexicalUnit.SAC_RECT_FUNCTION, unit.getLexicalUnitType());
+        Assert.assertEquals("rect", unit.getFunctionName());
+
+        unit  = (LexicalUnitImpl) unit.getParameters();
+        Assert.assertEquals(LexicalUnit.SAC_PIXEL, unit.getLexicalUnitType());
+        Assert.assertEquals(10f, unit.getFloatValue(), 0.00001);
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_OPERATOR_COMMA, unit.getLexicalUnitType());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_EM, unit.getLexicalUnitType());
+        Assert.assertEquals(20f, unit.getFloatValue(), 0.00001);
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_OPERATOR_COMMA, unit.getLexicalUnitType());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_PIXEL, unit.getLexicalUnitType());
+        Assert.assertEquals(30f, unit.getFloatValue(), 0.00001);
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_OPERATOR_COMMA, unit.getLexicalUnitType());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_FUNCTION, unit.getLexicalUnitType());
+        Assert.assertEquals("max", unit.getFunctionName());
+
+        unit  = (LexicalUnitImpl) unit.getParameters();
+        Assert.assertEquals(LexicalUnit.SAC_INTEGER, unit.getLexicalUnitType());
+        Assert.assertEquals(40, unit.getIntegerValue());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_OPERATOR_COMMA, unit.getLexicalUnitType());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_FUNCTION, unit.getLexicalUnitType());
+        Assert.assertEquals("blue", unit.getFunctionName());
+
+        unit  = (LexicalUnitImpl) unit.getParameters();
+        Assert.assertEquals(LexicalUnit.SAC_RGBCOLOR, unit.getLexicalUnitType());
+        Assert.assertEquals("rgb", unit.getFunctionName());
+
+        unit  = (LexicalUnitImpl) unit.getParameters();
+        Assert.assertEquals(LexicalUnit.SAC_INTEGER, unit.getLexicalUnitType());
+        Assert.assertEquals(1, unit.getIntegerValue());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_OPERATOR_COMMA, unit.getLexicalUnitType());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_INTEGER, unit.getLexicalUnitType());
+        Assert.assertEquals(2, unit.getIntegerValue());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_OPERATOR_COMMA, unit.getLexicalUnitType());
+
+        unit  = (LexicalUnitImpl) unit.getNextLexicalUnit();
+        Assert.assertEquals(LexicalUnit.SAC_INTEGER, unit.getLexicalUnitType());
+        Assert.assertEquals(3, unit.getIntegerValue());
+
+        Assert.assertNull(unit.getNextLexicalUnit());
+    }
+
+    @Test
+    public void beforeAfter() throws Exception {
+        final String cssText = "heading:before { content: attr(test) \"testData\" }";
+
+        final CSSOMParser parser = parser();
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final InputSource source = new InputSource(new StringReader(cssText));
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSStyleRuleImpl rule = (CSSStyleRuleImpl) rules.item(0);
+        Assert.assertEquals("heading:before { content: attr(test) \"testData\" }", rule.getCssText());
+
+        final CSSStyleDeclaration style = rule.getStyle();
+
+        Assert.assertEquals(1, style.getLength());
+
+        String name = style.item(0);
+        name = style.item(0);
+        Assert.assertEquals("content : attr(test) \"testData\"", name + " : " + style.getPropertyValue(name));
     }
 
     @Test
@@ -1146,6 +1296,111 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
      * @throws Exception if any error occurs
      */
     @Test
+    public void skipDeklarationsErrorBefore() throws Exception {
+        final String css = ".a { test; color: green }";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = parser();
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(1, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        Assert.assertTrue(errorHandler.getErrorMessage(),
+                errorHandler.getErrorMessage().startsWith("Error in declaration."));
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("*.a { color: green }", rule.getCssText());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void skipDeklarationsErrorBetween() throws Exception {
+        final String css = ".a { color: blue; test; color: green }";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = parser();
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(1, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        Assert.assertTrue(errorHandler.getErrorMessage(),
+                errorHandler.getErrorMessage().startsWith("Error in declaration."));
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("*.a { color: blue; color: green }", rule.getCssText());
+    }
+
+    /**
+     * see https://issues.jboss.org/browse/RF-11741
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void skipJBossIssue() throws Exception {
+        final String css = ".shadow {\n"
+                + " -webkit-box-shadow: 1px 4px 5px '#{richSkin.additionalBackgroundColor}';"
+                + " -moz-box-shadow: 2px 4px 5px '#{richSkin.additionalBackgroundColor}';"
+                + " box-shadow: 3px 4px 5px '#{richSkin.additionalBackgroundColor}';"
+                + "}";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = parser();
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        final CSSStyleRuleImpl ruleImpl = (CSSStyleRuleImpl) rule;
+        final CSSStyleDeclarationImpl declImpl = (CSSStyleDeclarationImpl) ruleImpl.getStyle();
+
+        Property prop = declImpl.getPropertyDeclaration("-webkit-box-shadow");
+        CSSValueImpl valueImpl = (CSSValueImpl) prop.getValue();
+        Assert.assertEquals("1px 4px 5px \"#{richSkin.additionalBackgroundColor}\"", valueImpl.getCssText());
+
+        prop = declImpl.getPropertyDeclaration("-moz-box-shadow");
+        valueImpl = (CSSValueImpl) prop.getValue();
+        Assert.assertEquals("2px 4px 5px \"#{richSkin.additionalBackgroundColor}\"", valueImpl.getCssText());
+
+        prop = declImpl.getPropertyDeclaration("box-shadow");
+        valueImpl = (CSSValueImpl) prop.getValue();
+        Assert.assertEquals("3px 4px 5px \"#{richSkin.additionalBackgroundColor}\"", valueImpl.getCssText());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
     public void dimensionPercent() throws Exception {
         final CSSValueImpl value = dimension("2%");
         Assert.assertEquals(CSSPrimitiveValue.CSS_PERCENTAGE, value.getPrimitiveType());
@@ -1303,6 +1558,95 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
 
         rule = rules.item(1);
         Assert.assertEquals("*.b { top: -1.234newDim }", rule.getCssText());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void gradientIE8Style() throws Exception {
+        final String css = ".a {\n"
+                            + "-ms-filter: \"progid:DXImageTransform.Microsoft."
+                                + "gradient(GradientType=0, startColorstr=#6191bf, endColorstr=#cde6f9)\";\n"
+                            + "color: green;"
+                            + "}";
+        final CSSStyleSheet sheet = parse(css);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+
+        CSSValueImpl value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("-ms-filter");
+        Assert.assertEquals("\"progid:DXImageTransform.Microsoft."
+                + "gradient(GradientType=0, startColorstr=#6191bf, endColorstr=#cde6f9)\"", value.getCssText());
+
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("color");
+        Assert.assertEquals("green", value.getCssText());
+    }
+
+    @Test
+    public void transformRotate() throws Exception {
+        final String css = ".flipped {\n"
+                + "  transform: rotateY(180deg);\n"
+                + "}";
+
+        final CSSStyleSheet sheet = parse(css);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+
+        final CSSValueImpl value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("transform");
+        Assert.assertEquals("rotateY(180deg)", value.getCssText());
+    }
+
+    @Test
+    public void rgba() throws Exception {
+        final String css = "p {\n"
+                + "  background-color: rgba(0,0,0,0.2);\n"
+                + "}";
+
+        final CSSStyleSheet sheet = parse(css);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+
+        final CSSValueImpl value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().
+                            getPropertyCSSValue("background-color");
+        Assert.assertEquals("rgba(0, 0, 0, 0.2)", value.getCssText());
+    }
+
+    @Test
+    public void linearGradient() throws Exception {
+        final String css = "h1 { background: linear-gradient(top, #fff, #f2f2f2); }\n"
+                + "h2 { background: linear-gradient( 45deg, blue, red ); }\n"
+                + "h3 { background: linear-gradient( to left top, #00f, red); }\n"
+                + "h4 { background: linear-gradient( 0 deg, blue, green 40%, red ); }\n";
+
+        final CSSStyleSheet sheet = parse(css);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(4, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        CSSValueImpl value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("background");
+        Assert.assertEquals("linear-gradient(top, rgb(255, 255, 255), rgb(242, 242, 242))", value.getCssText());
+
+        rule = rules.item(1);
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("background");
+        Assert.assertEquals("linear-gradient(45deg, blue, red)", value.getCssText());
+
+        rule = rules.item(2);
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("background");
+        Assert.assertEquals("linear-gradient(to left top, rgb(0, 0, 255), red)", value.getCssText());
+
+        rule = rules.item(3);
+        value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("background");
+        Assert.assertEquals("linear-gradient(0 deg, blue, green 40%, red)", value.getCssText());
     }
 
     /**
