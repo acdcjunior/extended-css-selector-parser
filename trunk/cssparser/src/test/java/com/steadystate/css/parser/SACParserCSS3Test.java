@@ -45,8 +45,10 @@ import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.ErrorHandler;
+import com.steadystate.css.dom.CSSStyleDeclarationImpl;
 import com.steadystate.css.dom.CSSStyleRuleImpl;
 import com.steadystate.css.dom.CSSValueImpl;
+import com.steadystate.css.dom.Property;
 import com.steadystate.css.parser.selectors.ChildSelectorImpl;
 import com.steadystate.css.parser.selectors.ConditionalSelectorImpl;
 import com.steadystate.css.parser.selectors.LangConditionImpl;
@@ -863,7 +865,8 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      */
     @Test
     public void counter() throws Exception {
-        final String css = "H1:before        { content: counter(chno, upper-latin) \". \" }\n"
+        final String css =
+                  "H1:before        { content: counter(chno, upper-latin) \". \" }\n"
                 + "H2:before        { content: counter(section, upper-roman) \" - \" }\n"
                 + "BLOCKQUOTE:after { content: \" [\" counter(bq, lower-greek) \"]\" }\n"
                 + "DIV.note:before  { content: counter(notecntr, disc) \" \" }\n"
@@ -1443,6 +1446,51 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
 
         final CSSRule rule = rules.item(0);
         Assert.assertEquals("*.a { color: blue; color: green }", rule.getCssText());
+    }
+
+    /**
+     * see https://issues.jboss.org/browse/RF-11741
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void skipJBossIssue() throws Exception {
+        final String css = ".shadow {\n"
+                + " -webkit-box-shadow: 1px 4px 5px '#{richSkin.additionalBackgroundColor}';"
+                + " -moz-box-shadow: 2px 4px 5px '#{richSkin.additionalBackgroundColor}';"
+                + " box-shadow: 3px 4px 5px '#{richSkin.additionalBackgroundColor}';"
+                + "}";
+
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = parser();
+
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals(0, errorHandler.getErrorCount());
+        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        final CSSStyleRuleImpl ruleImpl = (CSSStyleRuleImpl) rule;
+        final CSSStyleDeclarationImpl declImpl = (CSSStyleDeclarationImpl) ruleImpl.getStyle();
+
+        Property prop = declImpl.getPropertyDeclaration("-webkit-box-shadow");
+        CSSValueImpl valueImpl = (CSSValueImpl) prop.getValue();
+        Assert.assertEquals("1px 4px 5px \"#{richSkin.additionalBackgroundColor}\"", valueImpl.getCssText());
+
+        prop = declImpl.getPropertyDeclaration("-moz-box-shadow");
+        valueImpl = (CSSValueImpl) prop.getValue();
+        Assert.assertEquals("2px 4px 5px \"#{richSkin.additionalBackgroundColor}\"", valueImpl.getCssText());
+
+        prop = declImpl.getPropertyDeclaration("box-shadow");
+        valueImpl = (CSSValueImpl) prop.getValue();
+        Assert.assertEquals("3px 4px 5px \"#{richSkin.additionalBackgroundColor}\"", valueImpl.getCssText());
     }
 
     /**
