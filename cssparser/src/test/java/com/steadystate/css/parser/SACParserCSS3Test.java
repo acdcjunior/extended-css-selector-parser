@@ -2294,4 +2294,37 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         rule = rules.item(14);
         Assert.assertEquals("*.xd { }", rule.getCssText());
     }
+
+    /**
+     * Comments
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void comment() throws Exception {
+        final String css = "p { color: red; /* background: white; */ background: green; }";
+        final CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { color: red; background: green }", rule.getCssText());
+    }
+
+    /**
+     * Comments
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void commentNotClosed() throws Exception {
+        final String css = "p { color: red; /* background: white; }"
+                + "h1 { color: blue; }";
+        final CSSStyleSheet sheet = parse(css, 1, 0, 0);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { color: red }", rule.getCssText());
+    }
 }
