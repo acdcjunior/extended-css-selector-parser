@@ -636,6 +636,70 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
     }
 
     /**
+     * Empty declaration
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void emptyDeclaration() throws Exception {
+        final String css = "p {  }";
+        final CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { }", rule.getCssText());
+    }
+
+    /**
+     * Empty declaration only semicolon
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void emptyDeclarationSemicolon() throws Exception {
+        final String css = "p { ; }";
+        final CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { }", rule.getCssText());
+    }
+
+    /**
+     * Empty declaration only some semicolon
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void emptyDeclarationManySemicolon() throws Exception {
+        final String css = "p { ; ; \t     ; }";
+        final CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { }", rule.getCssText());
+    }
+
+    /**
+     * Empty declaration only comment
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void emptyDeclarationComment() throws Exception {
+        final String css = "p { /* background: white; */ }";
+        final CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { }", rule.getCssText());
+    }
+
+    /**
      * Comments
      * @throws Exception if any error occurs
      */
