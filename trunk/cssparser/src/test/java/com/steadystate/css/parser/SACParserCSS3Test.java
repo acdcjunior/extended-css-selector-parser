@@ -2312,6 +2312,70 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
+     * Empty declaration
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void emptyDeclaration() throws Exception {
+        final String css = "p {  }";
+        final CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { }", rule.getCssText());
+    }
+
+    /**
+     * Empty declaration only semicolon
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void emptyDeclarationSemicolon() throws Exception {
+        final String css = "p { ; }";
+        final CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { }", rule.getCssText());
+    }
+
+    /**
+     * Empty declaration only some semicolon
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void emptyDeclarationManySemicolon() throws Exception {
+        final String css = "p { ; ; \t     ; }";
+        final CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { }", rule.getCssText());
+    }
+
+    /**
+     * Empty declaration only comment
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void emptyDeclarationComment() throws Exception {
+        final String css = "p { /* background: white; */ }";
+        final CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { }", rule.getCssText());
+    }
+
+    /**
      * Comments
      * @throws Exception if any error occurs
      */
@@ -2326,5 +2390,25 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
 
         final CSSRule rule = rules.item(0);
         Assert.assertEquals("p { color: red }", rule.getCssText());
+    }
+
+    /**
+     * Comments
+     * @throws Exception if any error occurs
+     */
+    // @Test
+    public void syntaxError() throws Exception {
+        final String css = "p { *color: red; background: white; }"
+                + "h1 { color: blue; }";
+        final CSSStyleSheet sheet = parse(css, 1, 0, 1);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(2, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { background: white }", rule.getCssText());
+
+        rule = rules.item(1);
+        Assert.assertEquals("h1 { color: blue }", rule.getCssText());
     }
 }
