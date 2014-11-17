@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Introduction to CSS Parser</title>
+        <author email="davidsch@users.sourceforge.net">David Schweinsberg</author>
+    </properties>
+    
+    <body>
+        <section name="Overview">
+            <p>CSS Parser samples overview.</p>
+        </section>
+    </body>
+</document>
