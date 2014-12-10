@@ -6,6 +6,9 @@
   </properties>
   <body>
     <release version="0.9.15" date="xx.xx.2014" description="Bugfixes">
+        <action type="fix" dev="rbri">
+            Some internal lexer cleanup for CSS21 and CSS3 parser.
+        </action>
     </release>
     <release version="0.9.14" date="08.05.2014" description="Bugfixes and parser cleanup">
         <action type="fix" dev="rbri" issue="46">
@@ -18,7 +21,7 @@
             expressions inside the same declaration instead of jumping to the next declaration.
         </action>
         <action type="fix" dev="rbri">
-            Many small fixes for the parser; remove some unsed variables and correct some
+            Many small fixes for the parser; remove some unused variables and correct some
             statement order.
         </action>
     </release>
