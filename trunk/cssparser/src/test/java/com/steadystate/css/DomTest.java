@@ -1,7 +1,7 @@
 /*
  * CSS Parser Project
  *
- * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2014 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,7 +46,7 @@ import com.steadystate.css.parser.SACParserCSS21;
  * @author David Schweinsberg
  * @author rbri
  */
-public class TestDOM {
+public class DomTest {
 
     @Test
     public void test() throws Exception {
