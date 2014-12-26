@@ -422,16 +422,13 @@ abstract class AbstractSACParser implements Parser {
 
     private CharStream getCharStream(final InputSource source) throws IOException {
         if (source.getCharacterStream() != null) {
-            return new ASCII_CharStream(
-                source.getCharacterStream(), 1, 1);
+            return new ASCII_CharStream(source.getCharacterStream(), 1, 1);
         }
         else if (source.getByteStream() != null) {
-            return new ASCII_CharStream(new InputStreamReader(
-                source.getByteStream()), 1, 1);
+            return new ASCII_CharStream(new InputStreamReader(source.getByteStream()), 1, 1);
         }
         else if (source.getURI() != null) {
-            return new ASCII_CharStream(new InputStreamReader(
-                new URL(source.getURI()).openStream()), 1, 1);
+            return new ASCII_CharStream(new InputStreamReader(new URL(source.getURI()).openStream()), 1, 1);
         }
         return null;
     }
