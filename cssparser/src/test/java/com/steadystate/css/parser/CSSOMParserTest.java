@@ -124,7 +124,11 @@ public class CSSOMParserTest {
      */
     @Test
     public void defineParserInstance() throws Exception {
-        CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+        CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        Assert.assertNotNull(parser);
+        Assert.assertEquals("com.steadystate.css.parser.SACParserCSS3", System.getProperty("org.w3c.css.sac.parser"));
+
+        parser = new CSSOMParser(new SACParserCSS21());
         Assert.assertNotNull(parser);
         Assert.assertEquals("com.steadystate.css.parser.SACParserCSS21", System.getProperty("org.w3c.css.sac.parser"));
 
@@ -421,6 +425,15 @@ public class CSSOMParserTest {
             "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
             getCssTextFromDeclaration(new SACParserCSS21(),
                     "font-family: Arial, 'Helvetica Neue', Helvetica,  sans-serif"));
+
+        Assert.assertEquals(
+            "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
+            getCssTextFromDeclaration(new SACParserCSS3(),
+                    "font-family: Arial,'Helvetica Neue',Helvetica,sans-serif"));
+        Assert.assertEquals(
+            "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
+            getCssTextFromDeclaration(new SACParserCSS3(),
+                    "font-family: Arial, 'Helvetica Neue', Helvetica,  sans-serif"));
     }
 
     /**
@@ -454,6 +467,18 @@ public class CSSOMParserTest {
             "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat",
             getCssTextFromDeclaration(new SACParserCSS21(),
                     "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat"));
+
+        Assert.assertEquals(
+            "background: rgb(232, 239, 245) url(images/bottom-angle.png) no-repeat",
+            getCssTextFromDeclaration(new SACParserCSS3(),
+                    "background: #e8eff5 url(images/bottom-angle.png) no-repeat"));
+        Assert.assertEquals(
+            "background: red url(images/bottom-angle.png) no-repeat",
+            getCssTextFromDeclaration(new SACParserCSS3(), "background: red url(images/bottom-angle.png) no-repeat"));
+        Assert.assertEquals(
+            "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat",
+            getCssTextFromDeclaration(new SACParserCSS3(),
+                    "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat"));
     }
 
     /**
@@ -474,6 +499,13 @@ public class CSSOMParserTest {
             getCssTextFromDeclaration(new SACParserCSS21(), "content: '\u0122';"));
         Assert.assertEquals("content: \"\u0422\"",
             getCssTextFromDeclaration(new SACParserCSS21(), "content: '\u0422';"));
+
+        Assert.assertEquals("content: \"�\"",
+                getCssTextFromDeclaration(new SACParserCSS3(), "content: '�';"));
+        Assert.assertEquals("content: \"\u0122\"",
+            getCssTextFromDeclaration(new SACParserCSS3(), "content: '\u0122';"));
+        Assert.assertEquals("content: \"\u0422\"",
+            getCssTextFromDeclaration(new SACParserCSS3(), "content: '\u0422';"));
     }
 
     /**
@@ -486,6 +518,7 @@ public class CSSOMParserTest {
     public void doubleDotSelector() throws Exception {
         doubleDotSelector(new SACParserCSS2());
         doubleDotSelector(new SACParserCSS21());
+        doubleDotSelector(new SACParserCSS3());
     }
 
     private void doubleDotSelector(final Parser p) throws Exception {
@@ -528,6 +561,7 @@ public class CSSOMParserTest {
     public void importWithoutClosingSemicolon() throws Exception {
         importWithoutClosingSemicolon(new SACParserCSS2());
         importWithoutClosingSemicolon(new SACParserCSS21());
+        importWithoutClosingSemicolon(new SACParserCSS3());
     }
 
     private void importWithoutClosingSemicolon(final Parser p) throws Exception {
@@ -551,6 +585,7 @@ public class CSSOMParserTest {
     public void escapedChars() throws Exception {
         escapedChars(new SACParserCSS2());
         escapedChars(new SACParserCSS21());
+        escapedChars(new SACParserCSS3());
     }
 
     private void escapedChars(final Parser p) throws Exception {
