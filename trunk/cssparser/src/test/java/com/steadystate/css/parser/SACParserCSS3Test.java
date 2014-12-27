@@ -26,6 +26,7 @@
 
 package com.steadystate.css.parser;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 
@@ -2419,54 +2420,36 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     @Test
     public void unicode() throws Exception {
         // \\41 - fails
-        String css = "@p\\41ge :pageStyle {}";
-
-        InputSource source = new InputSource(new StringReader(css));
-        CSSOMParser parser = parser();
-
-        CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-        CSSRuleList rules = sheet.getCssRules();
-
-        Assert.assertEquals(1, rules.getLength());
-        CSSRule rule = rules.item(0);
-        Assert.assertEquals("@p\\41ge :pageStyle {}", rule.getCssText());
-
-        // \\041 - ok
-        css = "@p\\041ge :pageStyle {}";
-
-        source = new InputSource(new StringReader(css));
-        parser = parser();
-
-        sheet = parser.parseStyleSheet(source, null, null);
-        rules = sheet.getCssRules();
-
-        Assert.assertEquals(1, rules.getLength());
-        rule = rules.item(0);
-        Assert.assertEquals("@page :pageStyle {}", rule.getCssText());
-
-        // \\000041 - ok
-        css = "@p\\000041ge :pageStyle {}";
-
-        source = new InputSource(new StringReader(css));
-        parser = parser();
-
-        sheet = parser.parseStyleSheet(source, null, null);
-        rules = sheet.getCssRules();
-
-        Assert.assertEquals(1, rules.getLength());
-        rule = rules.item(0);
-        Assert.assertEquals("@page :pageStyle {}", rule.getCssText());
+        unicode("@p\\41ge :pageStyle {}", "@p\\41ge :pageStyle {}");
         // \\0000041 - fails
-        css = "@p\\0000041ge :pageStyle {}";
+        unicode("@p\\0000041ge :pageStyle {}", "@p\\0000041ge :pageStyle {}");
 
-        source = new InputSource(new StringReader(css));
-        parser = parser();
+        unicode("@p\\041ge :pageStyle {}", "@page :pageStyle {}");
+        unicode("@p\\0041ge :pageStyle {}", "@page :pageStyle {}");
+        unicode("@p\\00041ge :pageStyle {}", "@page :pageStyle {}");
+        unicode("@p\\000041ge :pageStyle {}", "@page :pageStyle {}");
 
-        sheet = parser.parseStyleSheet(source, null, null);
-        rules = sheet.getCssRules();
+        // terminated by whitespace
+        unicode("@\\0070 age :pageStyle {}", "@page :pageStyle {}");
+        unicode("@\\0070\tage :pageStyle {}", "@page :pageStyle {}");
+        unicode("@\\0070\r\nage :pageStyle {}", "@page :pageStyle {}");
+
+        // terminated by lenght
+        unicode("@\\000070age :pageStyle {}", "@page :pageStyle {}");
+
+        // backslash ignored
+        unicode("@\\page :pageStyle {}", "@page :pageStyle {}");
+    }
+
+    private void unicode(final String css, final String expected) throws IOException {
+        final InputSource source = new InputSource(new StringReader(css));
+        final CSSOMParser parser = parser();
+
+        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+        final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
-        rule = rules.item(0);
-        Assert.assertEquals("@p\\0000041ge :pageStyle {}", rule.getCssText());
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals(expected, rule.getCssText());
     }
 }
