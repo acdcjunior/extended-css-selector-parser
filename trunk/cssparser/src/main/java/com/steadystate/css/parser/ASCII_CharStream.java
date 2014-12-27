@@ -200,7 +200,6 @@ public final class ASCII_CharStream implements CharStream
    * @deprecated 
    * @see #getEndLine
    */
-
   public final int getLine() {
      return bufline[bufpos];
   }
@@ -246,46 +245,12 @@ public final class ASCII_CharStream implements CharStream
   {
      this(dstream, startline, startcolumn, 4096);
   }
-  public void ReInit(java.io.Reader dstream, int startline,
-  int startcolumn, int buffersize)
-  {
-      inputStream = dstream;
-      line = startline;
-      column = startcolumn - 1;
 
-    if (buffer == null || buffersize != buffer.length)
-    {
-        available = bufsize = buffersize;
-        buffer = new char[buffersize];
-        bufline = new int[buffersize];
-        bufcolumn = new int[buffersize];
-    }
-    prevCharIsLF = prevCharIsCR = false;
-    tokenBegin = inBuf = maxNextCharInd = 0;
-    bufpos = -1;
-  }
-
-  public void ReInit(java.io.Reader dstream, int startline,
-                                                           int startcolumn)
-  {
-     ReInit(dstream, startline, startcolumn, 4096);
-  }
-  public void ReInit(java.io.InputStream dstream, int startline,
-  int startcolumn, int buffersize)
-  {
-     ReInit(new java.io.InputStreamReader(dstream), startline, startcolumn, 4096);
-  }
-  public void ReInit(java.io.InputStream dstream, int startline,
-                                                           int startcolumn)
-  {
-     ReInit(dstream, startline, startcolumn, 4096);
-  }
   public final String GetImage()
   {
      if (bufpos >= tokenBegin)
         return new String(buffer, tokenBegin, bufpos - tokenBegin + 1);
-     return new String(buffer, tokenBegin, bufsize - tokenBegin) +
-                              new String(buffer, 0, bufpos + 1);
+     return new String(buffer, tokenBegin, bufsize - tokenBegin) + new String(buffer, 0, bufpos + 1);
   }
 
   public final char[] GetSuffix(int len)
