@@ -1305,12 +1305,13 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
                             + "h2 { background: url(\"this is a \\\"string\\\"\") }\n"
                             + "h4 { background: url('this is a \"string\"') }\n"
                             + "h5 { background: url('this is a \\'string\\'') }"
-                            + "h6 { background: url('this is a \\\r\n string') }";
+                            + "h6 { background: url('this is a \\\r\n string') }"
+                            + "h1:before { content: 'chapter\\A hoofdstuk\\00000a chapitre' }";
 
         final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
-        Assert.assertEquals(5, rules.getLength());
+        Assert.assertEquals(6, rules.getLength());
 
         CSSRule rule = rules.item(0);
         Assert.assertEquals("h1 { background: url(this is a 'string') }", rule.getCssText());
@@ -1326,6 +1327,9 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
 
         rule = rules.item(4);
         Assert.assertEquals("h6 { background: url(this is a  string) }", rule.getCssText());
+
+        rule = rules.item(5);
+        Assert.assertEquals("h1:before { content: \"chapter\nhoofdstuk\n chapitre\" }", rule.getCssText());
     }
 
     /**
@@ -2441,6 +2445,15 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         unicode("@\\page :pageStyle {}", "@page :pageStyle {}");
     }
 
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void unicodeEscaping() throws Exception {
+        unicode("@media paper\\7b { }", "@media paper{ {}");
+        unicode(".class\\7b { color: blue }", "*.class{ { color: blue }");
+    }
+
     private void unicode(final String css, final String expected) throws IOException {
         final InputSource source = new InputSource(new StringReader(css));
         final CSSOMParser parser = parser();
@@ -2451,5 +2464,126 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals(1, rules.getLength());
         final CSSRule rule = rules.item(0);
         Assert.assertEquals(expected, rule.getCssText());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void unescapeBackslash() throws Exception {
+        Assert.assertEquals("abuv", sacParser().unescape("ab\\uv", false));
+        Assert.assertEquals("ab\\ab", sacParser().unescape("ab\\\\ab", false));
+        Assert.assertEquals("ab\\", sacParser().unescape("ab\\", false));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void unescapeOneHexDigit() throws Exception {
+        Assert.assertEquals("ab\u0009x", sacParser().unescape("ab\\9x", false));
+        Assert.assertEquals("ab\u0009", sacParser().unescape("ab\\9", false));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void unescapeTwoHexDigits() throws Exception {
+        Assert.assertEquals("ab\u0009x", sacParser().unescape("ab\\09x", false));
+        Assert.assertEquals("ab\u00e9x", sacParser().unescape("ab\\e9x", false));
+        Assert.assertEquals("ab\u00e9", sacParser().unescape("ab\\e9", false));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void unescapeThreeHexDigits() throws Exception {
+        Assert.assertEquals("ab\u0009x", sacParser().unescape("ab\\009x", false));
+        Assert.assertEquals("ab\u00e9x", sacParser().unescape("ab\\0e9x", false));
+        Assert.assertEquals("ab\u0ce9x", sacParser().unescape("ab\\ce9x", false));
+        Assert.assertEquals("ab\u0ce9", sacParser().unescape("ab\\ce9", false));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void unescapeFourHexDigits() throws Exception {
+        Assert.assertEquals("ab\u0009x", sacParser().unescape("ab\\0009x", false));
+        Assert.assertEquals("ab\u00e9x", sacParser().unescape("ab\\00e9x", false));
+        Assert.assertEquals("ab\u0ce9x", sacParser().unescape("ab\\0ce9x", false));
+        Assert.assertEquals("ab\u1ce9x", sacParser().unescape("ab\\1ce9x", false));
+        Assert.assertEquals("ab\u1ce9", sacParser().unescape("ab\\1ce9", false));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void unescapeFiveHexDigits() throws Exception {
+        Assert.assertEquals("ab\u0009x", sacParser().unescape("ab\\00009x", false));
+        Assert.assertEquals("ab\u00e9x", sacParser().unescape("ab\\000e9x", false));
+        Assert.assertEquals("ab\u0ce9x", sacParser().unescape("ab\\00ce9x", false));
+        Assert.assertEquals("ab\u1ce9x", sacParser().unescape("ab\\01ce9x", false));
+        Assert.assertEquals("ab\ufffdx", sacParser().unescape("ab\\a1ce9x", false));
+        Assert.assertEquals("ab\ufffd", sacParser().unescape("ab\\a1ce9", false));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void unescapeSixHexDigits() throws Exception {
+        Assert.assertEquals("ab\u0009x", sacParser().unescape("ab\\000009x", false));
+        Assert.assertEquals("ab\u00e9x", sacParser().unescape("ab\\0000e9x", false));
+        Assert.assertEquals("ab\u0ce9x", sacParser().unescape("ab\\000ce9x", false));
+        Assert.assertEquals("ab\u1ce9x", sacParser().unescape("ab\\001ce9x", false));
+        Assert.assertEquals("ab\ufffdx", sacParser().unescape("ab\\0a1ce9x", false));
+        Assert.assertEquals("ab\ufffdx", sacParser().unescape("ab\\3a1ce9x", false));
+        Assert.assertEquals("ab\ufffd", sacParser().unescape("ab\\3a1ce9", false));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void unescapeSevenHexDigits() throws Exception {
+        Assert.assertEquals("ab\ufffd9x", sacParser().unescape("ab\\0000009x", false));
+        Assert.assertEquals("ab\u000e9x", sacParser().unescape("ab\\00000e9x", false));
+        Assert.assertEquals("ab\u00ce9x", sacParser().unescape("ab\\0000ce9x", false));
+        Assert.assertEquals("ab\u01ce9x", sacParser().unescape("ab\\0001ce9x", false));
+        Assert.assertEquals("ab\ua1ce9x", sacParser().unescape("ab\\00a1ce9x", false));
+        Assert.assertEquals("ab\ufffd9x", sacParser().unescape("ab\\03a1ce9x", false));
+        Assert.assertEquals("ab\ufffd9x", sacParser().unescape("ab\\73a1ce9x", false));
+        Assert.assertEquals("ab\ufffd9", sacParser().unescape("ab\\73a1ce9", false));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void unescapeAutoterminate() throws Exception {
+        Assert.assertEquals("ab\uabcd", sacParser().unescape("ab\\abcd", false));
+
+        Assert.assertEquals("ab\u00e9a", sacParser().unescape("ab\\e9 a", false));
+        Assert.assertEquals("ab\u00e9 a", sacParser().unescape("ab\\e9  a", false));
+        Assert.assertEquals("ab\u00e9 a", sacParser().unescape("ab\\0000e9 a", false));
+
+        Assert.assertEquals("ab\u00e9a", sacParser().unescape("ab\\e9\ta", false));
+        Assert.assertEquals("ab\u00e9\ta", sacParser().unescape("ab\\e9\t\ta", false));
+        Assert.assertEquals("ab\u00e9\ta", sacParser().unescape("ab\\0000e9\ta", false));
+
+        Assert.assertEquals("ab\u00e9a", sacParser().unescape("ab\\e9\ra", false));
+        Assert.assertEquals("ab\u00e9\ra", sacParser().unescape("ab\\e9\r\ra", false));
+        Assert.assertEquals("ab\u00e9\ra", sacParser().unescape("ab\\0000e9\ra", false));
+        Assert.assertEquals("ab\u00e9a", sacParser().unescape("ab\\e9\r\na", false));
+        Assert.assertEquals("ab\u00e9\ra", sacParser().unescape("ab\\e9\r\n\ra", false));
+        Assert.assertEquals("ab\u00e9\na", sacParser().unescape("ab\\e9\r\n\na", false));
+
+        Assert.assertEquals("ab\u00e9a", sacParser().unescape("ab\\e9\na", false));
+        Assert.assertEquals("ab\u00e9\na", sacParser().unescape("ab\\e9\n\na", false));
+        Assert.assertEquals("ab\u00e9\na", sacParser().unescape("ab\\0000e9\na", false));
     }
 }
