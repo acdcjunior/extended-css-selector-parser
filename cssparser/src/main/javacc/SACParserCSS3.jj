@@ -652,12 +652,14 @@ void mediaRuleSingle() :
 String medium() :
 {
   Token t;
+  String medium;
 }
 {
     t = <IDENT> ( <S> )*
     {
-        handleMedium(t.image, createLocator(t));
-        return t.image;
+        medium = unescape(t.image, false);
+        handleMedium(medium, createLocator(t));
+        return medium;
     }
 }
 
@@ -669,7 +671,6 @@ String medium() :
 //
 void pageRule() :
 {
-    Token t = null;
     String s = null;
     boolean start = false;
     Locator locator;
@@ -687,7 +688,7 @@ void pageRule() :
         <LBRACE> ( <S> )*
         {
             start = true;
-            handleStartPage((t != null) ? unescape(t.image, false) : null, s, locator);
+            handleStartPage(null, s, locator);
         }
 
         ( declaration() )?
@@ -708,7 +709,7 @@ void pageRule() :
     }
     finally {
         if (start) {
-            handleEndPage((t != null) ? unescape(t.image, false) : null, s);
+            handleEndPage(null, s);
         }
     }
 }
@@ -1033,7 +1034,7 @@ Condition _class(Condition pred, boolean pseudoElementFound) :
         t = <IDENT>
         {
             if (pseudoElementFound) { throw pe; }
-            Condition c = getConditionFactory().createClassCondition(null, t.image);
+            Condition c = getConditionFactory().createClassCondition(null, unescape(t.image, false));
             if (c instanceof Locatable)
             {
                 ((Locatable) c).setLocator(locator);
@@ -1060,7 +1061,7 @@ SimpleSelector elementName() :
 {
     try
     {
-        t=<IDENT>
+        t = <IDENT>
         {
             sel = getSelectorFactory().createElementSelector(null, unescape(t.image, false));
             if (sel instanceof Locatable)
@@ -1126,7 +1127,7 @@ Condition attrib(Condition pred, boolean pseudoElementFound) :
             )
             ( <S> )*
             (
-                t = <IDENT> { value = t.image; }
+                t = <IDENT> { value = unescape(t.image, false); }
                 |
                 t = <STRING> { value = unescape(t.image, false); }
             )
@@ -1512,7 +1513,7 @@ LexicalUnit function(LexicalUnit prev) :
     String funct = "";
 }
 {
-    t = <FUNCTION> { funct = funct + t.image; }
+    t = <FUNCTION> { funct = funct + unescape(t.image, false); }
     ( <S> )*
     (
         param = term(null) { body = param; }

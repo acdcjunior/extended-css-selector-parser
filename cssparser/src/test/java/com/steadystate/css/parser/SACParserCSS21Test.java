@@ -1209,12 +1209,13 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
                             + "h2 { background: url(\"this is a \\\"string\\\"\") }\n"
                             + "h4 { background: url('this is a \"string\"') }\n"
                             + "h5 { background: url('this is a \\'string\\'') }"
-                            + "h6 { background: url('this is a \\\r\n string') }";
+                            + "h6 { background: url('this is a \\\r\n string') }"
+                            + "h1:before { content: 'chapter\\A hoofdstuk\\00000a chapitre' }";
 
         final CSSStyleSheet sheet = parse(css);
         final CSSRuleList rules = sheet.getCssRules();
 
-        Assert.assertEquals(5, rules.getLength());
+        Assert.assertEquals(6, rules.getLength());
 
         CSSRule rule = rules.item(0);
         Assert.assertEquals("h1 { background: url(this is a 'string') }", rule.getCssText());
@@ -1230,6 +1231,9 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
 
         rule = rules.item(4);
         Assert.assertEquals("h6 { background: url(this is a  string) }", rule.getCssText());
+
+        rule = rules.item(5);
+        Assert.assertEquals("h1:before { content: \"chapter\nhoofdstuk\n chapitre\" }", rule.getCssText());
     }
 
     /**
@@ -1928,6 +1932,15 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
 
         // backslash ignored
         unicode("@\\page :pageStyle {}", "@page :pageStyle {}");
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void unicodeEscaping() throws Exception {
+        unicode("@media paper\\7b { }", "@media paper{ {}");
+        unicode(".class\\7b { color: blue }", "*.class{ { color: blue }");
     }
 
     private void unicode(final String css, final String expected) throws IOException {

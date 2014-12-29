@@ -661,71 +661,154 @@ abstract class AbstractSACParser implements Parser {
      * to the parser, meaning that the grammar would no longer match the standard grammar specified
      * by the W3C. This would make the parser and lexer much less maintainable.
      */
-    String unescape(final String s, final boolean unescapeDoubleQuotes) {
-        final int len = s.length();
-        final StringBuilder buf = new StringBuilder(len);
-        int index = 0;
+    public String unescape(final String s, final boolean unescapeDoubleQuotes) {
+        StringBuilder buf = null;
+        int index = -1;
+
+        int len = s.length();
+        len--;
+        while (index < len) {
+            final char c = s.charAt(++index);
+
+            if (c == '\\'
+                    || (c == '\"' && !unescapeDoubleQuotes)) {
+                buf = new StringBuilder();
+                buf.append(s.substring(0, index));
+                index--;
+                break;
+            }
+        }
+
+        if (null == buf) {
+            return s;
+        }
+
+        int numValue = -1;
+        int hexval;
+        int digitCount = 0;
 
         while (index < len) {
-            char c = s.charAt(index);
-            if (c == '\\') {
-                if (++index < len) {
-                    c = s.charAt(index);
-                    switch (c) {
-                        case '0': case '1': case '2': case '3': case '4':
-                        case '5': case '6': case '7': case '8': case '9':
-                        case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
-                        case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
-                            int numValue = Character.digit(c, 16);
-                            final int count = 0;
+            final char c = s.charAt(++index);
 
-                            while (index + 1 < len && count < 6) {
-                                c = s.charAt(index + 1);
+            if (numValue > -1) {
+                hexval = hexval(c);
+                if (hexval != -1) {
+                    numValue = (numValue * 16) + hexval;
+                    if (++digitCount < 6) {
+                        continue;
+                    }
 
-                                if (Character.digit(c, 16) != -1) {
-                                    numValue = (numValue * 16) + Character.digit(c, 16);
-                                    index++;
-                                }
-                                else {
-                                    if (Character.isWhitespace(c)) {
-                                        // skip the latest white space
-                                        index++;
-                                    }
-                                    break;
-                                }
-                            }
-                            buf.append((char) numValue);
-                            break;
-                        case '\n':
-                        case '\f':
-                            break;
-                        case '\r':
-                            if (index + 1 < len) {
-                                if (s.charAt(index + 1) == '\n') {
-                                    index++;
-                                }
-                            }
-                            break;
-                        case '\"':
-                            if (!unescapeDoubleQuotes) {
-                                buf.append('\\');
-                            }
-                            buf.append(c);
-                            break;
-                        default:
-                            buf.append(c);
+                    if (numValue > 0xFFFF || numValue == 0) {
+                        numValue = 0xFFFD;
+                    }
+                    buf.append((char) numValue);
+                    numValue = -1;
+                    continue;
+                }
+
+                if (digitCount > 0) {
+                    if (numValue > 0xFFFF || numValue == 0) {
+                        numValue = 0xFFFD;
+                    }
+
+                    buf.append((char) numValue);
+
+                    if (c == ' ' || c == '\t') {
+                        numValue = -1;
+                        continue;
                     }
                 }
-                else {
-                    throw new CSSParseException("invalid string " + s, getLocator());
+
+                numValue = -1;
+                if (digitCount == 0 && c == '\\') {
+                    buf.append('\\');
+                    continue;
+                }
+
+                if (c == '\n' || c == '\f') {
+                    continue;
+                }
+                if (c == '\r') {
+                    if (index < len) {
+                        if (s.charAt(index + 1) == '\n') {
+                            index++;
+                        }
+                    }
+                    continue;
                 }
             }
-            else {
-                buf.append(c);
+
+            if (c == '\\') {
+                numValue = 0;
+                digitCount = 0;
+                continue;
             }
-            index++;
+
+            if (c == '\"' && !unescapeDoubleQuotes) {
+                buf.append('\\');
+            }
+
+            buf.append(c);
+        }
+
+        if (numValue > -1) {
+            if (digitCount == 0) {
+                buf.append('\\');
+            }
+            else {
+                if (numValue > 0xFFFF || numValue == 0) {
+                    numValue = 0xFFFD;
+                }
+                buf.append((char) numValue);
+            }
         }
 
         return buf.toString();
+    }
+
+    private static int hexval(final char c) {
+        switch(c) {
+            case '0' :
+                return 0;
+            case '1' :
+                return 1;
+            case '2' :
+                return 2;
+            case '3' :
+                return 3;
+            case '4' :
+                return 4;
+            case '5' :
+                return 5;
+            case '6' :
+                return 6;
+            case '7' :
+                return 7;
+            case '8' :
+                return 8;
+            case '9' :
+                return 9;
+
+            case 'a' :
+            case 'A' :
+                return 10;
+            case 'b' :
+            case 'B' :
+                return 11;
+            case 'c' :
+            case 'C' :
+                return 12;
+            case 'd' :
+            case 'D' :
+                return 13;
+            case 'e' :
+            case 'E' :
+                return 14;
+            case 'f' :
+            case 'F' :
+                return 15;
+            default :
+                return -1;
+        }
     }
 }
