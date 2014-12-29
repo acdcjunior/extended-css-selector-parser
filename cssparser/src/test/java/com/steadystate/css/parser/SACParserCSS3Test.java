@@ -2568,21 +2568,28 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals("ab\uabcd", sacParser().unescape("ab\\abcd", false));
 
         Assert.assertEquals("ab\u00e9a", sacParser().unescape("ab\\e9 a", false));
+        Assert.assertEquals("ab\u00e9", sacParser().unescape("ab\\e9 ", false));
         Assert.assertEquals("ab\u00e9 a", sacParser().unescape("ab\\e9  a", false));
         Assert.assertEquals("ab\u00e9 a", sacParser().unescape("ab\\0000e9 a", false));
 
         Assert.assertEquals("ab\u00e9a", sacParser().unescape("ab\\e9\ta", false));
+        Assert.assertEquals("ab\u00e9", sacParser().unescape("ab\\e9\t", false));
         Assert.assertEquals("ab\u00e9\ta", sacParser().unescape("ab\\e9\t\ta", false));
         Assert.assertEquals("ab\u00e9\ta", sacParser().unescape("ab\\0000e9\ta", false));
 
         Assert.assertEquals("ab\u00e9a", sacParser().unescape("ab\\e9\ra", false));
+        Assert.assertEquals("ab\u00e9", sacParser().unescape("ab\\e9\r", false));
         Assert.assertEquals("ab\u00e9\ra", sacParser().unescape("ab\\e9\r\ra", false));
         Assert.assertEquals("ab\u00e9\ra", sacParser().unescape("ab\\0000e9\ra", false));
         Assert.assertEquals("ab\u00e9a", sacParser().unescape("ab\\e9\r\na", false));
+        Assert.assertEquals("ab\u00e9", sacParser().unescape("ab\\e9\r\n", false));
         Assert.assertEquals("ab\u00e9\ra", sacParser().unescape("ab\\e9\r\n\ra", false));
+        Assert.assertEquals("ab\u00e9\r", sacParser().unescape("ab\\e9\r\n\r", false));
         Assert.assertEquals("ab\u00e9\na", sacParser().unescape("ab\\e9\r\n\na", false));
+        Assert.assertEquals("ab\u00e9\n", sacParser().unescape("ab\\e9\r\n\n", false));
 
         Assert.assertEquals("ab\u00e9a", sacParser().unescape("ab\\e9\na", false));
+        Assert.assertEquals("ab\u00e9", sacParser().unescape("ab\\e9\n", false));
         Assert.assertEquals("ab\u00e9\na", sacParser().unescape("ab\\e9\n\na", false));
         Assert.assertEquals("ab\u00e9\na", sacParser().unescape("ab\\0000e9\na", false));
     }
