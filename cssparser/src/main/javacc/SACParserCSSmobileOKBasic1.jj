@@ -434,13 +434,6 @@ void mediaRuleList() :
   ( ( styleRule() | unknownAtRule() ) ( <S> )* )+ 
 }
 
-void mediaRuleSingle() :
-{
-}
-{
-  ( styleRule() | unknownAtRule() )
-}
-
 //
 // medium
 //   : IDENT S*
