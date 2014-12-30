@@ -2423,15 +2423,14 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      */
     @Test
     public void unicode() throws Exception {
-        // \\41 - fails
-        unicode("@p\\41ge :pageStyle {}", "@p\\41ge :pageStyle {}");
-        // \\0000041 - fails
-        unicode("@p\\0000041ge :pageStyle {}", "@p\\0000041ge :pageStyle {}");
-
+        unicode("@p\\41ge :pageStyle {}", "@page :pageStyle {}");
         unicode("@p\\041ge :pageStyle {}", "@page :pageStyle {}");
         unicode("@p\\0041ge :pageStyle {}", "@page :pageStyle {}");
         unicode("@p\\00041ge :pageStyle {}", "@page :pageStyle {}");
         unicode("@p\\000041ge :pageStyle {}", "@page :pageStyle {}");
+
+        // \\0000041 - fails
+        unicode("@p\\0000041ge :pageStyle {}", "@p\\0000041ge :pageStyle {}");
 
         // terminated by whitespace
         unicode("@\\0070 age :pageStyle {}", "@page :pageStyle {}");
