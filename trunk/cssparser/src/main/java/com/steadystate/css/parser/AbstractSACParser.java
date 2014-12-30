@@ -240,12 +240,10 @@ abstract class AbstractSACParser implements Parser {
         final StringBuilder message = new StringBuilder(s);
         message.append(" (");
         if (e.expectedTokenSequences.length == 1) {
-            message.append(MessageFormat.format(
-                messagePattern1, new Object[] {invalid, expected}));
+            message.append(MessageFormat.format(messagePattern1, new Object[] {invalid, expected}));
         }
         else {
-            message.append(MessageFormat.format(
-                messagePattern2, new Object[] {invalid, expected}));
+            message.append(MessageFormat.format(messagePattern2, new Object[] {invalid, expected}));
         }
         message.append(")");
         return new CSSParseException(message.toString(),
@@ -255,8 +253,7 @@ abstract class AbstractSACParser implements Parser {
 
     protected CSSParseException toCSSParseException(final TokenMgrError e) {
         final String messagePattern = getSACParserMessages().getString("tokenMgrError");
-        return new CSSParseException(messagePattern,
-            getInputSource().getURI(), 1, 1);
+        return new CSSParseException(messagePattern, getInputSource().getURI(), 1, 1);
     }
 
     protected CSSParseException toCSSParseException(final String messageKey,
@@ -273,8 +270,7 @@ abstract class AbstractSACParser implements Parser {
         catch (final MissingResourceException ex) {
             s = key;
         }
-        return new CSSParseException(s, e.getURI(), e.getLineNumber(),
-            e.getColumnNumber());
+        return new CSSParseException(s, e.getURI(), e.getLineNumber(), e.getColumnNumber());
     }
 
     public void parseStyleSheet(final InputSource source) throws IOException {
@@ -284,12 +280,10 @@ abstract class AbstractSACParser implements Parser {
             styleSheet();
         }
         catch (final ParseException e) {
-            getErrorHandler().error(
-                toCSSParseException("invalidStyleSheet", e));
+            getErrorHandler().error(toCSSParseException("invalidStyleSheet", e));
         }
         catch (final TokenMgrError e) {
-            getErrorHandler().error(
-                toCSSParseException(e));
+            getErrorHandler().error(toCSSParseException(e));
         }
         catch (final CSSParseException e) {
             getErrorHandler().error(e);
@@ -307,12 +301,10 @@ abstract class AbstractSACParser implements Parser {
             styleDeclaration();
         }
         catch (final ParseException e) {
-            getErrorHandler().error(
-                toCSSParseException("invalidStyleDeclaration", e));
+            getErrorHandler().error(toCSSParseException("invalidStyleDeclaration", e));
         }
         catch (final TokenMgrError e) {
-            getErrorHandler().error(
-                toCSSParseException(e));
+            getErrorHandler().error(toCSSParseException(e));
         }
         catch (final CSSParseException e) {
             getErrorHandler().error(e);
@@ -326,12 +318,10 @@ abstract class AbstractSACParser implements Parser {
             styleSheetRuleSingle();
         }
         catch (final ParseException e) {
-            getErrorHandler().error(
-                toCSSParseException("invalidRule", e));
+            getErrorHandler().error(toCSSParseException("invalidRule", e));
         }
         catch (final TokenMgrError e) {
-            getErrorHandler().error(
-                toCSSParseException(e));
+            getErrorHandler().error(toCSSParseException(e));
         }
         catch (final CSSParseException e) {
             getErrorHandler().error(e);
@@ -346,12 +336,10 @@ abstract class AbstractSACParser implements Parser {
             sl = parseSelectorsInternal();
         }
         catch (final ParseException e) {
-            getErrorHandler().error(
-                toCSSParseException("invalidSelectorList", e));
+            getErrorHandler().error(toCSSParseException("invalidSelectorList", e));
         }
         catch (final TokenMgrError e) {
-            getErrorHandler().error(
-                toCSSParseException(e));
+            getErrorHandler().error(toCSSParseException(e));
         }
         catch (final CSSParseException e) {
             getErrorHandler().error(e);
@@ -367,12 +355,10 @@ abstract class AbstractSACParser implements Parser {
             lu = expr();
         }
         catch (final ParseException e) {
-            getErrorHandler().error(
-                toCSSParseException("invalidExpr", e));
+            getErrorHandler().error(toCSSParseException("invalidExpr", e));
         }
         catch (final TokenMgrError e) {
-            getErrorHandler().error(
-                toCSSParseException(e));
+            getErrorHandler().error(toCSSParseException(e));
         }
         catch (final CSSParseException e) {
             getErrorHandler().error(e);
@@ -388,12 +374,10 @@ abstract class AbstractSACParser implements Parser {
             b = prio();
         }
         catch (final ParseException e) {
-            getErrorHandler().error(
-                toCSSParseException("invalidPrio", e));
+            getErrorHandler().error(toCSSParseException("invalidPrio", e));
         }
         catch (final TokenMgrError e) {
-            getErrorHandler().error(
-                toCSSParseException(e));
+            getErrorHandler().error(toCSSParseException(e));
         }
         catch (final CSSParseException e) {
             getErrorHandler().error(e);
@@ -424,10 +408,10 @@ abstract class AbstractSACParser implements Parser {
         if (source.getCharacterStream() != null) {
             return new CssCharStream(source.getCharacterStream(), 1, 1);
         }
-        else if (source.getByteStream() != null) {
+        if (source.getByteStream() != null) {
             return new CssCharStream(new InputStreamReader(source.getByteStream()), 1, 1);
         }
-        else if (source.getURI() != null) {
+        if (source.getURI() != null) {
             return new CssCharStream(new InputStreamReader(new URL(source.getURI()).openStream()), 1, 1);
         }
         return null;
