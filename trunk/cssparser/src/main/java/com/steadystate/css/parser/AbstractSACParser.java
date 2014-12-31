@@ -646,20 +646,35 @@ abstract class AbstractSACParser implements Parser {
      * by the W3C. This would make the parser and lexer much less maintainable.
      */
     public String unescape(final String s, final boolean unescapeDoubleQuotes) {
+        if (s == null) {
+            return s;
+        }
+
+        // avoid creation of new string if possible
         StringBuilder buf = null;
         int index = -1;
-
         int len = s.length();
         len--;
-        while (index < len) {
-            final char c = s.charAt(++index);
+        if (unescapeDoubleQuotes) {
+            while (index < len) {
+                final char c = s.charAt(++index);
 
-            if (c == '\\'
-                    || (c == '\"' && !unescapeDoubleQuotes)) {
-                buf = new StringBuilder();
-                buf.append(s.substring(0, index));
-                index--;
-                break;
+                if (c == '\\' || (c == '\"')) {
+                    buf = new StringBuilder(len);
+                    buf.append(s.substring(0, index));
+                    index--;
+                    break;
+                }
+            }
+        }
+        else {
+            while (index < len) {
+                if ('\\' == s.charAt(++index)) {
+                    buf = new StringBuilder(len);
+                    buf.append(s.substring(0, index));
+                    index--;
+                    break;
+                }
             }
         }
 
@@ -667,6 +682,7 @@ abstract class AbstractSACParser implements Parser {
             return s;
         }
 
+        // ok, we have to construct a new string
         int numValue = -1;
         int hexval;
         int digitCount = 0;

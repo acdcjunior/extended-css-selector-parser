@@ -28,6 +28,7 @@ package com.steadystate.css.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 
 import org.junit.Assert;
@@ -2591,5 +2592,61 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals("ab\u00e9", sacParser().unescape("ab\\e9\n", false));
         Assert.assertEquals("ab\u00e9\na", sacParser().unescape("ab\\e9\n\na", false));
         Assert.assertEquals("ab\u00e9\na", sacParser().unescape("ab\\0000e9\na", false));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void realWorldMicrosoft() throws Exception {
+        // style.csx.css
+        final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//style.csx.css");
+        Assert.assertNotNull(is);
+
+        final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
+        final CSSStyleSheet sheet = parse(css, 197, 0, 197);
+        Assert.assertEquals(701, sheet.getCssRules().getLength());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void realWorldOracle() throws Exception {
+        // compass-homestyle.css
+        final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//compass-homestyle.css");
+        Assert.assertNotNull(is);
+
+        final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
+        final CSSStyleSheet sheet = parse(css, 81, 0, 37);
+        Assert.assertEquals(709, sheet.getCssRules().getLength());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void realWorldIBM() throws Exception {
+        // www.css
+        final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//www.css");
+        Assert.assertNotNull(is);
+
+        final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
+        final CSSStyleSheet sheet = parse(css, 30, 0, 12);
+        Assert.assertEquals(493, sheet.getCssRules().getLength());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void realWorldSpiegel() throws Exception {
+        // style-V5-11.css
+        final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//style-V5-11.css");
+        Assert.assertNotNull(is);
+
+        final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
+        final CSSStyleSheet sheet = parse(css, 72, 0, 33);
+        Assert.assertEquals(2088, sheet.getCssRules().getLength());
     }
 }
