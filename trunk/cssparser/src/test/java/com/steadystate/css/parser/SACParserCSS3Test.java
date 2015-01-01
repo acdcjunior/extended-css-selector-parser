@@ -1,7 +1,7 @@
 /*
  * CSS Parser Project
  *
- * Copyright (C) 1999-2014 David Schweinsberg.  All rights reserved.
+ * Copyright (C) 1999-2015 David Schweinsberg.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -2606,7 +2606,6 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      */
     @Test
     public void realWorldMicrosoft() throws Exception {
-        // style.csx.css
         final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//style.csx.css");
         Assert.assertNotNull(is);
 
@@ -2620,7 +2619,6 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      */
     @Test
     public void realWorldOracle() throws Exception {
-        // compass-homestyle.css
         final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//compass-homestyle.css");
         Assert.assertNotNull(is);
 
@@ -2634,13 +2632,37 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      */
     @Test
     public void realWorldIBM() throws Exception {
-        // www.css
         final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//www.css");
         Assert.assertNotNull(is);
 
         final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
         final CSSStyleSheet sheet = parse(css, 35, 0, 2);
         Assert.assertEquals(493, sheet.getCssRules().getLength());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void realWorldApple() throws Exception {
+        final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//home.built.css");
+        Assert.assertNotNull(is);
+
+        final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
+        final CSSStyleSheet sheet = parse(css, 131, 0, 129);
+        Assert.assertEquals(675, sheet.getCssRules().getLength());
+    }
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void realWorldWikipedia() throws Exception {
+        final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//load.php.css");
+        Assert.assertNotNull(is);
+
+        final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
+        final CSSStyleSheet sheet = parse(css, 45, 0, 37);
+        Assert.assertEquals(90, sheet.getCssRules().getLength());
     }
 
     /**
