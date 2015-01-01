@@ -1222,11 +1222,16 @@ void declaration() :
   String p;
   LexicalUnit e;
   boolean priority = false;
+  Locator starHack = null;
   Locator locator = null;
 }
 {
     try
     {
+        // at the moment i have no better idea how to handle the
+        // infamous css-star-hack (http://en.wikipedia.org/wiki/CSS_filter#Star_hack)
+        // smart (means: ignoring only one decl)
+        ( <ASTERISK> { starHack = getLocator(); } )?
         p = property()
         {
             locator = getLocator();
@@ -1235,13 +1240,16 @@ void declaration() :
         e = expr()
         ( priority = prio() )?
         {
+            if (starHack != null)            {                CSSParseException cpe = toCSSParseException("invalidDeclarationStarHack", null, starHack);
+                getErrorHandler().error(cpe);
+                return;
+            }
             handleProperty(p, e, priority, locator);
         }
     }
     catch (CSSParseException ex)
     {
         getErrorHandler().error(ex);
-        getErrorHandler().warning(createSkipWarning("ignoringFollowingDeclarations", ex));
         error_skipdecl();
     }
     catch (ParseException ex)

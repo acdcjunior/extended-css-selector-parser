@@ -1230,7 +1230,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
 
         Assert.assertEquals(1, errorHandler.getErrorCount());
         final String expected = "Error in @page rule. "
-                + "(Invalid token \"<EOF>\". Was expecting one of: <S>, <IDENT>, \"}\", \";\".)";
+                + "(Invalid token \"<EOF>\". Was expecting one of: <S>, <IDENT>, \"}\", \";\", \"*\".)";
         Assert.assertEquals(expected, errorHandler.getErrorMessage());
         Assert.assertEquals("1", errorHandler.getErrorLines());
         Assert.assertEquals("39", errorHandler.getErrorColumns());
@@ -2400,23 +2400,30 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * Comments
+     * Handle the famous star hack as smart as possible.
      * @throws Exception if any error occurs
      */
-    // @Test
-    public void syntaxError() throws Exception {
-        final String css = "p { *color: red; background: white; }"
+    @Test
+    public void starHackFirst() throws Exception {
+        String css = "p { *color: red; background: white; }"
                 + "h1 { color: blue; }";
-        final CSSStyleSheet sheet = parse(css, 1, 0, 1);
-        final CSSRuleList rules = sheet.getCssRules();
+        CSSStyleSheet sheet = parse(css, 1, 0, 0);
 
+        CSSRuleList rules = sheet.getCssRules();
         Assert.assertEquals(2, rules.getLength());
 
         CSSRule rule = rules.item(0);
         Assert.assertEquals("p { background: white }", rule.getCssText());
 
-        rule = rules.item(1);
-        Assert.assertEquals("h1 { color: blue }", rule.getCssText());
+        css = "p { color: red; *background: white }"
+                + "h1 { color: blue; }";
+        sheet = parse(css, 1, 0, 0);
+
+        rules = sheet.getCssRules();
+        Assert.assertEquals(2, rules.getLength());
+
+        rule = rules.item(0);
+        Assert.assertEquals("p { color: red }", rule.getCssText());
     }
 
     /**
@@ -2604,7 +2611,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertNotNull(is);
 
         final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
-        final CSSStyleSheet sheet = parse(css, 197, 0, 197);
+        final CSSStyleSheet sheet = parse(css, 211, 0, 68);
         Assert.assertEquals(701, sheet.getCssRules().getLength());
     }
 
@@ -2618,7 +2625,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertNotNull(is);
 
         final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
-        final CSSStyleSheet sheet = parse(css, 81, 0, 37);
+        final CSSStyleSheet sheet = parse(css, 91, 0, 20);
         Assert.assertEquals(709, sheet.getCssRules().getLength());
     }
 
@@ -2632,7 +2639,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertNotNull(is);
 
         final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
-        final CSSStyleSheet sheet = parse(css, 30, 0, 12);
+        final CSSStyleSheet sheet = parse(css, 35, 0, 2);
         Assert.assertEquals(493, sheet.getCssRules().getLength());
     }
 
@@ -2646,7 +2653,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertNotNull(is);
 
         final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
-        final CSSStyleSheet sheet = parse(css, 72, 0, 33);
+        final CSSStyleSheet sheet = parse(css, 75, 0, 1);
         Assert.assertEquals(2088, sheet.getCssRules().getLength());
     }
 }

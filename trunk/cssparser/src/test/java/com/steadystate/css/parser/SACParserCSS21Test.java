@@ -931,11 +931,11 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
         Assert.assertEquals("24 23 25 24 23 38 23", errorHandler.getErrorColumns());
 
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(3, errorHandler.getWarningCount());
+        Assert.assertEquals(1, errorHandler.getWarningCount());
         Assert.assertTrue(errorHandler.getWarningMessage(),
                 errorHandler.getWarningMessage().startsWith("Ignoring the following declarations in this rule."));
-        Assert.assertEquals("4 5 6", errorHandler.getWarningLines());
-        Assert.assertEquals("25 24 38", errorHandler.getWarningColumns());
+        Assert.assertEquals("6", errorHandler.getWarningLines());
+        Assert.assertEquals("38", errorHandler.getWarningColumns());
 
         final CSSRuleList rules = sheet.getCssRules();
 
@@ -1133,7 +1133,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
 
         Assert.assertEquals(1, errorHandler.getErrorCount());
         final String expected = "Error in @page rule. "
-                + "(Invalid token \"<EOF>\". Was expecting one of: <S>, <IDENT>, \"}\", \";\".)";
+                + "(Invalid token \"<EOF>\". Was expecting one of: <S>, <IDENT>, \"}\", \";\", \"*\".)";
         Assert.assertEquals(expected, errorHandler.getErrorMessage());
         Assert.assertEquals("1", errorHandler.getErrorLines());
         Assert.assertEquals("39", errorHandler.getErrorColumns());
@@ -1187,7 +1187,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
         Assert.assertEquals("16", errorHandler.getErrorColumns());
 
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(1, errorHandler.getWarningCount());
+        Assert.assertEquals(0, errorHandler.getWarningCount());
 
         final CSSRuleList rules = sheet.getCssRules();
 
@@ -1904,6 +1904,33 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
         Assert.assertEquals(1, rules.getLength());
 
         final CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { color: red }", rule.getCssText());
+    }
+
+    /**
+     * Handle the famous star hack as smart as possible.
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void starHackFirst() throws Exception {
+        String css = "p { *color: red; background: white; }"
+                + "h1 { color: blue; }";
+        CSSStyleSheet sheet = parse(css, 1, 0, 0);
+
+        CSSRuleList rules = sheet.getCssRules();
+        Assert.assertEquals(2, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { background: white }", rule.getCssText());
+
+        css = "p { color: red; *background: white }"
+                + "h1 { color: blue; }";
+        sheet = parse(css, 1, 0, 0);
+
+        rules = sheet.getCssRules();
+        Assert.assertEquals(2, rules.getLength());
+
+        rule = rules.item(0);
         Assert.assertEquals("p { color: red }", rule.getCssText());
     }
 
