@@ -6,6 +6,13 @@
   </properties>
   <body>
     <release version="0.9.15" date="xx.xx.2014" description="Bugfixes">
+        <action type="fix" dev="rbri" issue="50">
+            No longer skip the following declarations if a css star hack (http://en.wikipedia.org/wiki/CSS_filter#Star_hack)
+            was used (CSS21 and CSS3).
+        </action>
+        <action type="fix" dev="rbri">
+            Bunch of fixes for the unicode handling implemented.
+        </action>
         <action type="fix" dev="rbri">
             Some internal lexer cleanup for CSS21 and CSS3 parser.
         </action>
