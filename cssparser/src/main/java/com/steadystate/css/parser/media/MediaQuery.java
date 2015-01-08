@@ -23,51 +23,49 @@
  * mailto:davidsch@users.sourceforge.net
  *
  */
-package com.steadystate.css.parser;
 
+package com.steadystate.css.parser.media;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.css.sac.SACMediaList;
-
-import com.steadystate.css.parser.media.MediaQuery;
+import com.steadystate.css.dom.Property;
+import com.steadystate.css.parser.LocatableImpl;
 
 /**
- * Implementation of {@link SACMediaList}.
- *
- * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author rbri
  */
-public class SACMediaListImpl extends LocatableImpl implements SACMediaList {
+public class MediaQuery extends LocatableImpl implements Serializable {
 
-    private List<MediaQuery> mediaQueries_ = new ArrayList<MediaQuery>(10);
+    private static final long serialVersionUID = 456776383828897471L;
 
-    public int getLength() {
-        return mediaQueries_.size();
+    private String media_;
+    private List<Property> properties_;
+
+    public MediaQuery(final String media) {
+        setMedia(media);
+        properties_ = new ArrayList<Property>(10);
     }
 
-    public String item(final int index) {
-        return mediaQuery(index).getMedia();
+    public String getMedia() {
+        return media_;
     }
 
-    public MediaQuery mediaQuery(final int index) {
-        return mediaQueries_.get(index);
+    public void setMedia(final String media) {
+        media_ = media;
     }
 
-    public void add(final String s) {
-        mediaQueries_.add(new MediaQuery(s));
+    public List<Property> getProperties() {
+        return properties_;
+    }
+
+    public void addMediaProperty(final Property mp) {
+        properties_.add(mp);
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        final int len = getLength();
-        for (int i = 0; i < len; i++) {
-            sb.append(item(i));
-            if (i < len - 1) {
-                sb.append(", ");
-            }
-        }
-        return sb.toString();
+        return getMedia();
     }
 }
