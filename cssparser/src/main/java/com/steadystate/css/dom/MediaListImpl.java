@@ -40,6 +40,7 @@ import org.w3c.dom.stylesheets.MediaList;
 
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.parser.Locatable;
+import com.steadystate.css.parser.SACMediaListImpl;
 import com.steadystate.css.parser.media.MediaQuery;
 import com.steadystate.css.userdata.UserDataConstants;
 import com.steadystate.css.util.LangUtils;
@@ -151,6 +152,14 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList {
     }
 
     private void setMediaList(final SACMediaList mediaList) {
+        if (mediaList instanceof SACMediaListImpl) {
+            final SACMediaListImpl impl = (SACMediaListImpl) mediaList;
+            for (int i = 0; i < mediaList.getLength(); i++) {
+                mediaQueries_.add(impl.mediaQuery(i));
+            }
+            return;
+        }
+
         for (int i = 0; i < mediaList.getLength(); i++) {
             mediaQueries_.add(new MediaQuery(mediaList.item(i)));
         }
