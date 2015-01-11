@@ -27,6 +27,10 @@ package com.steadystate.css.parser.media;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.w3c.dom.css.CSSValue;
+
+import com.steadystate.css.dom.CSSValueImpl;
+import com.steadystate.css.dom.Property;
 
 /**
  * Testcases for {@link MediaQuery}.
@@ -38,8 +42,41 @@ public class MediaQueryTest {
      */
     @Test
     public void testToString() throws Exception {
-        final MediaQuery mq = new MediaQuery("test");
+        MediaQuery mq = new MediaQuery("test");
         Assert.assertEquals("test", mq.toString());
+
+        mq = new MediaQuery("test", false, false);
+        Assert.assertEquals("test", mq.toString());
+
+        mq = new MediaQuery("test", true, false);
+        Assert.assertEquals("only test", mq.toString());
+
+        mq = new MediaQuery("test", false, true);
+        Assert.assertEquals("not test", mq.toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void properties() throws Exception {
+        Property prop = new Property("prop", new CSSValueImpl(), false);
+        MediaQuery mq = new MediaQuery("test");
+        mq.addMediaProperty(prop);
+        Assert.assertEquals("test and (prop: )", mq.toString());
+
+        final CSSValue value = new CSSValueImpl();
+        value.setCssText("10dpi");
+        prop = new Property("prop", value, false);
+        mq = new MediaQuery("test", true, false);
+        mq.addMediaProperty(prop);
+        Assert.assertEquals("only test and (prop: 10dpi)", mq.toString());
+
+        Assert.assertEquals(1, mq.getProperties().size());
+
+        prop = new Property("min-foo", value, false);
+        mq.addMediaProperty(prop);
+        Assert.assertEquals("only test and (prop: 10dpi) and (min-foo: 10dpi)", mq.toString());
     }
 
     /**

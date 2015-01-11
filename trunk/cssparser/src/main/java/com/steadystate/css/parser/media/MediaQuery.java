@@ -42,10 +42,18 @@ public class MediaQuery extends LocatableImpl implements Serializable {
 
     private String media_;
     private List<Property> properties_;
+    private boolean isOnly_;
+    private boolean isNot_;
 
     public MediaQuery(final String media) {
+        this(media, false, false);
+    }
+
+    public MediaQuery(final String media, final boolean isOnly, final boolean isNot) {
         setMedia(media);
         properties_ = new ArrayList<Property>(10);
+        isOnly_ = isOnly;
+        isNot_ = isNot;
     }
 
     public String getMedia() {
@@ -66,6 +74,22 @@ public class MediaQuery extends LocatableImpl implements Serializable {
 
     @Override
     public String toString() {
-        return getMedia();
+        final StringBuilder result = new StringBuilder();
+
+        if (isOnly_) {
+            result.append("only ");
+        }
+        if (isNot_) {
+            result.append("not ");
+        }
+
+        result.append(getMedia());
+
+        for (Property prop : properties_) {
+            result.append(" and (")
+                .append(prop.toString())
+                .append(')');
+        }
+        return result.toString();
     }
 }
