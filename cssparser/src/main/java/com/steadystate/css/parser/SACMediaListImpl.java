@@ -40,7 +40,11 @@ import com.steadystate.css.parser.media.MediaQuery;
  */
 public class SACMediaListImpl extends LocatableImpl implements SACMediaList {
 
-    private List<MediaQuery> mediaQueries_ = new ArrayList<MediaQuery>(10);
+    private final List<MediaQuery> mediaQueries_;
+
+    public SACMediaListImpl() {
+        mediaQueries_ = new ArrayList<MediaQuery>();
+    }
 
     public int getLength() {
         return mediaQueries_.size();
@@ -55,7 +59,11 @@ public class SACMediaListImpl extends LocatableImpl implements SACMediaList {
     }
 
     public void add(final String s) {
-        mediaQueries_.add(new MediaQuery(s));
+        add(new MediaQuery(s));
+    }
+
+    public void add(final MediaQuery mediaQuery) {
+        mediaQueries_.add(mediaQuery);
     }
 
     @Override

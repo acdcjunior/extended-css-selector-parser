@@ -118,10 +118,17 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList {
     }
 
     public String item(final int index) {
+        final MediaQuery mq = mediaQuery(index);
+        if (null == mq) { return null; }
+
+        return mq.getMedia();
+    }
+
+    public MediaQuery mediaQuery(final int index) {
         if (index < 0 || (index >= mediaQueries_.size())) {
             return null;
         }
-        return mediaQueries_.get(index).getMedia();
+        return mediaQueries_.get(index);
     }
 
     public void deleteMedium(final String oldMedium) throws DOMException {
