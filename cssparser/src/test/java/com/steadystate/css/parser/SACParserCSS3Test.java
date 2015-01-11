@@ -47,9 +47,11 @@ import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.ErrorHandler;
+import com.steadystate.css.dom.CSSMediaRuleImpl;
 import com.steadystate.css.dom.CSSStyleDeclarationImpl;
 import com.steadystate.css.dom.CSSStyleRuleImpl;
 import com.steadystate.css.dom.CSSValueImpl;
+import com.steadystate.css.dom.MediaListImpl;
 import com.steadystate.css.dom.Property;
 import com.steadystate.css.parser.selectors.ChildSelectorImpl;
 import com.steadystate.css.parser.selectors.ConditionalSelectorImpl;
@@ -439,6 +441,46 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
 
         rule = rules.item(2);
         Assert.assertEquals("@import url(subs2.css);", rule.getCssText());
+    }
+
+    /**
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void mediaRulePrint() throws Exception {
+        final String css = "@media print { h1 { color: red } }";
+        final CSSStyleSheet sheet = parse(css);
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+        final CSSRule cssRule = rules.item(0);
+        Assert.assertEquals("@media print {h1 { color: red } }", cssRule.getCssText());
+
+        final MediaListImpl mediaList = (MediaListImpl) ((CSSMediaRuleImpl) cssRule).getMedia();
+
+        Assert.assertEquals(1, mediaList.getLength());
+        Assert.assertEquals("print", mediaList.getMediaText());
+    }
+
+    /**
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void mediaRulePrintAndScreen() throws Exception {
+        final String css = "@media print,screen { h1 { color: red } }";
+        final CSSStyleSheet sheet = parse(css);
+
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+        final CSSRule cssRule = rules.item(0);
+        Assert.assertEquals("@media print, screen {h1 { color: red } }", cssRule.getCssText());
+
+        final MediaListImpl mediaList = (MediaListImpl) ((CSSMediaRuleImpl) cssRule).getMedia();
+
+        Assert.assertEquals(2, mediaList.getLength());
+        Assert.assertEquals("print, screen", mediaList.getMediaText());
     }
 
     /**
@@ -2612,6 +2654,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
         final CSSStyleSheet sheet = parse(css, 211, 0, 68);
         Assert.assertEquals(701, sheet.getCssRules().getLength());
+        Assert.assertEquals(1, sheet.getMedia().getLength());
     }
 
     /**
@@ -2625,6 +2668,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
         final CSSStyleSheet sheet = parse(css, 91, 0, 20);
         Assert.assertEquals(709, sheet.getCssRules().getLength());
+        Assert.assertEquals(1, sheet.getMedia().getLength());
     }
 
     /**
@@ -2638,6 +2682,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
         final CSSStyleSheet sheet = parse(css, 35, 0, 2);
         Assert.assertEquals(493, sheet.getCssRules().getLength());
+        Assert.assertEquals(1, sheet.getMedia().getLength());
     }
 
     /**
@@ -2651,6 +2696,8 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
         final CSSStyleSheet sheet = parse(css, 131, 0, 129);
         Assert.assertEquals(675, sheet.getCssRules().getLength());
+        Assert.assertEquals(1, sheet.getMedia().getLength());
+        Assert.assertEquals("all", sheet.getMedia().getMediaText());
     }
     /**
      * @throws Exception if any error occurs
@@ -2663,6 +2710,8 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
         final CSSStyleSheet sheet = parse(css, 45, 0, 37);
         Assert.assertEquals(90, sheet.getCssRules().getLength());
+        Assert.assertEquals(1, sheet.getMedia().getLength());
+        Assert.assertEquals("all", sheet.getMedia().getMediaText());
     }
 
     /**
@@ -2677,5 +2726,6 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
         final CSSStyleSheet sheet = parse(css, 75, 0, 1);
         Assert.assertEquals(2088, sheet.getCssRules().getLength());
+        Assert.assertEquals(1, sheet.getMedia().getLength());
     }
 }
