@@ -2771,12 +2771,31 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
                 + "screen and (min-resolution: 144dpi);"
                 + "screen and (min-resolution: 144dppx);", 2, 0);
     }
+
     /**
      * @throws Exception if any error occurs
      */
     @Test
     public void realWorldWikipedia() throws Exception {
         realWorld("realworld//load.php.css", 90, "print;screen;screen and (min-width: 982px);", 44, 36);
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void realWorldNormalize() throws Exception {
+        realWorld("realworld//normalize.css", 40, "", 0, 0);
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void realWorldBlueprint() throws Exception {
+        realWorld("realworld//blueprint//screen.css", 245, "", 0, 0);
+        realWorld("realworld//blueprint//print.css", 15, "", 0, 0);
+        realWorld("realworld//blueprint//ie.css", 22, "", 1, 0);
     }
 
     /**
