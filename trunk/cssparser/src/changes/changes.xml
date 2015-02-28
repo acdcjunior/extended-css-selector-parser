@@ -5,7 +5,10 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
-    <release version="0.9.15" date="xx.xx.2014" description="Bugfixes">
+    <release version="0.9.15" date="xx.xx.2015" description="Bugfixes">
+        <action type="fix" dev="rbri" issue="40">
+            CSS3 parser now supports media queries.
+        </action>
         <action type="fix" dev="rbri" issue="50">
             No longer skip the following declarations if a css star hack (http://en.wikipedia.org/wiki/CSS_filter#Star_hack)
             was used (CSS21 and CSS3).
