@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,6 +41,7 @@ import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.LexicalUnit;
 import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SelectorList;
+import org.w3c.dom.css.CSSMediaRule;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
@@ -1056,12 +1059,14 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
                         + "<IDENT>, <STRING>, \"-\", <PLUS>, <HASH>, <EMS>, <EXS>, "
                         + "<LENGTH_PX>, <LENGTH_CM>, <LENGTH_MM>, "
                         + "<LENGTH_IN>, <LENGTH_PT>, <LENGTH_PC>, <ANGLE_DEG>, <ANGLE_RAD>, <ANGLE_GRAD>, <TIME_MS>, "
-                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <PERCENTAGE>, <DIMENSION>, <URI>, <FUNCTION>.)"
+                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <RESOLUTION_DPI>, <RESOLUTION_DPCM>, <PERCENTAGE>, "
+                        + "<DIMENSION>, <URI>, <FUNCTION>.)"
                 + " Error in expression. (Invalid token \";\". Was expecting one of: <S>, <NUMBER>, \"inherit\", "
                         + "<IDENT>, <STRING>, \"-\", <PLUS>, <HASH>, <EMS>, <EXS>, "
                         + "<LENGTH_PX>, <LENGTH_CM>, <LENGTH_MM>, "
                         + "<LENGTH_IN>, <LENGTH_PT>, <LENGTH_PC>, <ANGLE_DEG>, <ANGLE_RAD>, <ANGLE_GRAD>, <TIME_MS>, "
-                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <PERCENTAGE>, <DIMENSION>, <URI>, <FUNCTION>.)"
+                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <RESOLUTION_DPI>, <RESOLUTION_DPCM>, <PERCENTAGE>, "
+                        + "<DIMENSION>, <URI>, <FUNCTION>.)"
                 + " Error in declaration. (Invalid token \"{\". Was expecting one of: <S>, \":\".)"
                 + " Error in style rule. (Invalid token \" \". Was expecting one of: <EOF>, \"}\", \";\".)"
                 + " Error in declaration. (Invalid token \"{\". Was expecting one of: <S>, \":\".)";
@@ -1320,7 +1325,8 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
                         + "<IDENT>, <STRING>, \"-\", <PLUS>, <HASH>, <EMS>, <EXS>, "
                         + "<LENGTH_PX>, <LENGTH_CM>, <LENGTH_MM>, "
                         + "<LENGTH_IN>, <LENGTH_PT>, <LENGTH_PC>, <ANGLE_DEG>, <ANGLE_RAD>, <ANGLE_GRAD>, <TIME_MS>, "
-                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <PERCENTAGE>, <DIMENSION>, <URI>, <FUNCTION>.)";
+                        + "<TIME_S>, <FREQ_HZ>, <FREQ_KHZ>, <RESOLUTION_DPI>, <RESOLUTION_DPCM>, <PERCENTAGE>, "
+                        + "<DIMENSION>, <URI>, <FUNCTION>.)";
         Assert.assertEquals(expected, errorHandler.getErrorMessage());
         Assert.assertEquals("3", errorHandler.getErrorLines());
         Assert.assertEquals("16", errorHandler.getErrorColumns());
@@ -2648,13 +2654,36 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      */
     @Test
     public void realWorldMicrosoft() throws Exception {
-        final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//style.csx.css");
-        Assert.assertNotNull(is);
-
-        final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
-        final CSSStyleSheet sheet = parse(css, 211, 0, 68);
-        Assert.assertEquals(701, sheet.getCssRules().getLength());
-        Assert.assertEquals(1, sheet.getMedia().getLength());
+        realWorld("realworld//style.csx.css", 701,
+                "screen and (-webkit-min-device-pixel-ratio: 0);"
+                + "screen and (max-width: 480px);"
+                + "screen and (max-width: 539px);"
+                + "screen and (max-width: 667px) and (min-width: 485px);"
+                + "screen and (max-width: 679px);"
+                + "screen and (max-width: 680px);"
+                + "screen and (max-width: 900px);"
+                + "screen and (min-width: 0) and (max-width: 899px);"
+                + "screen and (min-width: 1024px);"
+                + "screen and (min-width: 1025px);"
+                + "screen and (min-width: 1025px) and (min-height: 900px);"
+                + "screen and (min-width: 33.75em);"
+                + "screen and (min-width: 42.5em);"
+                + "screen and (min-width: 53.5em);"
+                + "screen and (min-width: 540px);"
+                + "screen and (min-width: 540px) and (max-width: 679px);"
+                + "screen and (min-width: 560px);"
+                + "screen and (min-width: 600px);"
+                + "screen and (min-width: 64.0625em);"
+                + "screen and (min-width: 64.0625em) and (min-height: 768px);"
+                + "screen and (min-width: 64.0625em) and (min-height: 900px);"
+                + "screen and (min-width: 668px);"
+                + "screen and (min-width: 668px) and (max-width: 1024px);"
+                + "screen and (min-width: 680px);"
+                + "screen and (min-width: 680px) and (max-width: 899px);"
+                + "screen and (min-width: 70em);"
+                + "screen and (min-width: 70em) and (min-height: 768px);"
+                + "screen and (min-width: 70em) and (min-height: 900px);"
+                + "screen and (min-width: 900px);", 145, 0);
     }
 
     /**
@@ -2662,13 +2691,43 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      */
     @Test
     public void realWorldOracle() throws Exception {
-        final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//compass-homestyle.css");
-        Assert.assertNotNull(is);
-
-        final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
-        final CSSStyleSheet sheet = parse(css, 91, 0, 20);
-        Assert.assertEquals(709, sheet.getCssRules().getLength());
-        Assert.assertEquals(1, sheet.getMedia().getLength());
+        realWorld("realworld//compass-homestyle.css", 735,
+                "all and (max-height: 600px);"
+                + "all and (max-width: 600px);"
+                + "all and (max-width: 770px);"
+                + "all and (min-width: 0) and (max-width: 1012px);"
+                + "all and (min-width: 0) and (max-width: 1018px);"
+                + "all and (min-width: 0) and (max-width: 1111px);"
+                + "all and (min-width: 0) and (max-width: 1312px);"
+                + "all and (min-width: 0) and (max-width: 390px);"
+                + "all and (min-width: 0) and (max-width: 400px);"
+                + "all and (min-width: 0) and (max-width: 410px);"
+                + "all and (min-width: 0) and (max-width: 450px);"
+                + "all and (min-width: 0) and (max-width: 600px);"
+                + "all and (min-width: 0) and (max-width: 640px);"
+                + "all and (min-width: 0) and (max-width: 680px);"
+                + "all and (min-width: 0) and (max-width: 720px);"
+                + "all and (min-width: 0) and (max-width: 770px);"
+                + "all and (min-width: 0) and (max-width: 870px);"
+                + "all and (min-width: 0) and (max-width: 974px);"
+                + "all and (min-width: 601px);"
+                + "all and (min-width: 771px) and (max-width: 990px);"
+                + "only screen and (max-width: 974px);"
+                + "only screen and (min-width: 0) and (max-width: 1024px);"
+                + "only screen and (min-width: 0) and (max-width: 320px);"
+                + "only screen and (min-width: 0) and (max-width: 500px);"
+                + "only screen and (min-width: 0) and (max-width: 600px);"
+                + "only screen and (min-width: 0) and (max-width: 770px);"
+                + "only screen and (min-width: 0) and (max-width: 880px);"
+                + "only screen and (min-width: 0) and (max-width: 974px);"
+                + "only screen and (min-width: 1024px) and (max-width: 1360px);"
+                + "only screen and (min-width: 1360px);"
+                + "only screen and (min-width: 601px) and (max-width: 974px);"
+                + "only screen and (min-width: 771px) and (max-width: 974px);"
+                + "only screen and (min-width: 880px);"
+                + "only screen and (min-width: 974px);"
+                + "only screen and (min-width: 975px) and (max-width: 1040px);"
+                + "\ufffdscreen,screen\t;", 51, 1);
     }
 
     /**
@@ -2676,13 +2735,8 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      */
     @Test
     public void realWorldIBM() throws Exception {
-        final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//www.css");
-        Assert.assertNotNull(is);
-
-        final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
-        final CSSStyleSheet sheet = parse(css, 35, 0, 2);
-        Assert.assertEquals(493, sheet.getCssRules().getLength());
-        Assert.assertEquals(1, sheet.getMedia().getLength());
+        realWorld("realworld//www.css", 493,
+                "only screen and (min-device-width: 768px) and (max-device-width: 1024px);print;screen;", 34, 1);
     }
 
     /**
@@ -2690,28 +2744,39 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      */
     @Test
     public void realWorldApple() throws Exception {
-        final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//home.built.css");
-        Assert.assertNotNull(is);
-
-        final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
-        final CSSStyleSheet sheet = parse(css, 131, 0, 129);
-        Assert.assertEquals(675, sheet.getCssRules().getLength());
-        Assert.assertEquals(1, sheet.getMedia().getLength());
-        Assert.assertEquals("all", sheet.getMedia().getMediaText());
+        realWorld("realworld//home.built.css", 675,
+                "only screen and (-webkit-min-device-pixel-ratio: 1.5);"
+                + "only screen and (max-device-width: 767px);"
+                + "only screen and (max-height: 970px);"
+                + "only screen and (max-width: 1023px);"
+                + "only screen and (max-width: 1024px);"
+                + "only screen and (max-width: 1024px) and (-webkit-min-device-pixel-ratio: 1.5);"
+                + "only screen and (max-width: 1024px) and (min-resolution: 144dpi);"
+                + "only screen and (max-width: 1024px) and (min-resolution: 144dppx);"
+                + "only screen and (max-width: 28em) and (max-device-width: 735px);"
+                + "only screen and (max-width: 320px);"
+                + "only screen and (max-width: 735px) and (max-device-width: 768px);"
+                + "only screen and (max-width: 735px) and (max-device-width: 768px) "
+                        + "and (-webkit-min-device-pixel-ratio: 1.5);"
+                + "only screen and (max-width: 735px) and (max-device-width: 768px) and (min-resolution: 144dpi);"
+                + "only screen and (max-width: 735px) and (max-device-width: 768px) and (min-resolution: 144dppx);"
+                + "only screen and (max-width: 735px) and (max-device-width: 768px) and (orientation: portrait);"
+                + "only screen and (min-device-width: 768px);"
+                + "only screen and (min-width: 1442px);"
+                + "only screen and (min-width: 1442px) and (-webkit-min-device-pixel-ratio: 1.5);"
+                + "only screen and (min-width: 1442px) and (min-height: 1251px);"
+                + "only screen and (min-width: 1442px) and (min-resolution: 144dpi);"
+                + "only screen and (min-width: 1442px) and (min-resolution: 144dppx);"
+                + "print;"
+                + "screen and (min-resolution: 144dpi);"
+                + "screen and (min-resolution: 144dppx);", 2, 0);
     }
     /**
      * @throws Exception if any error occurs
      */
     @Test
     public void realWorldWikipedia() throws Exception {
-        final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//load.php.css");
-        Assert.assertNotNull(is);
-
-        final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
-        final CSSStyleSheet sheet = parse(css, 45, 0, 37);
-        Assert.assertEquals(90, sheet.getCssRules().getLength());
-        Assert.assertEquals(1, sheet.getMedia().getLength());
-        Assert.assertEquals("all", sheet.getMedia().getMediaText());
+        realWorld("realworld//load.php.css", 90, "print;screen;screen and (min-width: 982px);", 44, 36);
     }
 
     /**
@@ -2719,13 +2784,33 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      */
     @Test
     public void realWorldSpiegel() throws Exception {
-        // style-V5-11.css
-        final InputStream is = getClass().getClassLoader().getResourceAsStream("realworld//style-V5-11.css");
+        realWorld("realworld//style-V5-11.css", 2088, "screen and (min-width: 1030px);", 74, 0);
+    }
+
+    private void realWorld(final String resourceName, final int rules, final String media,
+                final int err, final int warn) throws Exception {
+        final InputStream is = getClass().getClassLoader().getResourceAsStream(resourceName);
         Assert.assertNotNull(is);
 
         final InputSource css = new InputSource(new InputStreamReader(is, "UTF-8"));
-        final CSSStyleSheet sheet = parse(css, 75, 0, 1);
-        Assert.assertEquals(2088, sheet.getCssRules().getLength());
-        Assert.assertEquals(1, sheet.getMedia().getLength());
+        final CSSStyleSheet sheet = parse(css, err, 0, warn);
+        Assert.assertEquals(rules, sheet.getCssRules().getLength());
+
+        final Set<String> mediaQ = new TreeSet<String>();
+        for (int i = 0; i < sheet.getCssRules().getLength(); i++) {
+            final CSSRule cssRule = sheet.getCssRules().item(i);
+            if (cssRule instanceof CSSMediaRule) {
+                final MediaListImpl mediaList = (MediaListImpl) ((CSSMediaRuleImpl) cssRule).getMedia();
+                for (int j = 0; j < mediaList.getLength(); j++) {
+                    mediaQ.add(mediaList.mediaQuery(j).toString());
+                }
+            }
+        }
+        final StringBuilder queries = new StringBuilder();
+        for (String string : mediaQ) {
+            queries.append(string);
+            queries.append(";");
+        }
+        Assert.assertEquals(media, queries.toString());
     }
 }
