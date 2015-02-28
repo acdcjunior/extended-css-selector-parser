@@ -41,6 +41,7 @@ import org.w3c.css.sac.Condition;
 import org.w3c.css.sac.ConditionalSelector;
 import org.w3c.css.sac.DescendantSelector;
 import org.w3c.css.sac.InputSource;
+import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SelectorList;
 import org.w3c.css.sac.SimpleSelector;
@@ -116,6 +117,27 @@ public abstract class AbstractSACParserTest {
         Assert.assertEquals(warn, errorHandler.getWarningCount());
 
         return sheet;
+    }
+
+    protected SACMediaList parseMedia(final String css,
+            final int err, final int fatal, final int warn) throws IOException {
+        final InputSource source = new InputSource(new StringReader(css));
+        return parseMedia(source, err, fatal, warn);
+    }
+
+    protected SACMediaList parseMedia(final InputSource source,
+            final int err, final int fatal, final int warn) throws IOException {
+        final CSSOMParser parser = parser();
+        final ErrorHandler errorHandler = new ErrorHandler();
+        parser.setErrorHandler(errorHandler);
+
+        final SACMediaList mediaList = parser.parseMedia(source);
+
+        Assert.assertEquals(err, errorHandler.getErrorCount());
+        Assert.assertEquals(fatal, errorHandler.getFatalErrorCount());
+        Assert.assertEquals(warn, errorHandler.getWarningCount());
+
+        return mediaList;
     }
 
     protected SelectorList createSelectors(final String cssText) throws Exception {
