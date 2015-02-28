@@ -91,6 +91,26 @@ public class CSS3MediaTest extends AbstractSACParserTest {
     }
 
     /**
+     * see http://keithclark.co.uk/articles/moving-ie-specific-css-into-media-blocks/media-tests/
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void mediaBlockHacks() throws Exception {
+        // TODO have to check this in more detail
+        String css = "@media\\0 { h1 { color: red } }";
+        CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        Assert.assertEquals(1, sheet.getCssRules().getLength());
+
+        css = "@media\\9 { h1 { color: red } }";
+        sheet = parse(css, 0, 0, 0);
+        Assert.assertEquals(1, sheet.getCssRules().getLength());
+
+        css = "@media screen\\0 { h1 { color: red } }";
+        sheet = parse(css, 0, 0, 0);
+        Assert.assertEquals(1, sheet.getCssRules().getLength());
+    }
+
+    /**
      * @throws Exception if any error occurs
      */
     @Test
