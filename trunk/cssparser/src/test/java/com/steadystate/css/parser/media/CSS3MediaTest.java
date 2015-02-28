@@ -26,9 +26,12 @@
 
 package com.steadystate.css.parser.media;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.LexicalUnit;
+import org.w3c.css.sac.SACMediaList;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleSheet;
 
@@ -38,6 +41,7 @@ import com.steadystate.css.dom.MediaListImpl;
 import com.steadystate.css.dom.Property;
 import com.steadystate.css.parser.AbstractSACParserTest;
 import com.steadystate.css.parser.LexicalUnitImpl;
+import com.steadystate.css.parser.SACMediaListImpl;
 import com.steadystate.css.parser.SACParserCSS3;
 
 /**
@@ -265,5 +269,53 @@ public class CSS3MediaTest extends AbstractSACParserTest {
         Assert.assertEquals("all and (color:)", mediaListImpl.mediaQuery(0).toString());
         Assert.assertEquals(1, mediaListImpl.mediaQuery(0).getProperties().size());
         Assert.assertEquals("color:", mediaListImpl.mediaQuery(0).getProperties().get(0).toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void parseMedia() throws Exception {
+        final String css = "speech and (min-device-width: 800px)";
+        final SACMediaList mediaList = parseMedia(css, 0, 0, 0);
+
+        Assert.assertEquals(1, mediaList.getLength());
+        Assert.assertEquals("speech", mediaList.toString());
+
+        final MediaQuery mediaQuery = ((SACMediaListImpl) mediaList).mediaQuery(0);
+        Assert.assertEquals("speech", mediaQuery.getMedia());
+        final List<Property> properties = mediaQuery.getProperties();
+        Assert.assertEquals(1, properties.size());
+        Assert.assertEquals("min-device-width: 800px", properties.get(0).toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void parseMediaComplexRule() throws Exception {
+        final String css = "only screen and (max-width: 735px) and (max-device-width: 768px), print,"
+                + "aural and (device-aspect-ratio: 16/9)";
+        final SACMediaList mediaList = parseMedia(css, 0, 0, 0);
+
+        Assert.assertEquals(3, mediaList.getLength());
+        Assert.assertEquals("screen, print, aural", mediaList.toString());
+
+        MediaQuery mediaQuery = ((SACMediaListImpl) mediaList).mediaQuery(0);
+        Assert.assertEquals("screen", mediaQuery.getMedia());
+        List<Property> properties = mediaQuery.getProperties();
+        Assert.assertEquals(2, properties.size());
+        Assert.assertEquals("max-width: 735px", properties.get(0).toString());
+        Assert.assertEquals("max-device-width: 768px", properties.get(1).toString());
+
+        mediaQuery = ((SACMediaListImpl) mediaList).mediaQuery(1);
+        Assert.assertEquals("print", mediaQuery.getMedia());
+        properties = mediaQuery.getProperties();
+        Assert.assertEquals(0, properties.size());
+
+        mediaQuery = ((SACMediaListImpl) mediaList).mediaQuery(2);
+        Assert.assertEquals("aural", mediaQuery.getMedia());
+        properties = mediaQuery.getProperties();
+        Assert.assertEquals("device-aspect-ratio: 16/ 9", properties.get(0).toString());
     }
 }
