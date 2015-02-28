@@ -50,6 +50,10 @@ import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SelectorList;
 import org.w3c.css.sac.SimpleSelector;
 
+import com.steadystate.css.parser.media.MediaQuery;
+import com.steadystate.css.dom.Property;
+import com.steadystate.css.dom.CSSValueImpl;
+
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
@@ -170,6 +174,10 @@ TOKEN_MGR_DECLS :
 
 // comment      \/\*[^*]*\*+([^/*][^*]*\*+)*\/
 | < #COMMENT_: "/" "*" ( ~["*"] )* ("*")+ ( ~["/","*"] ( ~["*"] )* ( "*" )+ )* "/">
+
+| < AND: "and" >
+| < NOT: "not" >
+| < ONLY: "only" >
 
 // {num}            {return NUMBER;}
 | < NUMBER: <NUM> >
@@ -371,6 +379,12 @@ TOKEN_MGR_DECLS :
 
 // {num}{K}{H}{Z}       {return FREQ;}
 | < FREQ_KHZ: <NUM> <K_LETTER> <H_LETTER> <Z_LETTER> > { matchedToken.image = trimBy(image, 0, 3); }
+
+// {num}{D}{P}{I}       {return RESOLUTION;}
+| < RESOLUTION_DPI: <NUM> "dpi" > { matchedToken.image = trimBy(image, 0, 3); }
+
+// {num}{D}{P}{C}{M}       {return RESOLUTION;}
+| < RESOLUTION_DPCM: <NUM> "dpcm" > { matchedToken.image = trimBy(image, 0, 4); }
 
 // {num}%               {return PERCENTAGE;}
 | < PERCENTAGE: <NUM> "%" > { matchedToken.image = trimBy(image, 0, 1); }
@@ -611,21 +625,88 @@ void mediaRule() :
 
 void mediaList(SACMediaListImpl ml) :
 {
-    String s;
+    MediaQuery mq;
 }
 {
     try
     {
-        s = medium()
+        mq = mediaQuery()
         {
             ml.setLocator(getLocator());
         }
-        ( <COMMA> ( <S> )* { ml.add(s); } s = medium() )*
-        { ml.add(s); }
+        ( <COMMA> ( <S> )* { ml.add(mq); } mq = mediaQuery() )*
+        { ml.add(mq); }
     }
     catch(ParseException e)
     {
         throw toCSSParseException("invalidMediaList", e);
+    }
+}
+
+//
+// media_query
+//   : [ONLY | NOT]? S* media_type S* [ AND S* expression ]*
+//   | expression [ AND S* expression ]*
+//   ;
+//
+MediaQuery mediaQuery() :
+{
+    String s;
+    MediaQuery mq;
+    Property p;
+    boolean only = false;
+    boolean not = false;
+}
+{
+  (    (      (
+        (
+          <ONLY> { only = true; }          |
+          <NOT> { not = true; }
+        ) ( <S> )*
+      )?
+      s = medium()
+      { mq = new MediaQuery(s, only, not); mq.setLocator(getLocator()); }
+      (
+        <AND> ( <S> )*
+        p = mediaExpression()
+        {            mq.addMediaProperty(p);
+        }
+      )*
+    )
+    |    (      p = mediaExpression()
+      {          s = "all";          handleMedium(s, null);          mq = new MediaQuery(s, only, not);
+          mq.setLocator(getLocator());          mq.addMediaProperty(p);      }      (        <AND> ( <S> )*        p = mediaExpression()        {            mq.addMediaProperty(p);        }      )*    )
+  )
+  { return mq; }
+}
+
+//
+// expression
+//   : '(' S* media_feature S* [ ':' S* expr ]? ')' S*
+//   ;
+//
+Property mediaExpression() :
+{
+  String p;
+  LexicalUnit e = null;
+  Property prop;
+}
+{
+    <LROUND>
+    ( <S> )*
+    p = property()
+    (      <COLON> ( <S> )*
+      e = expr()
+    )?
+    <RROUND>
+    ( <S> )*
+    {
+        if(e==null)
+        {          prop = new Property(p, null, false);
+        }
+        else        {          prop = new Property(p, new CSSValueImpl(e), false);
+        }
+        return prop;
     }
 }
 
@@ -1449,22 +1530,24 @@ LexicalUnit term(LexicalUnit prev) :
                     value = LexicalUnitImpl.createNumber(prev, floatValue(op, t.image));
                 }
             }
-            | t = <PERCENTAGE>  { value = LexicalUnitImpl.createPercentage(prev, floatValue(op, t.image)); }
-            | t = <LENGTH_PX>   { value = LexicalUnitImpl.createPixel(prev, floatValue(op, t.image)); }
-            | t = <LENGTH_CM>   { value = LexicalUnitImpl.createCentimeter(prev, floatValue(op, t.image)); }
-            | t = <LENGTH_MM>   { value = LexicalUnitImpl.createMillimeter(prev, floatValue(op, t.image)); }
-            | t = <LENGTH_IN>   { value = LexicalUnitImpl.createInch(prev, floatValue(op, t.image)); }
-            | t = <LENGTH_PT>   { value = LexicalUnitImpl.createPoint(prev, floatValue(op, t.image)); }
-            | t = <LENGTH_PC>   { value = LexicalUnitImpl.createPica(prev, floatValue(op, t.image)); }
-            | t = <EMS>         { value = LexicalUnitImpl.createEm(prev, floatValue(op, t.image)); }
-            | t = <EXS>         { value = LexicalUnitImpl.createEx(prev, floatValue(op, t.image)); }
-            | t = <ANGLE_DEG>   { value = LexicalUnitImpl.createDegree(prev, floatValue(op, t.image)); }
-            | t = <ANGLE_RAD>   { value = LexicalUnitImpl.createRadian(prev, floatValue(op, t.image)); }
-            | t = <ANGLE_GRAD>  { value = LexicalUnitImpl.createGradian(prev, floatValue(op, t.image)); }
-            | t = <TIME_MS>     { value = LexicalUnitImpl.createMillisecond(prev, floatValue(op, t.image)); }
-            | t = <TIME_S>      { value = LexicalUnitImpl.createSecond(prev, floatValue(op, t.image)); }
-            | t = <FREQ_HZ>     { value = LexicalUnitImpl.createHertz(prev, floatValue(op, t.image)); }
-            | t = <FREQ_KHZ>    { value = LexicalUnitImpl.createKiloHertz(prev, floatValue(op, t.image)); }
+            | t = <PERCENTAGE>        { value = LexicalUnitImpl.createPercentage(prev, floatValue(op, t.image)); }
+            | t = <LENGTH_PX>         { value = LexicalUnitImpl.createPixel(prev, floatValue(op, t.image)); }
+            | t = <LENGTH_CM>         { value = LexicalUnitImpl.createCentimeter(prev, floatValue(op, t.image)); }
+            | t = <LENGTH_MM>         { value = LexicalUnitImpl.createMillimeter(prev, floatValue(op, t.image)); }
+            | t = <LENGTH_IN>         { value = LexicalUnitImpl.createInch(prev, floatValue(op, t.image)); }
+            | t = <LENGTH_PT>         { value = LexicalUnitImpl.createPoint(prev, floatValue(op, t.image)); }
+            | t = <LENGTH_PC>         { value = LexicalUnitImpl.createPica(prev, floatValue(op, t.image)); }
+            | t = <EMS>               { value = LexicalUnitImpl.createEm(prev, floatValue(op, t.image)); }
+            | t = <EXS>               { value = LexicalUnitImpl.createEx(prev, floatValue(op, t.image)); }
+            | t = <ANGLE_DEG>         { value = LexicalUnitImpl.createDegree(prev, floatValue(op, t.image)); }
+            | t = <ANGLE_RAD>         { value = LexicalUnitImpl.createRadian(prev, floatValue(op, t.image)); }
+            | t = <ANGLE_GRAD>        { value = LexicalUnitImpl.createGradian(prev, floatValue(op, t.image)); }
+            | t = <TIME_MS>           { value = LexicalUnitImpl.createMillisecond(prev, floatValue(op, t.image)); }
+            | t = <TIME_S>            { value = LexicalUnitImpl.createSecond(prev, floatValue(op, t.image)); }
+            | t = <FREQ_HZ>           { value = LexicalUnitImpl.createHertz(prev, floatValue(op, t.image)); }
+            | t = <FREQ_KHZ>          { value = LexicalUnitImpl.createKiloHertz(prev, floatValue(op, t.image)); }
+            | t = <RESOLUTION_DPI>    { value = LexicalUnitImpl.createDimension(prev, floatValue(op, t.image), "dpi"); }
+            | t = <RESOLUTION_DPCM>   { value = LexicalUnitImpl.createDimension(prev, floatValue(op, t.image), "dpcm"); }
             | value = function(prev)
         )
         | t = <STRING>          { value = LexicalUnitImpl.createString(prev, unescape(t.image, false)); }
