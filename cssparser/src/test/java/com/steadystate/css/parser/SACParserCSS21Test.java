@@ -2010,6 +2010,8 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
         unicode("@media paper\\7b { }", "@media paper{ {}");
         unicode(".class\\7b { color: blue }", "*.class{ { color: blue }");
         unicode("@page :pseu\\64o { color: blue }", "@page :pseudo {color: blue}");
+        unicode("h1:first-l\\69ne { color: blue }", "h1:first-line { color: blue }");
+        unicode(".cls { color: blu\\65 }", "*.cls { color: blue }");
     }
 
     private void unicode(final String css, final String expected) throws IOException {
