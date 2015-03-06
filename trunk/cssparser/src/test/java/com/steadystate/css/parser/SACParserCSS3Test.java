@@ -2498,7 +2498,8 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals(2, rules.getLength());
 
         rule = rules.item(0);
-        Assert.assertEquals("p { background: \\0green }", rule.getCssText());
+        // spec says we have to replace U+0000 with U+FFFD
+        Assert.assertEquals("p { background: \uFFFDgreen }", rule.getCssText());
     }
 
     /**
