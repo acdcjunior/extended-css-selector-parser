@@ -2009,6 +2009,7 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     public void unicodeEscaping() throws Exception {
         unicode("@media paper\\7b { }", "@media paper{ {}");
         unicode(".class\\7b { color: blue }", "*.class{ { color: blue }");
+        unicode("@page :pseu\\64o { color: blue }", "@page :pseudo {color: blue}");
     }
 
     private void unicode(final String css, final String expected) throws IOException {

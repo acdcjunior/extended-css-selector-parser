@@ -2475,6 +2475,33 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
+     * Testcase for the backslash zero ie hack
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void backslashZeroHack() throws Exception {
+        String css = "p { margin-top: 0px\\0; }"
+                + "h1 { color: blue; }";
+        CSSStyleSheet sheet = parse(css, 0, 0, 0);
+
+        CSSRuleList rules = sheet.getCssRules();
+        Assert.assertEquals(2, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { margin-top: 0px\\0 }", rule.getCssText());
+
+        css = "p { background: \\0green; }"
+                + "h1 { color: blue; }";
+        sheet = parse(css, 0, 0, 0);
+
+        rules = sheet.getCssRules();
+        Assert.assertEquals(2, rules.getLength());
+
+        rule = rules.item(0);
+        Assert.assertEquals("p { background: \\0green }", rule.getCssText());
+    }
+
+    /**
      * @throws Exception if any error occurs
      */
     @Test
@@ -2507,6 +2534,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     public void unicodeEscaping() throws Exception {
         unicode("@media paper\\7b { }", "@media paper{ {}");
         unicode(".class\\7b { color: blue }", "*.class{ { color: blue }");
+        unicode("@page :pseu\\64o { color: blue }", "@page :pseudo {color: blue}");
     }
 
     private void unicode(final String css, final String expected) throws IOException {
