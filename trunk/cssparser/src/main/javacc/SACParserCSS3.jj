@@ -1275,8 +1275,8 @@ Object pseudo(Condition pred, boolean pseudoElementFound) :
         (
             t = <IDENT>
             {
-                if (pseudoElementFound) { throw toCSSParseException("duplicatePseudo", new String[] { t.image }, locator); }
-                String s = t.image;
+                String s = unescape(t.image, false);
+                if (pseudoElementFound) { throw toCSSParseException("duplicatePseudo", new String[] { s }, locator); }
                 if ("first-line".equals(s)
                     || "first-letter".equals(s)
                     || "before".equals(s)
@@ -1553,9 +1553,9 @@ LexicalUnit term(LexicalUnit prev) :
         | t = <STRING>          { value = LexicalUnitImpl.createString(prev, unescape(t.image, false)); }
         |
             (                t = <IDENT>
-                ( <COLON> { throw toCSSParseException("invalidExprColon", new String[]{t.image}, getLocator()); } )?
+                ( <COLON> { throw toCSSParseException("invalidExprColon", new String[]{ unescape(t.image, false) }, getLocator()); } )?
             )
-            { value = LexicalUnitImpl.createIdent(prev, t.image); }
+            { value = LexicalUnitImpl.createIdent(prev, unescape(t.image, false)); }
         | t = <URI>             { value = LexicalUnitImpl.createURI(prev, unescape(t.image, true)); }
         | value = hexcolor(prev)
         | t = <DIMENSION>
