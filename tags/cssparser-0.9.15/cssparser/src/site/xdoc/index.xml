@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<document xmlns:j="jelly:core">
+
+    <properties>
+        <title>Welcome to CSS Parser</title>
+        <revision>$Revision: 8141 $</revision>
+        <author>David Schweinsberg</author>
+        <author>RBRi</author>
+    </properties>
+
+    <body>
+        <section name="Overview">
+            <p>
+                The <em>CSS Parser</em> is implemented as a package of Java classes, that inputs
+                Cascading Style Sheets source text and outputs a
+                <a href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113">Document Object Model Level 2 Style</a>
+                tree. Alternatively, applications can use <a href="http://www.w3.org/Style/CSS/SAC/">
+                SAC: The Simple API for CSS</a>.  Its purpose is to allow developers working with Java to incorporate
+                Cascading Style Sheet information, primarily in conjunction with XML application developments.
+            </p>
+            <p>
+                The CSS Parser package includes parsers for:
+                <ul>
+                  <li><a href="http://www.w3.org/Style/CSS/current-work">Cascading Style Sheets Level 3</a>,</li>
+                  <li><a href="http://www.w3.org/TR/CSS2/">Cascading Style Sheets Level 2.1</a>,</li>
+                  <li><a href="http://www.w3.org/TR/1998/REC-CSS2-19980512">Cascading Style Sheets Level 2</a>, and</li>
+                  <li><a href="http://www.w3.org/TR/REC-CSS1/">Cascading Style Sheets Level 1</a></li>
+                </ul>
+            </p>
+                
+            <p>The parser is freely available and without charge and is licenced under the terms of the
+                <a href="http://www.gnu.org/copyleft/lesser.html">GNU Lesser General Public License</a>.
+            </p>
+        </section>
+
+        <section name="Requirements">
+                <p>To use the pre-packaged JAR file:</p>
+                <ul>
+                    <li>The parser requires JDK 1.5 or higher.</li>
+                </ul>
+                <p>To compile the source:</p>
+                <ul>
+                    <li>The <a href="http://javacc.java.net/">Java Compiler Compiler (JavaCC)</a></li>
+                </ul>
+        </section>
+
+        <section name="Download latest release 0.9.15 (25.03.2015)">
+
+            <p>from the <a href="http://sourceforge.net/projects/cssparser/">SourceForge Project Page</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="changes-report.html">Change history</a>.
+            </p>
+        </section>
+
+        <section name="Support">
+            <p>Users are invited to ask questions and post feedback via the project's Tracker and
+            Public Forums on the <a href="http://sourceforge.net/projects/cssparser/">SourceForge Project Page</a>.</p>
+            <p>Obtain the
+            <a href="http://www.w3.org/TR/DOM-Level-2-Style">Document Object Model Level 2 Style</a>
+            Recommendation for details of the DOM interfaces provided.  For more information on using the SAC interface, go to
+            the <a href="http://www.w3.org/Style/CSS/SAC/">SAC: The Simple API for CSS</a> Home Page.</p>
+        </section>
+    </body>
+</document>
