@@ -5,7 +5,7 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
-    <release version="0.9.15" date="xx.xx.2015" description="Bugfixes">
+    <release version="0.9.15" date="25.03.2015" description="Bugfixes">
         <action type="new" dev="rbri">
             Simple 'Getting started' document added.
         </action>
