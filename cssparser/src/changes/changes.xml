@@ -6,6 +6,9 @@
   </properties>
   <body>
     <release version="0.9.15" date="xx.xx.2015" description="Bugfixes">
+        <action type="new" dev="rbri">
+            Simple 'Getting started' document added.
+        </action>
         <action type="fix" dev="rbri" issue="40">
             CSS3 parser now supports media queries.
         </action>
