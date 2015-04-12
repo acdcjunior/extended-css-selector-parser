@@ -40,7 +40,7 @@ for (int i = 0; i < rules.getLength(); i++) {
 
         <section name="Error handling">
             <p>
-                CSSParser error handling is base on org.w3c.css.sac.ErrorHandler and
+                CSSParser error handling is based on org.w3c.css.sac.ErrorHandler and
                 CSSParseException. You have to write your own implementation of the ErrorHandler
                 interface and register it before start parsing.
             </p>
