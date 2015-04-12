@@ -18,7 +18,7 @@
                 your first parser.
             </p>
             <source><![CDATA[
-InputSource source = new InputSource(new StringReader("h1 { background: #red; }"));
+InputSource source = new InputSource(new StringReader("h1 { background: #ffcc44; }"));
 CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
 CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
 ]]></source>
@@ -52,6 +52,22 @@ ErrorHandler errorHandler = new MyErrorHandler();
 parser.setErrorHandler(errorHandler);
 
 CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+]]></source>
+            <source><![CDATA[
+public static class MyErrorHandler implements ErrorHandler {
+
+    public void warning(CSSParseException exception) throws CSSException {
+        System.out.println("Warning: " + exception.getMessage());
+    }
+
+    public void error(CSSParseException exception) throws CSSException {
+        System.out.println("Error: " + exception.getMessage());
+    }
+
+    public void fatalError(CSSParseException exception) throws CSSException {
+        System.out.println("Fatal: " + exception.getMessage());
+    }
+}
 ]]></source>
         </section>
     </body>
