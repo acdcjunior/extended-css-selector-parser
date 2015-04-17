@@ -184,8 +184,6 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
         if (null == p) {
             return;
         }
-
-        removeProperty(p.getName());
         properties_.add(p);
     }
 
@@ -193,7 +191,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
         if (null == propertyName) {
             return null;
         }
-        for (int i = 0; i < properties_.size(); i++) {
+        for (int i = properties_.size() - 1; i > -1; i--) {
             final Property p = properties_.get(i);
             if (p != null && propertyName.equalsIgnoreCase(p.getName())) {
                 return p;

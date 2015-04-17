@@ -45,6 +45,7 @@ import org.w3c.dom.css.CSSValue;
 
 import com.steadystate.css.dom.CSSStyleDeclarationImpl;
 import com.steadystate.css.dom.CSSStyleRuleImpl;
+import com.steadystate.css.dom.Property;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
@@ -684,7 +685,8 @@ public class CSSOMParserTest {
         final InputSource is = new InputSource(r);
         final CSSStyleSheet sheet = getCss21Parser().parseStyleSheet(is, null, null);
 
-        Assert.assertEquals("p { background-repeat: repeat-y; "
+        Assert.assertEquals("p { background: rgb(0, 0, 0); "
+                + "background-repeat: repeat-y; "
                 + "background: url(img/test.png) no-repeat; "
                 + "background-size: 190px 48px }",
                 sheet.toString().trim());
@@ -696,15 +698,37 @@ public class CSSOMParserTest {
         final CSSStyleRuleImpl ruleImpl = (CSSStyleRuleImpl) rule;
         final CSSStyleDeclarationImpl declImpl = (CSSStyleDeclarationImpl) ruleImpl.getStyle();
 
-        Assert.assertEquals(3, declImpl.getLength());
+        Assert.assertEquals(4, declImpl.getLength());
 
-        Assert.assertEquals("background-repeat", declImpl.item(0));
-        Assert.assertEquals("repeat-y", declImpl.getPropertyCSSValue("background-repeat").getCssText());
-
-        Assert.assertEquals("background", declImpl.item(1));
+        Assert.assertEquals("background", declImpl.item(0));
         Assert.assertEquals("url(img/test.png) no-repeat", declImpl.getPropertyCSSValue("background").getCssText());
 
-        Assert.assertEquals("background-size", declImpl.item(2));
+        Assert.assertEquals("background-repeat", declImpl.item(1));
+        Assert.assertEquals("repeat-y", declImpl.getPropertyCSSValue("background-repeat").getCssText());
+
+        Assert.assertEquals("background", declImpl.item(2));
+        Assert.assertEquals("url(img/test.png) no-repeat", declImpl.getPropertyCSSValue("background").getCssText());
+
+        Assert.assertEquals("background-size", declImpl.item(3));
         Assert.assertEquals("190px 48px", declImpl.getPropertyCSSValue("background-size").getCssText());
+
+        // now check the core results
+        Assert.assertEquals(4, declImpl.getProperties().size());
+
+        Property prop = declImpl.getProperties().get(0);
+        Assert.assertEquals("background", prop.getName());
+        Assert.assertEquals("rgb(0, 0, 0)", prop.getValue().getCssText());
+
+        prop = declImpl.getProperties().get(1);
+        Assert.assertEquals("background-repeat", prop.getName());
+        Assert.assertEquals("repeat-y", prop.getValue().getCssText());
+
+        prop = declImpl.getProperties().get(2);
+        Assert.assertEquals("background", prop.getName());
+        Assert.assertEquals("url(img/test.png) no-repeat", prop.getValue().getCssText());
+
+        prop = declImpl.getProperties().get(3);
+        Assert.assertEquals("background-size", prop.getName());
+        Assert.assertEquals("190px 48px", prop.getValue().getCssText());
     }
 }

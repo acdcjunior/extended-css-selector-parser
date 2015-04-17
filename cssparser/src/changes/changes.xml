@@ -10,7 +10,9 @@
             Minor updates to the documentation.
         </action>
         <action type="fix" dev="rbri" issue="51">
-            If a rule contains the same property twice, the latter will overwrite the one before.
+            If a rule contains the same property twice, the CSSStyleDeclarationImpl methods
+            getPropertyDeclaration, getPropertyValue, getPropertyCSSValue, getPropertyPriority, and setProperty
+            are now returning (or updating) the latter one instead of the first one.
         </action>
     </release>
     <release version="0.9.15" date="25.03.2015" description="Media query support, Bugfixes">
