@@ -6,6 +6,12 @@
   </properties>
   <body>
     <release version="0.9.16" date="xx.xx.2015" description="Bugfixes">
+        <action type="update" dev="rbri">
+            Minor updates to the documentation.
+        </action>
+        <action type="fix" dev="rbri" issue="51">
+            If a rule contains the same property twice, the latter will overwrite the one before.
+        </action>
     </release>
     <release version="0.9.15" date="25.03.2015" description="Media query support, Bugfixes">
         <action type="new" dev="rbri">
