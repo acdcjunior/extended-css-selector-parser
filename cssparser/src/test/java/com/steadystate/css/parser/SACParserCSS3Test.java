@@ -1037,12 +1037,12 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     @Test
     public void malformedDeclaration() throws Exception {
         final String css = "p { color:green }\n"
-                    + "p { color:green; color } /* malformed declaration missing ':', value */\n"
-                    + "p { color:red;   color; color:green } /* same with expected recovery */\n"
-                    + "p { color:green; color: } /* malformed declaration missing value */\n"
-                    + "p { color:red;   color:; color:green } /* same with expected recovery */\n"
-                    + "p { color:green; color{;color:maroon} } /* unexpected tokens { } */\n"
-                    + "p { color:red;   color{;color:maroon}; color:green } /* same with recovery */\n";
+                    + "p { color:green; background } /* malformed declaration missing ':', value */\n"
+                    + "p { color:red;   background; visibility:hidden } /* same with expected recovery */\n"
+                    + "p { color:green; background: } /* malformed declaration missing value */\n"
+                    + "p { color:red;   background:; visibility:hidden } /* same with expected recovery */\n"
+                    + "p { color:green; background{;visibility:hidden} } /* unexpected tokens { } */\n"
+                    + "p { color:red;   background{;visibility:hidden}; display:block } /* same with recovery */\n";
 
         final InputSource source = new InputSource(new StringReader(css));
         final CSSOMParser parser = parser();
@@ -1072,14 +1072,14 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
                 + " Error in declaration. (Invalid token \"{\". Was expecting one of: <S>, \":\".)";
         Assert.assertEquals(expected, errorHandler.getErrorMessage());
         Assert.assertEquals("2 3 4 5 6 6 7", errorHandler.getErrorLines());
-        Assert.assertEquals("24 23 25 24 23 38 23", errorHandler.getErrorColumns());
+        Assert.assertEquals("29 28 30 29 28 48 28", errorHandler.getErrorColumns());
 
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(1, errorHandler.getWarningCount());
         Assert.assertTrue(errorHandler.getWarningMessage(),
                 errorHandler.getWarningMessage().startsWith("Ignoring the following declarations in this rule."));
         Assert.assertEquals("6", errorHandler.getWarningLines());
-        Assert.assertEquals("38", errorHandler.getWarningColumns());
+        Assert.assertEquals("48", errorHandler.getWarningColumns());
 
         final CSSRuleList rules = sheet.getCssRules();
 
@@ -1092,15 +1092,15 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         rule = rules.item(1);
         Assert.assertEquals("p { color: green }", rule.getCssText());
         rule = rules.item(2);
-        Assert.assertEquals("p { color: red; color: green }", rule.getCssText());
+        Assert.assertEquals("p { color: red; visibility: hidden }", rule.getCssText());
         rule = rules.item(3);
         Assert.assertEquals("p { color: green }", rule.getCssText());
         rule = rules.item(4);
-        Assert.assertEquals("p { color: red; color: green }", rule.getCssText());
+        Assert.assertEquals("p { color: red; visibility: hidden }", rule.getCssText());
         rule = rules.item(5);
         Assert.assertEquals("p { color: green }", rule.getCssText());
         rule = rules.item(6);
-        Assert.assertEquals("p { color: red; color: green }", rule.getCssText());
+        Assert.assertEquals("p { color: red; display: block }", rule.getCssText());
     }
 
     /**
@@ -1307,8 +1307,8 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         final String css = "p {\n"
                             + "  color: green;\n"
                             + "  font-family: 'Courier New Times\n"
-                            + "  color: red;\n"
-                            + "  color: green;\n"
+                            + "  visibility: hidden;\n"
+                            + "  background: green;\n"
                             + "}";
 
         final InputSource source = new InputSource(new StringReader(css));
@@ -1339,7 +1339,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals(1, rules.getLength());
 
         final CSSRule rule = rules.item(0);
-        Assert.assertEquals("p { color: green; color: green }", rule.getCssText());
+        Assert.assertEquals("p { color: green; background: green }", rule.getCssText());
     }
 
     /**
@@ -1478,7 +1478,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      */
     @Test
     public void skipDeklarationsErrorBetween() throws Exception {
-        final String css = ".a { color: blue; test; color: green }";
+        final String css = ".a { color: blue; test; background: green }";
 
         final InputSource source = new InputSource(new StringReader(css));
         final CSSOMParser parser = parser();
@@ -1500,7 +1500,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals(1, rules.getLength());
 
         final CSSRule rule = rules.item(0);
-        Assert.assertEquals("*.a { color: blue; color: green }", rule.getCssText());
+        Assert.assertEquals("*.a { color: blue; background: green }", rule.getCssText());
     }
 
     /**

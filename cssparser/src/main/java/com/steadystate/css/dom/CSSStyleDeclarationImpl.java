@@ -181,6 +181,11 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, Serializabl
     }
 
     public void addProperty(final Property p) {
+        if (null == p) {
+            return;
+        }
+
+        removeProperty(p.getName());
         properties_.add(p);
     }
 

@@ -43,6 +43,9 @@ import org.w3c.dom.css.CSSStyleRule;
 import org.w3c.dom.css.CSSStyleSheet;
 import org.w3c.dom.css.CSSValue;
 
+import com.steadystate.css.dom.CSSStyleDeclarationImpl;
+import com.steadystate.css.dom.CSSStyleRuleImpl;
+
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author sdanig
@@ -664,5 +667,44 @@ public class CSSOMParserTest {
         final CSSPageRule pageRule = (CSSPageRule) rule;
         Assert.assertEquals("", pageRule.getSelectorText());
         Assert.assertEquals("size: 21cm 29.7cm", pageRule.getStyle().getCssText());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void overwriteProperties() throws Exception {
+        final Reader r = new StringReader(
+                "p {"
+                + "background: rgb(0, 0, 0);"
+                + "background-repeat: repeat-y;"
+                + "background: url(img/test.png) no-repeat;"
+                + "background-size: 190px 48px;"
+                + "}");
+        final InputSource is = new InputSource(r);
+        final CSSStyleSheet sheet = getCss21Parser().parseStyleSheet(is, null, null);
+
+        Assert.assertEquals("p { background-repeat: repeat-y; "
+                + "background: url(img/test.png) no-repeat; "
+                + "background-size: 190px 48px }",
+                sheet.toString().trim());
+
+        final CSSRuleList rules = sheet.getCssRules();
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        final CSSStyleRuleImpl ruleImpl = (CSSStyleRuleImpl) rule;
+        final CSSStyleDeclarationImpl declImpl = (CSSStyleDeclarationImpl) ruleImpl.getStyle();
+
+        Assert.assertEquals(3, declImpl.getLength());
+
+        Assert.assertEquals("background-repeat", declImpl.item(0));
+        Assert.assertEquals("repeat-y", declImpl.getPropertyCSSValue("background-repeat").getCssText());
+
+        Assert.assertEquals("background", declImpl.item(1));
+        Assert.assertEquals("url(img/test.png) no-repeat", declImpl.getPropertyCSSValue("background").getCssText());
+
+        Assert.assertEquals("background-size", declImpl.item(2));
+        Assert.assertEquals("190px 48px", declImpl.getPropertyCSSValue("background-size").getCssText());
     }
 }
