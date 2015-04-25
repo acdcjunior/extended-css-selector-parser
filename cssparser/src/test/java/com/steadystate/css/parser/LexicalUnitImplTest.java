@@ -61,6 +61,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals(",", unit.toString());
+        Assert.assertEquals("SAC_OPERATOR_COMMA", unit.toDebugString());
     }
 
     /**
@@ -84,6 +85,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals(">", unit.toString());
+        Assert.assertEquals("SAC_OPERATOR_GT", unit.toDebugString());
     }
 
     /**
@@ -108,6 +110,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("7.1234kHz", unit.toString());
+        Assert.assertEquals("SAC_KILOHERTZ(7.1234kHz)", unit.toDebugString());
     }
 
     /**
@@ -132,6 +135,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("0Watt", unit.toString());
+        Assert.assertEquals("SAC_DIMENSION(0Watt)", unit.toDebugString());
     }
 
     /**
@@ -156,6 +160,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("sqrt()", unit.toString());
+        Assert.assertEquals("SAC_FUNCTION(sqrt())", unit.toDebugString());
     }
 
     /**
@@ -181,6 +186,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("sqrt(14cm)", unit.toString());
+        Assert.assertEquals("SAC_FUNCTION(sqrt(14cm))", unit.toDebugString());
     }
 
     /**
@@ -205,6 +211,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("testValue", unit.toString());
+        Assert.assertEquals("SAC_UNICODERANGE(testValue)", unit.toDebugString());
     }
 
     /**
@@ -229,6 +236,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("", unit.toString());
+        Assert.assertEquals("SAC_UNICODERANGE(null)", unit.toDebugString());
     }
 
     /**
@@ -287,7 +295,9 @@ public class LexicalUnitImplTest {
         unit.setLexicalUnitType(LexicalUnit.SAC_SUB_EXPRESSION);
         Assert.assertEquals("", unit.toString());
         unit.setStringValue("value");
+
         Assert.assertEquals("value", unit.toString());
+        Assert.assertEquals("SAC_SUB_EXPRESSION(value)", unit.toDebugString());
     }
 
     /**
@@ -372,6 +382,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("17", unit.toString());
+        Assert.assertEquals("SAC_INTEGER(17)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -393,6 +404,29 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7", unit.toString());
+        Assert.assertEquals("SAC_REAL(1.7)", ((LexicalUnitImpl) unit).toDebugString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void createNumberFromFloatPecision() throws Exception {
+        final LexicalUnit unit = LexicalUnitImpl.createNumber(null, 1.234567654321f);
+
+        Assert.assertEquals(LexicalUnit.SAC_REAL, unit.getLexicalUnitType());
+        Assert.assertEquals(1.2345676f, unit.getFloatValue(), 0.0001f);
+        Assert.assertEquals(1, unit.getIntegerValue());
+        Assert.assertEquals("", unit.getDimensionUnitText());
+        Assert.assertNull(unit.getFunctionName());
+        Assert.assertNull(unit.getParameters());
+        Assert.assertNull(unit.getStringValue());
+
+        Assert.assertNull(unit.getNextLexicalUnit());
+        Assert.assertNull(unit.getPreviousLexicalUnit());
+
+        Assert.assertEquals("1.2345676", unit.toString());
+        Assert.assertEquals("SAC_REAL(1.2345676)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -414,6 +448,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7%", unit.toString());
+        Assert.assertEquals("SAC_PERCENTAGE(1.7%)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -435,6 +470,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7px", unit.toString());
+        Assert.assertEquals("SAC_PIXEL(1.7px)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -456,6 +492,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7cm", unit.toString());
+        Assert.assertEquals("SAC_CENTIMETER(1.7cm)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -477,6 +514,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7mm", unit.toString());
+        Assert.assertEquals("SAC_MILLIMETER(1.7mm)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -498,6 +536,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7in", unit.toString());
+        Assert.assertEquals("SAC_INCH(1.7in)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -519,6 +558,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7pt", unit.toString());
+        Assert.assertEquals("SAC_POINT(1.7pt)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -540,6 +580,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7pc", unit.toString());
+        Assert.assertEquals("SAC_PICA(1.7pc)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -561,6 +602,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7em", unit.toString());
+        Assert.assertEquals("SAC_EM(1.7em)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -582,6 +624,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7ex", unit.toString());
+        Assert.assertEquals("SAC_EX(1.7ex)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -603,6 +646,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7deg", unit.toString());
+        Assert.assertEquals("SAC_DEGREE(1.7deg)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -624,6 +668,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7rad", unit.toString());
+        Assert.assertEquals("SAC_RADIAN(1.7rad)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -645,6 +690,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7grad", unit.toString());
+        Assert.assertEquals("SAC_GRADIAN(1.7grad)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -666,6 +712,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7ms", unit.toString());
+        Assert.assertEquals("SAC_MILLISECOND(1.7ms)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -687,6 +734,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7s", unit.toString());
+        Assert.assertEquals("SAC_SECOND(1.7s)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -708,6 +756,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7Hz", unit.toString());
+        Assert.assertEquals("SAC_HERTZ(1.7Hz)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -729,6 +778,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7Ohm", unit.toString());
+        Assert.assertEquals("SAC_DIMENSION(1.7Ohm)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -750,6 +800,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("1.7kHz", unit.toString());
+        Assert.assertEquals("SAC_KILOHERTZ(1.7kHz)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -772,6 +823,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("counter(CounterValue)", unit.toString());
+        Assert.assertEquals("SAC_COUNTER_FUNCTION(counter(CounterValue))", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -793,6 +845,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("counter()", unit.toString());
+        Assert.assertEquals("SAC_COUNTER_FUNCTION(counter())", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -816,6 +869,8 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("counters(CounterValue, Second)", unit.toString());
+        Assert.assertEquals("SAC_COUNTERS_FUNCTION(counters(CounterValue, Second))",
+                ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -837,6 +892,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("counters()", unit.toString());
+        Assert.assertEquals("SAC_COUNTERS_FUNCTION(counters())", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -858,6 +914,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("attr(attrValue)", unit.toString());
+        Assert.assertEquals("SAC_ATTR(attr(attrValue))", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -885,6 +942,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("rect(1, 2, 3, 4)", unit.toString());
+        Assert.assertEquals("SAC_RECT_FUNCTION(rect(1, 2, 3, 4))", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -909,6 +967,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("rgb(255, 128, 0)", unit.toString());
+        Assert.assertEquals("SAC_RGBCOLOR(rgb(255, 128, 0))", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -931,6 +990,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("foo(\"param\")", unit.toString());
+        Assert.assertEquals("SAC_FUNCTION(foo(\"param\"))", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -956,6 +1016,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("foo(10, 11)", unit.toString());
+        Assert.assertEquals("SAC_FUNCTION(foo(10,11))", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -977,6 +1038,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("\"RBRi\"", unit.toString());
+        Assert.assertEquals("SAC_STRING_VALUE(\"RBRi\")", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -998,6 +1060,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("css", unit.toString());
+        Assert.assertEquals("SAC_IDENT(css)", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -1019,6 +1082,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals("url(www.wetator.org)", unit.toString());
+        Assert.assertEquals("SAC_URI(url(www.wetator.org))", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
@@ -1040,6 +1104,7 @@ public class LexicalUnitImplTest {
         Assert.assertNull(unit.getPreviousLexicalUnit());
 
         Assert.assertEquals(",", unit.toString());
+        Assert.assertEquals("SAC_OPERATOR_COMMA", ((LexicalUnitImpl) unit).toDebugString());
     }
 
     /**
