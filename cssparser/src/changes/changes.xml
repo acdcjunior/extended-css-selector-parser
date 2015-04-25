@@ -5,7 +5,13 @@
     <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
   <body>
-    <release version="0.9.16" date="xx.xx.2015" description="Bugfixes">
+    <release version="0.9.16" date="xx.xx.2015" description="Bugfixes, improved UnitTest suite">
+        <action type="fix" dev="rbri" issue="51">
+            Possible NPE in com.steadystate.css.dom.CSSPageRuleImpl.getCssText() fixed.
+        </action>
+        <action type="change" dev="rbri">
+            Attribute 'ident' removed from class CSSPageRuleImpl.
+        </action>
         <action type="update" dev="rbri">
             Minor updates to the documentation.
         </action>
