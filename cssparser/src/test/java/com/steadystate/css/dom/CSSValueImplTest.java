@@ -563,4 +563,18 @@ public class CSSValueImplTest {
         Assert.assertEquals(0.0, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
         Assert.assertEquals("cssparser", value.getStringValue());
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void setCssText() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createURI(null, "cssparser");
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        value.setCssText("1.2s");
+        Assert.assertEquals("1.2s", value.getCssText());
+        Assert.assertEquals(CSSPrimitiveValue.CSS_S, value.getPrimitiveType());
+        Assert.assertEquals(1.2, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
+    }
 }
