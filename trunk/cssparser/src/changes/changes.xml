@@ -7,6 +7,9 @@
   <body>
     <release version="0.9.16" date="xx.xx.2015" description="Bugfixes, improved UnitTest suite">
         <action type="fix" dev="rbri">
+            Possible NPE in com.steadystate.css.dom.CSSFontFaceRuleImpl.getCssText() fixed.
+        </action>
+        <action type="fix" dev="rbri">
             Wrong null handling in com.steadystate.css.dom.CSSCharsetRuleImpl.getCssText() fixed.
             getCssText() now returns also the semicolon, because this is part of the rule per spec.
         </action>
