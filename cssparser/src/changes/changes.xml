@@ -7,6 +7,9 @@
   <body>
     <release version="0.9.16" date="xx.xx.2015" description="Bugfixes, improved UnitTest suite">
         <action type="fix" dev="rbri">
+            Possible NPE in com.steadystate.css.dom.CSSImportRuleImpl.getCssText() fixed.
+        </action>
+        <action type="fix" dev="rbri">
             Possible NPE in com.steadystate.css.dom.CSSFontFaceRuleImpl.getCssText() fixed.
         </action>
         <action type="fix" dev="rbri">
