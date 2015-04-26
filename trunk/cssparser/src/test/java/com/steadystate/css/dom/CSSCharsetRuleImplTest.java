@@ -38,7 +38,7 @@ import com.steadystate.css.parser.CSSOMParser;
 
 /**
 /**
- * Unit tests for {@link CSSPageRuleImpl}.
+ * Unit tests for {@link CSSCharsetRuleImpl}.
  *
  * @author rbri
  */
