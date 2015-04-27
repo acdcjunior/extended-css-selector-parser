@@ -713,7 +713,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     @Test
-    public void rgbInsidefunction() throws Exception {
+    public void rgbInsideFunction() throws Exception {
         final String cssText = "color: foo(#cd4);";
 
         final CSSOMParser parser = parser();
