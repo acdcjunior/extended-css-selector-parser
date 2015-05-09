@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSMediaRule;
+import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.parser.CSSOMParser;
@@ -45,6 +46,20 @@ import com.steadystate.css.parser.SACParserCSS21;
  * @author rbri
  */
 public class CSSMediaRuleImplTest {
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssText() throws Exception {
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
+        final InputSource source = new InputSource(new StringReader("@media print { body { font-size: 10pt } }"));
+        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        final CSSMediaRule mediaRule = (CSSMediaRule) ss.getCssRules().item(0);
+
+        Assert.assertEquals("@media print {body { font-size: 10pt } }", mediaRule.getCssText());
+        Assert.assertEquals(CSSRule.MEDIA_RULE, mediaRule.getType());
+    }
 
     /**
      * @throws Exception if any error occurs
@@ -160,11 +175,11 @@ public class CSSMediaRuleImplTest {
      * @throws Exception if any error occurs
      */
     @Test
-    public void testToString() throws Exception {
+    public void asString() throws Exception {
         final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
         final InputSource source = new InputSource(new StringReader("@media print { body { font-size: 10pt } }"));
         final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
-        final CSSMediaRule mediaRule = (CSSMediaRule) ss.getCssRules().item(0);
+        final CSSMediaRuleImpl mediaRule = (CSSMediaRuleImpl) ss.getCssRules().item(0);
 
         Assert.assertEquals("@media print {body { font-size: 10pt } }", mediaRule.toString());
     }
