@@ -101,4 +101,16 @@ public class CSSUnknownRuleImplTest {
         final CSSUnknownRuleImpl value = (CSSUnknownRuleImpl) ss.getCssRules().item(0);
         return value;
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssTextFormated() throws Exception {
+        final CSSUnknownRuleImpl value = parseUnknownRule("@foo \"text\";");
+
+        Assert.assertEquals("@foo text;", value.getCssText());
+        Assert.assertEquals("@foo text;", value.getCssText(null));
+        Assert.assertEquals("@foo text;", value.getCssText(new CSSFormat()));
+    }
 }
