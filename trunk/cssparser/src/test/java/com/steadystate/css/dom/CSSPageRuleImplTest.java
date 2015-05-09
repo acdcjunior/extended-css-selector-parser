@@ -138,4 +138,16 @@ public class CSSPageRuleImplTest {
         final CSSPageRuleImpl value = (CSSPageRuleImpl) ss.getCssRules().item(0);
         return value;
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssTextFormated() throws Exception {
+        final CSSPageRuleImpl value = parsePageRule("@page { size: 21.0cm 29.7cm; }");
+
+        Assert.assertEquals("@page {size: 21cm 29.7cm}", value.getCssText());
+        Assert.assertEquals("@page {size: 21cm 29.7cm}", value.getCssText(null));
+        Assert.assertEquals("@page {size: 21cm 29.7cm}", value.getCssText(new CSSFormat()));
+    }
 }
