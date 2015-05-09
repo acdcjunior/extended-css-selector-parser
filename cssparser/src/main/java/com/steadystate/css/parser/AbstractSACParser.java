@@ -767,7 +767,7 @@ abstract class AbstractSACParser implements Parser {
     }
 
     private static int hexval(final char c) {
-        switch(c) {
+        switch (c) {
             case '0' :
                 return 0;
             case '1' :
