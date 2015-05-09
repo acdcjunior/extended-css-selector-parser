@@ -577,4 +577,17 @@ public class CSSValueImplTest {
         Assert.assertEquals(CSSPrimitiveValue.CSS_S, value.getPrimitiveType());
         Assert.assertEquals(1.2, value.getFloatValue(CSSPrimitiveValue.CSS_NUMBER), 0.00001);
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssTextFormated() throws Exception {
+        final LexicalUnit lu = LexicalUnitImpl.createString(null, "value");
+        final CSSValueImpl value = new CSSValueImpl(lu, false);
+
+        Assert.assertEquals("\"value\"", value.getCssText());
+        Assert.assertEquals("\"value\"", value.getCssText(null));
+        Assert.assertEquals("\"value\"", value.getCssText(new CSSFormat()));
+    }
 }
