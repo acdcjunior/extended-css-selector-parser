@@ -115,4 +115,16 @@ public class CSSImportRuleImplTest {
         final CSSImportRuleImpl value = (CSSImportRuleImpl) ss.getCssRules().item(0);
         return value;
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssTextFormated() throws Exception {
+        final CSSImportRuleImpl value = parseImportRule("@import \"ext.css\";");
+
+        Assert.assertEquals("@import url(ext.css);", value.getCssText());
+        Assert.assertEquals("@import url(ext.css);", value.getCssText(null));
+        Assert.assertEquals("@import url(ext.css);", value.getCssText(new CSSFormat()));
+    }
 }
