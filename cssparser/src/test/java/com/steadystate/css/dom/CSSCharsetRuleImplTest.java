@@ -115,4 +115,15 @@ public class CSSCharsetRuleImplTest {
         final CSSCharsetRuleImpl value = (CSSCharsetRuleImpl) ss.getCssRules().item(0);
         return value;
     }
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssTextFormated() throws Exception {
+        final CSSCharsetRuleImpl value = parseCharsetRule("@charset \"utf-8\";");
+
+        Assert.assertEquals("@charset \"utf-8\";", value.getCssText());
+        Assert.assertEquals("@charset \"utf-8\";", value.getCssText(null));
+        Assert.assertEquals("@charset \"utf-8\";", value.getCssText(new CSSFormat()));
+    }
 }
