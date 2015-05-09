@@ -953,7 +953,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals("P:before { content: counter(p, none) }", rule.getCssText());
         Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
         value = (CSSValueImpl) ((CSSStyleRule) rule).getStyle().getPropertyCSSValue("content");
-        Assert.assertEquals("counter(p, none)", (value.getCounterValue().toString()));
+        Assert.assertEquals("counter(p, none)", value.getCounterValue().toString());
     }
 
     /**
