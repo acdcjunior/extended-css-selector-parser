@@ -124,4 +124,16 @@ public class CSSFontFaceRuleImplTest {
         final CSSFontFaceRuleImpl value = (CSSFontFaceRuleImpl) ss.getCssRules().item(0);
         return value;
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssTextFormated() throws Exception {
+        final CSSFontFaceRuleImpl value = parseFontFaceRule("@font-face { font-family: 'Scarface' }");
+
+        Assert.assertEquals("@font-face {font-family: \"Scarface\"}", value.getCssText());
+        Assert.assertEquals("@font-face {font-family: \"Scarface\"}", value.getCssText(null));
+        Assert.assertEquals("@font-face {font-family: \"Scarface\"}", value.getCssText(new CSSFormat()));
+    }
 }
