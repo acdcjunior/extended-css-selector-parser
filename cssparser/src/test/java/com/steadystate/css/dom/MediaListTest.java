@@ -206,4 +206,17 @@ public class MediaListTest {
         Assert.assertEquals("MyMediaText", ml.item(0));
         Assert.assertNull(ml.item(1));
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getMediaTextFormated() throws Exception {
+        final MediaListImpl ml = new MediaListImpl();
+        ml.appendMedium("newMedium");
+
+        Assert.assertEquals("newMedium", ml.getMediaText());
+        Assert.assertEquals("newMedium", ml.getMediaText(null));
+        Assert.assertEquals("newMedium", ml.getMediaText(new CSSFormat()));
+    }
 }
