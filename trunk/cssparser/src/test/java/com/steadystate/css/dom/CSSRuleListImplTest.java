@@ -112,4 +112,16 @@ public class CSSRuleListImplTest {
 
         return (CSSRuleListImpl) ss.getCssRules();
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssTextFormated() throws Exception {
+        final CSSRuleListImpl value = parseRuleList("h1 {} h2 {color:green}");
+
+        Assert.assertEquals("h1 { }\r\nh2 { color: green }", value.getCssText());
+        Assert.assertEquals("h1 { }\r\nh2 { color: green }", value.getCssText(null));
+        Assert.assertEquals("h1 { }\r\nh2 { color: green }", value.getCssText(new CSSFormat()));
+    }
 }

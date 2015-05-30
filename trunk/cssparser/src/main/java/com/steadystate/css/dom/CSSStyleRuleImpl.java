@@ -75,7 +75,16 @@ public class CSSStyleRuleImpl extends AbstractCSSRuleImpl implements CSSStyleRul
         return STYLE_RULE;
     }
 
-    public String getCssText() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getCssText(final CSSFormat format) {
+        final CSSStyleDeclaration style = getStyle();
+        if (null == style) {
+            return "";
+        }
+
         final String styleText = getStyle().getCssText();
         if (null == styleText || styleText.length() == 0) {
             return getSelectorText() + " { }";

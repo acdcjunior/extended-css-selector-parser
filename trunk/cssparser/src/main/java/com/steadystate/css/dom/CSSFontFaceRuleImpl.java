@@ -63,17 +63,10 @@ public class CSSFontFaceRuleImpl extends AbstractCSSRuleImpl implements CSSFontF
         return FONT_FACE_RULE;
     }
 
-    public String getCssText() {
-        return getCssText(null);
-    }
-
     /**
-     * Returns a string representation of the rule based on the given format.
-     * If provided format is null, the result is the same as getCssText()
-     *
-     * @param format the formating rules
-     * @return the formated string
+     * {@inheritDoc}
      */
+    @Override
     public String getCssText(final CSSFormat format) {
         final StringBuilder result = new StringBuilder();
         result.append("@font-face {");

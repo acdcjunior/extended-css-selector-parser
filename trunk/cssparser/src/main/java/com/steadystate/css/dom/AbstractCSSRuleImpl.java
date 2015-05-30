@@ -70,6 +70,24 @@ public abstract class AbstractCSSRuleImpl extends CSSOMObjectImpl {
         return parentRule_;
     }
 
+    /**
+     * Returns a string representation of the rule based on the given format.
+     * If provided format is null, the result is the same as getCssText()
+     *
+     * @param format the formating rules
+     * @return the formated string
+     */
+    public abstract String getCssText(final CSSFormat format);
+
+    /**
+     * Same as {@link #getCssText(CSSFormat)} but using the default format.
+     *
+     * @return the formated string
+     */
+    public String getCssText() {
+        return getCssText(null);
+    }
+
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
