@@ -27,7 +27,6 @@
 package com.steadystate.css.dom;
 
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,17 +85,43 @@ public class CSSRuleListImpl implements CSSRuleList, Serializable {
         getRules().remove(index);
     }
 
-    @Override
-    public String toString() {
+    /**
+     * Same as {@link #getCssText(CSSFormat)} but using the default format.
+     *
+     * @return the formated string
+     */
+    public String getCssText() {
+        return getCssText(null);
+    }
+
+    /**
+     * Returns a string representation of the rule based on the given format.
+     * If provided format is null, the result is the same as getCssText()
+     *
+     * @param format the formating rules
+     * @return the formated string
+     */
+    public String getCssText(final CSSFormat format) {
         final StringBuilder sb = new StringBuilder();
-        if (0 < getLength()) {
-            sb.append(item(0).toString());
-        }
-        for (int i = 1; i < getLength(); i++) {
-            sb.append("\r\n");
-            sb.append(item(i).toString());
+        for (int i = 0; i < getLength(); i++) {
+            if (i > 0) {
+                sb.append("\r\n");
+            }
+
+            final CSSRule rule = item(i);
+            if (rule instanceof AbstractCSSRuleImpl) {
+                sb.append(((AbstractCSSRuleImpl) rule).getCssText(format));
+            }
+            else {
+                sb.append(rule.toString());
+            }
         }
         return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+        return getCssText(null);
     }
 
     @Override
