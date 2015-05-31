@@ -6,6 +6,9 @@
   </properties>
   <body>
     <release version="0.9.16" date="xx.xx.2015" description="Bugfixes, improved UnitTest suite">
+        <action type="add" dev="rbri" issue="54">
+            Support for getCssText(CSSFormat) added to start supporting various output format options.
+        </action>
         <action type="add" dev="rbri">
             Missing impl of com.steadystate.css.dom.CSSUnknownRuleImpl.setCssText(String) added.
         </action>
