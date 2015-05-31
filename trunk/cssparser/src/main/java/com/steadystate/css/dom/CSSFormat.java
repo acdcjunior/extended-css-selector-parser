@@ -32,5 +32,14 @@ package com.steadystate.css.dom;
  * @author rbri
  */
 public class CSSFormat {
+    private boolean rgbAsHex_;
+
+    public boolean isRgbAsHex() {
+        return rgbAsHex_;
+    }
+
+    public void setRgbAsHex(final boolean rgbAsHex) {
+        rgbAsHex_ = rgbAsHex;
+    }
 
 }
