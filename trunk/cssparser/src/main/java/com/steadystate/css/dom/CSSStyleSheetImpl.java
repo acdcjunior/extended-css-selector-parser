@@ -286,9 +286,33 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
         cssRules_ = rules;
     }
 
+    /**
+     * Same as {@link #getCssText(CSSFormat)} but using the default format.
+     *
+     * @return the formated string
+     */
+    public String getCssText() {
+        return getCssText(null);
+    }
+
+    /**
+     * Returns a string representation of the rule based on the given format.
+     * If provided format is null, the result is the same as getCssText()
+     *
+     * @param format the formating rules
+     * @return the formated string
+     */
+    public String getCssText(final CSSFormat format) {
+        final CSSRuleList rules = getCssRules();
+        if (rules instanceof CSSRuleListImpl) {
+            return ((CSSRuleListImpl) rules).getCssText(format);
+        }
+        return getCssRules().toString();
+    }
+
     @Override
     public String toString() {
-        return getCssRules().toString();
+        return getCssText(null);
     }
 
     @Override

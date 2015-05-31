@@ -39,7 +39,6 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.parser.CSSOMParser;
-import com.steadystate.css.parser.SACParserCSS21;
 
 /**
 /**
@@ -54,9 +53,7 @@ public class CSSStyleSheetImplTest {
      */
     @Test
     public void insertRule() throws Exception {
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
-        final InputSource source = new InputSource(new StringReader(""));
-        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        final CSSStyleSheetImpl ss = parseStyleSheet("");
 
         ss.insertRule(".testStyle { height: 42px; }", 0);
         Assert.assertEquals("*.testStyle { height: 42px }", ss.getCssRules().item(0).getCssText());
@@ -84,9 +81,7 @@ public class CSSStyleSheetImplTest {
      */
     @Test
     public void insertRuleWithLeadingWhitespace() throws Exception {
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
-        final InputSource source = new InputSource(new StringReader(""));
-        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        final CSSStyleSheetImpl ss = parseStyleSheet("");
 
         ss.insertRule(" .testStyleDef { height: 42px; }", 0);
         Assert.assertEquals("*.testStyleDef { height: 42px }", ss.getCssRules().item(0).getCssText());
@@ -108,9 +103,7 @@ public class CSSStyleSheetImplTest {
      */
     @Test
     public void insertRuleWithoutDeclaration() throws Exception {
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
-        final InputSource source = new InputSource(new StringReader(""));
-        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        final CSSStyleSheet ss = parseStyleSheet("");
 
         try {
             ss.insertRule(".testStyleDef", 0);
@@ -127,10 +120,8 @@ public class CSSStyleSheetImplTest {
      */
     @Test
     public void insertRuleReadOnly() throws Exception {
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
-        final InputSource source = new InputSource(new StringReader(""));
-        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
-        ((CSSStyleSheetImpl) ss).setReadOnly(true);
+        final CSSStyleSheetImpl ss = parseStyleSheet("");
+        ss.setReadOnly(true);
 
         try {
             ss.insertRule(".testStyleDef", 0);
@@ -148,9 +139,7 @@ public class CSSStyleSheetImplTest {
      */
     @Test
     public void insertRuleRuleOrderCharset() throws Exception {
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
-        final InputSource source = new InputSource(new StringReader(""));
-        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        final CSSStyleSheet ss = parseStyleSheet("");
 
         ss.insertRule("@charset \"US-ASCII\";", 0);
         try {
@@ -167,9 +156,7 @@ public class CSSStyleSheetImplTest {
      */
     @Test
     public void insertRuleRuleImport() throws Exception {
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
-        final InputSource source = new InputSource(new StringReader(""));
-        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        final CSSStyleSheet ss = parseStyleSheet("");
 
         ss.insertRule("@import \"great.css\";", 0);
 
@@ -191,9 +178,7 @@ public class CSSStyleSheetImplTest {
      */
     @Test
     public void deleteRule() throws Exception {
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
-        final InputSource source = new InputSource(new StringReader("test { height: 42px }"));
-        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        final CSSStyleSheet ss = parseStyleSheet("test { height: 42px }");
 
         ss.deleteRule(0);
     }
@@ -203,9 +188,7 @@ public class CSSStyleSheetImplTest {
      */
     @Test
     public void deleteRuleWrongIndex() throws Exception {
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
-        final InputSource source = new InputSource(new StringReader(""));
-        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        final CSSStyleSheet ss = parseStyleSheet("");
 
         try {
             ss.deleteRule(7);
@@ -222,10 +205,8 @@ public class CSSStyleSheetImplTest {
      */
     @Test
     public void deleteRuleReadOnly() throws Exception {
-        final CSSOMParser parser = new CSSOMParser(new SACParserCSS21());
-        final InputSource source = new InputSource(new StringReader(""));
-        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
-        ((CSSStyleSheetImpl) ss).setReadOnly(true);
+        final CSSStyleSheetImpl ss = parseStyleSheet("");
+        ss.setReadOnly(true);
 
         try {
             ss.deleteRule(0);
@@ -269,5 +250,24 @@ public class CSSStyleSheetImplTest {
         final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
         final Object o = ois.readObject();
         Assert.assertEquals(css, o);
+    }
+
+    private CSSStyleSheetImpl parseStyleSheet(final String rule) throws Exception {
+        final InputSource is = new InputSource(new StringReader(rule));
+        final CSSStyleSheet ss = new CSSOMParser().parseStyleSheet(is, null, null);
+
+        return (CSSStyleSheetImpl) ss;
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssTextFormated() throws Exception {
+        final CSSStyleSheetImpl value = parseStyleSheet("h1{color:blue}");
+
+        Assert.assertEquals("h1 { color: blue }", value.getCssText());
+        Assert.assertEquals("h1 { color: blue }", value.getCssText(null));
+        Assert.assertEquals("h1 { color: blue }", value.getCssText(new CSSFormat()));
     }
 }
