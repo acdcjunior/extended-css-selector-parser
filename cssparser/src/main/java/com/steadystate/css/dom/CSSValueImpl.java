@@ -168,9 +168,30 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
             while (it.hasNext()) {
                 final Object o = it.next();
                 final CSSValueImpl cssValue = (CSSValueImpl) o;
-                if (cssValue.value_ instanceof LexicalUnit) {
+                if (cssValue.value_ instanceof LexicalUnitImpl) {
+                    LexicalUnitImpl lu = (LexicalUnitImpl) cssValue.value_;
+                    sb.append(lu.getCssText(format));
+
+                    // Step to the next lexical unit, determining what spacing we
+                    // need to put around the operators
+                    final LexicalUnit prev = lu;
+                    lu = (LexicalUnitImpl) lu.getNextLexicalUnit();
+                    if ((lu != null)
+                            && ((lu.getLexicalUnitType() == LexicalUnit.SAC_OPERATOR_COMMA)
+                            || (lu.getLexicalUnitType() == LexicalUnit.SAC_OPERATOR_SLASH)
+                            || (prev.getLexicalUnitType() == LexicalUnit.SAC_OPERATOR_SLASH)
+                        )) {
+                        sb.append(lu.getCssText(format));
+                    }
+                }
+                else if (cssValue.value_ instanceof LexicalUnit) {
                     LexicalUnit lu = (LexicalUnit) cssValue.value_;
-                    sb.append(lu.toString());
+                    if (lu instanceof LexicalUnitImpl) {
+                        sb.append(((LexicalUnitImpl) lu).getCssText(format));
+                    }
+                    else {
+                        sb.append(lu.toString());
+                    }
 
                     // Step to the next lexical unit, determining what spacing we
                     // need to put around the operators

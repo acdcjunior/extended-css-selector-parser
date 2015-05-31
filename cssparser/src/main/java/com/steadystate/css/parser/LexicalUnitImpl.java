@@ -30,6 +30,8 @@ import java.io.Serializable;
 
 import org.w3c.css.sac.LexicalUnit;
 
+import com.steadystate.css.dom.CSSFormat;
+
 /**
  * Implementation of {@link LexicalUnit}.
  *
@@ -243,8 +245,23 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
         return parameters_;
     }
 
-    @Override
-    public String toString() {
+    /**
+     * Same as {@link #getCssText(CSSFormat)} but using the default format.
+     *
+     * @return the formated string
+     */
+    public String getCssText() {
+        return getCssText(null);
+    }
+
+    /**
+     * Returns a string representation of the rule based on the given format.
+     * If provided format is null, the result is the same as getCssText()
+     *
+     * @param format the formating rules
+     * @return the formated string
+     */
+    public String getCssText(final CSSFormat format) {
         if (null != toString_) {
             return toString_;
         }
@@ -379,6 +396,11 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
         }
         toString_ = sb.toString();
         return toString_;
+    }
+
+    @Override
+    public String toString() {
+        return getCssText(null);
     }
 
     public String toDebugString() {
