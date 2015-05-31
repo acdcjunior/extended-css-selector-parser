@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 import org.w3c.dom.css.CSSStyleSheet;
 
+import com.steadystate.css.format.CSSFormat;
 import com.steadystate.css.parser.CSSOMParser;
 
 /**

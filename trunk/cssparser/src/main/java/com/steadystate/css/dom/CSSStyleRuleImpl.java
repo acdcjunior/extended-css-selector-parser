@@ -37,6 +37,8 @@ import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSStyleRule;
 
+import com.steadystate.css.format.CSSFormat;
+import com.steadystate.css.format.CSSFormatable;
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.util.LangUtils;
 
@@ -85,11 +87,18 @@ public class CSSStyleRuleImpl extends AbstractCSSRuleImpl implements CSSStyleRul
             return "";
         }
 
-        final String styleText = getStyle().getCssText();
+        final String styleText;
+        if (style instanceof CSSFormatable) {
+            styleText = ((CSSFormatable) style).getCssText(format);
+        }
+        else {
+            styleText = style.getCssText();
+        }
+
         if (null == styleText || styleText.length() == 0) {
             return getSelectorText() + " { }";
         }
-        return getSelectorText() + " { " + getStyle().getCssText() + " }";
+        return getSelectorText() + " { " + styleText + " }";
     }
 
     public void setCssText(final String cssText) throws DOMException {

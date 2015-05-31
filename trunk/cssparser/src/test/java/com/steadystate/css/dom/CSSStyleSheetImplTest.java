@@ -38,6 +38,7 @@ import org.w3c.css.sac.InputSource;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSStyleSheet;
 
+import com.steadystate.css.format.CSSFormat;
 import com.steadystate.css.parser.CSSOMParser;
 
 /**
@@ -269,5 +270,18 @@ public class CSSStyleSheetImplTest {
         Assert.assertEquals("h1 { color: blue }", value.getCssText());
         Assert.assertEquals("h1 { color: blue }", value.getCssText(null));
         Assert.assertEquals("h1 { color: blue }", value.getCssText(new CSSFormat()));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssTextFormatedAsHex() throws Exception {
+        final CSSStyleSheetImpl value = parseStyleSheet("h1{ color: rgb(1,2,3)}");
+
+        final CSSFormat format = new CSSFormat();
+
+        format.setRgbAsHex(true);
+        Assert.assertEquals("h1 { color: #010203 }", value.getCssText(format));
     }
 }

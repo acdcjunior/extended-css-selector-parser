@@ -35,6 +35,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSCharsetRule;
 import org.w3c.dom.css.CSSRule;
 
+import com.steadystate.css.format.CSSFormat;
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.util.LangUtils;
 

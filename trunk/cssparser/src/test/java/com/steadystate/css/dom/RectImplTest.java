@@ -38,6 +38,7 @@ import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.Rect;
 
+import com.steadystate.css.format.CSSFormat;
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.parser.LexicalUnitImpl;
 import com.steadystate.css.parser.SACParserCSS21;
@@ -48,7 +49,7 @@ import com.steadystate.css.parser.SACParserCSS21;
  *
  * @author rbri
  */
-public class RectTest {
+public class RectImplTest {
 
     /**
      * @throws Exception if any error occurs
@@ -194,5 +195,25 @@ public class RectTest {
         Assert.assertEquals("2px", rect.getRight().toString());
         Assert.assertEquals("-3px", rect.getBottom().toString());
         Assert.assertEquals("4px", rect.getLeft().toString());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssText() throws Exception {
+        final LexicalUnit rectLU = LexicalUnitImpl.createNumber(null, 10);
+        LexicalUnit lu = LexicalUnitImpl.createComma(rectLU);
+        lu = LexicalUnitImpl.createNumber(lu, 20);
+        lu = LexicalUnitImpl.createComma(lu);
+        lu = LexicalUnitImpl.createNumber(lu, 30);
+        lu = LexicalUnitImpl.createComma(lu);
+        lu = LexicalUnitImpl.createNumber(lu, 40);
+
+        final RectImpl rect = new RectImpl(rectLU);
+
+        Assert.assertEquals("rect(10, 20, 30, 40)", rect.getCssText());
+        Assert.assertEquals("rect(10, 20, 30, 40)", rect.getCssText(null));
+        Assert.assertEquals("rect(10, 20, 30, 40)", rect.getCssText(new CSSFormat()));
     }
 }

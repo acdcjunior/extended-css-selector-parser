@@ -34,6 +34,8 @@ import org.junit.Test;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.stylesheets.MediaList;
 
+import com.steadystate.css.format.CSSFormat;
+
 /**
 /**
  * Unit tests for {@link MediaListImpl}.
