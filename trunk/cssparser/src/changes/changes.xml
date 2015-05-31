@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
-<document>
+<document xmlns="http://maven.apache.org/changes/1.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <properties>
     <title>Changes</title>
-    <author email="sdanig@users.sourceforge.net">Daniel Gredler</author>
   </properties>
+
   <body>
-    <release version="0.9.16" date="xx.xx.2015" description="Bugfixes, improved UnitTest suite">
+    <release version="0.9.16" date="xx.xx.2015" description="Formated output support, Bugfixes, improved UnitTest suite">
         <action type="add" dev="rbri" issue="54">
             Support for getCssText(CSSFormat) added to start supporting various output format options.
         </action>
