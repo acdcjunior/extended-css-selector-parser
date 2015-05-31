@@ -276,7 +276,7 @@ public class CSSStyleSheetImplTest {
      * @throws Exception if any error occurs
      */
     @Test
-    public void getCssTextFormatedAsHex() throws Exception {
+    public void getCssTextFormatedRgbAsHex() throws Exception {
         final CSSStyleSheetImpl value = parseStyleSheet("h1{ color: rgb(1,2,3)}");
 
         final CSSFormat format = new CSSFormat();
