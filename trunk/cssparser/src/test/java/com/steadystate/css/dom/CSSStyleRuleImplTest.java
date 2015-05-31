@@ -105,15 +105,15 @@ public class CSSStyleRuleImplTest {
         return value;
     }
 
-//    /**
-//     * @throws Exception if any error occurs
-//     */
-//    @Test
-//    public void getCssTextFormated() throws Exception {
-//        final CSSUnknownRuleImpl value = parseUnknownRule("@foo \"text\";");
-//
-//        Assert.assertEquals("@foo text;", value.getCssText());
-//        Assert.assertEquals("@foo text;", value.getCssText(null));
-//        Assert.assertEquals("@foo text;", value.getCssText(new CSSFormat()));
-//    }
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssTextFormated() throws Exception {
+        final CSSStyleRuleImpl value = parseStyleRule("h1{color:blue}");
+
+        Assert.assertEquals("h1 { color: blue }", value.getCssText());
+        Assert.assertEquals("h1 { color: blue }", value.getCssText(null));
+        Assert.assertEquals("h1 { color: blue }", value.getCssText(new CSSFormat()));
+    }
 }
