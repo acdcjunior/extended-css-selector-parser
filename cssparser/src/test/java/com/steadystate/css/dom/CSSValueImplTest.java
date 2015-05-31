@@ -32,6 +32,7 @@ import org.w3c.css.sac.LexicalUnit;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSPrimitiveValue;
 
+import com.steadystate.css.format.CSSFormat;
 import com.steadystate.css.parser.LexicalUnitImpl;
 
 /**

@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.w3c.css.sac.LexicalUnit;
 import org.w3c.dom.DOMException;
 
+import com.steadystate.css.format.CSSFormat;
 import com.steadystate.css.parser.LexicalUnitImpl;
 
 /**
@@ -38,7 +39,7 @@ import com.steadystate.css.parser.LexicalUnitImpl;
  *
  * @author rbri
  */
-public class RGBColorTest {
+public class RGBColorImplTest {
 
     /**
      * @throws Exception if any error occurs
@@ -135,5 +136,44 @@ public class RGBColorTest {
         catch (final DOMException e) {
             Assert.assertEquals("Too many parameters for rgb function.", e.getMessage());
         }
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssText() throws Exception {
+        final LexicalUnit rgbLu = LexicalUnitImpl.createNumber(null, 10);
+        LexicalUnit lu = LexicalUnitImpl.createComma(rgbLu);
+        lu = LexicalUnitImpl.createNumber(lu, 20);
+        lu = LexicalUnitImpl.createComma(lu);
+        lu = LexicalUnitImpl.createNumber(lu, 30);
+
+        final RGBColorImpl rgb = new RGBColorImpl(rgbLu);
+
+        Assert.assertEquals("rgb(10, 20, 30)", rgb.getCssText());
+        Assert.assertEquals("rgb(10, 20, 30)", rgb.getCssText(null));
+        Assert.assertEquals("rgb(10, 20, 30)", rgb.getCssText(new CSSFormat()));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssTextAsHex() throws Exception {
+        final LexicalUnit rgbLu = LexicalUnitImpl.createNumber(null, 10);
+        LexicalUnit lu = LexicalUnitImpl.createComma(rgbLu);
+        lu = LexicalUnitImpl.createNumber(lu, 20);
+        lu = LexicalUnitImpl.createComma(lu);
+        lu = LexicalUnitImpl.createNumber(lu, 5);
+
+        final RGBColorImpl rgb = new RGBColorImpl(rgbLu);
+        final CSSFormat format = new CSSFormat();
+
+        format.setRgbAsHex(true);
+        Assert.assertEquals("#0a1405", rgb.getCssText(format));
+
+        format.setRgbAsHex(false);
+        Assert.assertEquals("rgb(10, 20, 5)", rgb.getCssText(format));
     }
 }

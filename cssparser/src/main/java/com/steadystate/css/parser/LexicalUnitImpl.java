@@ -30,7 +30,8 @@ import java.io.Serializable;
 
 import org.w3c.css.sac.LexicalUnit;
 
-import com.steadystate.css.dom.CSSFormat;
+import com.steadystate.css.format.CSSFormat;
+import com.steadystate.css.format.CSSFormatable;
 
 /**
  * Implementation of {@link LexicalUnit}.
@@ -38,7 +39,7 @@ import com.steadystate.css.dom.CSSFormat;
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author rbri
  */
-public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Serializable {
+public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, CSSFormatable, Serializable {
 
     private static final long serialVersionUID = -7260032046960116891L;
 
@@ -255,11 +256,7 @@ public class LexicalUnitImpl extends LocatableImpl implements LexicalUnit, Seria
     }
 
     /**
-     * Returns a string representation of the rule based on the given format.
-     * If provided format is null, the result is the same as getCssText()
-     *
-     * @param format the formating rules
-     * @return the formated string
+     * {@inheritDoc}
      */
     public String getCssText(final CSSFormat format) {
         if (null != toString_) {

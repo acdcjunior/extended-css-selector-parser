@@ -24,22 +24,21 @@
  *
  */
 
-package com.steadystate.css.dom;
+package com.steadystate.css.format;
 
 /**
- * Format object that controls the output produced by toString(CssFormat).
+ * Common interface for all classes supporting formated output.
  *
  * @author rbri
  */
-public class CSSFormat {
-    private boolean rgbAsHex_;
+public interface CSSFormatable {
 
-    public boolean isRgbAsHex() {
-        return rgbAsHex_;
-    }
-
-    public void setRgbAsHex(final boolean rgbAsHex) {
-        rgbAsHex_ = rgbAsHex;
-    }
-
+    /**
+     * Returns a string representation of the rule based on the given format.
+     * If provided format is null, the result is the same as getCssText()
+     *
+     * @param format the formating rules
+     * @return the formated string
+     */
+    String getCssText(final CSSFormat format);
 }

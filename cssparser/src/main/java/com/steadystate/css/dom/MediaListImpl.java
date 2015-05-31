@@ -38,6 +38,7 @@ import org.w3c.css.sac.SACMediaList;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.stylesheets.MediaList;
 
+import com.steadystate.css.format.CSSFormat;
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.parser.Locatable;
 import com.steadystate.css.parser.SACMediaListImpl;

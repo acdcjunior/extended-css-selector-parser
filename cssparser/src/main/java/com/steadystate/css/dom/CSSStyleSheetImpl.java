@@ -46,6 +46,8 @@ import org.w3c.dom.css.CSSStyleSheet;
 import org.w3c.dom.stylesheets.MediaList;
 import org.w3c.dom.stylesheets.StyleSheet;
 
+import com.steadystate.css.format.CSSFormat;
+import com.steadystate.css.format.CSSFormatable;
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.util.LangUtils;
 import com.steadystate.css.util.ThrowCssExceptionErrorHandler;
@@ -56,7 +58,7 @@ import com.steadystate.css.util.ThrowCssExceptionErrorHandler;
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author rbri
  */
-public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
+public class CSSStyleSheetImpl implements CSSStyleSheet, CSSFormatable, Serializable {
 
     private static final long serialVersionUID = -2300541300646796363L;
 
@@ -296,11 +298,7 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, Serializable {
     }
 
     /**
-     * Returns a string representation of the rule based on the given format.
-     * If provided format is null, the result is the same as getCssText()
-     *
-     * @param format the formating rules
-     * @return the formated string
+     * {@inheritDoc}
      */
     public String getCssText(final CSSFormat format) {
         final CSSRuleList rules = getCssRules();

@@ -33,6 +33,8 @@ import java.util.List;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
 
+import com.steadystate.css.format.CSSFormat;
+import com.steadystate.css.format.CSSFormatable;
 import com.steadystate.css.util.LangUtils;
 
 /**
@@ -41,7 +43,7 @@ import com.steadystate.css.util.LangUtils;
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author rbri
  */
-public class CSSRuleListImpl implements CSSRuleList, Serializable {
+public class CSSRuleListImpl implements CSSRuleList, CSSFormatable, Serializable {
 
     private static final long serialVersionUID = -1269068897476453290L;
 
@@ -95,11 +97,7 @@ public class CSSRuleListImpl implements CSSRuleList, Serializable {
     }
 
     /**
-     * Returns a string representation of the rule based on the given format.
-     * If provided format is null, the result is the same as getCssText()
-     *
-     * @param format the formating rules
-     * @return the formated string
+     * {@inheritDoc}
      */
     public String getCssText(final CSSFormat format) {
         final StringBuilder sb = new StringBuilder();
@@ -109,8 +107,8 @@ public class CSSRuleListImpl implements CSSRuleList, Serializable {
             }
 
             final CSSRule rule = item(i);
-            if (rule instanceof AbstractCSSRuleImpl) {
-                sb.append(((AbstractCSSRuleImpl) rule).getCssText(format));
+            if (rule instanceof CSSFormatable) {
+                sb.append(((CSSFormatable) rule).getCssText(format));
             }
             else {
                 sb.append(rule.toString());
