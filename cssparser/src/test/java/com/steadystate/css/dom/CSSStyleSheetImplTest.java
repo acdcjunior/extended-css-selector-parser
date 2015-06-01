@@ -284,4 +284,17 @@ public class CSSStyleSheetImplTest {
         format.setRgbAsHex(true);
         Assert.assertEquals("h1 { color: #010203 }", value.getCssText(format));
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void getCssTextFormatedRgbAsHex2() throws Exception {
+        final CSSStyleSheetImpl value = parseStyleSheet("h1 { border: 1px solid rgb(17,2,3) }");
+
+        final CSSFormat format = new CSSFormat();
+
+        format.setRgbAsHex(true);
+        Assert.assertEquals("h1 { border: 1px solid #110203 }", value.getCssText(format));
+    }
 }

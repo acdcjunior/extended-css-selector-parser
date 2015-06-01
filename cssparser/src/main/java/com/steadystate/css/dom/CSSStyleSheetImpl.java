@@ -302,7 +302,7 @@ public class CSSStyleSheetImpl implements CSSStyleSheet, CSSFormatable, Serializ
      */
     public String getCssText(final CSSFormat format) {
         final CSSRuleList rules = getCssRules();
-        if (rules instanceof CSSRuleListImpl) {
+        if (rules instanceof CSSFormatable) {
             return ((CSSRuleListImpl) rules).getCssText(format);
         }
         return getCssRules().toString();
