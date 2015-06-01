@@ -198,6 +198,9 @@ public class CSSValueImpl extends CSSOMObjectImpl implements CSSPrimitiveValue, 
                         sb.append(lu.toString());
                     }
                 }
+                else if (cssValue.value_ instanceof CSSFormatable) {
+                    sb.append(((CSSFormatable) o).getCssText(format));
+                }
                 else {
                     sb.append(o);
                 }
