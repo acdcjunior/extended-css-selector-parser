@@ -91,7 +91,7 @@ public class MediaListImpl extends CSSOMObjectImpl implements MediaList {
      * Returns a string representation of the rule based on the given format.
      * If provided format is null, the result is the same as getCssText()
      *
-     * @param format the formating rules
+     * @param format the formatting rules
      * @return the formated string
      */
     public String getMediaText(final CSSFormat format) {
