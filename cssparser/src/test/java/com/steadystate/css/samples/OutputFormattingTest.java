@@ -40,10 +40,10 @@ import com.steadystate.css.parser.SACParserCSS3;
  *
  * @author rbri
  */
-public class OutputFormatingTest {
+public class OutputFormattingTest {
 
     @Test
-    public void outputFormating() throws Exception {
+    public void outputFormatting() throws Exception {
         InputSource source = new InputSource(new StringReader("h1{background:rgb(7,42,0)}"));
         CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
         CSSStyleSheetImpl sheet = (CSSStyleSheetImpl) parser.parseStyleSheet(source, null, null);

@@ -33,7 +33,7 @@
 
     <suppress checks="MethodLength" files="GettingStartedTest.java"/>
     <suppress checks="FinalLocalVariable" files="GettingStartedTest.java"/>
-    <suppress checks="FinalLocalVariable" files="OutputFormatingTest.java"/>
+    <suppress checks="FinalLocalVariable" files="OutputFormattingTest.java"/>
 
     <suppress checks="Header" files=".+.properties"/>
 

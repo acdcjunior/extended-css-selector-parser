@@ -8,9 +8,9 @@
     </properties>
 
     <body>
-        <section name="Output Formating">
+        <section name="Output Formatting">
             <p>
-                Starting with version 0.9.16 CSSParser includes limited support of output formating.
+                Starting with version 0.9.16 CSSParser includes limited support of output formatting.
                 At the moment the formatter uses a fixed layout.<br/>
                 Additionally there is an option that forces for the output of color values as hex instead of rgb.
             </p>
