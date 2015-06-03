@@ -30,6 +30,7 @@
         </menu>
         <menu name="How do I...">
             <item name="Get started" href="/gettingStarted.html"/>
+            <item name="Output Formating" href="/outputFormating.html"/>
         </menu>
         <menu ref="reports"/>
         <menu ref="parent"/>
