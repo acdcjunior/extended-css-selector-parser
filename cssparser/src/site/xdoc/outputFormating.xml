@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+    <properties>
+        <title>Getting Started with CSSParser</title>
+        <author email="rbri@rbri.de">RBRi</author>
+    </properties>
+
+    <body>
+        <section name="Output Formating">
+            <p>
+                Starting with version 0.9.16 CSSParser includes limited support of output formating.
+                At the moment the formatter uses a fixed layout.<br/>
+                Additionally there is an option that forces for the output of color values as hex instead of rgb.
+            </p>
+            <p>
+                If you need more options, please open a ticket.
+            </p>
+            <source><![CDATA[
+InputSource source = new InputSource(new StringReader("h1{background:rgb(7,42,0);}"));
+CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+CSSStyleSheetImpl sheet = (CSSStyleSheetImpl) parser.parseStyleSheet(source, null, null);
+
+CSSFormat format = new CSSFormat();
+format.setRgbAsHex(true);
+
+System.out.println(sheet.getCssText(format));
+]]></source>
+        </section>
+    </body>
+</document>
