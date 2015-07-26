@@ -48,6 +48,8 @@ import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SelectorList;
 import org.w3c.css.sac.SimpleSelector;
 
+import com.steadystate.css.parser.ParserUtils;
+
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author waldbaer
@@ -80,24 +82,6 @@ PARSER_END(SACParserCSS2)
 
 TOKEN_MGR_DECLS :
 {
-    private String trimBy(StringBuilder s, int left, int right) {
-        int end = s.length();
-        return s.toString().substring(left, end-right);
-    }
-
-    private String trimUrl(StringBuilder s) {
-        StringBuilder s1 = new StringBuilder( trimBy(s, 4, 1).trim() );
-        if (s1.length() == 0)
-        {
-            return s1.toString();
-        }
-        int end = s1.length() - 1;
-        if ((s1.charAt(0) == '"' && s1.charAt(end) == '"')
-            || (s1.charAt(0) == '\'' && s1.charAt(end) == '\''))
-            return trimBy(s1, 1, 1);
-        else
-           return s1.toString();
-    }
 }
 
 <DEFAULT> TOKEN :
@@ -152,7 +136,7 @@ TOKEN_MGR_DECLS :
 {
 // string      {string1}|{string2}
 // {string}        {return STRING;}
-  < STRING: <STRING1> | <STRING2> > { matchedToken.image = trimBy(image, 1, 1); }
+  < STRING: <STRING1> | <STRING2> > { matchedToken.image = ParserUtils.trimBy(image, 1, 1); }
 | < RROUND: ")" >
 }
 
@@ -164,7 +148,7 @@ TOKEN_MGR_DECLS :
 
 // "url("{w}{string}{w}")"  {return URI;}
 // "url("{w}{url}{w}")" {return URI;}
-| < URI: "url(" ( <S> )* ( <STRING> | ( <URL> )* ) ( <S> )* <RROUND> > { matchedToken.image = trimUrl(image); }
+| < URI: "url(" ( <S> )* ( <STRING> | ( <URL> )* ) ( <S> )* <RROUND> > { matchedToken.image = ParserUtils.trimUrl(image); }
 }
 
 <DEFAULT> TOKEN :
@@ -205,52 +189,52 @@ TOKEN_MGR_DECLS :
 | < INHERIT: "inherit" >
 
 // {num}em         {return EMS;}
-| < EMS: <NUM> "em" > { matchedToken.image = trimBy(image, 0, 2); }
+| < EMS: <NUM> "em" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}ex         {return EXS;}
-| < EXS: <NUM> "ex" > { matchedToken.image = trimBy(image, 0, 2); }
+| < EXS: <NUM> "ex" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}px         {return LENGTH;}
-| < LENGTH_PX: <NUM> "px" > { matchedToken.image = trimBy(image, 0, 2); }
+| < LENGTH_PX: <NUM> "px" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}cm         {return LENGTH;}
-| < LENGTH_CM: <NUM> "cm" > { matchedToken.image = trimBy(image, 0, 2); }
+| < LENGTH_CM: <NUM> "cm" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}mm         {return LENGTH;}
-| < LENGTH_MM: <NUM> "mm" > { matchedToken.image = trimBy(image, 0, 2); }
+| < LENGTH_MM: <NUM> "mm" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}in         {return LENGTH;}
-| < LENGTH_IN: <NUM> "in" > { matchedToken.image = trimBy(image, 0, 2); }
+| < LENGTH_IN: <NUM> "in" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}pt         {return LENGTH;}
-| < LENGTH_PT: <NUM> "pt" > { matchedToken.image = trimBy(image, 0, 2); }
+| < LENGTH_PT: <NUM> "pt" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}pc         {return LENGTH;}
-| < LENGTH_PC: <NUM> "pc" > { matchedToken.image = trimBy(image, 0, 2); }
+| < LENGTH_PC: <NUM> "pc" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}deg        {return ANGLE;}
-| < ANGLE_DEG: <NUM> "deg" > { matchedToken.image = trimBy(image, 0, 3); }
+| < ANGLE_DEG: <NUM> "deg" > { matchedToken.image = ParserUtils.trimBy(image, 0, 3); }
 
 // {num}rad        {return ANGLE;}
-| < ANGLE_RAD: <NUM> "rad" > { matchedToken.image = trimBy(image, 0, 3); }
+| < ANGLE_RAD: <NUM> "rad" > { matchedToken.image = ParserUtils.trimBy(image, 0, 3); }
 
 // {num}grad       {return ANGLE;}
-| < ANGLE_GRAD: <NUM> "grad" > { matchedToken.image = trimBy(image, 0, 4); }
+| < ANGLE_GRAD: <NUM> "grad" > { matchedToken.image = ParserUtils.trimBy(image, 0, 4); }
 
 // {num}ms         {return TIME;}
-| < TIME_MS: <NUM> "ms" > { matchedToken.image = trimBy(image, 0, 2); }
+| < TIME_MS: <NUM> "ms" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}s          {return TIME;}
-| < TIME_S: <NUM> "s" > { matchedToken.image = trimBy(image, 0, 1); }
+| < TIME_S: <NUM> "s" > { matchedToken.image = ParserUtils.trimBy(image, 0, 1); }
 
 // {num}Hz         {return FREQ;}
-| < FREQ_HZ: <NUM> "Hz" > { matchedToken.image = trimBy(image, 0, 2); }
+| < FREQ_HZ: <NUM> "Hz" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}kHz        {return FREQ;}
-| < FREQ_KHZ: <NUM> "kHz" > { matchedToken.image = trimBy(image, 0, 3); }
+| < FREQ_KHZ: <NUM> "kHz" > { matchedToken.image = ParserUtils.trimBy(image, 0, 3); }
 
 // {num}%          {return PERCENTAGE;}
-| < PERCENTAGE: <NUM> "%" > { matchedToken.image = trimBy(image, 0, 1); }
+| < PERCENTAGE: <NUM> "%" > { matchedToken.image = ParserUtils.trimBy(image, 0, 1); }
 
 // {num}{ident}    {return DIMEN;}
 | < DIMEN: <NUM> <IDENT> >
