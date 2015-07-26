@@ -8,6 +8,9 @@
 
   <body>
     <release version="0.9.17" date="xx.xx.2015" description="Bugfixes">
+        <action type="change" dev="rbri">
+            Minor parser code optimizations and more unit tests.
+        </action>
     </release>
     <release version="0.9.16" date="03.06.2015" description="Formated output support, Bugfixes, improved UnitTest suite">
         <action type="add" dev="rbri" issue="54">
