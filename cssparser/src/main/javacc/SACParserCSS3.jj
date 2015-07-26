@@ -39,8 +39,6 @@ PARSER_BEGIN(SACParserCSS3)
 
 package com.steadystate.css.parser;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.w3c.css.sac.CSSParseException;
 import org.w3c.css.sac.Condition;
 import org.w3c.css.sac.LexicalUnit;
@@ -51,6 +49,7 @@ import org.w3c.css.sac.SelectorList;
 import org.w3c.css.sac.SimpleSelector;
 
 import com.steadystate.css.parser.media.MediaQuery;
+import com.steadystate.css.parser.ParserUtils;
 import com.steadystate.css.dom.Property;
 import com.steadystate.css.dom.CSSValueImpl;
 
@@ -88,28 +87,6 @@ PARSER_END(SACParserCSS3)
 
 TOKEN_MGR_DECLS :
 {
-    private String trimBy(final StringBuilder s, final int left, final int right) {
-        final int end = s.length();
-        return s.substring(left, end-right);
-    }
-
-    private String trimUrl(StringBuilder s) {
-        StringBuilder s1 = new StringBuilder( trimBy(s, 4, 1).trim() );
-        if (s1.length() == 0)
-        {
-            return s1.toString();
-        }
-        int end = s1.length() - 1;
-        char c0 = s1.charAt(0);
-        char c1 = s1.charAt(end);
-        if ((c0 == '"' && c1 == '"')
-            || (c0 == '\'' && c1 == '\''))
-        {
-            return trimBy(s1, 1, 1);
-        }
-
-        return s1.toString();
-    }
 }
 
 <DEFAULT> TOKEN :
@@ -196,7 +173,7 @@ TOKEN_MGR_DECLS :
 
 // string       {string1}|{string2}
 // {string}        {return STRING;}
-| < STRING: ( "\"" <STRING1> "\"" ) | ( "\'" <STRING2> "\'" ) > { matchedToken.image = trimBy(image, 1, 1); }
+| < STRING: ( "\"" <STRING1> "\"" ) | ( "\'" <STRING2> "\'" ) > { matchedToken.image = ParserUtils.trimBy(image, 1, 1); }
 
 // url      ([!#$%&*-~]|{nonascii}|{escape})*
 | < #URL: ( ["!","#","$","%","&","*"-"[","]"-"~"] | <NONASCII> | <ESCAPE> )* >
@@ -336,65 +313,65 @@ TOKEN_MGR_DECLS :
 | < IMPORTANT_SYM: "!" ( <W> | <COMMENT_> )* <I_LETTER> <M_LETTER> <P_LETTER> <O_LETTER> <R_LETTER> <T_LETTER> <A_LETTER> <N_LETTER> <T_LETTER> >
 
 // {num}{E}{M}          {return EMS;}
-| < EMS: <NUM> <E_LETTER> <M_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
+| < EMS: <NUM> <E_LETTER> <M_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}{E}{X}          {return EXS;}
-| < EXS: <NUM> <E_LETTER> <X_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
+| < EXS: <NUM> <E_LETTER> <X_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}{P}{X}          {return LENGTH;}
-| < LENGTH_PX: <NUM> <P_LETTER> <X_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
+| < LENGTH_PX: <NUM> <P_LETTER> <X_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}{C}{M}          {return LENGTH;}
-| < LENGTH_CM: <NUM> <C_LETTER> <M_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
+| < LENGTH_CM: <NUM> <C_LETTER> <M_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}{M}{M}          {return LENGTH;}
-| < LENGTH_MM: <NUM> <M_LETTER> <M_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
+| < LENGTH_MM: <NUM> <M_LETTER> <M_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}{I}{N}          {return LENGTH;}
-| < LENGTH_IN: <NUM> <I_LETTER> <N_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
+| < LENGTH_IN: <NUM> <I_LETTER> <N_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}{P}{T}          {return LENGTH;}
-| < LENGTH_PT: <NUM> <P_LETTER> <T_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
+| < LENGTH_PT: <NUM> <P_LETTER> <T_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}{P}{C}          {return LENGTH;}
-| < LENGTH_PC: <NUM> <P_LETTER> <C_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
+| < LENGTH_PC: <NUM> <P_LETTER> <C_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}{D}{E}{G}       {return ANGLE;}
-| < ANGLE_DEG: <NUM> <D_LETTER> <E_LETTER> <G_LETTER> > { matchedToken.image = trimBy(image, 0, 3); }
+| < ANGLE_DEG: <NUM> <D_LETTER> <E_LETTER> <G_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 3); }
 
 // {num}{R}{A}{D}       {return ANGLE;}
-| < ANGLE_RAD: <NUM> <R_LETTER> <A_LETTER> <D_LETTER> > { matchedToken.image = trimBy(image, 0, 3); }
+| < ANGLE_RAD: <NUM> <R_LETTER> <A_LETTER> <D_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 3); }
 
 // {num}{G}{R}{A}{D}    {return ANGLE;}
-| < ANGLE_GRAD: <NUM> <G_LETTER> <R_LETTER> <A_LETTER> <D_LETTER> > { matchedToken.image = trimBy(image, 0, 4); }
+| < ANGLE_GRAD: <NUM> <G_LETTER> <R_LETTER> <A_LETTER> <D_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 4); }
 
 // {num}{M}{S}          {return TIME;}
-| < TIME_MS: <NUM> <M_LETTER> <S_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
+| < TIME_MS: <NUM> <M_LETTER> <S_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}{S}             {return TIME;}
-| < TIME_S: <NUM> <S_LETTER> > { matchedToken.image = trimBy(image, 0, 1); }
+| < TIME_S: <NUM> <S_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 1); }
 
 // {num}{H}{Z}          {return FREQ;}
-| < FREQ_HZ: <NUM> <H_LETTER> <Z_LETTER> > { matchedToken.image = trimBy(image, 0, 2); }
+| < FREQ_HZ: <NUM> <H_LETTER> <Z_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); }
 
 // {num}{K}{H}{Z}       {return FREQ;}
-| < FREQ_KHZ: <NUM> <K_LETTER> <H_LETTER> <Z_LETTER> > { matchedToken.image = trimBy(image, 0, 3); }
+| < FREQ_KHZ: <NUM> <K_LETTER> <H_LETTER> <Z_LETTER> > { matchedToken.image = ParserUtils.trimBy(image, 0, 3); }
 
 // {num}{D}{P}{I}       {return RESOLUTION;}
-| < RESOLUTION_DPI: <NUM> "dpi" > { matchedToken.image = trimBy(image, 0, 3); }
+| < RESOLUTION_DPI: <NUM> "dpi" > { matchedToken.image = ParserUtils.trimBy(image, 0, 3); }
 
 // {num}{D}{P}{C}{M}       {return RESOLUTION;}
-| < RESOLUTION_DPCM: <NUM> "dpcm" > { matchedToken.image = trimBy(image, 0, 4); }
+| < RESOLUTION_DPCM: <NUM> "dpcm" > { matchedToken.image = ParserUtils.trimBy(image, 0, 4); }
 
 // {num}%               {return PERCENTAGE;}
-| < PERCENTAGE: <NUM> "%" > { matchedToken.image = trimBy(image, 0, 1); }
+| < PERCENTAGE: <NUM> "%" > { matchedToken.image = ParserUtils.trimBy(image, 0, 1); }
 
 // {num}{ident}         {return DIMENSION;}
 | < DIMENSION: <NUM> <IDENT> >
 
 // "url("{w}{string}{w}")"  {return URI;}
 // "url("{w}{url}{w}")" {return URI;}
-| < URI: "url" <LROUND> ( <S> )* ( <STRING> | <URL> ) ( <S> )* <RROUND> > { matchedToken.image = trimUrl(image); }
+| < URI: "url" <LROUND> ( <S> )* ( <STRING> | <URL> ) ( <S> )* <RROUND> > { matchedToken.image = ParserUtils.trimUrl(image); }
 
 // {N}{O}{T} "("        {return FUNCTION_NOT;}
 | < FUNCTION_NOT: <N_LETTER> <O_LETTER> <T_LETTER> <LROUND> >

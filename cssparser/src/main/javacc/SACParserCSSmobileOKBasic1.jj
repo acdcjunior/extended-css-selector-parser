@@ -48,6 +48,8 @@ import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SelectorList;
 import org.w3c.css.sac.SimpleSelector;
 
+import com.steadystate.css.parser.ParserUtils;
+
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author waldbaer
@@ -80,24 +82,6 @@ PARSER_END(SACParserCSSmobileOKBasic1)
 
 TOKEN_MGR_DECLS :
 {
-    private String trimBy(StringBuilder s, int left, int right) {
-        int end = s.length();
-        return s.toString().substring(left, end-right);
-    }
-
-    private String trimUrl(StringBuilder s) {
-        StringBuilder s1 = new StringBuilder( trimBy(s, 4, 1).trim() );
-        if (s1.length() == 0)
-        {
-            return s1.toString();
-        }
-        int end = s1.length() - 1;
-        if ((s1.charAt(0) == '"' && s1.charAt(end) == '"')
-            || (s1.charAt(0) == '\'' && s1.charAt(end) == '\''))
-            return trimBy(s1, 1, 1);
-        else
-           return s1.toString();
-    }
 }
 
 <DEFAULT> TOKEN :
@@ -113,11 +97,11 @@ TOKEN_MGR_DECLS :
 <DEFAULT> TOKEN : 
 {
   < IDENT: <NMSTART> ( <NMCHAR> )* > 
-| < LINK_PSCLASS: ":link" > { matchedToken.image = trimBy(image, 1, 0); }
-| < VISITED_PSCLASS: ":visited" > { matchedToken.image = trimBy(image, 1, 0); }
-| < ACTIVE_PSCLASS: ":active" > { matchedToken.image = trimBy(image, 1, 0); }
-| < FIRST_LINE: ":first-line" > { matchedToken.image = trimBy(image, 1, 0); }
-| < FIRST_LETTER: ":first-letter" > { matchedToken.image = trimBy(image, 1, 0); }
+| < LINK_PSCLASS: ":link" > { matchedToken.image = ParserUtils.trimBy(image, 1, 0); }
+| < VISITED_PSCLASS: ":visited" > { matchedToken.image = ParserUtils.trimBy(image, 1, 0); }
+| < ACTIVE_PSCLASS: ":active" > { matchedToken.image = ParserUtils.trimBy(image, 1, 0); }
+| < FIRST_LINE: ":first-line" > { matchedToken.image = ParserUtils.trimBy(image, 1, 0); }
+| < FIRST_LETTER: ":first-letter" > { matchedToken.image = ParserUtils.trimBy(image, 1, 0); }
 | < HASH: "#" <NAME> > 
 //| < CLASS: "." <NAME> > 
 }
@@ -142,7 +126,7 @@ TOKEN_MGR_DECLS :
 
 <DEFAULT> TOKEN :
 {
-  < STRING: <STRING1> | <STRING2> > { matchedToken.image = trimBy(image, 1, 1); } : DEFAULT
+  < STRING: <STRING1> | <STRING2> > { matchedToken.image = ParserUtils.trimBy(image, 1, 1); } : DEFAULT
 | < RROUND: ")" >
 }
 
@@ -151,7 +135,7 @@ TOKEN_MGR_DECLS :
 {
 //  < #URL: ["!","#","$","%","&","*"-"~"] | <NONASCII> | <ESCAPE> >
 //  < #URL: ["!","#","$","%","&","*"-"[","]"-"~"] | <NONASCII> | <ESCAPE> > 
- < URL: "url(" ( <S> )* ( <STRING> | ( ["!","#","$","%","&","*"-"[","]"-"~"] | <NONASCII> | <ESCAPE> )* ) ( <S> )* <RROUND> > { matchedToken.image = trimUrl(image); } : DEFAULT
+ < URL: "url(" ( <S> )* ( <STRING> | ( ["!","#","$","%","&","*"-"[","]"-"~"] | <NONASCII> | <ESCAPE> )* ) ( <S> )* <RROUND> > { matchedToken.image = ParserUtils.trimUrl(image); } : DEFAULT
 }
 
 <DEFAULT> TOKEN :
@@ -162,15 +146,15 @@ TOKEN_MGR_DECLS :
 | < MEDIA_SYM: "@media" >
 | < IMPORTANT_SYM: "!" ( <S> )? "important" > : DEFAULT
 | < ATKEYWORD: "@" <IDENT> >
-| < EMS: <NUM> "em" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
-| < EXS: <NUM> "ex" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
-| < LENGTH_PX: <NUM> "px" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
-| < LENGTH_CM: <NUM> "cm" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
-| < LENGTH_MM: <NUM> "mm" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
-| < LENGTH_IN: <NUM> "in" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
-| < LENGTH_PT: <NUM> "pt" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
-| < LENGTH_PC: <NUM> "pc" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
-| < PERCENTAGE: <NUM> "%" > { matchedToken.image = trimBy(image, 0, 1); } : DEFAULT
+| < EMS: <NUM> "em" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); } : DEFAULT
+| < EXS: <NUM> "ex" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); } : DEFAULT
+| < LENGTH_PX: <NUM> "px" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); } : DEFAULT
+| < LENGTH_CM: <NUM> "cm" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); } : DEFAULT
+| < LENGTH_MM: <NUM> "mm" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); } : DEFAULT
+| < LENGTH_IN: <NUM> "in" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); } : DEFAULT
+| < LENGTH_PT: <NUM> "pt" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); } : DEFAULT
+| < LENGTH_PC: <NUM> "pc" > { matchedToken.image = ParserUtils.trimBy(image, 0, 2); } : DEFAULT
+| < PERCENTAGE: <NUM> "%" > { matchedToken.image = ParserUtils.trimBy(image, 0, 1); } : DEFAULT
 | < NUMBER: <NUM> > : DEFAULT
 // TODO: check rgb
 | < RGB: "rgb(" > : DEFAULT
