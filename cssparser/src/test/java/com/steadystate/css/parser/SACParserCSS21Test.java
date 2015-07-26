@@ -1279,6 +1279,34 @@ public class SACParserCSS21Test extends AbstractSACParserTest {
     }
 
     /**
+     * @throws Exception in case of failure
+     */
+    @Test
+    public void emptyUrl() throws Exception {
+        final String css = "h1 { background: url() }\n"
+                            + "h2 { background: url(\"\") }\n"
+                            + "h4 { background: url('') }\n"
+                            + "h5 { background: url( ) }";
+
+        final CSSStyleSheet sheet = parse(css);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(4, rules.getLength());
+
+        CSSRule rule = rules.item(0);
+        Assert.assertEquals("h1 { background: url() }", rule.getCssText());
+
+        rule = rules.item(1);
+        Assert.assertEquals("h2 { background: url() }", rule.getCssText());
+
+        rule = rules.item(2);
+        Assert.assertEquals("h4 { background: url() }", rule.getCssText());
+
+        rule = rules.item(3);
+        Assert.assertEquals("h5 { background: url() }", rule.getCssText());
+    }
+
+    /**
      * Regression test for bug 1420893.
      *
      * @throws Exception if any error occurs
