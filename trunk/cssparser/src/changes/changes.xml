@@ -8,6 +8,9 @@
 
   <body>
     <release version="0.9.17" date="xx.xx.2015" description="Bugfixes">
+        <action type="fix" dev="rbri">
+            Encoding of the input stream was ignored when the input stream was set up with a byte stream.
+        </action>
         <action type="change" dev="rbri">
             Minor parser code optimizations and more unit tests.
         </action>
