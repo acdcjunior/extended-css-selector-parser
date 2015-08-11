@@ -26,6 +26,7 @@
 
 package com.steadystate.css.parser;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -2890,5 +2891,41 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
             queries.append(";");
         }
         Assert.assertEquals(media, queries.toString());
+    }
+
+    /**
+     * Test unicode input based on a byte stream
+     *
+     * @throws Exception in case of failure
+     */
+    @Test
+    public void unicodeInputByteStream() throws Exception {
+        final String css = "h1:before { content: \"\u04c5 - \u0666\" }";
+
+        final InputSource source = new InputSource();
+        source.setEncoding("UTF-8");
+        source.setByteStream(new ByteArrayInputStream(css.getBytes("UTF-8")));
+
+        final CSSStyleSheet sheet = parse(source, 0, 0, 0);
+
+        Assert.assertEquals(css, sheet.toString());
+    }
+
+    /**
+     * Test unicode input based on a byte stream
+     *
+     * @throws Exception in case of failure
+     */
+    @Test
+    public void unicodeInputByteStreamDefaultEncoding() throws Exception {
+        final String css = "h1:before { content: \"\u04c5 - \u00e4\" }";
+
+        final InputSource source = new InputSource();
+        source.setByteStream(new ByteArrayInputStream(css.getBytes()));
+
+        final CSSStyleSheet sheet = parse(source, 0, 0, 0);
+
+        // chars not available from the encoding are replaced by '?'
+        Assert.assertEquals("h1:before { content: \"? - \u00e4\" }", sheet.toString());
     }
 }
