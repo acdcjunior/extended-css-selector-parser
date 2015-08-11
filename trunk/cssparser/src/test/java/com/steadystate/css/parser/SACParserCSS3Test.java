@@ -2918,14 +2918,13 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      */
     @Test
     public void unicodeInputByteStreamDefaultEncoding() throws Exception {
-        final String css = "h1:before { content: \"\u04c5 - \u00e4\" }";
+        final String css = "h1:before { content: \"\u00fe - \u00e4\" }";
 
         final InputSource source = new InputSource();
         source.setByteStream(new ByteArrayInputStream(css.getBytes()));
 
         final CSSStyleSheet sheet = parse(source, 0, 0, 0);
 
-        // chars not available from the encoding are replaced by '?'
-        Assert.assertEquals("h1:before { content: \"? - \u00e4\" }", sheet.toString());
+        Assert.assertEquals(css, sheet.toString());
     }
 }
