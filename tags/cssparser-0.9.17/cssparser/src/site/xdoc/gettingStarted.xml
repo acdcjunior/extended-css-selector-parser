@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+    <properties>
+        <title>Getting Started with CSSParser</title>
+        <author email="rbri@rbri.de">RBRi</author>
+    </properties>
+
+    <body>
+        <section name="Introduction">
+            <p>
+                The <a href="dependencies.html">dependencies page</a> lists all the jars that you will need
+                to have in your classpath.
+            </p>
+            <p>
+                The class com.steadystate.css.parser.CSSOMParser is a good starting point for writing
+                your first parser.
+            </p>
+            <source><![CDATA[
+InputSource source = new InputSource(new StringReader("h1 { background: #ffcc44; }"));
+CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+]]></source>
+        </section>
+
+        <section name="Processing the rules">
+            <p>
+                The method getCssRules() offers all rules available.
+            </p>
+            <source><![CDATA[
+CSSRuleList rules = sheet.getCssRules();
+for (int i = 0; i < rules.getLength(); i++) {
+    final CSSRule rule = rules.item(i);
+
+    System.out.println(rule.getCssText());
+}
+]]></source>
+        </section>
+
+        <section name="Error handling">
+            <p>
+                CSSParser error handling is based on org.w3c.css.sac.ErrorHandler and
+                CSSParseException. You have to write your own implementation of the ErrorHandler
+                interface and register it before start parsing.
+            </p>
+            <source><![CDATA[
+InputSource source = new InputSource(new StringReader("h1 { background: #red; }"));
+CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+
+ErrorHandler errorHandler = new MyErrorHandler();
+parser.setErrorHandler(errorHandler);
+
+CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
+]]></source>
+            <source><![CDATA[
+public static class MyErrorHandler implements ErrorHandler {
+
+    public void warning(CSSParseException exception) throws CSSException {
+        System.out.println("Warning: " + exception.getMessage());
+    }
+
+    public void error(CSSParseException exception) throws CSSException {
+        System.out.println("Error: " + exception.getMessage());
+    }
+
+    public void fatalError(CSSParseException exception) throws CSSException {
+        System.out.println("Fatal: " + exception.getMessage());
+    }
+}
+]]></source>
+        </section>
+    </body>
+</document>
