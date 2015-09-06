@@ -8,6 +8,12 @@
 
   <body>
     <release version="0.9.18" date="xx.xx.2015" description="Bugfixes">
+        <action type="change" dev="rbri">
+            MediaList.getMediaText now outputs the whole media query
+        </action>
+        <action type="change" dev="rbri">
+            Colon is no longer part of the text output of empty properties.
+        </action>
     </release>
     <release version="0.9.17" date="16.08.2015" description="Bugfixes">
         <action type="fix" dev="rbri">

@@ -46,14 +46,14 @@ public class PropteryTest {
     @Test
     public void defaultConstructor() throws Exception {
         final Property prop = new Property();
-        Assert.assertEquals("null:", prop.toString());
+        Assert.assertEquals("null", prop.toString());
         Assert.assertNull(prop.getName());
         Assert.assertNull(prop.getValue());
         Assert.assertFalse(prop.isImportant());
         Assert.assertTrue(prop.getUserDataMap().isEmpty());
 
         prop.setName("MyName");
-        Assert.assertEquals("MyName:", prop.toString());
+        Assert.assertEquals("MyName", prop.toString());
         Assert.assertEquals("MyName", prop.getName());
         Assert.assertNull(prop.getValue());
         Assert.assertFalse(prop.isImportant());
@@ -79,6 +79,21 @@ public class PropteryTest {
         Assert.assertEquals("MyName: 11px !important", prop.toString());
         Assert.assertEquals("MyName", prop.getName());
         Assert.assertEquals("11px", prop.getValue().toString());
+        Assert.assertTrue(prop.isImportant());
+        Assert.assertTrue(prop.getUserDataMap().isEmpty());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void defaultConstructorNoValueImportant() throws Exception {
+        final Property prop = new Property();
+        prop.setName("MyName");
+        prop.setImportant(true);
+        Assert.assertEquals("MyName !important", prop.toString());
+        Assert.assertEquals("MyName", prop.getName());
+        Assert.assertNull(prop.getValue());
         Assert.assertTrue(prop.isImportant());
         Assert.assertTrue(prop.getUserDataMap().isEmpty());
     }
