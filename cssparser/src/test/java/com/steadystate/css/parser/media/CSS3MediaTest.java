@@ -34,6 +34,7 @@ import org.w3c.css.sac.LexicalUnit;
 import org.w3c.css.sac.SACMediaList;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleSheet;
+import org.w3c.dom.stylesheets.MediaList;
 
 import com.steadystate.css.dom.CSSMediaRuleImpl;
 import com.steadystate.css.dom.CSSValueImpl;
@@ -65,9 +66,11 @@ public class CSS3MediaTest extends AbstractSACParserTest {
         Assert.assertTrue(cssRule instanceof CSSMediaRuleImpl);
         Assert.assertTrue(((CSSMediaRuleImpl) cssRule).getMedia() instanceof MediaListImpl);
 
-        final MediaListImpl mediaListImpl = (MediaListImpl) ((CSSMediaRuleImpl) cssRule).getMedia();
-        Assert.assertEquals("screen", mediaListImpl.getMediaText());
-        Assert.assertEquals(1, mediaListImpl.getLength());
+        final MediaList mediaList = ((CSSMediaRuleImpl) cssRule).getMedia();
+        Assert.assertEquals("screen and (max-width: 30em)", mediaList.getMediaText());
+        Assert.assertEquals(1, mediaList.getLength());
+
+        final MediaListImpl mediaListImpl = (MediaListImpl) mediaList;
         Assert.assertEquals("screen", mediaListImpl.mediaQuery(0).getMedia());
         Assert.assertEquals("screen and (max-width: 30em)", mediaListImpl.mediaQuery(0).toString());
         Assert.assertEquals(1, mediaListImpl.mediaQuery(0).getProperties().size());
@@ -85,13 +88,15 @@ public class CSS3MediaTest extends AbstractSACParserTest {
         Assert.assertTrue(cssRule instanceof CSSMediaRuleImpl);
         Assert.assertTrue(((CSSMediaRuleImpl) cssRule).getMedia() instanceof MediaListImpl);
 
-        final MediaListImpl mediaListImpl = (MediaListImpl) ((CSSMediaRuleImpl) cssRule).getMedia();
-        Assert.assertEquals("screen", mediaListImpl.getMediaText());
-        Assert.assertEquals(1, mediaListImpl.getLength());
+        final MediaList mediaList = ((CSSMediaRuleImpl) cssRule).getMedia();
+        Assert.assertEquals("screen and (color)", mediaList.getMediaText());
+        Assert.assertEquals(1, mediaList.getLength());
+
+        final MediaListImpl mediaListImpl = (MediaListImpl) mediaList;
         Assert.assertEquals("screen", mediaListImpl.mediaQuery(0).getMedia());
-        Assert.assertEquals("screen and (color:)", mediaListImpl.mediaQuery(0).toString());
+        Assert.assertEquals("screen and (color)", mediaListImpl.mediaQuery(0).toString());
         Assert.assertEquals(1, mediaListImpl.mediaQuery(0).getProperties().size());
-        Assert.assertEquals("color:", mediaListImpl.mediaQuery(0).getProperties().get(0).toString());
+        Assert.assertEquals("color", mediaListImpl.mediaQuery(0).getProperties().get(0).toString());
     }
 
     /**
@@ -125,13 +130,15 @@ public class CSS3MediaTest extends AbstractSACParserTest {
         Assert.assertTrue(cssRule instanceof CSSMediaRuleImpl);
         Assert.assertTrue(((CSSMediaRuleImpl) cssRule).getMedia() instanceof MediaListImpl);
 
-        final MediaListImpl mediaListImpl = (MediaListImpl) ((CSSMediaRuleImpl) cssRule).getMedia();
-        Assert.assertEquals("screen", mediaListImpl.getMediaText());
-        Assert.assertEquals(1, mediaListImpl.getLength());
+        final MediaList mediaList = ((CSSMediaRuleImpl) cssRule).getMedia();
+        Assert.assertEquals("only screen and (color)", mediaList.getMediaText());
+        Assert.assertEquals(1, mediaList.getLength());
+
+        final MediaListImpl mediaListImpl = (MediaListImpl) mediaList;
         Assert.assertEquals("screen", mediaListImpl.mediaQuery(0).getMedia());
-        Assert.assertEquals("only screen and (color:)", mediaListImpl.mediaQuery(0).toString());
+        Assert.assertEquals("only screen and (color)", mediaListImpl.mediaQuery(0).toString());
         Assert.assertEquals(1, mediaListImpl.mediaQuery(0).getProperties().size());
-        Assert.assertEquals("color:", mediaListImpl.mediaQuery(0).getProperties().get(0).toString());
+        Assert.assertEquals("color", mediaListImpl.mediaQuery(0).getProperties().get(0).toString());
     }
 
     /**
@@ -145,13 +152,15 @@ public class CSS3MediaTest extends AbstractSACParserTest {
         Assert.assertTrue(cssRule instanceof CSSMediaRuleImpl);
         Assert.assertTrue(((CSSMediaRuleImpl) cssRule).getMedia() instanceof MediaListImpl);
 
-        final MediaListImpl mediaListImpl = (MediaListImpl) ((CSSMediaRuleImpl) cssRule).getMedia();
-        Assert.assertEquals("screen", mediaListImpl.getMediaText());
-        Assert.assertEquals(1, mediaListImpl.getLength());
+        final MediaList mediaList = ((CSSMediaRuleImpl) cssRule).getMedia();
+        Assert.assertEquals("not screen and (color)", mediaList.getMediaText());
+        Assert.assertEquals(1, mediaList.getLength());
+
+        final MediaListImpl mediaListImpl = (MediaListImpl) mediaList;
         Assert.assertEquals("screen", mediaListImpl.mediaQuery(0).getMedia());
-        Assert.assertEquals("not screen and (color:)", mediaListImpl.mediaQuery(0).toString());
+        Assert.assertEquals("not screen and (color)", mediaListImpl.mediaQuery(0).toString());
         Assert.assertEquals(1, mediaListImpl.mediaQuery(0).getProperties().size());
-        Assert.assertEquals("color:", mediaListImpl.mediaQuery(0).getProperties().get(0).toString());
+        Assert.assertEquals("color", mediaListImpl.mediaQuery(0).getProperties().get(0).toString());
     }
 
     /**
@@ -165,9 +174,11 @@ public class CSS3MediaTest extends AbstractSACParserTest {
         Assert.assertTrue(cssRule instanceof CSSMediaRuleImpl);
         Assert.assertTrue(((CSSMediaRuleImpl) cssRule).getMedia() instanceof MediaListImpl);
 
-        final MediaListImpl mediaListImpl = (MediaListImpl) ((CSSMediaRuleImpl) cssRule).getMedia();
-        Assert.assertEquals("screen", mediaListImpl.getMediaText());
-        Assert.assertEquals(1, mediaListImpl.getLength());
+        final MediaList mediaList = ((CSSMediaRuleImpl) cssRule).getMedia();
+        Assert.assertEquals("not screen and (min-resolution: 300dpi)", mediaList.getMediaText());
+        Assert.assertEquals(1, mediaList.getLength());
+
+        final MediaListImpl mediaListImpl = (MediaListImpl) mediaList;
         Assert.assertEquals("screen", mediaListImpl.mediaQuery(0).getMedia());
         Assert.assertEquals("not screen and (min-resolution: 300dpi)", mediaListImpl.mediaQuery(0).toString());
         Assert.assertEquals(1, mediaListImpl.mediaQuery(0).getProperties().size());
@@ -192,9 +203,11 @@ public class CSS3MediaTest extends AbstractSACParserTest {
         Assert.assertTrue(cssRule instanceof CSSMediaRuleImpl);
         Assert.assertTrue(((CSSMediaRuleImpl) cssRule).getMedia() instanceof MediaListImpl);
 
-        final MediaListImpl mediaListImpl = (MediaListImpl) ((CSSMediaRuleImpl) cssRule).getMedia();
-        Assert.assertEquals("screen", mediaListImpl.getMediaText());
-        Assert.assertEquals(1, mediaListImpl.getLength());
+        final MediaList mediaList = ((CSSMediaRuleImpl) cssRule).getMedia();
+        Assert.assertEquals("not screen and (min-resolution: 11.8dpcm)", mediaList.getMediaText());
+        Assert.assertEquals(1, mediaList.getLength());
+
+        final MediaListImpl mediaListImpl = (MediaListImpl) mediaList;
         Assert.assertEquals("screen", mediaListImpl.mediaQuery(0).getMedia());
         Assert.assertEquals("not screen and (min-resolution: 11.8dpcm)", mediaListImpl.mediaQuery(0).toString());
         Assert.assertEquals(1, mediaListImpl.mediaQuery(0).getProperties().size());
@@ -221,7 +234,8 @@ public class CSS3MediaTest extends AbstractSACParserTest {
         Assert.assertTrue(((CSSMediaRuleImpl) cssRule).getMedia() instanceof MediaListImpl);
 
         final MediaListImpl mediaListImpl = (MediaListImpl) ((CSSMediaRuleImpl) cssRule).getMedia();
-        Assert.assertEquals("screen", mediaListImpl.getMediaText());
+        Assert.assertEquals("only screen and (max-width: 735px) and (max-device-width: 768px)",
+                mediaListImpl.getMediaText());
         Assert.assertEquals(1, mediaListImpl.getLength());
         Assert.assertEquals("screen", mediaListImpl.mediaQuery(0).getMedia());
         Assert.assertEquals("only screen and (max-width: 735px) and (max-device-width: 768px)",
@@ -263,12 +277,12 @@ public class CSS3MediaTest extends AbstractSACParserTest {
         Assert.assertTrue(((CSSMediaRuleImpl) cssRule).getMedia() instanceof MediaListImpl);
 
         final MediaListImpl mediaListImpl = (MediaListImpl) ((CSSMediaRuleImpl) cssRule).getMedia();
-        Assert.assertEquals("all", mediaListImpl.getMediaText());
+        Assert.assertEquals("all and (color)", mediaListImpl.getMediaText());
         Assert.assertEquals(1, mediaListImpl.getLength());
         Assert.assertEquals("all", mediaListImpl.mediaQuery(0).getMedia());
-        Assert.assertEquals("all and (color:)", mediaListImpl.mediaQuery(0).toString());
+        Assert.assertEquals("all and (color)", mediaListImpl.mediaQuery(0).toString());
         Assert.assertEquals(1, mediaListImpl.mediaQuery(0).getProperties().size());
-        Assert.assertEquals("color:", mediaListImpl.mediaQuery(0).getProperties().get(0).toString());
+        Assert.assertEquals("color", mediaListImpl.mediaQuery(0).getProperties().get(0).toString());
     }
 
     /**
