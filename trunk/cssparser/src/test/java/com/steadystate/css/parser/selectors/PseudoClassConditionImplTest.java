@@ -28,6 +28,8 @@ package com.steadystate.css.parser.selectors;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.steadystate.css.format.CSSFormat;
+
 /**
  * Testcases for {@link PseudoClassConditionImpl}.
  */
@@ -43,7 +45,12 @@ public class PseudoClassConditionImplTest {
         Assert.assertNull(c.getLocalName());
         Assert.assertNull(c.getValue());
         Assert.assertTrue(c.getSpecified());  // TODO is this correct?
+
         Assert.assertEquals(":", c.toString());
+
+        Assert.assertEquals(":", c.getCssText(null));
+        Assert.assertEquals(":", c.getCssText(new CSSFormat()));
+        Assert.assertEquals(":", c.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -56,7 +63,12 @@ public class PseudoClassConditionImplTest {
         Assert.assertNull(c.getLocalName());
         Assert.assertEquals("", c.getValue());
         Assert.assertTrue(c.getSpecified());
+
         Assert.assertEquals(":", c.toString());
+
+        Assert.assertEquals(":", c.getCssText(null));
+        Assert.assertEquals(":", c.getCssText(new CSSFormat()));
+        Assert.assertEquals(":", c.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -69,6 +81,11 @@ public class PseudoClassConditionImplTest {
         Assert.assertNull(c.getLocalName());
         Assert.assertEquals("value", c.getValue());
         Assert.assertTrue(c.getSpecified());
+
         Assert.assertEquals(":value", c.toString());
+
+        Assert.assertEquals(":value", c.getCssText(null));
+        Assert.assertEquals(":value", c.getCssText(new CSSFormat()));
+        Assert.assertEquals(":value", c.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 }

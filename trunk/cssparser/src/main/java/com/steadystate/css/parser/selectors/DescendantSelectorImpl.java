@@ -32,6 +32,7 @@ import org.w3c.css.sac.DescendantSelector;
 import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SimpleSelector;
 
+import com.steadystate.css.format.CSSFormat;
 import com.steadystate.css.parser.Locatable;
 import com.steadystate.css.parser.LocatableImpl;
 
@@ -77,8 +78,10 @@ public class DescendantSelectorImpl extends LocatableImpl implements DescendantS
         return simpleSelector_;
     }
 
-    @Override
-    public String toString() {
+    /**
+     * {@inheritDoc}
+     */
+    public String getCssText(final CSSFormat format) {
         final StringBuilder result = new StringBuilder(getAncestorSelector().toString());
         if (Selector.SAC_PSEUDO_ELEMENT_SELECTOR == getSimpleSelector().getSelectorType()) {
             result.append(':');
@@ -88,5 +91,10 @@ public class DescendantSelectorImpl extends LocatableImpl implements DescendantS
         }
         result.append(getSimpleSelector().toString());
         return result.toString();
+    }
+
+    @Override
+    public String toString() {
+        return getCssText(null);
     }
 }
