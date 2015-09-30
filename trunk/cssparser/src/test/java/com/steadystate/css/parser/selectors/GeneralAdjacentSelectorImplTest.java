@@ -29,21 +29,72 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.Selector;
 
+import com.steadystate.css.format.CSSFormat;
+
 /**
  * Test cases for {@link GeneralAdjacentSelectorImpl}.
  * @author Ahmed Ashour
+ * @author Ronald Brill
  */
 public class GeneralAdjacentSelectorImplTest {
 
     @Test
-    public void simpleSelector() {
+    public void withoutParentDescendant() {
+        final GeneralAdjacentSelectorImpl selector =
+                new GeneralAdjacentSelectorImpl(Selector.SAC_ANY_NODE_SELECTOR, null, null);
+        Assert.assertNull(selector.getSelector());
+        Assert.assertNull(selector.getSiblingSelector());
+
+        Assert.assertEquals(" ~ ", selector.toString());
+
+        Assert.assertEquals(" ~ ", selector.getCssText(null));
+        Assert.assertEquals(" ~ ", selector.getCssText(new CSSFormat()));
+        Assert.assertEquals(" ~ ", selector.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
+    }
+
+    @Test
+    public void withoutParent() {
+        final ElementSelectorImpl descendant = new ElementSelectorImpl("a");
+        final GeneralAdjacentSelectorImpl selector =
+                new GeneralAdjacentSelectorImpl(Selector.SAC_ANY_NODE_SELECTOR, null, descendant);
+        Assert.assertNull(selector.getSelector());
+        Assert.assertEquals(descendant, selector.getSiblingSelector());
+
+        Assert.assertEquals(" ~ a", selector.toString());
+
+        Assert.assertEquals(" ~ a", selector.getCssText(null));
+        Assert.assertEquals(" ~ a", selector.getCssText(new CSSFormat()));
+        Assert.assertEquals(" ~ a", selector.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
+    }
+
+    @Test
+    public void withoutDescendant() {
+        final ElementSelectorImpl parent = new ElementSelectorImpl("p");
+        final GeneralAdjacentSelectorImpl selector =
+                new GeneralAdjacentSelectorImpl(Selector.SAC_ANY_NODE_SELECTOR, parent, null);
+        Assert.assertEquals(parent, selector.getSelector());
+        Assert.assertNull(null, selector.getSiblingSelector());
+
+        Assert.assertEquals("p ~ ", selector.toString());
+
+        Assert.assertEquals("p ~ ", selector.getCssText(null));
+        Assert.assertEquals("p ~ ", selector.getCssText(new CSSFormat()));
+        Assert.assertEquals("p ~ ", selector.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
+    }
+
+    @Test
+    public void both() {
         final ElementSelectorImpl parent = new ElementSelectorImpl("p");
         final ElementSelectorImpl descendant = new ElementSelectorImpl("a");
         final GeneralAdjacentSelectorImpl selector =
                 new GeneralAdjacentSelectorImpl(Selector.SAC_ANY_NODE_SELECTOR, parent, descendant);
         Assert.assertEquals(parent, selector.getSelector());
         Assert.assertEquals(descendant, selector.getSiblingSelector());
-        Assert.assertEquals("p ~ a", selector.toString());
-    }
 
+        Assert.assertEquals("p ~ a", selector.toString());
+
+        Assert.assertEquals("p ~ a", selector.getCssText(null));
+        Assert.assertEquals("p ~ a", selector.getCssText(new CSSFormat()));
+        Assert.assertEquals("p ~ a", selector.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
+    }
 }
