@@ -29,6 +29,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.Selector;
 
+import com.steadystate.css.format.CSSFormat;
+
 /**
  * Testcases for {@link DescendantSelectorImpl}.
  * @author rbri
@@ -41,6 +43,11 @@ public class DescendantSelectorImplTest {
         final ElementSelectorImpl descendant = new ElementSelectorImpl("a");
         final DescendantSelectorImpl selector = new DescendantSelectorImpl(parent, descendant);
         Assert.assertEquals(parent, selector.getAncestorSelector());
+
+        Assert.assertEquals("p a", selector.toString());
+
+        Assert.assertEquals("p a", selector.getCssText(null));
+        Assert.assertEquals("p a", selector.getCssText(new CSSFormat()));
     }
 
     @Test
@@ -49,6 +56,11 @@ public class DescendantSelectorImplTest {
         final ElementSelectorImpl descendant = new ElementSelectorImpl("a");
         final DescendantSelectorImpl selector = new DescendantSelectorImpl(parent, descendant);
         Assert.assertEquals(descendant, selector.getSimpleSelector());
+
+        Assert.assertEquals("p a", selector.toString());
+
+        Assert.assertEquals("p a", selector.getCssText(null));
+        Assert.assertEquals("p a", selector.getCssText(new CSSFormat()));
     }
 
     @Test
@@ -57,6 +69,11 @@ public class DescendantSelectorImplTest {
         final ElementSelectorImpl descendant = new ElementSelectorImpl("a");
         final DescendantSelectorImpl selector = new DescendantSelectorImpl(parent, descendant);
         Assert.assertEquals(Selector.SAC_DESCENDANT_SELECTOR, selector.getSelectorType());
+
+        Assert.assertEquals("p a", selector.toString());
+
+        Assert.assertEquals("p a", selector.getCssText(null));
+        Assert.assertEquals("p a", selector.getCssText(new CSSFormat()));
     }
 
     @Test
@@ -65,6 +82,9 @@ public class DescendantSelectorImplTest {
         final ElementSelectorImpl descendant = new ElementSelectorImpl("a");
         final DescendantSelectorImpl selector = new DescendantSelectorImpl(parent, descendant);
         Assert.assertEquals("p a", selector.toString());
+
+        Assert.assertEquals("p a", selector.getCssText(null));
+        Assert.assertEquals("p a", selector.getCssText(new CSSFormat()));
     }
 
     @Test
@@ -72,6 +92,10 @@ public class DescendantSelectorImplTest {
         final ElementSelectorImpl parent = new ElementSelectorImpl("a");
         final PseudoElementSelectorImpl descendant = new PseudoElementSelectorImpl("after");
         final DescendantSelectorImpl selector = new DescendantSelectorImpl(parent, descendant);
+
         Assert.assertEquals("a:after", selector.toString());
+
+        Assert.assertEquals("a:after", selector.getCssText(null));
+        Assert.assertEquals("a:after", selector.getCssText(new CSSFormat()));
     }
 }

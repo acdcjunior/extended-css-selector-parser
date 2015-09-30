@@ -29,6 +29,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.Selector;
 
+import com.steadystate.css.format.CSSFormat;
+
 /**
  * Testcases for {@link ElementSelectorImpl}.
  */
@@ -43,7 +45,12 @@ public class ElementSelectorImplTest {
         Assert.assertNull(c.getNamespaceURI());
         Assert.assertNull(c.getLocalName());
         Assert.assertEquals(Selector.SAC_ELEMENT_NODE_SELECTOR, c.getSelectorType());
+
         Assert.assertEquals("*", c.toString());
+
+        Assert.assertEquals("*", c.getCssText(null));
+        Assert.assertEquals("*", c.getCssText(new CSSFormat()));
+        Assert.assertEquals("", c.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -55,7 +62,12 @@ public class ElementSelectorImplTest {
         Assert.assertNull(c.getNamespaceURI());
         Assert.assertEquals("", c.getLocalName());
         Assert.assertEquals(Selector.SAC_ELEMENT_NODE_SELECTOR, c.getSelectorType());
+
         Assert.assertEquals("", c.toString());
+
+        Assert.assertEquals("", c.getCssText(null));
+        Assert.assertEquals("", c.getCssText(new CSSFormat()));
+        Assert.assertEquals("", c.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -67,6 +79,11 @@ public class ElementSelectorImplTest {
         Assert.assertNull(c.getNamespaceURI());
         Assert.assertEquals("value", c.getLocalName());
         Assert.assertEquals(Selector.SAC_ELEMENT_NODE_SELECTOR, c.getSelectorType());
+
         Assert.assertEquals("value", c.toString());
+
+        Assert.assertEquals("value", c.getCssText(null));
+        Assert.assertEquals("value", c.getCssText(new CSSFormat()));
+        Assert.assertEquals("value", c.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 }
