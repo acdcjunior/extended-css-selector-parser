@@ -29,6 +29,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.Condition;
 
+import com.steadystate.css.format.CSSFormat;
+
 /**
  * Testcases for {@link OneOfAttributeConditionImpl}.
  */
@@ -45,7 +47,12 @@ public class OneOfAttributeConditionImplTest {
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertNull(ac.getValue());
         Assert.assertFalse(ac.getSpecified());
+
         Assert.assertEquals("[test]", ac.toString());
+
+        Assert.assertEquals("[test]", ac.getCssText(null));
+        Assert.assertEquals("[test]", ac.getCssText(new CSSFormat()));
+        Assert.assertEquals("[test]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -59,7 +66,12 @@ public class OneOfAttributeConditionImplTest {
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("", ac.getValue());
         Assert.assertFalse(ac.getSpecified());
+
         Assert.assertEquals("[test~=\"\"]", ac.toString());
+
+        Assert.assertEquals("[test~=\"\"]", ac.getCssText(null));
+        Assert.assertEquals("[test~=\"\"]", ac.getCssText(new CSSFormat()));
+        Assert.assertEquals("[test~=\"\"]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -73,7 +85,12 @@ public class OneOfAttributeConditionImplTest {
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("value", ac.getValue());
         Assert.assertFalse(ac.getSpecified());
+
         Assert.assertEquals("[test~=\"value\"]", ac.toString());
+
+        Assert.assertEquals("[test~=\"value\"]", ac.getCssText(null));
+        Assert.assertEquals("[test~=\"value\"]", ac.getCssText(new CSSFormat()));
+        Assert.assertEquals("[test~=\"value\"]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -87,7 +104,12 @@ public class OneOfAttributeConditionImplTest {
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertNull(ac.getValue());
         Assert.assertTrue(ac.getSpecified());
+
         Assert.assertEquals("[test]", ac.toString());
+
+        Assert.assertEquals("[test]", ac.getCssText(null));
+        Assert.assertEquals("[test]", ac.getCssText(new CSSFormat()));
+        Assert.assertEquals("[test]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -101,7 +123,12 @@ public class OneOfAttributeConditionImplTest {
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("", ac.getValue());
         Assert.assertTrue(ac.getSpecified());
+
         Assert.assertEquals("[test~=\"\"]", ac.toString());
+
+        Assert.assertEquals("[test~=\"\"]", ac.getCssText(null));
+        Assert.assertEquals("[test~=\"\"]", ac.getCssText(new CSSFormat()));
+        Assert.assertEquals("[test~=\"\"]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -115,6 +142,11 @@ public class OneOfAttributeConditionImplTest {
         Assert.assertEquals("test", ac.getLocalName());
         Assert.assertEquals("value", ac.getValue());
         Assert.assertTrue(ac.getSpecified());
+
         Assert.assertEquals("[test~=\"value\"]", ac.toString());
+
+        Assert.assertEquals("[test~=\"value\"]", ac.getCssText(null));
+        Assert.assertEquals("[test~=\"value\"]", ac.getCssText(new CSSFormat()));
+        Assert.assertEquals("[test~=\"value\"]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 }
