@@ -57,6 +57,7 @@ import com.steadystate.css.dom.CSSStyleRuleImpl;
 import com.steadystate.css.dom.CSSValueImpl;
 import com.steadystate.css.dom.MediaListImpl;
 import com.steadystate.css.dom.Property;
+import com.steadystate.css.parser.media.MediaQuery;
 import com.steadystate.css.parser.selectors.ChildSelectorImpl;
 import com.steadystate.css.parser.selectors.ConditionalSelectorImpl;
 import com.steadystate.css.parser.selectors.LangConditionImpl;
@@ -2881,7 +2882,9 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
             if (cssRule instanceof CSSMediaRule) {
                 final MediaListImpl mediaList = (MediaListImpl) ((CSSMediaRuleImpl) cssRule).getMedia();
                 for (int j = 0; j < mediaList.getLength(); j++) {
-                    mediaQ.add(mediaList.mediaQuery(j).toString());
+                    final MediaQuery mediaQuery = mediaList.mediaQuery(j);
+                    Assert.assertEquals(mediaQuery.toString(), mediaQuery.getCssText(null));
+                    mediaQ.add(mediaQuery.toString());
                 }
             }
         }
