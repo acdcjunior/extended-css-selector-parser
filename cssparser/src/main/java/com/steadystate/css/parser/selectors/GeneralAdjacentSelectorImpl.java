@@ -41,7 +41,7 @@ import com.steadystate.css.parser.LocatableImpl;
  * @author Ahmed Ashour
  * @author rbri
  */
-public class GeneralAdjacentSelectorImpl extends LocatableImpl implements SiblingSelector, Serializable {
+public class GeneralAdjacentSelectorImpl extends LocatableImpl implements SiblingSelector, CSSFormatable, Serializable {
 
     private static final long serialVersionUID = 1292704016876205605L;
 
