@@ -31,12 +31,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.steadystate.css.dom.Property;
+import com.steadystate.css.format.CSSFormat;
+import com.steadystate.css.format.CSSFormatable;
 import com.steadystate.css.parser.LocatableImpl;
 
 /**
  * @author rbri
  */
-public class MediaQuery extends LocatableImpl implements Serializable {
+public class MediaQuery extends LocatableImpl implements CSSFormatable, Serializable {
 
     private static final long serialVersionUID = 456776383828897471L;
 
@@ -72,8 +74,10 @@ public class MediaQuery extends LocatableImpl implements Serializable {
         properties_.add(mp);
     }
 
-    @Override
-    public String toString() {
+    /**
+     * {@inheritDoc}
+     */
+    public String getCssText(final CSSFormat format) {
         final StringBuilder result = new StringBuilder();
 
         if (isOnly_) {
@@ -87,9 +91,14 @@ public class MediaQuery extends LocatableImpl implements Serializable {
 
         for (Property prop : properties_) {
             result.append(" and (")
-                .append(prop.toString())
+                .append(prop.getCssText(format))
                 .append(')');
         }
         return result.toString();
+    }
+
+    @Override
+    public String toString() {
+        return getCssText(null);
     }
 }
