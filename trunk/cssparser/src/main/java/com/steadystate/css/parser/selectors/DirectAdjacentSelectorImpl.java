@@ -32,6 +32,8 @@ import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SiblingSelector;
 import org.w3c.css.sac.SimpleSelector;
 
+import com.steadystate.css.format.CSSFormat;
+import com.steadystate.css.format.CSSFormatable;
 import com.steadystate.css.parser.Locatable;
 import com.steadystate.css.parser.LocatableImpl;
 
@@ -88,8 +90,27 @@ public class DirectAdjacentSelectorImpl extends LocatableImpl implements Sibling
         return siblingSelector_;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public String getCssText(final CSSFormat format) {
+        final StringBuilder result = new StringBuilder();
+
+        if (null != selector_) {
+            result.append(((CSSFormatable) selector_).getCssText(format));
+        }
+
+        result.append(" + ");
+
+        if (null != siblingSelector_) {
+            result.append(((CSSFormatable) siblingSelector_).getCssText(format));
+        }
+
+        return result.toString();
+    }
+
     @Override
     public String toString() {
-        return selector_.toString() + " + " + siblingSelector_.toString();
+        return getCssText(null);
     }
 }

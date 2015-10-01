@@ -33,6 +33,7 @@ import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SimpleSelector;
 
 import com.steadystate.css.format.CSSFormat;
+import com.steadystate.css.format.CSSFormatable;
 import com.steadystate.css.parser.Locatable;
 import com.steadystate.css.parser.LocatableImpl;
 
@@ -40,7 +41,7 @@ import com.steadystate.css.parser.LocatableImpl;
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author rbri
  */
-public class DescendantSelectorImpl extends LocatableImpl implements DescendantSelector, Serializable {
+public class DescendantSelectorImpl extends LocatableImpl implements DescendantSelector, CSSFormatable, Serializable {
 
     private static final long serialVersionUID = -3620467847449531232L;
 
