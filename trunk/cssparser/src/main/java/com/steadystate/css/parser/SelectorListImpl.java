@@ -33,13 +33,16 @@ import java.util.List;
 import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SelectorList;
 
+import com.steadystate.css.format.CSSFormat;
+import com.steadystate.css.format.CSSFormatable;
+
 /**
  * Implementation of {@link SelectorList}.
  *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author rbri
  */
-public class SelectorListImpl extends LocatableImpl implements SelectorList, Serializable {
+public class SelectorListImpl extends LocatableImpl implements SelectorList, CSSFormatable, Serializable {
 
     private static final long serialVersionUID = 7313376916207026333L;
 
@@ -65,16 +68,24 @@ public class SelectorListImpl extends LocatableImpl implements SelectorList, Ser
         selectors_.add(sel);
     }
 
-    @Override
-    public String toString() {
+    /**
+     * {@inheritDoc}
+     */
+    public String getCssText(final CSSFormat format) {
         final StringBuilder sb = new StringBuilder();
         final int len = getLength();
         for (int i = 0; i < len; i++) {
-            sb.append(item(i).toString());
+            final CSSFormatable sel = (CSSFormatable) item(i);
+            sb.append(sel.getCssText(format));
             if (i < len - 1) {
                 sb.append(", ");
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+        return getCssText(null);
     }
 }
