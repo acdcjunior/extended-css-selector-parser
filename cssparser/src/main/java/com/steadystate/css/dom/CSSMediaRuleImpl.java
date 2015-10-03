@@ -252,8 +252,7 @@ public class CSSMediaRuleImpl extends AbstractCSSRuleImpl implements CSSMediaRul
                 final CSSRule cssRule = cssRules_.item(i);
                 if (cssRule instanceof AbstractCSSRuleImpl) {
                     ((AbstractCSSRuleImpl) cssRule).setParentRule(this);
-                    ((AbstractCSSRuleImpl) cssRule).setParentStyleSheet(
-                        getParentStyleSheetImpl());
+                    ((AbstractCSSRuleImpl) cssRule).setParentStyleSheet(getParentStyleSheetImpl());
                 }
             }
         }

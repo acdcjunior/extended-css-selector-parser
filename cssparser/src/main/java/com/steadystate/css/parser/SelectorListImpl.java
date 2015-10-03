@@ -35,6 +35,7 @@ import org.w3c.css.sac.SelectorList;
 
 import com.steadystate.css.format.CSSFormat;
 import com.steadystate.css.format.CSSFormatable;
+import com.steadystate.css.parser.selectors.ElementSelectorImpl;
 
 /**
  * Implementation of {@link SelectorList}.
@@ -72,8 +73,24 @@ public class SelectorListImpl extends LocatableImpl implements SelectorList, CSS
      * {@inheritDoc}
      */
     public String getCssText(final CSSFormat format) {
-        final StringBuilder sb = new StringBuilder();
         final int len = getLength();
+
+        // if the selector is only asterisk we
+        // have to preserve it in any case
+        if (len == 1) {
+            final Selector sel = item(0);
+            if (sel instanceof ElementSelectorImpl) {
+                if (format != null && format.isSuppressUniversalSelector()) {
+                    format.setSuppressUniversalSelector(false);
+                    final String res = ((ElementSelectorImpl) sel).getCssText(format);
+                    format.setSuppressUniversalSelector(true);
+                    return res;
+                }
+                return ((ElementSelectorImpl) sel).getCssText(format);
+            }
+        }
+
+        final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < len; i++) {
             final CSSFormatable sel = (CSSFormatable) item(i);
             sb.append(sel.getCssText(format));
