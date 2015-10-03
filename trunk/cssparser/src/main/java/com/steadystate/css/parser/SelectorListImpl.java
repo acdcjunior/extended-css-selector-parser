@@ -79,15 +79,14 @@ public class SelectorListImpl extends LocatableImpl implements SelectorList, CSS
         // have to preserve it in any case
         if (len == 1) {
             final Selector sel = item(0);
-            if (sel instanceof ElementSelectorImpl) {
-                if (format != null && format.isSuppressUniversalSelector()) {
-                    format.setSuppressUniversalSelector(false);
-                    final String res = ((ElementSelectorImpl) sel).getCssText(format);
-                    format.setSuppressUniversalSelector(true);
-                    return res;
-                }
-                return ((ElementSelectorImpl) sel).getCssText(format);
+            if (sel instanceof ElementSelectorImpl
+                    && format != null && format.isSuppressUniversalSelector()) {
+                format.setSuppressUniversalSelector(false);
+                final String res = ((ElementSelectorImpl) sel).getCssText(format);
+                format.setSuppressUniversalSelector(true);
+                return res;
             }
+            return ((CSSFormatable) sel).getCssText(format);
         }
 
         final StringBuilder sb = new StringBuilder();
