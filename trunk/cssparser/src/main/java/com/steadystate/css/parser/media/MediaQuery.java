@@ -78,23 +78,23 @@ public class MediaQuery extends LocatableImpl implements CSSFormatable, Serializ
      * {@inheritDoc}
      */
     public String getCssText(final CSSFormat format) {
-        final StringBuilder result = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         if (isOnly_) {
-            result.append("only ");
+            sb.append("only ");
         }
         if (isNot_) {
-            result.append("not ");
+            sb.append("not ");
         }
 
-        result.append(getMedia());
+        sb.append(getMedia());
 
         for (Property prop : properties_) {
-            result.append(" and (")
+            sb.append(" and (")
                 .append(prop.getCssText(format))
                 .append(')');
         }
-        return result.toString();
+        return sb.toString();
     }
 
     @Override

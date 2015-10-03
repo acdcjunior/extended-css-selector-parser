@@ -93,17 +93,17 @@ public class ConditionalSelectorImpl extends LocatableImpl implements Conditiona
      * {@inheritDoc}
      */
     public String getCssText(final CSSFormat format) {
-        final StringBuilder result = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         if (null != simpleSelector_) {
-            result.append(((CSSFormatable) simpleSelector_).getCssText(format));
+            sb.append(((CSSFormatable) simpleSelector_).getCssText(format));
         }
 
         if (null != condition_) {
-            result.append(((CSSFormatable) condition_).getCssText(format));
+            sb.append(((CSSFormatable) condition_).getCssText(format));
         }
 
-        return result.toString();
+        return sb.toString();
     }
 
     @Override

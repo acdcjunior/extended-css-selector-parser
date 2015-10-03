@@ -2100,6 +2100,22 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
+     * Comments
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void notRule() throws Exception {
+        final String css = "p { color: red; /* background: white; */ background: green; }";
+        final CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSRule rule = rules.item(0);
+        Assert.assertEquals("p { color: red; background: green }", rule.getCssText());
+    }
+
+    /**
      * @throws Exception if any error occurs
      */
     @Test
