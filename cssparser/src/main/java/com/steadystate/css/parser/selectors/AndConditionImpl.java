@@ -83,19 +83,19 @@ public class AndConditionImpl extends LocatableImpl implements CombinatorConditi
      * {@inheritDoc}
      */
     public String getCssText(final CSSFormat format) {
-        final StringBuilder result = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         Condition cond = getFirstCondition();
         if (null != cond) {
-            result.append(((CSSFormatable) cond).getCssText(format));
+            sb.append(((CSSFormatable) cond).getCssText(format));
         }
 
         cond = getSecondCondition();
         if (null != cond) {
-            result.append(((CSSFormatable) cond).getCssText(format));
+            sb.append(((CSSFormatable) cond).getCssText(format));
         }
 
-        return result.toString();
+        return sb.toString();
     }
 
     @Override

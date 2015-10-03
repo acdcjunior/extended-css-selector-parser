@@ -119,7 +119,10 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, CSSFormatab
 
     public String getPropertyValue(final String propertyName) {
         final Property p = getPropertyDeclaration(propertyName);
-        return (p == null || p.getValue() == null) ? "" : p.getValue().toString();
+        if (p == null || p.getValue() == null) {
+            return "";
+        }
+        return p.getValue().toString();
     }
 
     public CSSValue getPropertyCSSValue(final String propertyName) {
@@ -135,7 +138,10 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration, CSSFormatab
             final Property p = properties_.get(i);
             if (p != null && propertyName.equalsIgnoreCase(p.getName())) {
                 properties_.remove(i);
-                return (p.getValue() == null) ? "" : p.getValue().toString();
+                if (p.getValue() == null) {
+                    return "";
+                }
+                return p.getValue().toString();
             }
         }
         return "";
