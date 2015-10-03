@@ -27,6 +27,7 @@ package com.steadystate.css.samples;
 
 import java.io.StringReader;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 
@@ -48,9 +49,20 @@ public class OutputFormattingTest {
         CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
         CSSStyleSheetImpl sheet = (CSSStyleSheetImpl) parser.parseStyleSheet(source, null, null);
 
-        CSSFormat format = new CSSFormat();
-        format.setRgbAsHex(true);
+        Assert.assertEquals("h1 { background: rgb(7, 42, 0) }", sheet.getCssText());
 
-        System.out.println(sheet.getCssText(format));
+        Assert.assertEquals("h1 { background: #072a00 }", sheet.getCssText(new CSSFormat().setRgbAsHex(true)));
+    }
+
+    @Test
+    public void outputFormatting2() throws Exception {
+        InputSource source = new InputSource(new StringReader(".li{display:none}"));
+        CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        CSSStyleSheetImpl sheet = (CSSStyleSheetImpl) parser.parseStyleSheet(source, null, null);
+
+        Assert.assertEquals("*.li { display: none }", sheet.getCssText());
+
+        Assert.assertEquals(".li { display: none }",
+                sheet.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 }
