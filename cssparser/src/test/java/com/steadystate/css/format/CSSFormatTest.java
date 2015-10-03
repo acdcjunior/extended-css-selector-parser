@@ -120,4 +120,24 @@ public class CSSFormatTest  extends AbstractSACParserTest {
         Assert.assertEquals(":hover { color: rgb(255, 0, 0) }",
                 rule.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void substringSelector() throws Exception {
+        final String css = ".li [test*=\"\"] { color:#f00; }";
+        final CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSStyleRuleImpl rule = (CSSStyleRuleImpl) rules.item(0);
+        Assert.assertEquals("*.li *[test*=\"\"] { color: rgb(255, 0, 0) }", rule.getCssText());
+        Assert.assertEquals("*.li *[test*=\"\"] { color: rgb(255, 0, 0) }", rule.getCssText(new CSSFormat()));
+        Assert.assertEquals("*.li *[test*=\"\"] { color: #ff0000 }",
+                rule.getCssText(new CSSFormat().setRgbAsHex(true)));
+        Assert.assertEquals(".li [test*=\"\"] { color: rgb(255, 0, 0) }",
+                rule.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
+    }
 }

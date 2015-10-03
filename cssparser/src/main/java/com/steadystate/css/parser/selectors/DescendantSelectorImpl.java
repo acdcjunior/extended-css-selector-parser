@@ -83,15 +83,24 @@ public class DescendantSelectorImpl extends LocatableImpl implements DescendantS
      * {@inheritDoc}
      */
     public String getCssText(final CSSFormat format) {
-        final StringBuilder result = new StringBuilder(getAncestorSelector().toString());
+        final StringBuilder sb = new StringBuilder();
+
+        if (null != ancestorSelector_) {
+            sb.append(((CSSFormatable) ancestorSelector_).getCssText(format));
+        }
+
         if (Selector.SAC_PSEUDO_ELEMENT_SELECTOR == getSimpleSelector().getSelectorType()) {
-            result.append(':');
+            sb.append(':');
         }
         else {
-            result.append(' ');
+            sb.append(' ');
         }
-        result.append(getSimpleSelector().toString());
-        return result.toString();
+
+        if (null != simpleSelector_) {
+            sb.append(((CSSFormatable) simpleSelector_).getCssText(format));
+        }
+
+        return sb.toString();
     }
 
     @Override
