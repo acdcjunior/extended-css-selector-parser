@@ -94,19 +94,19 @@ public class DirectAdjacentSelectorImpl extends LocatableImpl implements Sibling
      * {@inheritDoc}
      */
     public String getCssText(final CSSFormat format) {
-        final StringBuilder result = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         if (null != selector_) {
-            result.append(((CSSFormatable) selector_).getCssText(format));
+            sb.append(((CSSFormatable) selector_).getCssText(format));
         }
 
-        result.append(" + ");
+        sb.append(" + ");
 
         if (null != siblingSelector_) {
-            result.append(((CSSFormatable) siblingSelector_).getCssText(format));
+            sb.append(((CSSFormatable) siblingSelector_).getCssText(format));
         }
 
-        return result.toString();
+        return sb.toString();
     }
 
     @Override
