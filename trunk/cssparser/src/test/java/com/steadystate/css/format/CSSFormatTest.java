@@ -68,6 +68,25 @@ public class CSSFormatTest  extends AbstractSACParserTest {
      * @throws Exception if any error occurs
      */
     @Test
+    public void allSelector() throws Exception {
+        final String css = "* { display: none; }";
+        final CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSStyleRuleImpl rule = (CSSStyleRuleImpl) rules.item(0);
+        Assert.assertEquals("* { display: none }", rule.getCssText());
+        Assert.assertEquals("* { display: none }", rule.getCssText(new CSSFormat()));
+        Assert.assertEquals("* { display: none }", rule.getCssText(new CSSFormat().setRgbAsHex(true)));
+        Assert.assertEquals("* { display: none }",
+                rule.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
     public void classSelector() throws Exception {
         final String css = ".info { display: none; }";
         final CSSStyleSheet sheet = parse(css, 0, 0, 0);
@@ -80,6 +99,25 @@ public class CSSFormatTest  extends AbstractSACParserTest {
         Assert.assertEquals("*.info { display: none }", rule.getCssText(new CSSFormat()));
         Assert.assertEquals("*.info { display: none }", rule.getCssText(new CSSFormat().setRgbAsHex(true)));
         Assert.assertEquals(".info { display: none }",
+                rule.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void pseudoSelector() throws Exception {
+        final String css = "*:hover{color:#f00;}";
+        final CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        final CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        final CSSStyleRuleImpl rule = (CSSStyleRuleImpl) rules.item(0);
+        Assert.assertEquals("*:hover { color: rgb(255, 0, 0) }", rule.getCssText());
+        Assert.assertEquals("*:hover { color: rgb(255, 0, 0) }", rule.getCssText(new CSSFormat()));
+        Assert.assertEquals("*:hover { color: #ff0000 }", rule.getCssText(new CSSFormat().setRgbAsHex(true)));
+        Assert.assertEquals(":hover { color: rgb(255, 0, 0) }",
                 rule.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 }
