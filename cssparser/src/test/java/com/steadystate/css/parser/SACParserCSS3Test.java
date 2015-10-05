@@ -54,6 +54,7 @@ import com.steadystate.css.ErrorHandler;
 import com.steadystate.css.dom.CSSMediaRuleImpl;
 import com.steadystate.css.dom.CSSStyleDeclarationImpl;
 import com.steadystate.css.dom.CSSStyleRuleImpl;
+import com.steadystate.css.dom.CSSStyleSheetImpl;
 import com.steadystate.css.dom.CSSValueImpl;
 import com.steadystate.css.dom.MediaListImpl;
 import com.steadystate.css.dom.Property;
@@ -2114,9 +2115,13 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals(1, rules.getLength());
 
         final CSSRule rule = rules.item(0);
-        Assert.assertEquals("*#stageList li:not(*.memberStage) { display: none }", rule.getCssText());
-        Assert.assertEquals("#stageList li:not(*.memberStage) { display: none }",
+        Assert.assertEquals("*#stageList li:not(.memberStage) { display: none }", rule.getCssText());
+        Assert.assertEquals("#stageList li:not(.memberStage) { display: none }",
                     ((CSSFormatable) rule).getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
+
+        final CSSStyleSheetImpl theOutputSheet = new CSSStyleSheetImpl();
+        // theOutputSheet.insertRule(rule.getCssText(), 0);
+        theOutputSheet.insertRule("#stageList li:not(.memberStage) { display: none; }", 0);
     }
 
     /**
@@ -2147,7 +2152,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     @Test
     public void not_hash() throws Exception {
         final SelectorList selectors = createSelectors("p:not( #test)");
-        Assert.assertEquals("p:not(*#test)", selectors.item(0).toString());
+        Assert.assertEquals("p:not(#test)", selectors.item(0).toString());
 
         Assert.assertEquals(1, selectors.getLength());
         final Selector selector = selectors.item(0);
@@ -2160,7 +2165,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals(Condition.SAC_PSEUDO_CLASS_CONDITION, condition.getConditionType());
 
         final PseudoClassConditionImpl pseudo = (PseudoClassConditionImpl) condition;
-        Assert.assertEquals("not(*#test)", pseudo.getValue());
+        Assert.assertEquals("not(#test)", pseudo.getValue());
     }
 
     /**
@@ -2170,7 +2175,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     public void not_class() throws Exception {
         // element name
         final SelectorList selectors = createSelectors("p:not(.klass)");
-        Assert.assertEquals("p:not(*.klass)", selectors.item(0).toString());
+        Assert.assertEquals("p:not(.klass)", selectors.item(0).toString());
 
         Assert.assertEquals(1, selectors.getLength());
         final Selector selector = selectors.item(0);
@@ -2183,7 +2188,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals(Condition.SAC_PSEUDO_CLASS_CONDITION, condition.getConditionType());
 
         final PseudoClassConditionImpl pseudo = (PseudoClassConditionImpl) condition;
-        Assert.assertEquals("not(*.klass)", pseudo.getValue());
+        Assert.assertEquals("not(.klass)", pseudo.getValue());
     }
 
     /**
@@ -2192,7 +2197,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     @Test
     public void not_attrib() throws Exception {
         final SelectorList selectors = createSelectors("p:not([type='file'])");
-        Assert.assertEquals("p:not(*[type=\"file\"])", selectors.item(0).toString());
+        Assert.assertEquals("p:not([type=\"file\"])", selectors.item(0).toString());
 
         Assert.assertEquals(1, selectors.getLength());
         final Selector selector = selectors.item(0);
@@ -2205,7 +2210,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals(Condition.SAC_PSEUDO_CLASS_CONDITION, condition.getConditionType());
 
         final PseudoClassConditionImpl pseudo = (PseudoClassConditionImpl) condition;
-        Assert.assertEquals("not(*[type=\"file\"])", pseudo.getValue());
+        Assert.assertEquals("not([type=\"file\"])", pseudo.getValue());
     }
 
     /**
@@ -2214,7 +2219,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     @Test
     public void not_pseudo() throws Exception {
         final SelectorList selectors = createSelectors("p:not(:first)");
-        Assert.assertEquals("p:not(*:first)", selectors.item(0).toString());
+        Assert.assertEquals("p:not(:first)", selectors.item(0).toString());
 
         Assert.assertEquals(1, selectors.getLength());
         final Selector selector = selectors.item(0);
@@ -2227,7 +2232,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals(Condition.SAC_PSEUDO_CLASS_CONDITION, condition.getConditionType());
 
         final PseudoClassConditionImpl pseudo = (PseudoClassConditionImpl) condition;
-        Assert.assertEquals("not(*:first)", pseudo.getValue());
+        Assert.assertEquals("not(:first)", pseudo.getValue());
     }
     /**
      * @throws Exception if any error occurs
@@ -2260,13 +2265,13 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals("input:foo(test):before", selectors.item(0).toString());
 
         selectors = createSelectors("input:not(#test):not(#rest)");
-        Assert.assertEquals("input:not(*#test):not(*#rest)", selectors.item(0).toString());
+        Assert.assertEquals("input:not(#test):not(#rest)", selectors.item(0).toString());
 
         selectors = createSelectors("input:not(#test):nth-child(even)");
-        Assert.assertEquals("input:not(*#test):nth-child(even)", selectors.item(0).toString());
+        Assert.assertEquals("input:not(#test):nth-child(even)", selectors.item(0).toString());
 
         selectors = createSelectors("input:not(#test):before");
-        Assert.assertEquals("input:not(*#test):before", selectors.item(0).toString());
+        Assert.assertEquals("input:not(#test):before", selectors.item(0).toString());
     }
 
     /**
@@ -2288,7 +2293,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
 
         // pseudo element not at end
         checkError("input:before:not(#test)",
-                "Duplicate pseudo class \":not(*#test)\" or pseudo class \":not(*#test)\" not at end.");
+                "Duplicate pseudo class \":not(#test)\" or pseudo class \":not(#test)\" not at end.");
         checkError("input:before[type='file']",
                 "Error in attribute selector. (Invalid token \"type\". Was expecting: <S>.)");
         checkError("input:before.styleClass", "Error in class selector. (Invalid token \"\". Was expecting one of: .)");

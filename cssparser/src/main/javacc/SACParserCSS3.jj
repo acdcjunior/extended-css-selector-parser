@@ -52,6 +52,8 @@ import com.steadystate.css.parser.media.MediaQuery;
 import com.steadystate.css.parser.ParserUtils;
 import com.steadystate.css.dom.Property;
 import com.steadystate.css.dom.CSSValueImpl;
+import com.steadystate.css.format.CSSFormat;
+import com.steadystate.css.format.CSSFormatable;
 
 
 /**
@@ -1277,7 +1279,7 @@ Object pseudo(Condition pred, boolean pseudoElementFound) :
             (
                 t = <FUNCTION_NOT> { function = unescape(t.image, false); }
                 ( <S> )*
-                sel = negation_arg() { String arg = sel.toString(); }
+                sel = negation_arg() { String arg = ((CSSFormatable)sel).getCssText(new CSSFormat().setSuppressUniversalSelector(true)); }
                 ( <S> )*
                 <RROUND>
                 {
