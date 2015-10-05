@@ -2077,29 +2077,29 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
 
         // hash
         selectors = createSelectors("input:not(#test)");
-        Assert.assertEquals("input:not(*#test)", selectors.item(0).toString());
+        Assert.assertEquals("input:not(#test)", selectors.item(0).toString());
 
         // class
         selectors = createSelectors("input:not(.home)");
-        Assert.assertEquals("input:not(*.home)", selectors.item(0).toString());
+        Assert.assertEquals("input:not(.home)", selectors.item(0).toString());
 
         // attrib
         selectors = createSelectors("input:not([title])");
-        Assert.assertEquals("input:not(*[title])", selectors.item(0).toString());
+        Assert.assertEquals("input:not([title])", selectors.item(0).toString());
 
         selectors = createSelectors("input:not([type = 'file'])");
-        Assert.assertEquals("input:not(*[type=\"file\"])", selectors.item(0).toString());
+        Assert.assertEquals("input:not([type=\"file\"])", selectors.item(0).toString());
 
         selectors = createSelectors("input:not([type ~= 'file'])");
-        Assert.assertEquals("input:not(*[type~=\"file\"])", selectors.item(0).toString());
+        Assert.assertEquals("input:not([type~=\"file\"])", selectors.item(0).toString());
 
         // pseudo
         selectors = createSelectors("input:not(:last)");
-        Assert.assertEquals("input:not(*:last)", selectors.item(0).toString());
+        Assert.assertEquals("input:not(:last)", selectors.item(0).toString());
 
         // whitespace
         selectors = createSelectors("input:not( .hi \t)");
-        Assert.assertEquals("input:not(*.hi)", selectors.item(0).toString());
+        Assert.assertEquals("input:not(.hi)", selectors.item(0).toString());
     }
 
     /**

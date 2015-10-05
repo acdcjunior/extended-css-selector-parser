@@ -1279,7 +1279,10 @@ Object pseudo(Condition pred, boolean pseudoElementFound) :
             (
                 t = <FUNCTION_NOT> { function = unescape(t.image, false); }
                 ( <S> )*
-                sel = negation_arg() { String arg = ((CSSFormatable)sel).getCssText(new CSSFormat().setSuppressUniversalSelector(true)); }
+                sel = negation_arg() {
+                        String arg = ((CSSFormatable)sel).getCssText(new CSSFormat().setSuppressUniversalSelector(true));
+                        if ("".equals(arg)) { arg = "*"; }
+                      }
                 ( <S> )*
                 <RROUND>
                 {
