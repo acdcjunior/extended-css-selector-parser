@@ -57,6 +57,8 @@ import com.steadystate.css.dom.CSSStyleRuleImpl;
 import com.steadystate.css.dom.CSSValueImpl;
 import com.steadystate.css.dom.MediaListImpl;
 import com.steadystate.css.dom.Property;
+import com.steadystate.css.format.CSSFormat;
+import com.steadystate.css.format.CSSFormatable;
 import com.steadystate.css.parser.media.MediaQuery;
 import com.steadystate.css.parser.selectors.ChildSelectorImpl;
 import com.steadystate.css.parser.selectors.ConditionalSelectorImpl;
@@ -2100,19 +2102,21 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     }
 
     /**
-     * Comments
+     * Testcase for issue #56
      * @throws Exception if any error occurs
      */
     @Test
     public void notRule() throws Exception {
-        final String css = "p { color: red; /* background: white; */ background: green; }";
+        final String css = "#stageList li:not(.memberStage) { display: none; }";
         final CSSStyleSheet sheet = parse(css, 0, 0, 0);
         final CSSRuleList rules = sheet.getCssRules();
 
         Assert.assertEquals(1, rules.getLength());
 
         final CSSRule rule = rules.item(0);
-        Assert.assertEquals("p { color: red; background: green }", rule.getCssText());
+        Assert.assertEquals("*#stageList li:not(*.memberStage) { display: none }", rule.getCssText());
+        Assert.assertEquals("#stageList li:not(*.memberStage) { display: none }",
+                    ((CSSFormatable) rule).getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
