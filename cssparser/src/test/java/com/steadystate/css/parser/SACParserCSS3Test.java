@@ -2120,8 +2120,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
                     ((CSSFormatable) rule).getCssText(new CSSFormat()));
 
         final CSSStyleSheetImpl theOutputSheet = new CSSStyleSheetImpl();
-        // theOutputSheet.insertRule(rule.getCssText(), 0);
-        theOutputSheet.insertRule("#stageList li:not(.memberStage) { display: none; }", 0);
+        theOutputSheet.insertRule(rule.getCssText(), 0);
     }
 
     /**
@@ -2144,6 +2143,28 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
 
         final PseudoClassConditionImpl pseudo = (PseudoClassConditionImpl) condition;
         Assert.assertEquals("not(abc)", pseudo.getValue());
+    }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void not_universal() throws Exception {
+        final SelectorList selectors = createSelectors("p:not(*)");
+        Assert.assertEquals("p:not(*)", selectors.item(0).toString());
+
+        Assert.assertEquals(1, selectors.getLength());
+        final Selector selector = selectors.item(0);
+
+        Assert.assertEquals(Selector.SAC_CONDITIONAL_SELECTOR, selector.getSelectorType());
+
+        final ConditionalSelector condSel = (ConditionalSelector) selector;
+        final Condition condition = condSel.getCondition();
+
+        Assert.assertEquals(Condition.SAC_PSEUDO_CLASS_CONDITION, condition.getConditionType());
+
+        final PseudoClassConditionImpl pseudo = (PseudoClassConditionImpl) condition;
+        Assert.assertEquals("not(*)", pseudo.getValue());
     }
 
     /**
@@ -2248,6 +2269,10 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         checkError("input:not()",
                 "Error in pseudo class or element. (Invalid token \")\"."
                 + " Was expecting one of: <S>, <IDENT>, \".\", \":\", \"*\", \"[\", <HASH>.)");
+
+        checkError("input:not(*.home)",
+                "Error in pseudo class or element. (Invalid token \".\"."
+                + " Was expecting one of: <S>, \")\".)");
     }
 
     /**
