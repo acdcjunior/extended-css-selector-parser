@@ -49,7 +49,6 @@ public class LangConditionImplTest {
 
         Assert.assertEquals(":lang()", c.getCssText(null));
         Assert.assertEquals(":lang()", c.getCssText(new CSSFormat()));
-        Assert.assertEquals(":lang()", c.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -65,7 +64,6 @@ public class LangConditionImplTest {
 
         Assert.assertEquals(":lang()", c.getCssText(null));
         Assert.assertEquals(":lang()", c.getCssText(new CSSFormat()));
-        Assert.assertEquals(":lang()", c.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -81,6 +79,5 @@ public class LangConditionImplTest {
 
         Assert.assertEquals(":lang(value)", c.getCssText(null));
         Assert.assertEquals(":lang(value)", c.getCssText(new CSSFormat()));
-        Assert.assertEquals(":lang(value)", c.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 }

@@ -60,8 +60,6 @@ public class CSSFormatTest  extends AbstractSACParserTest {
         Assert.assertEquals("p { background: green }", rule.getCssText());
         Assert.assertEquals("p { background: green }", rule.getCssText(new CSSFormat()));
         Assert.assertEquals("p { background: green }", rule.getCssText(new CSSFormat().setRgbAsHex(true)));
-        Assert.assertEquals("p { background: green }",
-                rule.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -79,8 +77,6 @@ public class CSSFormatTest  extends AbstractSACParserTest {
         Assert.assertEquals("* { display: none }", rule.getCssText());
         Assert.assertEquals("* { display: none }", rule.getCssText(new CSSFormat()));
         Assert.assertEquals("* { display: none }", rule.getCssText(new CSSFormat().setRgbAsHex(true)));
-        Assert.assertEquals("* { display: none }",
-                rule.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -95,11 +91,9 @@ public class CSSFormatTest  extends AbstractSACParserTest {
         Assert.assertEquals(1, rules.getLength());
 
         final CSSStyleRuleImpl rule = (CSSStyleRuleImpl) rules.item(0);
-        Assert.assertEquals("*.info { display: none }", rule.getCssText());
-        Assert.assertEquals("*.info { display: none }", rule.getCssText(new CSSFormat()));
-        Assert.assertEquals("*.info { display: none }", rule.getCssText(new CSSFormat().setRgbAsHex(true)));
-        Assert.assertEquals(".info { display: none }",
-                rule.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
+        Assert.assertEquals(".info { display: none }", rule.getCssText());
+        Assert.assertEquals(".info { display: none }", rule.getCssText(new CSSFormat()));
+        Assert.assertEquals(".info { display: none }", rule.getCssText(new CSSFormat().setRgbAsHex(true)));
     }
 
     /**
@@ -117,8 +111,6 @@ public class CSSFormatTest  extends AbstractSACParserTest {
         Assert.assertEquals("*:hover { color: rgb(255, 0, 0) }", rule.getCssText());
         Assert.assertEquals("*:hover { color: rgb(255, 0, 0) }", rule.getCssText(new CSSFormat()));
         Assert.assertEquals("*:hover { color: #ff0000 }", rule.getCssText(new CSSFormat().setRgbAsHex(true)));
-        Assert.assertEquals(":hover { color: rgb(255, 0, 0) }",
-                rule.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -133,11 +125,9 @@ public class CSSFormatTest  extends AbstractSACParserTest {
         Assert.assertEquals(1, rules.getLength());
 
         final CSSStyleRuleImpl rule = (CSSStyleRuleImpl) rules.item(0);
-        Assert.assertEquals("*.li *[test*=\"\"] { color: rgb(255, 0, 0) }", rule.getCssText());
-        Assert.assertEquals("*.li *[test*=\"\"] { color: rgb(255, 0, 0) }", rule.getCssText(new CSSFormat()));
-        Assert.assertEquals("*.li *[test*=\"\"] { color: #ff0000 }",
+        Assert.assertEquals(".li [test*=\"\"] { color: rgb(255, 0, 0) }", rule.getCssText());
+        Assert.assertEquals(".li [test*=\"\"] { color: rgb(255, 0, 0) }", rule.getCssText(new CSSFormat()));
+        Assert.assertEquals(".li [test*=\"\"] { color: #ff0000 }",
                 rule.getCssText(new CSSFormat().setRgbAsHex(true)));
-        Assert.assertEquals(".li [test*=\"\"] { color: rgb(255, 0, 0) }",
-                rule.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 }

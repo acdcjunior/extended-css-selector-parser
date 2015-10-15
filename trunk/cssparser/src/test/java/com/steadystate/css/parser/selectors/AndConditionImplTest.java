@@ -50,7 +50,6 @@ public class AndConditionImplTest {
 
         Assert.assertEquals("", ac.getCssText(null));
         Assert.assertEquals("", ac.getCssText(new CSSFormat()));
-        Assert.assertEquals("", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -68,7 +67,6 @@ public class AndConditionImplTest {
 
         Assert.assertEquals("[test]", ac.getCssText(null));
         Assert.assertEquals("[test]", ac.getCssText(new CSSFormat()));
-        Assert.assertEquals("[test]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -86,7 +84,6 @@ public class AndConditionImplTest {
 
         Assert.assertEquals("[test]", ac.getCssText(null));
         Assert.assertEquals("[test]", ac.getCssText(new CSSFormat()));
-        Assert.assertEquals("[test]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -105,6 +102,5 @@ public class AndConditionImplTest {
 
         Assert.assertEquals("#value[test]", ac.getCssText(null));
         Assert.assertEquals("#value[test]", ac.getCssText(new CSSFormat()));
-        Assert.assertEquals("#value[test]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 }

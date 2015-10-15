@@ -150,7 +150,7 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
         Assert.assertEquals("de", ((LangConditionImpl) selector.getCondition()).getLang());
 
         rule = rules.item(2);
-        Assert.assertEquals("*:lang(fr) > Q { }", rule.getCssText());
+        Assert.assertEquals(":lang(fr) > Q { }", rule.getCssText());
         Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
         ChildSelectorImpl childSelector = (ChildSelectorImpl) ((CSSStyleRuleImpl) rule).getSelectors().item(0);
         selector = (ConditionalSelectorImpl) childSelector.getAncestorSelector();
@@ -158,7 +158,7 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
         Assert.assertEquals("fr", ((LangConditionImpl) selector.getCondition()).getLang());
 
         rule = rules.item(3);
-        Assert.assertEquals("*:lang(de) > Q { }", rule.getCssText());
+        Assert.assertEquals(":lang(de) > Q { }", rule.getCssText());
         Assert.assertEquals(CSSRule.STYLE_RULE, rule.getType());
         childSelector = (ChildSelectorImpl) ((CSSStyleRuleImpl) rule).getSelectors().item(0);
         selector = (ConditionalSelectorImpl) childSelector.getAncestorSelector();
@@ -590,49 +590,49 @@ public class SACParserCSS2Test extends AbstractSACParserTest {
         Assert.assertEquals("OL { list-style-type: lower-alpha }", rule.getCssText());
 
         rule = rules.item(1);
-        Assert.assertEquals("*.a { color: green; background: white none }", rule.getCssText());
+        Assert.assertEquals(".a { color: green; background: white none }", rule.getCssText());
 
         rule = rules.item(1);
-        Assert.assertEquals("*.a { color: green; background: white none }", rule.getCssText());
+        Assert.assertEquals(".a { color: green; background: white none }", rule.getCssText());
 
         rule = rules.item(2);
-        Assert.assertEquals("*.b { color: green; background: white none }", rule.getCssText());
+        Assert.assertEquals(".b { color: green; background: white none }", rule.getCssText());
 
         rule = rules.item(3);
-        Assert.assertEquals("*.c { color: green; background: white none }", rule.getCssText());
+        Assert.assertEquals(".c { color: green; background: white none }", rule.getCssText());
 
         rule = rules.item(4);
-        Assert.assertEquals("*.d { color: green; background: white none }", rule.getCssText());
+        Assert.assertEquals(".d { color: green; background: white none }", rule.getCssText());
 
         rule = rules.item(5);
-        Assert.assertEquals("*.e { color: green; background: white none }", rule.getCssText());
+        Assert.assertEquals(".e { color: green; background: white none }", rule.getCssText());
 
         rule = rules.item(6);
-        Assert.assertEquals("*.f { color: green; background: white none }", rule.getCssText());
+        Assert.assertEquals(".f { color: green; background: white none }", rule.getCssText());
 
         rule = rules.item(7);
-        Assert.assertEquals("*.g { color: green; background: white none }", rule.getCssText());
+        Assert.assertEquals(".g { color: green; background: white none }", rule.getCssText());
 
         rule = rules.item(8);
-        Assert.assertEquals("*.h { color: green; background: white none }", rule.getCssText());
+        Assert.assertEquals(".h { color: green; background: white none }", rule.getCssText());
 
         rule = rules.item(9);
-        Assert.assertEquals("*.i { color: green; background: white none }", rule.getCssText());
+        Assert.assertEquals(".i { color: green; background: white none }", rule.getCssText());
 
         rule = rules.item(10);
-        Assert.assertEquals("*.j { color: green; background: white none }", rule.getCssText());
+        Assert.assertEquals(".j { color: green; background: white none }", rule.getCssText());
 
         rule = rules.item(11);
-        Assert.assertEquals("*.k { color: green; background: white none }", rule.getCssText());
+        Assert.assertEquals(".k { color: green; background: white none }", rule.getCssText());
 
         rule = rules.item(12);
-//         Assert.assertEquals("*.xb { }", rule.getCssText());
+//         Assert.assertEquals(".xb { }", rule.getCssText());
 
         rule = rules.item(13);
-        Assert.assertEquals("*.xc { }", rule.getCssText());
+        Assert.assertEquals(".xc { }", rule.getCssText());
 
         rule = rules.item(14);
-        Assert.assertEquals("*.xd { }", rule.getCssText());
+        Assert.assertEquals(".xd { }", rule.getCssText());
     }
 
     /**

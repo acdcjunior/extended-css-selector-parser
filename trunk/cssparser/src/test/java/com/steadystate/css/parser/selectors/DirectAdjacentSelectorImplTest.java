@@ -53,7 +53,6 @@ public class DirectAdjacentSelectorImplTest {
 
         Assert.assertEquals(" + ", s.getCssText(null));
         Assert.assertEquals(" + ", s.getCssText(new CSSFormat()));
-        Assert.assertEquals(" + ", s.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -72,7 +71,6 @@ public class DirectAdjacentSelectorImplTest {
 
         Assert.assertEquals("p + ", s.getCssText(null));
         Assert.assertEquals("p + ", s.getCssText(new CSSFormat()));
-        Assert.assertEquals("p + ", s.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -91,7 +89,6 @@ public class DirectAdjacentSelectorImplTest {
 
         Assert.assertEquals(" + c", s.getCssText(null));
         Assert.assertEquals(" + c", s.getCssText(new CSSFormat()));
-        Assert.assertEquals(" + c", s.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -112,6 +109,5 @@ public class DirectAdjacentSelectorImplTest {
 
         Assert.assertEquals("p + c", s.getCssText(null));
         Assert.assertEquals("p + c", s.getCssText(new CSSFormat()));
-        Assert.assertEquals("p + c", s.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 }

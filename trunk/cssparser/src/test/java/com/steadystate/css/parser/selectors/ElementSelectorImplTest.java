@@ -50,7 +50,6 @@ public class ElementSelectorImplTest {
 
         Assert.assertEquals("*", c.getCssText(null));
         Assert.assertEquals("*", c.getCssText(new CSSFormat()));
-        Assert.assertEquals("", c.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -67,7 +66,6 @@ public class ElementSelectorImplTest {
 
         Assert.assertEquals("", c.getCssText(null));
         Assert.assertEquals("", c.getCssText(new CSSFormat()));
-        Assert.assertEquals("", c.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -84,6 +82,5 @@ public class ElementSelectorImplTest {
 
         Assert.assertEquals("value", c.getCssText(null));
         Assert.assertEquals("value", c.getCssText(new CSSFormat()));
-        Assert.assertEquals("value", c.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 }

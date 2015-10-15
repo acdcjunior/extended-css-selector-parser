@@ -602,25 +602,19 @@ Selector simpleSelector(Selector sel, char comb) :
                 ( c = pseudoClass(c) )?
             )
             |
-            ( { simpleSel = this.getSelectorFactory().createElementSelector(null, null); }
-                (
-                    ( c = hash(c) )
-                    ( c = _class(c) )?
-                    ( c = pseudoClass(c) )?
-                )
+            (
+                ( c = hash(c) )
+                ( c = _class(c) )?
+                ( c = pseudoClass(c) )?
             )
             |
-            ( { simpleSel = this.getSelectorFactory().createElementSelector(null, null); }
-                (
-                    ( c = _class(c) )
-                    ( c = pseudoClass(c) )?
-                )
+            (
+                ( c = _class(c) )
+                ( c = pseudoClass(c) )?
             )
             |
-            ( { simpleSel = this.getSelectorFactory().createElementSelector(null, null); }
-                ( 
-                    ( c = pseudoClass(c) )
-                )
+            ( 
+                ( c = pseudoClass(c) )
             )
         )
 

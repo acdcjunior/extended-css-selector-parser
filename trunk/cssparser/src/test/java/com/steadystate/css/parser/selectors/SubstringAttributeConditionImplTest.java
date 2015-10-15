@@ -52,7 +52,6 @@ public class SubstringAttributeConditionImplTest {
 
         Assert.assertEquals("[test]", ac.getCssText(null));
         Assert.assertEquals("[test]", ac.getCssText(new CSSFormat()));
-        Assert.assertEquals("[test]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -71,7 +70,6 @@ public class SubstringAttributeConditionImplTest {
 
         Assert.assertEquals("[test*=\"\"]", ac.getCssText(null));
         Assert.assertEquals("[test*=\"\"]", ac.getCssText(new CSSFormat()));
-        Assert.assertEquals("[test*=\"\"]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -90,7 +88,6 @@ public class SubstringAttributeConditionImplTest {
 
         Assert.assertEquals("[test*=\"value\"]", ac.getCssText(null));
         Assert.assertEquals("[test*=\"value\"]", ac.getCssText(new CSSFormat()));
-        Assert.assertEquals("[test*=\"value\"]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -109,7 +106,6 @@ public class SubstringAttributeConditionImplTest {
 
         Assert.assertEquals("[test]", ac.getCssText(null));
         Assert.assertEquals("[test]", ac.getCssText(new CSSFormat()));
-        Assert.assertEquals("[test]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -128,7 +124,6 @@ public class SubstringAttributeConditionImplTest {
 
         Assert.assertEquals("[test*=\"\"]", ac.getCssText(null));
         Assert.assertEquals("[test*=\"\"]", ac.getCssText(new CSSFormat()));
-        Assert.assertEquals("[test*=\"\"]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -147,6 +142,5 @@ public class SubstringAttributeConditionImplTest {
 
         Assert.assertEquals("[test*=\"value\"]", ac.getCssText(null));
         Assert.assertEquals("[test*=\"value\"]", ac.getCssText(new CSSFormat()));
-        Assert.assertEquals("[test*=\"value\"]", ac.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 }

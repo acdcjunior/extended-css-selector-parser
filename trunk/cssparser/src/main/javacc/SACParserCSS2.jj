@@ -850,7 +850,7 @@ Selector simpleSelector(Selector sel, char comb) :
                 )*
             )
             |
-            ( { simpleSel = getSelectorFactory().createElementSelector(null, null); }
+            (
                 ( c = hash(c, null != pseudoElementSel)
                 | c = _class(c, null != pseudoElementSel)
                 | c = attrib(c, null != pseudoElementSel)

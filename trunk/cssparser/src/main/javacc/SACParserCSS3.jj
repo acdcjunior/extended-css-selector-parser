@@ -1008,7 +1008,7 @@ Selector simpleSelector(Selector sel, char comb) :
                 )*
             )
             |
-            ( { simpleSel = getSelectorFactory().createElementSelector(null, null); }
+            (
                 ( c = hash(c, null != pseudoElementSel)
                 | c = _class(c, null != pseudoElementSel)
                 | c = attrib(c, null != pseudoElementSel)
@@ -1280,7 +1280,7 @@ Object pseudo(Condition pred, boolean pseudoElementFound) :
                 t = <FUNCTION_NOT> { function = unescape(t.image, false); }
                 ( <S> )*
                 sel = negation_arg() {
-                        String arg = ((CSSFormatable)sel).getCssText(new CSSFormat().setSuppressUniversalSelector(true));
+                        String arg = ((CSSFormatable)sel).getCssText(null);
                         if ("".equals(arg)) { arg = "*"; }
                       }
                 ( <S> )*
@@ -1643,7 +1643,6 @@ Selector negation_arg() :
                 return simpleSel;
             }
 
-            simpleSel = getSelectorFactory().createElementSelector(null, null);
             simpleSel = getSelectorFactory().createConditionalSelector(simpleSel, c);
             return simpleSel;
         }
