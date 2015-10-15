@@ -38,6 +38,7 @@ import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.parser.CSSOMParser;
 import com.steadystate.css.parser.SACParserCSS21;
+import com.steadystate.css.parser.SACParserCSS3;
 
 /**
 /**
@@ -134,6 +135,31 @@ public class CSSMediaRuleImplTest {
         catch (final DOMException e) {
             Assert.assertTrue(e.getMessage(), e.getMessage().startsWith("Syntax error"));
             Assert.assertEquals(0, mediaRule.getCssRules().getLength());
+        }
+    }
+
+    /**
+     * Regression test for bug #56.
+     *
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void insertRuleNot() throws Exception {
+        final CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        final InputSource source = new InputSource(new StringReader("@media print { }"));
+        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
+        final CSSMediaRule mediaRule = (CSSMediaRule) ss.getCssRules().item(0);
+
+        mediaRule.insertRule("li:not(.shiny) { height: 44px }", 0);
+        Assert.assertEquals("li:not(.shiny) { height: 44px }", mediaRule.getCssRules().item(0).getCssText());
+
+        try {
+            mediaRule.insertRule("li:not(*.shiny) { height: 44px }", 0);
+            Assert.fail("DOMException expected");
+        }
+        catch (final DOMException e) {
+            Assert.assertTrue(e.getMessage(), e.getMessage().startsWith("Syntax error"));
+            Assert.assertEquals(1, mediaRule.getCssRules().getLength());
         }
     }
 
