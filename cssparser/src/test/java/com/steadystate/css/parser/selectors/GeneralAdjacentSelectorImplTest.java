@@ -49,7 +49,6 @@ public class GeneralAdjacentSelectorImplTest {
 
         Assert.assertEquals(" ~ ", selector.getCssText(null));
         Assert.assertEquals(" ~ ", selector.getCssText(new CSSFormat()));
-        Assert.assertEquals(" ~ ", selector.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     @Test
@@ -64,7 +63,6 @@ public class GeneralAdjacentSelectorImplTest {
 
         Assert.assertEquals(" ~ a", selector.getCssText(null));
         Assert.assertEquals(" ~ a", selector.getCssText(new CSSFormat()));
-        Assert.assertEquals(" ~ a", selector.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     @Test
@@ -79,7 +77,6 @@ public class GeneralAdjacentSelectorImplTest {
 
         Assert.assertEquals("p ~ ", selector.getCssText(null));
         Assert.assertEquals("p ~ ", selector.getCssText(new CSSFormat()));
-        Assert.assertEquals("p ~ ", selector.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     @Test
@@ -95,6 +92,5 @@ public class GeneralAdjacentSelectorImplTest {
 
         Assert.assertEquals("p ~ a", selector.getCssText(null));
         Assert.assertEquals("p ~ a", selector.getCssText(new CSSFormat()));
-        Assert.assertEquals("p ~ a", selector.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 }

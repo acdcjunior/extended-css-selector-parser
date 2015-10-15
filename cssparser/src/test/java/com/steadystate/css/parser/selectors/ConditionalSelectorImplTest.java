@@ -51,7 +51,6 @@ public class ConditionalSelectorImplTest {
 
         Assert.assertEquals("", s.getCssText(null));
         Assert.assertEquals("", s.getCssText(new CSSFormat()));
-        Assert.assertEquals("", s.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -69,7 +68,6 @@ public class ConditionalSelectorImplTest {
 
         Assert.assertEquals("p", s.getCssText(null));
         Assert.assertEquals("p", s.getCssText(new CSSFormat()));
-        Assert.assertEquals("p", s.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -87,7 +85,6 @@ public class ConditionalSelectorImplTest {
 
         Assert.assertEquals("#id", s.getCssText(null));
         Assert.assertEquals("#id", s.getCssText(new CSSFormat()));
-        Assert.assertEquals("#id", s.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 
     /**
@@ -106,6 +103,5 @@ public class ConditionalSelectorImplTest {
 
         Assert.assertEquals("p#id", s.getCssText(null));
         Assert.assertEquals("p#id", s.getCssText(new CSSFormat()));
-        Assert.assertEquals("p#id", s.getCssText(new CSSFormat().setSuppressUniversalSelector(true)));
     }
 }

@@ -220,7 +220,7 @@ public abstract class AbstractSACParserTest {
 
         Assert.assertEquals(1, rules.getLength());
         final CSSRule rule = rules.item(0);
-        Assert.assertEquals("*" + css, rule.getCssText());
+        Assert.assertEquals(css, rule.getCssText());
 
         final CSSStyleRuleImpl ruleImpl = (CSSStyleRuleImpl) rule;
         final CSSStyleDeclarationImpl declImpl = (CSSStyleDeclarationImpl) ruleImpl.getStyle();
