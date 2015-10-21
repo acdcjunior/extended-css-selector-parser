@@ -3,7 +3,6 @@
 
     <properties>
         <title>Welcome to CSS Parser</title>
-        <revision>$Revision: 8141 $</revision>
         <author>David Schweinsberg</author>
         <author>RBRi</author>
     </properties>
