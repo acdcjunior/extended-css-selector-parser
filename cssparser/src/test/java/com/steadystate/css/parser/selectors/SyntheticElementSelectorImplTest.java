@@ -32,34 +32,18 @@ import org.w3c.css.sac.Selector;
 import com.steadystate.css.format.CSSFormat;
 
 /**
- * Testcases for {@link ElementSelectorImpl}.
+ * Testcases for {@link SyntheticElementSelectorImpl}.
  */
-public class ElementSelectorImplTest {
+public class SyntheticElementSelectorImplTest {
 
     /**
      * @throws Exception if any error occurs
      */
     @Test
-    public void withoutValue() throws Exception {
-        final ElementSelectorImpl s = new ElementSelectorImpl(null);
+    public void ctor() throws Exception {
+        final SyntheticElementSelectorImpl s = new SyntheticElementSelectorImpl();
         Assert.assertNull(s.getNamespaceURI());
         Assert.assertNull(s.getLocalName());
-        Assert.assertEquals(Selector.SAC_ELEMENT_NODE_SELECTOR, s.getSelectorType());
-
-        Assert.assertEquals("*", s.toString());
-
-        Assert.assertEquals("*", s.getCssText(null));
-        Assert.assertEquals("*", s.getCssText(new CSSFormat()));
-    }
-
-    /**
-     * @throws Exception if any error occurs
-     */
-    @Test
-    public void emptyValue() throws Exception {
-        final ElementSelectorImpl s = new ElementSelectorImpl("");
-        Assert.assertNull(s.getNamespaceURI());
-        Assert.assertEquals("", s.getLocalName());
         Assert.assertEquals(Selector.SAC_ELEMENT_NODE_SELECTOR, s.getSelectorType());
 
         Assert.assertEquals("", s.toString());
@@ -73,14 +57,14 @@ public class ElementSelectorImplTest {
      */
     @Test
     public void withValue() throws Exception {
-        final ElementSelectorImpl s = new ElementSelectorImpl("value");
-        Assert.assertNull(s.getNamespaceURI());
-        Assert.assertEquals("value", s.getLocalName());
-        Assert.assertEquals(Selector.SAC_ELEMENT_NODE_SELECTOR, s.getSelectorType());
-
-        Assert.assertEquals("value", s.toString());
-
-        Assert.assertEquals("value", s.getCssText(null));
-        Assert.assertEquals("value", s.getCssText(new CSSFormat()));
+        final SyntheticElementSelectorImpl s = new SyntheticElementSelectorImpl();
+        try {
+            s.setLocalName("test");
+            Assert.fail("RuntimeException expected");
+        }
+        catch (final RuntimeException e) {
+            Assert.assertEquals("Method setLocalName is not supported for SyntheticElementSelectorImpl.",
+                                    e.getMessage());
+        }
     }
 }

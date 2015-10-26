@@ -9,14 +9,9 @@
   <body>
     <release version="0.9.18" date="xx.xx.2015" description="Bugfixes">
         <action type="change" dev="rbri">
-            INCOMPATIBLE CHANGE: The parser no longer creates an ElementSelector (with value '*')
-            when parsing simple selectors like '.shiny'. Instead of this the resulting ConditionalSelector
-            will hold null as simple selector. Implication: ConditionalSelectorImpl.getSimpleSelector()
-            will return null instead of an ElementSelector.
-        </action>
-        <action type="change" dev="rbri">
-            Parser no longer inserts universal selectors in some cases. As a result, the output (toString, getCssText)
-            no longer contains '*' not defined in the input
+            At some places the parser inserts synthetic universal selectors (*). Starting with this version a special
+            class (SyntheticElementSelectorImpl) is used for these selectors.
+            As a result, the output (toString, getCssText) no longer contains an extra '*' (if not explicit defined in the input)
         </action>
         <action type="fix" dev="rbri" issue="56">
             CSSStyleSheet.insertRule when taking the rule from an existing rule and the rule contains ':not'.

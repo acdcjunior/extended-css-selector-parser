@@ -523,18 +523,18 @@ Selector simpleSelector(Selector sel, char comb) :
                 ( c = pseudoClass(c) )? 
             )
             | 
-            ( 
+            ( { simpleSel = ((com.steadystate.css.parser.selectors.SelectorFactoryImpl) getSelectorFactory()).createSyntheticElementSelector(); }
                 ( c = hash(c) ) 
                 ( c = _class(c) )? 
                 ( c = pseudoClass(c) )? 
             )
             | 
-            ( 
+            ( { simpleSel = ((com.steadystate.css.parser.selectors.SelectorFactoryImpl) getSelectorFactory()).createSyntheticElementSelector(); }
                 ( c = _class(c) ) 
                 ( c = pseudoClass(c) )? 
             )
             | 
-            ( 
+            ( { simpleSel = ((com.steadystate.css.parser.selectors.SelectorFactoryImpl) getSelectorFactory()).createSyntheticElementSelector(); }
                 ( c = pseudoClass(c) ) 
             )
         )

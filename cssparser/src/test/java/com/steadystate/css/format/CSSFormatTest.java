@@ -130,4 +130,32 @@ public class CSSFormatTest  extends AbstractSACParserTest {
         Assert.assertEquals(".li [test*=\"\"] { color: #ff0000 }",
                 rule.getCssText(new CSSFormat().setRgbAsHex(true)));
     }
+
+    /**
+     * @throws Exception if any error occurs
+     */
+    @Test
+    public void syntheticSelector() throws Exception {
+        String css = "*:hover{color:#f00;}";
+        CSSStyleSheet sheet = parse(css, 0, 0, 0);
+        CSSRuleList rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        CSSStyleRuleImpl rule = (CSSStyleRuleImpl) rules.item(0);
+        Assert.assertEquals("*:hover { color: rgb(255, 0, 0) }", rule.getCssText());
+        Assert.assertEquals("*:hover { color: rgb(255, 0, 0) }", rule.getCssText(new CSSFormat()));
+        Assert.assertEquals("*:hover { color: #ff0000 }", rule.getCssText(new CSSFormat().setRgbAsHex(true)));
+
+        css = ":hover{color:#f00;}";
+        sheet = parse(css, 0, 0, 0);
+        rules = sheet.getCssRules();
+
+        Assert.assertEquals(1, rules.getLength());
+
+        rule = (CSSStyleRuleImpl) rules.item(0);
+        Assert.assertEquals(":hover { color: rgb(255, 0, 0) }", rule.getCssText());
+        Assert.assertEquals(":hover { color: rgb(255, 0, 0) }", rule.getCssText(new CSSFormat()));
+        Assert.assertEquals(":hover { color: #ff0000 }", rule.getCssText(new CSSFormat().setRgbAsHex(true)));
+    }
 }
