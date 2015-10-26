@@ -8,7 +8,7 @@
 
   <body>
     <release version="0.9.18" date="xx.xx.2015" description="Bugfixes">
-        <action type="change" dev="rbri">
+        <action type="update" dev="rbri">
             At some places the parser inserts synthetic universal selectors (*). Starting with this version a special
             class (SyntheticElementSelectorImpl) is used for these selectors.
             As a result, the output (toString, getCssText) no longer contains an extra '*' (if not explicit defined in the input)
@@ -16,13 +16,13 @@
         <action type="fix" dev="rbri" issue="56">
             CSSStyleSheet.insertRule when taking the rule from an existing rule and the rule contains ':not'.
         </action>
-        <action type="change" dev="rbri">
+        <action type="update" dev="rbri">
             MediaQuery.isOnly() and MediaQuery.isNot() added.
         </action>
-        <action type="change" dev="rbri">
+        <action type="update" dev="rbri">
             MediaList.getMediaText now outputs the whole media query
         </action>
-        <action type="change" dev="rbri">
+        <action type="update" dev="rbri">
             Colon is no longer part of the text output of empty properties.
         </action>
     </release>
@@ -30,7 +30,7 @@
         <action type="fix" dev="rbri">
             Encoding of the input stream was ignored when the input stream was set up with a byte stream.
         </action>
-        <action type="change" dev="rbri">
+        <action type="update" dev="rbri">
             Minor parser code optimizations and more unit tests.
         </action>
     </release>
@@ -54,7 +54,7 @@
         <action type="fix" dev="rbri">
             Possible NPE in com.steadystate.css.dom.CSSPageRuleImpl.getCssText() fixed.
         </action>
-        <action type="change" dev="rbri">
+        <action type="update" dev="rbri">
             Attribute 'ident' removed from class CSSPageRuleImpl.
         </action>
         <action type="update" dev="rbri">
