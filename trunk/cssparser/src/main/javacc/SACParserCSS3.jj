@@ -1008,7 +1008,7 @@ Selector simpleSelector(Selector sel, char comb) :
                 )*
             )
             |
-            (
+            ( { simpleSel = ((com.steadystate.css.parser.selectors.SelectorFactoryImpl) getSelectorFactory()).createSyntheticElementSelector(); }
                 ( c = hash(c, null != pseudoElementSel)
                 | c = _class(c, null != pseudoElementSel)
                 | c = attrib(c, null != pseudoElementSel)
