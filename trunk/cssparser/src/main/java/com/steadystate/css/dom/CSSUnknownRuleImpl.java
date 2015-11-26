@@ -42,8 +42,6 @@ import com.steadystate.css.util.LangUtils;
 /**
  * Implementation of {@link CSSUnknownRule}.
  *
- * TODO: Reinstate setCssText
- *
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  * @author rbri
  */
