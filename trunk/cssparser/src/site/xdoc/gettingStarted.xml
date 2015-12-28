@@ -70,5 +70,25 @@ public static class MyErrorHandler implements ErrorHandler {
 }
 ]]></source>
         </section>
+
+        <section name="Parsing single style declarations">
+            <p>
+                It is also possible to parse only style declarations instead of a whole style sheet.
+            </p>
+            <source><![CDATA[
+InputSource source = new InputSource(new StringReader("background: #ffcc44; margin-top: 4px"));
+CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+CSSStyleDeclaration decl = parser.parseStyleDeclaration(source);
+
+for (int i = 0; i < decl.getLength(); i++) {
+    final String propName = decl.item(i);
+
+    System.out.println("'" + propName + "' has value: '" + decl.getPropertyValue(propName) + "'");
+}
+]]></source>
+        </section>
+
+
+
     </body>
 </document>
