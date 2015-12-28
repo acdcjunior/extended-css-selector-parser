@@ -34,6 +34,7 @@ import org.w3c.css.sac.ErrorHandler;
 import org.w3c.css.sac.InputSource;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
+import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSStyleSheet;
 
 import com.steadystate.css.parser.CSSOMParser;
@@ -85,4 +86,18 @@ public class GettingStartedTest {
             System.out.println("Fatal: " + exception.getMessage());
         }
     }
+
+    @Test
+    public void parseStyle() throws Exception {
+        InputSource source = new InputSource(new StringReader("background: #ffcc44; margin-top: 4px"));
+        CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
+        CSSStyleDeclaration decl = parser.parseStyleDeclaration(source);
+
+        for (int i = 0; i < decl.getLength(); i++) {
+            final String propName = decl.item(i);
+
+            System.out.println("'" + propName + "' has value: '" + decl.getPropertyValue(propName) + "'");
+        }
+    }
+
 }
