@@ -7,7 +7,7 @@
   </properties>
 
   <body>
-    <release version="0.9.19" date="xx.xx.2015" description="Bugfixes">
+    <release version="0.9.19" date="xx.xx.2015" description="Bugfixes, documentation">
         <action type="fix" dev="rbri" issue="57">
             Incorrect Free Software Foundation address fixed.
         </action>
