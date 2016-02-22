@@ -38,7 +38,7 @@
 
     <properties>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
-        <jdk.version>1.5</jdk.version>
+        <jdk.version>1.7</jdk.version>
     </properties>
 
     <dependencies>
