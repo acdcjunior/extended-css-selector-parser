@@ -41,7 +41,10 @@ import org.w3c.dom.stylesheets.MediaList;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Testcases for correct error location reporting.
@@ -269,9 +272,8 @@ public class LocatorTest {
             final Map<Character, Integer> counts)    {
         if (style instanceof CSSStyleDeclarationImpl) {
             final CSSStyleDeclarationImpl csdi = (CSSStyleDeclarationImpl) style;
-            final Iterator<Property> it = csdi.getProperties().iterator();
-            while (it.hasNext()) {
-                property(it.next(), positions, counts);
+            for (Property property : csdi.getProperties()) {
+                property(property, positions, counts);
             }
         }
     }
