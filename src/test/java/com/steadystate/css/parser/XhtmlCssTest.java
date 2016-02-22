@@ -25,14 +25,13 @@
  */
 package com.steadystate.css.parser;
 
-import java.io.StringReader;
-
+import com.steadystate.css.ErrorHandler;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.Parser;
 
-import com.steadystate.css.ErrorHandler;
+import java.io.StringReader;
 
 /**
  * @author rbri
@@ -68,14 +67,6 @@ public class XhtmlCssTest {
     @Test
     public void xhtmlCssCSS21() throws Exception {
         xhtmlCss(new SACParserCSS21());
-    }
-
-    /**
-     * @throws Exception if any error occurs
-     */
-    @Test
-    public void xhtmlCssCSSmobileOKBasic1() throws Exception {
-        xhtmlCss(new SACParserCSSmobileOKBasic1());
     }
 
     private void xhtmlCss(final Parser sacParser) throws Exception {

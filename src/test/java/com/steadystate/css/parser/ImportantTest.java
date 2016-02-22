@@ -25,11 +25,7 @@
  */
 package com.steadystate.css.parser;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
-
+import com.steadystate.css.ErrorHandler;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.InputSource;
@@ -38,7 +34,10 @@ import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
 import org.w3c.dom.css.CSSStyleSheet;
 
-import com.steadystate.css.ErrorHandler;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 
 /**
  * Testcases.
@@ -67,14 +66,6 @@ public class ImportantTest {
     @Test
     public void css21() throws Exception {
         css(new SACParserCSS21());
-    }
-
-    /**
-     * @throws Exception if any error occurs
-     */
-    @Test
-    public void cssCSSmobileOKBasic1() throws Exception {
-        css(new SACParserCSSmobileOKBasic1());
     }
 
     /**
@@ -110,18 +101,6 @@ public class ImportantTest {
 
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(0, errorHandler.getErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-    }
-
-    /**
-     * @throws Exception if any error occurs
-     */
-    @Test
-    public void cssCSSmobileOKBasic1Error() throws Exception {
-        final ErrorHandler errorHandler = parserError(new SACParserCSSmobileOKBasic1());
-
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(1, errorHandler.getErrorCount());
         Assert.assertEquals(0, errorHandler.getWarningCount());
     }
 

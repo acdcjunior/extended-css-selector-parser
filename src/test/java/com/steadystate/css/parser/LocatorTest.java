@@ -25,40 +25,23 @@
  */
 package com.steadystate.css.parser;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.w3c.css.sac.InputSource;
-import org.w3c.css.sac.Locator;
-import org.w3c.css.sac.Parser;
-import org.w3c.dom.css.CSSCharsetRule;
-import org.w3c.dom.css.CSSFontFaceRule;
-import org.w3c.dom.css.CSSImportRule;
-import org.w3c.dom.css.CSSMediaRule;
-import org.w3c.dom.css.CSSPageRule;
-import org.w3c.dom.css.CSSRule;
-import org.w3c.dom.css.CSSRuleList;
-import org.w3c.dom.css.CSSStyleDeclaration;
-import org.w3c.dom.css.CSSStyleRule;
-import org.w3c.dom.css.CSSStyleSheet;
-import org.w3c.dom.css.CSSUnknownRule;
-import org.w3c.dom.css.CSSValue;
-import org.w3c.dom.css.CSSValueList;
-import org.w3c.dom.stylesheets.MediaList;
-
 import com.steadystate.css.dom.CSSOMObject;
 import com.steadystate.css.dom.CSSStyleDeclarationImpl;
 import com.steadystate.css.dom.CSSValueImpl;
 import com.steadystate.css.dom.Property;
 import com.steadystate.css.userdata.UserDataConstants;
+import org.junit.Assert;
+import org.junit.Test;
+import org.w3c.css.sac.InputSource;
+import org.w3c.css.sac.Locator;
+import org.w3c.css.sac.Parser;
+import org.w3c.dom.css.*;
+import org.w3c.dom.stylesheets.MediaList;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.*;
 
 /**
  * Testcases for correct error location reporting.
@@ -204,47 +187,6 @@ public class LocatorTest {
         positions.put('V', vPos);
 
         locations(new SACParserCSS21(), cssCode, positions);
-    }
-
-    @Test
-    public void locationsCSSmobileOKbasic1() {
-        final String cssCode = IMPORT_RULE
-            + UNKNOWN_AT_RULE
-            + PAGE_RULE
-            + FONT_FACE_RULE
-            + MEDIA_RULE_START
-            + STYLE_RULE
-            + "}\n";
-        final Map<Character, List<Integer[]>> positions =
-            new Hashtable<Character, List<Integer[]>>();
-        final List<Integer[]> rPos = new ArrayList<Integer[]>();
-        rPos.add(new Integer[] {1, 1});
-        rPos.add(new Integer[] {2, 1});
-        rPos.add(new Integer[] {3, 1});
-        rPos.add(new Integer[] {6, 1});
-        rPos.add(new Integer[] {10, 1});
-        rPos.add(new Integer[] {11, 1});
-        rPos.add(new Integer[] {12, 1});
-        positions.put('R', rPos);
-        final List<Integer[]> mPos = new ArrayList<Integer[]>();
-        mPos.add(new Integer[] {1, 29});
-        mPos.add(new Integer[] {10, 16});
-        positions.put('M', mPos);
-        final List<Integer[]> pPos = new ArrayList<Integer[]>();
-        pPos.add(new Integer[] {12, 3});
-        pPos.add(new Integer[] {13, 3});
-        pPos.add(new Integer[] {14, 3});
-        positions.put('P', pPos);
-        final List<Integer[]> vPos = new ArrayList<Integer[]>();
-        vPos.add(new Integer[] {12, 16});
-        vPos.add(new Integer[] {13, 17});
-        vPos.add(new Integer[] {14, 17});
-        vPos.add(new Integer[] {14, 17});
-        vPos.add(new Integer[] {14, 24});
-        vPos.add(new Integer[] {14, 30});
-        positions.put('V', vPos);
-
-        locations(new SACParserCSSmobileOKBasic1(), cssCode, positions);
     }
 
     private void locations(final Parser sacParser, final String cssCode,
