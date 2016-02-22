@@ -44,11 +44,7 @@
     <properties>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
     </properties>
-    <scm>
-        <connection>scm:svn:svn://svn.code.sf.net/p/cssparser/code/trunk/cssparser</connection>
-        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/cssparser/code/trunk/cssparser</developerConnection>
-        <url>http://svn.code.sf.net/p/cssparser/code/trunk/cssparser</url>
-    </scm>
+
     <build>
         <plugins>
             <plugin>
@@ -241,4 +237,11 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <scm>
+        <connection>scm:git:git@github.com:seleniumquery/extended-css-selector-parser.git</connection>
+        <developerConnection>scm:git:git@github.com:seleniumquery/extended-css-selector-parser.git</developerConnection>
+        <url>git@github.com:seleniumquery/extended-css-selector-parser.git</url>
+    </scm>
+
 </project>
