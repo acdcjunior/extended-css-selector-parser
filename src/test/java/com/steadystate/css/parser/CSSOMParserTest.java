@@ -61,11 +61,6 @@ public class CSSOMParserTest {
         return new CSSOMParser();
     }
 
-    private CSSOMParser getCss2Parser() {
-        System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS2");
-        return new CSSOMParser();
-    }
-
     /**
      * @throws Exception if any error occurs
      */
@@ -85,11 +80,6 @@ public class CSSOMParserTest {
         CSSOMParser parser = new CSSOMParser();
         Assert.assertNotNull(parser);
         Assert.assertEquals("com.steadystate.css.parser.SACParserCSS21", System.getProperty("org.w3c.css.sac.parser"));
-
-        System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS2");
-        parser = new CSSOMParser();
-        Assert.assertNotNull(parser);
-        Assert.assertEquals("com.steadystate.css.parser.SACParserCSS2", System.getProperty("org.w3c.css.sac.parser"));
     }
 
     /**
@@ -123,10 +113,6 @@ public class CSSOMParserTest {
         parser = new CSSOMParser(new SACParserCSS21());
         Assert.assertNotNull(parser);
         Assert.assertEquals("com.steadystate.css.parser.SACParserCSS21", System.getProperty("org.w3c.css.sac.parser"));
-
-        parser = new CSSOMParser(new SACParserCSS2());
-        Assert.assertNotNull(parser);
-        Assert.assertEquals("com.steadystate.css.parser.SACParserCSS2", System.getProperty("org.w3c.css.sac.parser"));
     }
 
     /**
@@ -151,50 +137,6 @@ public class CSSOMParserTest {
 
         final CSSValue value = style.getPropertyCSSValue(style.item(0));
         Assert.assertEquals(testValue_, value.getCssText());
-    }
-
-    /**
-     * @throws Exception if any error occurs
-     */
-    @Test
-    public void parseStyleSheetIgnoreProblemCss2() throws Exception {
-        final String test = "p{filter:alpha(opacity=33.3);opacity:0.333}a{color:#123456;}";
-
-        final Reader r = new StringReader(test);
-        final InputSource is = new InputSource(r);
-        final CSSStyleSheet ss = getCss2Parser().parseStyleSheet(is, null, null);
-        final CSSRuleList rl = ss.getCssRules();
-        Assert.assertEquals(2, rl.getLength());
-
-        CSSRule rule = rl.item(0);
-        CSSStyleRule sr = (CSSStyleRule) rule;
-        Assert.assertEquals("p { opacity: 0.333 }", sr.getCssText());
-
-        rule = rl.item(1);
-        sr = (CSSStyleRule) rule;
-        Assert.assertEquals("a { color: rgb(18, 52, 86) }", sr.getCssText());
-    }
-
-    /**
-     * @throws Exception if any error occurs
-     */
-    @Test
-    public void parseStyleSheetIgnoreProblemCss21() throws Exception {
-        final String test = "p{filter:alpha(opacity=33.3);opacity:0.333}a{color:#123456;}";
-
-        final Reader r = new StringReader(test);
-        final InputSource is = new InputSource(r);
-        final CSSStyleSheet ss = getCss21Parser().parseStyleSheet(is, null, null);
-        final CSSRuleList rl = ss.getCssRules();
-        Assert.assertEquals(2, rl.getLength());
-
-        CSSRule rule = rl.item(0);
-        CSSStyleRule sr = (CSSStyleRule) rule;
-        Assert.assertEquals("p { opacity: 0.333 }", sr.getCssText());
-
-        rule = rl.item(1);
-        sr = (CSSStyleRule) rule;
-        Assert.assertEquals("a { color: rgb(18, 52, 86) }", sr.getCssText());
     }
 
     /**
@@ -345,142 +287,10 @@ public class CSSOMParserTest {
     }
 
     /**
-     * Regression test for bug 3293695.
-     *
-     * @throws Exception
-     *             if any error occurs
-     */
-    @Test
-    public void urlGreedy() throws Exception {
-        Assert.assertEquals(
-            "background: url(images/bottom-angle.png); background-image: url(background.png)",
-            getCssTextFromDeclaration(
-                    new SACParserCSS2(),
-                    "background:url('images/bottom-angle.png');background-image:url('background.png');"));
-        Assert.assertEquals(
-            "background: url(images/bottom-angle.png); background-image: url(background.png)",
-            getCssTextFromDeclaration(
-                    new SACParserCSS2(),
-                    "background:url(\"images/bottom-angle.png\");background-image:url(\"background.png\");"));
-        Assert.assertEquals(
-            "background: rgb(60, 90, 118) url(/images/status_bg.png?2) no-repeat center; "
-            + "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
-            getCssTextFromDeclaration(
-                    new SACParserCSS2(),
-                    "background:#3c5a76 url('/images/status_bg.png?2') no-repeat center;"
-                    + "font-family:Arial,'Helvetica Neue',Helvetica,sans-serif"));
-
-        Assert.assertEquals(
-            "background: url(images/bottom-angle.png); background-image: url(background.png)",
-            getCssTextFromDeclaration(
-                    new SACParserCSS21(),
-                    "background:url('images/bottom-angle.png');background-image:url('background.png');"));
-        Assert.assertEquals(
-            "background: url(images/bottom-angle.png); background-image: url(background.png)",
-            getCssTextFromDeclaration(
-                    new SACParserCSS21(),
-                    "background:url(\"images/bottom-angle.png\");background-image:url(\"background.png\");"));
-        Assert.assertEquals(
-            "background: rgb(60, 90, 118) url(/images/status_bg.png?2) no-repeat center; "
-            + "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
-            getCssTextFromDeclaration(
-                    new SACParserCSS21(),
-                    "background:#3c5a76 url('/images/status_bg.png?2') no-repeat center;"
-                    + "font-family:Arial,'Helvetica Neue',Helvetica,sans-serif"));
-    }
-
-    /**
-     * Regression test for bug 2042900.
-     *
-     * @throws Exception
-     *             if any error occurs
-     */
-    @Test
-    public void commaList() throws Exception {
-        Assert.assertEquals(
-            "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
-            getCssTextFromDeclaration(new SACParserCSS2(), "font-family: Arial,'Helvetica Neue',Helvetica,sans-serif"));
-        Assert.assertEquals(
-            "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
-            getCssTextFromDeclaration(new SACParserCSS2(),
-                    "font-family: Arial, 'Helvetica Neue', Helvetica,  sans-serif"));
-
-        Assert.assertEquals(
-            "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
-            getCssTextFromDeclaration(new SACParserCSS21(),
-                    "font-family: Arial,'Helvetica Neue',Helvetica,sans-serif"));
-        Assert.assertEquals(
-            "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
-            getCssTextFromDeclaration(new SACParserCSS21(),
-                    "font-family: Arial, 'Helvetica Neue', Helvetica,  sans-serif"));
-
-        Assert.assertEquals(
-            "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
-            getCssTextFromDeclaration(new SACParserCSS3(),
-                    "font-family: Arial,'Helvetica Neue',Helvetica,sans-serif"));
-        Assert.assertEquals(
-            "font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif",
-            getCssTextFromDeclaration(new SACParserCSS3(),
-                    "font-family: Arial, 'Helvetica Neue', Helvetica,  sans-serif"));
-    }
-
-    /**
-     * Regression test for bug 1183734.
-     *
-     * @throws Exception
-     *             if any error occurs
-     */
-    @Test
-    public void colorFirst() throws Exception {
-        Assert.assertEquals(
-            "background: rgb(232, 239, 245) url(images/bottom-angle.png) no-repeat",
-            getCssTextFromDeclaration(new SACParserCSS2(),
-                    "background: #e8eff5 url(images/bottom-angle.png) no-repeat"));
-        Assert.assertEquals(
-            "background: red url(images/bottom-angle.png) no-repeat",
-            getCssTextFromDeclaration(new SACParserCSS2(), "background: red url(images/bottom-angle.png) no-repeat"));
-        Assert.assertEquals(
-            "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat",
-            getCssTextFromDeclaration(new SACParserCSS2(),
-                    "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat"));
-
-        Assert.assertEquals(
-            "background: rgb(232, 239, 245) url(images/bottom-angle.png) no-repeat",
-            getCssTextFromDeclaration(new SACParserCSS21(),
-                    "background: #e8eff5 url(images/bottom-angle.png) no-repeat"));
-        Assert.assertEquals(
-            "background: red url(images/bottom-angle.png) no-repeat",
-            getCssTextFromDeclaration(new SACParserCSS21(), "background: red url(images/bottom-angle.png) no-repeat"));
-        Assert.assertEquals(
-            "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat",
-            getCssTextFromDeclaration(new SACParserCSS21(),
-                    "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat"));
-
-        Assert.assertEquals(
-            "background: rgb(232, 239, 245) url(images/bottom-angle.png) no-repeat",
-            getCssTextFromDeclaration(new SACParserCSS3(),
-                    "background: #e8eff5 url(images/bottom-angle.png) no-repeat"));
-        Assert.assertEquals(
-            "background: red url(images/bottom-angle.png) no-repeat",
-            getCssTextFromDeclaration(new SACParserCSS3(), "background: red url(images/bottom-angle.png) no-repeat"));
-        Assert.assertEquals(
-            "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat",
-            getCssTextFromDeclaration(new SACParserCSS3(),
-                    "background: rgb(8, 3, 6) url(images/bottom-angle.png) no-repeat"));
-    }
-
-    /**
      * @throws Exception if any error occurs
      */
     @Test
     public void speciaChars() throws Exception {
-        Assert.assertEquals("content: \"�\"",
-            getCssTextFromDeclaration(new SACParserCSS2(), "content: '�';"));
-        Assert.assertEquals("content: \"\u0122\"",
-            getCssTextFromDeclaration(new SACParserCSS2(), "content: '\u0122';"));
-        Assert.assertEquals("content: \"\u0422\"",
-            getCssTextFromDeclaration(new SACParserCSS2(), "content: '\u0422';"));
-
         Assert.assertEquals("content: \"�\"",
             getCssTextFromDeclaration(new SACParserCSS21(), "content: '�';"));
         Assert.assertEquals("content: \"\u0122\"",
@@ -504,7 +314,6 @@ public class CSSOMParserTest {
      */
     @Test
     public void doubleDotSelector() throws Exception {
-        doubleDotSelector(new SACParserCSS2());
         doubleDotSelector(new SACParserCSS21());
         doubleDotSelector(new SACParserCSS3());
     }
@@ -519,50 +328,6 @@ public class CSSOMParserTest {
     }
 
     /**
-     * Regression test for bug 2796824.
-     *
-     * @throws Exception
-     *             if any error occurs
-     */
-    @Test
-    public void importEOF() throws Exception {
-        importEOF(new SACParserCSS2());
-        importEOF(new SACParserCSS21());
-    }
-
-    private void importEOF(final Parser p) throws Exception {
-        final Reader r = new StringReader("@import http://www.wetator.org");
-        final InputSource source = new InputSource(r);
-        final CSSOMParser parser = new CSSOMParser(p);
-        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(0, ss.getCssRules().getLength());
-    }
-
-    /**
-     * Regression test for bug 3198584.
-     *
-     * @throws Exception
-     *             if any error occurs
-     */
-    @Test
-    public void importWithoutClosingSemicolon() throws Exception {
-        importWithoutClosingSemicolon(new SACParserCSS2());
-        importWithoutClosingSemicolon(new SACParserCSS21());
-        importWithoutClosingSemicolon(new SACParserCSS3());
-    }
-
-    private void importWithoutClosingSemicolon(final Parser p) throws Exception {
-        final Reader r = new StringReader("@import url('a.css'); @import url('c.css')");
-        final InputSource source = new InputSource(r);
-        final CSSOMParser parser = new CSSOMParser(p);
-        final CSSStyleSheet ss = parser.parseStyleSheet(source, null, null);
-
-        // second rule is not detected, because the closing semicolon is missed
-        Assert.assertEquals(1, ss.getCssRules().getLength());
-    }
-
-    /**
      * Regression test for bug 1226128.
      *
      * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#escaped-characters">CSS Spec</a>
@@ -571,7 +336,6 @@ public class CSSOMParserTest {
      */
     @Test
     public void escapedChars() throws Exception {
-        escapedChars(new SACParserCSS2());
         escapedChars(new SACParserCSS21());
         escapedChars(new SACParserCSS3());
     }

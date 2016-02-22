@@ -96,9 +96,6 @@
                 </executions>
                 <configuration>
                     <includes>
-                        <include>target/generated-sources/javacc/com/steadystate/css/parser/SACParserCSS2.java</include>
-                        <include>target/generated-sources/javacc/com/steadystate/css/parser/SACParserCSS2TokenManager.java</include>
-
                         <include>target/generated-sources/javacc/com/steadystate/css/parser/SACParserCSS21.java</include>
                         <include>target/generated-sources/javacc/com/steadystate/css/parser/SACParserCSS21TokenManager.java</include>
 

@@ -48,28 +48,8 @@ public class ImportantTest {
      * @throws Exception if any error occurs
      */
     @Test
-    public void css2() throws Exception {
-        css(new SACParserCSS2());
-    }
-
-    /**
-     * @throws Exception if any error occurs
-     */
-    @Test
     public void css21() throws Exception {
         css(new SACParserCSS21());
-    }
-
-    /**
-     * @throws Exception if any error occurs
-     */
-    @Test
-    public void css2Error() throws Exception {
-        final ErrorHandler errorHandler = parserError(new SACParserCSS2());
-
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(1, errorHandler.getErrorCount());
-        Assert.assertEquals(1, errorHandler.getWarningCount());
     }
 
     /**

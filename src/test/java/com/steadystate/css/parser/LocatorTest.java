@@ -73,53 +73,6 @@ public class LocatorTest {
         + "}\n";
 
     @Test
-    public void locationsCSS2() {
-        final String cssCode = CHARSET_RULE
-            + IMPORT_RULE
-            + UNKNOWN_AT_RULE
-            + PAGE_RULE
-            + FONT_FACE_RULE
-            + MEDIA_RULE_START
-            + STYLE_RULE
-            + "}\n";
-        final Map<Character, List<Integer[]>> positions =
-            new Hashtable<Character, List<Integer[]>>();
-        final List<Integer[]> rPos = new ArrayList<Integer[]>();
-        rPos.add(new Integer[] {1, 1});
-        rPos.add(new Integer[] {2, 1});
-        rPos.add(new Integer[] {3, 1});
-        rPos.add(new Integer[] {4, 1});
-        rPos.add(new Integer[] {7, 1});
-        rPos.add(new Integer[] {11, 1});
-        rPos.add(new Integer[] {12, 1});
-        positions.put('R', rPos);
-        final List<Integer[]> mPos = new ArrayList<Integer[]>();
-        mPos.add(new Integer[] {2, 29});
-        mPos.add(new Integer[] {11, 16});
-        positions.put('M', mPos);
-        final List<Integer[]> pPos = new ArrayList<Integer[]>();
-        pPos.add(new Integer[] {5, 3});
-        pPos.add(new Integer[] {8, 3});
-        pPos.add(new Integer[] {9, 3});
-        pPos.add(new Integer[] {13, 3});
-        pPos.add(new Integer[] {14, 3});
-        pPos.add(new Integer[] {15, 3});
-        positions.put('P', pPos);
-        final List<Integer[]> vPos = new ArrayList<Integer[]>();
-        vPos.add(new Integer[] {5, 11});
-        vPos.add(new Integer[] {8, 16});
-        vPos.add(new Integer[] {9, 8});
-        vPos.add(new Integer[] {13, 16});
-        vPos.add(new Integer[] {14, 17});
-        vPos.add(new Integer[] {15, 17});
-        vPos.add(new Integer[] {15, 17});
-        vPos.add(new Integer[] {15, 24});
-        vPos.add(new Integer[] {15, 30});
-        positions.put('V', vPos);
-        locations(new SACParserCSS2(), cssCode, positions);
-    }
-
-    @Test
     public void testLocationsCSS21() {
         final String cssCode = CHARSET_RULE
             + IMPORT_RULE
