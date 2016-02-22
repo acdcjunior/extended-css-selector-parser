@@ -121,26 +121,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.15</version>
-                <configuration>
-                    <configLocation>checkstyle.xml</configLocation>
-                    <suppressionsLocation>checkstyle_suppressions.xml</suppressionsLocation>
-                    <headerLocation>${project.build.directory}/../LICENSE.txt</headerLocation>
-                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    <consoleOutput>true</consoleOutput>
-                    <failsOnError>true</failsOnError>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>6.5</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
@@ -176,41 +156,6 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.4</version>
                 <configuration>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <version>2.9</version>
-                <configuration>
-                    <downloadSources>true</downloadSources>
-                    <downloadJavadocs>true</downloadJavadocs>
-                    <additionalBuildcommands>
-                        <buildcommand>net.sf.eclipsecs.core.CheckstyleBuilder</buildcommand>
-                    </additionalBuildcommands>
-                    <additionalProjectnatures>
-                        <projectnature>net.sf.eclipsecs.core.CheckstyleNature</projectnature>
-                    </additionalProjectnatures>
-                    <additionalConfig>
-                        <file>
-                            <name>.checkstyle</name>
-                            <content>
-<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<fileset-config file-format-version="1.2.0" simple-config="true" sync-formatter="false">
-  <local-check-config name="CSS Parser" location="checkstyle.xml" type="project" description="">
-    <property name="checkstyle.suppressions.file" value="$${project_loc}/checkstyle_suppressions.xml" />
-    <property name="checkstyle.header.file" value="$${project_loc}/LICENSE.txt" />
-    <additional-data name="protect-config-file" value="false" />
-  </local-check-config>
-  <fileset name="all" enabled="true" check-config-name="CSS Parser" local="true">
-    <file-match-pattern match-pattern="^src/.*\.java" include-pattern="true" />
-  </fileset>
-  <filter name="NonSrcDirs" enabled="true" />
-</fileset-config>
-]]>
-                            </content>
-                        </file>
-                    </additionalConfig>
                 </configuration>
             </plugin>
             <plugin>
