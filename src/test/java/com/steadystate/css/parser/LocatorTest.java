@@ -73,35 +73,6 @@ public class LocatorTest {
         + "}\n";
 
     @Test
-    public void locationsCSS1() {
-        final String cssCode = SIMPLE_IMPORT_RULE
-            + UNKNOWN_AT_RULE
-            + STYLE_RULE;
-        final Map<Character, List<Integer[]>> positions =
-            new Hashtable<Character, List<Integer[]>>();
-        final List<Integer[]> rPos = new ArrayList<Integer[]>();
-        rPos.add(new Integer[] {1, 1});
-        rPos.add(new Integer[] {2, 1});
-        rPos.add(new Integer[] {3, 1});
-        positions.put('R', rPos);
-        final List<Integer[]> pPos = new ArrayList<Integer[]>();
-        pPos.add(new Integer[] {4, 3});
-        pPos.add(new Integer[] {5, 3});
-        pPos.add(new Integer[] {6, 3});
-        positions.put('P', pPos);
-        final List<Integer[]> vPos = new ArrayList<Integer[]>();
-        vPos.add(new Integer[] {4, 16});
-        vPos.add(new Integer[] {5, 17});
-        vPos.add(new Integer[] {6, 17});
-        vPos.add(new Integer[] {6, 17});
-        vPos.add(new Integer[] {6, 24});
-        vPos.add(new Integer[] {6, 30});
-        positions.put('V', vPos);
-
-        locations(new SACParserCSS1(), cssCode, positions);
-    }
-
-    @Test
     public void locationsCSS2() {
         final String cssCode = CHARSET_RULE
             + IMPORT_RULE

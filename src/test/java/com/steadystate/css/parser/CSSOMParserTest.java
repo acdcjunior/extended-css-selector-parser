@@ -26,26 +26,19 @@
 
 package com.steadystate.css.parser;
 
-import java.io.Reader;
-import java.io.StringReader;
-
+import com.steadystate.css.dom.CSSStyleDeclarationImpl;
+import com.steadystate.css.dom.CSSStyleRuleImpl;
+import com.steadystate.css.dom.Property;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.Parser;
 import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
-import org.w3c.dom.css.CSSPageRule;
-import org.w3c.dom.css.CSSRule;
-import org.w3c.dom.css.CSSRuleList;
-import org.w3c.dom.css.CSSStyleDeclaration;
-import org.w3c.dom.css.CSSStyleRule;
-import org.w3c.dom.css.CSSStyleSheet;
-import org.w3c.dom.css.CSSValue;
+import org.w3c.dom.css.*;
 
-import com.steadystate.css.dom.CSSStyleDeclarationImpl;
-import com.steadystate.css.dom.CSSStyleRuleImpl;
-import com.steadystate.css.dom.Property;
+import java.io.Reader;
+import java.io.StringReader;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
@@ -97,11 +90,6 @@ public class CSSOMParserTest {
         parser = new CSSOMParser();
         Assert.assertNotNull(parser);
         Assert.assertEquals("com.steadystate.css.parser.SACParserCSS2", System.getProperty("org.w3c.css.sac.parser"));
-
-        System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS1");
-        parser = new CSSOMParser();
-        Assert.assertNotNull(parser);
-        Assert.assertEquals("com.steadystate.css.parser.SACParserCSS1", System.getProperty("org.w3c.css.sac.parser"));
     }
 
     /**
@@ -139,10 +127,6 @@ public class CSSOMParserTest {
         parser = new CSSOMParser(new SACParserCSS2());
         Assert.assertNotNull(parser);
         Assert.assertEquals("com.steadystate.css.parser.SACParserCSS2", System.getProperty("org.w3c.css.sac.parser"));
-
-        parser = new CSSOMParser(new SACParserCSS1());
-        Assert.assertNotNull(parser);
-        Assert.assertEquals("com.steadystate.css.parser.SACParserCSS1", System.getProperty("org.w3c.css.sac.parser"));
     }
 
     /**

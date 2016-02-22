@@ -49,14 +49,6 @@ public class XhtmlCssTest {
      * @throws Exception if any error occurs
      */
     @Test
-    public void xhtmlCssCSS1() throws Exception {
-        xhtmlCss(new SACParserCSS1());
-    }
-
-    /**
-     * @throws Exception if any error occurs
-     */
-    @Test
     public void xhtmlCssCSS2() throws Exception {
         xhtmlCss(new SACParserCSS2());
     }
