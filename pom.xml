@@ -1,17 +1,41 @@
+<!--
+  ~ Copyright (C) 1999-2015 David Schweinsberg.  All rights reserved.
+  ~ Copyright (c) 2016 seleniumQuery authors
+  ~
+  ~ This library is free software; you can redistribute it and/or
+  ~ modify it under the terms of the GNU Lesser General Public
+  ~ License as published by the Free Software Foundation; either
+  ~ version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This library is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ~ Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public
+  ~ License along with this library; if not, write to the Free Software 
+  ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+  ~ MA 02110-1301 USA
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.sourceforge.cssparser</groupId>
-    <artifactId>cssparser</artifactId>
-    <version>0.9.18</version>
-    <name>CSS Parser</name>
-    <url>http://cssparser.sourceforge.net/</url>
-    <description>A CSS parser which implements SAC (the Simple API for CSS).</description>
+	
+    <groupId>io.github.seleniumquery</groupId>
+    <artifactId>extended-css-selector-parser</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+	
+    <name>Extended CSS Selector Parser</name>
+    <url>https://github.com/seleniumQuery/extended-css-selector-parser</url>
+    <description>"Extended CSS Selector" parser.</description>
+	
     <licenses>
         <license>
             <name>GNU Lesser General Public License</name>
             <url>http://www.gnu.org/licenses/lgpl.txt</url>
         </license>
     </licenses>
+
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
