@@ -38,6 +38,7 @@
 
     <properties>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+        <jdk.version>1.5</jdk.version>
     </properties>
 
     <dependencies>
@@ -58,15 +59,15 @@
     <build>
         <plugins>
             <plugin>
-                <!-- set Java 5 as the minimum requirement -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.5.1</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
                 </configuration>
             </plugin>
+
             <plugin>
                 <!-- generate parsers and lexers before compiling -->
                 <groupId>org.codehaus.mojo</groupId>
