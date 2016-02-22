@@ -176,19 +176,6 @@
         </plugins>
     </build>
 
-    <issueManagement>
-        <system>SourceForge2</system>
-        <url>http://sourceforge.net/p/cssparser/bugs/</url>
-    </issueManagement>
-    <mailingLists>
-        <mailingList>
-            <name>CSSParser Developers</name>
-            <subscribe>https://lists.sourceforge.net/lists/listinfo/cssparser-developers</subscribe>
-            <unsubscribe>https://lists.sourceforge.net/lists/listinfo/cssparser-developers</unsubscribe>
-            <archive>http://sourceforge.net/p/cssparser/mailman/cssparser-developers</archive>
-            <post>cssparser-develops@lists.sourceforge.net</post>
-        </mailingList>
-    </mailingLists>
     <developers>
         <developer>
             <name>David Schweinsberg</name>
@@ -237,6 +224,11 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/seleniumQuery/extended-css-selector-parser/issues/</url>
+    </issueManagement>
 
     <scm>
         <connection>scm:git:git@github.com:seleniumquery/extended-css-selector-parser.git</connection>
