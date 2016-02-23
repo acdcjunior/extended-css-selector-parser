@@ -4,7 +4,6 @@
  * Copyright (c) 2011 IBM Corporation
  * Owner: Corporate Webmaster (NUS_N_NIWWW)
  */
-@import url("/common/v17/css/www_2.css");@import url("/common/v17/css/www_1.css");
 @media screen{
 #ibm-print-masthead,#ibm-content-main p.ibm-terms{display:none !important}
 }

@@ -296,9 +296,6 @@ TOKEN_MGR_DECLS :
 // "#"{name}            {return HASH;}
 | < HASH: "#" <NAME> >
 
-// @{I}{M}{P}{O}{R}{T}  {return IMPORT_SYM;}
-| < IMPORT_SYM: "@" <I_LETTER> <M_LETTER> <P_LETTER> <O_LETTER> <R_LETTER> <T_LETTER>>
-
 // @{P}{A}{G}{E}        {return PAGE_SYM;}
 | < PAGE_SYM: "@" <P_LETTER> <A_LETTER> <G_LETTER> <E_LETTER> >
 
@@ -394,7 +391,7 @@ TOKEN_MGR_DECLS :
 
 //
 // stylesheet
-//  : [S|CDO|CDC]* [ import [S|CDO|CDC]* ]*
+//  : [S|CDO|CDC]*
 //    [ [ ruleset | media | page | font_face ] [S|CDO|CDC]* ]*
 //  ;
 //
@@ -422,8 +419,6 @@ void styleSheetRuleList() :
     ( <S> | <CDO> | <CDC> )*
     (
         (
-            importRule(ruleFound)
-            |
             (
                 styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownAtRule()
             )
@@ -443,7 +438,7 @@ void styleSheetRuleSingle() :
 }
 {
     ( <S> )*
-    ( importRule(false) | styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownAtRule() )
+    ( styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownAtRule() )
     ( <S> )*
 }
 
@@ -465,59 +460,6 @@ void unknownAtRule() :
     catch (ParseException e)
     {
         getErrorHandler().error(toCSSParseException("invalidUnknownRule", e));
-    }
-}
-
-//
-// import
-//  : IMPORT_SYM S*
-//    [STRING|URI] S* [ medium [ COMMA S* medium]* ]? ';' S*
-//  ;
-//
-void importRule(final boolean nonImportRuleFoundBefore) :
-{
-    Token t;
-    SACMediaListImpl ml = new SACMediaListImpl();
-    Locator locator;
-}
-{
-    try
-    {
-        {
-            ParseException e = null;
-            if (nonImportRuleFoundBefore)
-            {
-                e = generateParseException();
-            }
-        }
-        <IMPORT_SYM>
-        {
-            locator = getLocator();
-        }
-        ( <S> )*
-        ( t = <STRING> | t = <URI> ) ( <S> )*
-        ( mediaList(ml) )?
-        <SEMICOLON>
-        {
-            if (nonImportRuleFoundBefore)
-            {
-                getErrorHandler().error(toCSSParseException("invalidImportRuleIgnored2", e));
-            }
-            else
-            {
-                handleImportStyle(unescape(t.image, false), ml, null, locator);
-            }
-        }
-    }
-    catch (CSSParseException e)
-    {
-        getErrorHandler().error(e);
-        error_skipAtRule();
-    }
-    catch (ParseException e)
-    {
-        getErrorHandler().error(toCSSParseException("invalidImportRule", e));
-        error_skipAtRule();
     }
 }
 
@@ -683,7 +625,7 @@ void mediaRuleList() :
 {
 }
 {
-  ( ( styleRule() | pageRule() | importRule(true) | unknownAtRule() ) ( <S> )* )+
+  ( ( styleRule() | pageRule() | unknownAtRule() ) ( <S> )* )+
 }
 
 //

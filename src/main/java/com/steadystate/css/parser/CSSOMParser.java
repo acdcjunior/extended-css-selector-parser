@@ -290,19 +290,6 @@ public class CSSOMParser {
 
         public void importStyle(final String uri, final SACMediaList media,
             final String defaultNamespaceURI, final Locator locator) throws CSSException {
-            // Create the import rule and add it to the rule list
-            final CSSImportRuleImpl ir = new CSSImportRuleImpl(
-                CSSOMParser.this.getParentStyleSheet(),
-                getParentRule(),
-                uri,
-                new MediaListImpl(media));
-            addLocator(locator, ir);
-            if (!nodeStack_.empty()) {
-                ((CSSRuleListImpl) nodeStack_.peek()).add(ir);
-            }
-            else {
-                root_ = ir;
-            }
         }
 
         public void startMedia(final SACMediaList media) throws CSSException {

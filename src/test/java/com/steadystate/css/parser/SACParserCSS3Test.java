@@ -303,7 +303,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertNotNull(is);
 
         final CSSStyleSheet sheet = parse(is);
-        Assert.assertEquals(17, sheet.getCssRules().getLength());
+        Assert.assertEquals(16, sheet.getCssRules().getLength());
     }
 
     /**
@@ -322,44 +322,6 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     public void whitespaceOnlyCSS() throws Exception {
         final CSSStyleSheet sheet = parse("  \t \r\n \n");
         Assert.assertEquals(0, sheet.getCssRules().getLength());
-    }
-
-    /**
-     * @throws Exception if the test fails
-     */
-    @Test
-    public void importRuleOnly() throws Exception {
-        final String css = "@import 'subs.css';";
-
-        final CSSStyleSheet sheet = parse(css);
-        final CSSRuleList rules = sheet.getCssRules();
-
-        Assert.assertEquals(1, rules.getLength());
-
-        final CSSRule rule = rules.item(0);
-        Assert.assertEquals("@import url(subs.css);", rule.getCssText());
-    }
-
-    /**
-     * @throws Exception if the test fails
-     */
-    @Test
-    public void importRulesOnly() throws Exception {
-        final String css = "@import 'subs.css'; @import 'subs1.css'; @import 'subs2.css';";
-
-        final CSSStyleSheet sheet = parse(css);
-        final CSSRuleList rules = sheet.getCssRules();
-
-        Assert.assertEquals(3, rules.getLength());
-
-        CSSRule rule = rules.item(0);
-        Assert.assertEquals("@import url(subs.css);", rule.getCssText());
-
-        rule = rules.item(1);
-        Assert.assertEquals("@import url(subs1.css);", rule.getCssText());
-
-        rule = rules.item(2);
-        Assert.assertEquals("@import url(subs2.css);", rule.getCssText());
     }
 
     /**
@@ -441,141 +403,6 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
         Assert.assertEquals("@font-face {font-family: Headline; "
                 + "src: local(Futura-Medium), url(fonts.svg#MyGeometricModern) format(\"svg\")}",
                 rule.getCssText());
-    }
-
-    /**
-     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#at-rules">
-     *          http://www.w3.org/TR/CSS21/syndata.html#at-rules</a>
-     * @throws Exception if the test fails
-     */
-    @Test
-    public void atRules1() throws Exception {
-        final String css = "@import 'subs.css';\n"
-            + "h1 { color: blue }\n"
-            + "@import 'list.css';\n"
-            + "h2 { color: red }\n";
-
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = parser();
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(1, errorHandler.getErrorCount());
-        final String expected = "@import rule must occur before all other rules, except the @charset rule."
-                + " (Invalid token \"@import\". Was expecting one of: <S>, \"<!--\", \"-->\".)";
-        Assert.assertEquals(expected, errorHandler.getErrorMessage());
-        Assert.assertEquals("3", errorHandler.getErrorLines());
-        Assert.assertEquals("1", errorHandler.getErrorColumns());
-
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
-        final CSSRuleList rules = sheet.getCssRules();
-
-        Assert.assertEquals(3, rules.getLength());
-
-        CSSRule rule = rules.item(0);
-        Assert.assertEquals("@import url(subs.css);", rule.getCssText());
-
-        rule = rules.item(1);
-        Assert.assertEquals("h1 { color: blue }", rule.getCssText());
-
-        rule = rules.item(2);
-        Assert.assertEquals("h2 { color: red }", rule.getCssText());
-    }
-
-    /**
-     * @see <a href="http://www.w3.org/TR/CSS21/syndata.html#at-rules">
-     *  http://www.w3.org/TR/CSS21/syndata.html#at-rules</a>
-     * @throws Exception if the test fails
-     */
-    @Test
-    public void atRules2() throws Exception {
-        final String css = "@import 'subs.css';\n"
-            + "@media print {\n"
-            + "  @import 'print-main.css';\n"
-            + "  body { font-size: 10pt }\n"
-            + "}\n"
-            + "h1 {color: blue }\n";
-
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = parser();
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(1, errorHandler.getErrorCount());
-        final String expected = "@import rule must occur before all other rules, except the @charset rule."
-                + " (Invalid token \"@import\". Was expecting: <S>.)";
-        Assert.assertEquals(expected, errorHandler.getErrorMessage());
-        Assert.assertEquals("3", errorHandler.getErrorLines());
-        Assert.assertEquals("3", errorHandler.getErrorColumns());
-
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
-        final CSSRuleList rules = sheet.getCssRules();
-
-        Assert.assertEquals(3, rules.getLength());
-
-        CSSRule rule = rules.item(0);
-        Assert.assertEquals("@import url(subs.css);", rule.getCssText());
-
-        rule = rules.item(1);
-        Assert.assertEquals("@media print {body { font-size: 10pt } }", rule.getCssText());
-
-        rule = rules.item(2);
-        Assert.assertEquals("h1 { color: blue }", rule.getCssText());
-    }
-
-    /**
-     * Test for {@literal @}import after a rule
-     * @throws Exception
-     */
-    @Test
-    public void atRules2b() throws Exception {
-        final String css = "@import 'subs.css';\n"
-            + "@media print {\n"
-            + "  body { font-size: 10pt }\n"
-            + "  @import 'print-main.css';\n"
-            + "}\n"
-            + "h1 {color: blue }\n";
-
-        final InputSource source = new InputSource(new StringReader(css));
-        final CSSOMParser parser = parser();
-
-        final ErrorHandler errorHandler = new ErrorHandler();
-        parser.setErrorHandler(errorHandler);
-
-        final CSSStyleSheet sheet = parser.parseStyleSheet(source, null, null);
-
-        Assert.assertEquals(1, errorHandler.getErrorCount());
-        final String expected = "@import rule must occur before all other rules, except the @charset rule."
-                + " (Invalid token \"@import\". Was expecting: <S>.)";
-        Assert.assertEquals(expected, errorHandler.getErrorMessage());
-        Assert.assertEquals("4", errorHandler.getErrorLines());
-        Assert.assertEquals("3", errorHandler.getErrorColumns());
-
-        Assert.assertEquals(0, errorHandler.getFatalErrorCount());
-        Assert.assertEquals(0, errorHandler.getWarningCount());
-
-        final CSSRuleList rules = sheet.getCssRules();
-
-        Assert.assertEquals(3, rules.getLength());
-
-        CSSRule rule = rules.item(0);
-        Assert.assertEquals("@import url(subs.css);", rule.getCssText());
-
-        rule = rules.item(1);
-        Assert.assertEquals("@media print {body { font-size: 10pt } }", rule.getCssText());
-
-        rule = rules.item(2);
-        Assert.assertEquals("h1 { color: blue }", rule.getCssText());
     }
 
     @Test
@@ -2757,7 +2584,7 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
      */
     @Test
     public void realWorldIBM() throws Exception {
-        realWorld("realworld//www.css", 493,
+        realWorld("realworld//www.css", 491,
                 "only screen and (min-device-width: 768px) and (max-device-width: 1024px);print;screen;", 34, 1);
     }
 
