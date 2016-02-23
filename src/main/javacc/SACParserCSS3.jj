@@ -61,7 +61,7 @@ import com.steadystate.css.format.CSSFormatable;
  * @author waldbaer
  * @author Ahmed Ashour
  * @author rbri
- * @version $Id: SACParserCSS21.jj,v 1.9 2010-05-19 13:26:51 waldbaer Exp $
+ * @author acdcjunior
  */
 public class SACParserCSS3 extends AbstractSACParser implements Parser {
 
@@ -637,9 +637,12 @@ MediaQuery mediaQuery() :
     boolean not = false;
 }
 {
-  (    (      (
+  (
+    (
+      (
         (
-          <ONLY> { only = true; }          |
+          <ONLY> { only = true; }
+          |
           <NOT> { not = true; }
         ) ( <S> )*
       )?
@@ -648,13 +651,29 @@ MediaQuery mediaQuery() :
       (
         <AND> ( <S> )*
         p = mediaExpression()
-        {            mq.addMediaProperty(p);
+        {
+            mq.addMediaProperty(p);
         }
       )*
     )
-    |    (      p = mediaExpression()
-      {          s = "all";          handleMedium(s, null);          mq = new MediaQuery(s, only, not);
-          mq.setLocator(getLocator());          mq.addMediaProperty(p);      }      (        <AND> ( <S> )*        p = mediaExpression()        {            mq.addMediaProperty(p);        }      )*    )
+    |
+    (
+      p = mediaExpression()
+      {
+          s = "all";
+          handleMedium(s, null);
+          mq = new MediaQuery(s, only, not);
+          mq.setLocator(getLocator());
+          mq.addMediaProperty(p);
+      }
+      (
+        <AND> ( <S> )*
+        p = mediaExpression()
+        {
+            mq.addMediaProperty(p);
+        }
+      )*
+    )
   )
   { return mq; }
 }
@@ -674,16 +693,20 @@ Property mediaExpression() :
     <LROUND>
     ( <S> )*
     p = property()
-    (      <COLON> ( <S> )*
+    (
+      <COLON> ( <S> )*
       e = expr()
     )?
     <RROUND>
     ( <S> )*
     {
         if(e==null)
-        {          prop = new Property(p, null, false);
+        {
+          prop = new Property(p, null, false);
         }
-        else        {          prop = new Property(p, new CSSValueImpl(e), false);
+        else
+        {
+          prop = new Property(p, new CSSValueImpl(e), false);
         }
         return prop;
     }
@@ -1417,7 +1440,9 @@ void declaration() :
         e = expr()
         ( priority = prio() )?
         {
-            if (starHack != null)            {                CSSParseException cpe = toCSSParseException("invalidDeclarationStarHack", null, starHack);
+            if (starHack != null)
+            {
+                CSSParseException cpe = toCSSParseException("invalidDeclarationStarHack", null, starHack);
                 getErrorHandler().error(cpe);
                 return;
             }
@@ -1534,7 +1559,8 @@ LexicalUnit term(LexicalUnit prev) :
         )
         | t = <STRING>          { value = LexicalUnitImpl.createString(prev, unescape(t.image, false)); }
         |
-            (                t = <IDENT>
+            (
+                t = <IDENT>
                 ( <COLON> { throw toCSSParseException("invalidExprColon", new String[]{ unescape(t.image, false) }, getLocator()); } )?
             )
             { value = LexicalUnitImpl.createIdent(prev, unescape(t.image, false)); }
@@ -1585,7 +1611,8 @@ LexicalUnit function(LexicalUnit prev) :
         param = term(null) { body = param; }
         (
             (
-                (                  t = <COMMA>    { body = LexicalUnitImpl.createComma(body); }
+                (
+                  t = <COMMA>    { body = LexicalUnitImpl.createComma(body); }
                   | t = <EQUALS>   { body = LexicalUnitImpl.createIdent(body, t.image); }
                 )
                 ( <S> )*

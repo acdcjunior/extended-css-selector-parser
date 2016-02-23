@@ -113,7 +113,7 @@ public class LocatorTest {
         vPos.add(new Integer[] {15, 30});
         positions.put('V', vPos);
 
-        locations(new SACParserCSS21(), cssCode, positions);
+        locations(new SACParserCSS3(), cssCode, positions);
     }
 
     private void locations(final Parser sacParser, final String cssCode,
@@ -179,8 +179,8 @@ public class LocatorTest {
                 cssStyleDeclaration(cssPageRule.getStyle(), positions, counts);
                 break;
             case CSSRule.FONT_FACE_RULE:
-                final CSSFontFaceRule cssFontFaceRule = (CSSFontFaceRule) cssRule;
-                cssStyleDeclaration(cssFontFaceRule.getStyle(), positions, counts);
+//                final CSSFontFaceRule cssFontFaceRule = (CSSFontFaceRule) cssRule;
+//                cssStyleDeclaration(cssFontFaceRule.getStyle(), positions, counts);
                 break;
             case CSSRule.STYLE_RULE:
                 final CSSStyleRule cssStyleRule = (CSSStyleRule) cssRule;

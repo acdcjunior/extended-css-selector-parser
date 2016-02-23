@@ -26,23 +26,11 @@
 
 package com.steadystate.css.parser;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
-
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.InputSource;
-import org.w3c.css.sac.LexicalUnit;
-import org.w3c.css.sac.Locator;
-import org.w3c.css.sac.Parser;
-import org.w3c.css.sac.SACMediaList;
-import org.w3c.css.sac.SelectorList;
+import com.steadystate.css.util.Output;
+import org.w3c.css.sac.*;
 import org.w3c.css.sac.helpers.ParserFactory;
 
-import com.steadystate.css.util.Output;
+import java.io.*;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
@@ -51,7 +39,7 @@ import com.steadystate.css.util.Output;
  */
 public class ParseTester extends HandlerBase {
 
-    private static final String PARSER = "com.steadystate.css.parser.SACParserCSS21";
+    private static final String PARSER = "com.steadystate.css.parser.SACParserCSS3";
 
     private int propertyCounter_ = 0;
     private Output output_;

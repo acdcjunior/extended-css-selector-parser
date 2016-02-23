@@ -57,7 +57,7 @@ public class CSSOMParserTest {
     private String testPropertyValue_ = "sans-serif";
 
     private CSSOMParser getCss21Parser() {
-        System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS21");
+        System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS3");
         return new CSSOMParser();
     }
 
@@ -68,7 +68,7 @@ public class CSSOMParserTest {
     public void defaultConstructor() throws Exception {
         final CSSOMParser parser = new CSSOMParser();
         Assert.assertNotNull(parser);
-        Assert.assertEquals("com.steadystate.css.parser.SACParserCSS21", System.getProperty("org.w3c.css.sac.parser"));
+        Assert.assertEquals("com.steadystate.css.parser.SACParserCSS3", System.getProperty("org.w3c.css.sac.parser"));
     }
 
     /**
@@ -76,10 +76,10 @@ public class CSSOMParserTest {
      */
     @Test
     public void defineParserClass() throws Exception {
-        System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS21");
+        System.setProperty("org.w3c.css.sac.parser", "com.steadystate.css.parser.SACParserCSS3");
         CSSOMParser parser = new CSSOMParser();
         Assert.assertNotNull(parser);
-        Assert.assertEquals("com.steadystate.css.parser.SACParserCSS21", System.getProperty("org.w3c.css.sac.parser"));
+        Assert.assertEquals("com.steadystate.css.parser.SACParserCSS3", System.getProperty("org.w3c.css.sac.parser"));
     }
 
     /**
@@ -109,10 +109,6 @@ public class CSSOMParserTest {
         CSSOMParser parser = new CSSOMParser(new SACParserCSS3());
         Assert.assertNotNull(parser);
         Assert.assertEquals("com.steadystate.css.parser.SACParserCSS3", System.getProperty("org.w3c.css.sac.parser"));
-
-        parser = new CSSOMParser(new SACParserCSS21());
-        Assert.assertNotNull(parser);
-        Assert.assertEquals("com.steadystate.css.parser.SACParserCSS21", System.getProperty("org.w3c.css.sac.parser"));
     }
 
     /**
@@ -172,7 +168,7 @@ public class CSSOMParserTest {
         final InputSource is = new InputSource(r);
         final SelectorList sl = getCss21Parser().parseSelectors(is);
 
-        Assert.assertNull(sl);
+        Assert.assertEquals("table:bogus(1) td", sl.item(0).toString());
     }
 
     /**
@@ -292,13 +288,6 @@ public class CSSOMParserTest {
     @Test
     public void speciaChars() throws Exception {
         Assert.assertEquals("content: \"�\"",
-            getCssTextFromDeclaration(new SACParserCSS21(), "content: '�';"));
-        Assert.assertEquals("content: \"\u0122\"",
-            getCssTextFromDeclaration(new SACParserCSS21(), "content: '\u0122';"));
-        Assert.assertEquals("content: \"\u0422\"",
-            getCssTextFromDeclaration(new SACParserCSS21(), "content: '\u0422';"));
-
-        Assert.assertEquals("content: \"�\"",
                 getCssTextFromDeclaration(new SACParserCSS3(), "content: '�';"));
         Assert.assertEquals("content: \"\u0122\"",
             getCssTextFromDeclaration(new SACParserCSS3(), "content: '\u0122';"));
@@ -314,7 +303,6 @@ public class CSSOMParserTest {
      */
     @Test
     public void doubleDotSelector() throws Exception {
-        doubleDotSelector(new SACParserCSS21());
         doubleDotSelector(new SACParserCSS3());
     }
 
@@ -336,7 +324,6 @@ public class CSSOMParserTest {
      */
     @Test
     public void escapedChars() throws Exception {
-        escapedChars(new SACParserCSS21());
         escapedChars(new SACParserCSS3());
     }
 

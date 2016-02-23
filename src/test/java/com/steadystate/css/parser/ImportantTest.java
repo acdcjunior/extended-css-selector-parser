@@ -49,7 +49,7 @@ public class ImportantTest {
      */
     @Test
     public void css21() throws Exception {
-        css(new SACParserCSS21());
+        css(new SACParserCSS3());
     }
 
     /**
@@ -57,7 +57,7 @@ public class ImportantTest {
      */
     @Test
     public void css21Error() throws Exception {
-        final ErrorHandler errorHandler = parserError(new SACParserCSS21());
+        final ErrorHandler errorHandler = parserError(new SACParserCSS3());
 
         Assert.assertEquals(0, errorHandler.getFatalErrorCount());
         Assert.assertEquals(0, errorHandler.getErrorCount());

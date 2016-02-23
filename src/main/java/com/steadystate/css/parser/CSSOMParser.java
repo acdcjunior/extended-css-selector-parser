@@ -26,20 +26,10 @@
 
 package com.steadystate.css.parser;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Stack;
-import java.util.logging.Logger;
-
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.ErrorHandler;
-import org.w3c.css.sac.InputSource;
-import org.w3c.css.sac.LexicalUnit;
-import org.w3c.css.sac.Locator;
-import org.w3c.css.sac.Parser;
-import org.w3c.css.sac.SACMediaList;
-import org.w3c.css.sac.SelectorList;
+import com.steadystate.css.dom.*;
+import com.steadystate.css.sac.DocumentHandlerExt;
+import com.steadystate.css.userdata.UserDataConstants;
+import org.w3c.css.sac.*;
 import org.w3c.css.sac.helpers.ParserFactory;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
@@ -48,29 +38,18 @@ import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.css.CSSStyleSheet;
 import org.w3c.dom.css.CSSValue;
 
-import com.steadystate.css.dom.CSSCharsetRuleImpl;
-import com.steadystate.css.dom.CSSFontFaceRuleImpl;
-import com.steadystate.css.dom.CSSImportRuleImpl;
-import com.steadystate.css.dom.CSSMediaRuleImpl;
-import com.steadystate.css.dom.CSSOMObject;
-import com.steadystate.css.dom.CSSPageRuleImpl;
-import com.steadystate.css.dom.CSSRuleListImpl;
-import com.steadystate.css.dom.CSSStyleDeclarationImpl;
-import com.steadystate.css.dom.CSSStyleRuleImpl;
-import com.steadystate.css.dom.CSSStyleSheetImpl;
-import com.steadystate.css.dom.CSSUnknownRuleImpl;
-import com.steadystate.css.dom.CSSValueImpl;
-import com.steadystate.css.dom.MediaListImpl;
-import com.steadystate.css.dom.Property;
-import com.steadystate.css.sac.DocumentHandlerExt;
-import com.steadystate.css.userdata.UserDataConstants;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Stack;
+import java.util.logging.Logger;
 
 /**
  * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
  */
 public class CSSOMParser {
 
-    private static final String DEFAULT_PARSER = "com.steadystate.css.parser.SACParserCSS21";
+    private static final String DEFAULT_PARSER = "com.steadystate.css.parser.SACParserCSS3";
 
     private static String LastFailed_;
 
@@ -100,7 +79,7 @@ public class CSSOMParser {
             try {
                 // use the direct method if we already failed once before
                 if (null != LastFailed_ && LastFailed_.equals(currentParser)) {
-                    parser_ = new SACParserCSS21();
+                    parser_ = new SACParserCSS3();
                 }
                 else {
                     if (null == currentParser) {
@@ -114,10 +93,10 @@ public class CSSOMParser {
             catch (final Exception e) {
                 final Logger log = Logger.getLogger("com.steadystate.css");
                 log.warning(e.toString());
-                log.warning("using the default 'SACParserCSS21' instead");
+                log.warning("using the default 'SACParserCSS3' instead");
                 log.throwing("CSSOMParser", "consturctor", e);
                 LastFailed_ = currentParser;
-                parser_ = new SACParserCSS21();
+                parser_ = new SACParserCSS3();
             }
         }
     }
