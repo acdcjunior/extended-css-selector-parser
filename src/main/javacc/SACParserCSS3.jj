@@ -308,9 +308,6 @@ TOKEN_MGR_DECLS :
 // "@{F}{O}{N}{T}-{F}{A}{C}{E}"    {return FONT_FACE_SYM;}
 | < FONT_FACE_SYM: "@" <F_LETTER> <O_LETTER> <N_LETTER> <T_LETTER> "-" <F_LETTER> <A_LETTER> <C_LETTER> <E_LETTER> >
 
-// @{C}{H}{A}{R}{S}{E}{T}   {return CHARSET_SYM;}
-| < CHARSET_SYM: "@" <C_LETTER> <H_LETTER> <A_LETTER> <R_LETTER> <S_LETTER> <E_LETTER> <T_LETTER> >
-
 // "!"({w}|{comment})*{I}{M}{P}{O}{R}{T}{A}{N}{T}   {return IMPORTANT_SYM;}
 | < IMPORTANT_SYM: "!" ( <W> | <COMMENT_> )* <I_LETTER> <M_LETTER> <P_LETTER> <O_LETTER> <R_LETTER> <T_LETTER> <A_LETTER> <N_LETTER> <T_LETTER> >
 
@@ -397,8 +394,7 @@ TOKEN_MGR_DECLS :
 
 //
 // stylesheet
-//  : [ CHARSET_SYM STRING ';' ]?
-//    [S|CDO|CDC]* [ import [S|CDO|CDC]* ]*
+//  : [S|CDO|CDC]* [ import [S|CDO|CDC]* ]*
 //    [ [ ruleset | media | page | font_face ] [S|CDO|CDC]* ]*
 //  ;
 //
@@ -425,10 +421,6 @@ void styleSheetRuleList() :
 {
     ( <S> | <CDO> | <CDC> )*
     (
-        charsetRule()
-        ( <S> | <CDO> | <CDC> )*
-    )?
-    (
         (
             importRule(ruleFound)
             |
@@ -451,33 +443,8 @@ void styleSheetRuleSingle() :
 }
 {
     ( <S> )*
-    ( charsetRule() | importRule(false) | styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownAtRule() )
+    ( importRule(false) | styleRule() | mediaRule() | pageRule() | fontFaceRule() | unknownAtRule() )
     ( <S> )*
-}
-
-void charsetRule() :
-{
-  Token t;
-  Locator locator;
-}
-{
-    try
-    {
-        <CHARSET_SYM>
-        {
-            locator = getLocator();
-        }
-        <S>
-        t = <STRING>
-        <SEMICOLON>
-        {
-            handleCharset(t.toString(), locator);
-        }
-    }
-    catch (ParseException e)
-    {
-        getErrorHandler().error(toCSSParseException("invalidCharsetRule", e));
-    }
 }
 
 void unknownAtRule() :

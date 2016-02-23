@@ -26,20 +26,15 @@
 
 package com.steadystate.css.dom;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.StringReader;
-
+import com.steadystate.css.format.CSSFormat;
+import com.steadystate.css.parser.CSSOMParser;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSStyleSheet;
 
-import com.steadystate.css.format.CSSFormat;
-import com.steadystate.css.parser.CSSOMParser;
+import java.io.*;
 
 /**
 /**
@@ -133,45 +128,6 @@ public class CSSStyleSheetImplTest {
             Assert.assertEquals(0, ss.getCssRules().getLength());
         }
 
-    }
-
-    /**
-     * @throws Exception if any error occurs
-     */
-    @Test
-    public void insertRuleRuleOrderCharset() throws Exception {
-        final CSSStyleSheet ss = parseStyleSheet("");
-
-        ss.insertRule("@charset \"US-ASCII\";", 0);
-        try {
-            ss.insertRule("@charset \"US-ASCII\";", 0);
-            Assert.fail("DOMException expected");
-        }
-        catch (final DOMException e) {
-            Assert.assertTrue(e.getMessage(), e.getMessage().startsWith("A charset rule already exists"));
-        }
-    }
-
-    /**
-     * @throws Exception if any error occurs
-     */
-    @Test
-    public void insertRuleRuleImport() throws Exception {
-        final CSSStyleSheet ss = parseStyleSheet("");
-
-        ss.insertRule("@import \"great.css\";", 0);
-
-        ss.insertRule("@charset \"US-ASCII\";", 0);
-        ss.insertRule("@import \"great.css\";", 1);
-
-        try {
-            ss.insertRule("testStyleDef { height: 42px }", 0);
-            Assert.fail("DOMException expected");
-        }
-        catch (final DOMException e) {
-            Assert.assertTrue(e.getMessage(),
-                    e.getMessage().startsWith("Can't insert a rule before the last charset or import rule"));
-        }
     }
 
     /**

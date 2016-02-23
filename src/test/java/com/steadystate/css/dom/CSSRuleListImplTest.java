@@ -26,15 +26,14 @@
 
 package com.steadystate.css.dom;
 
-import java.io.StringReader;
-
+import com.steadystate.css.format.CSSFormat;
+import com.steadystate.css.parser.CSSOMParser;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.InputSource;
 import org.w3c.dom.css.CSSStyleSheet;
 
-import com.steadystate.css.format.CSSFormat;
-import com.steadystate.css.parser.CSSOMParser;
+import java.io.StringReader;
 
 /**
 /**
@@ -89,21 +88,6 @@ public class CSSRuleListImplTest {
         Assert.assertEquals(null, rl.item(-1));
         Assert.assertEquals("@font-face {}", rl.item(0).toString());
         Assert.assertEquals(null, rl.item(1));
-        Assert.assertEquals(null, rl.item(10));
-
-        rl.add(new CSSCharsetRuleImpl());
-        Assert.assertEquals(null, rl.item(-1));
-        Assert.assertEquals("@font-face {}", rl.item(0).toString());
-        Assert.assertEquals("@charset \"\";", rl.item(1).toString());
-        Assert.assertEquals(null, rl.item(2));
-        Assert.assertEquals(null, rl.item(10));
-
-        rl.add(new CSSImportRuleImpl());
-        Assert.assertEquals(null, rl.item(-1));
-        Assert.assertEquals("@font-face {}", rl.item(0).toString());
-        Assert.assertEquals("@charset \"\";", rl.item(1).toString());
-        Assert.assertEquals("@import;", rl.item(2).toString());
-        Assert.assertEquals(null, rl.item(3));
         Assert.assertEquals(null, rl.item(10));
     }
 

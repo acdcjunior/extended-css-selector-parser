@@ -26,48 +26,20 @@
 
 package com.steadystate.css.parser;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.w3c.css.sac.Condition;
-import org.w3c.css.sac.ConditionalSelector;
-import org.w3c.css.sac.InputSource;
-import org.w3c.css.sac.LexicalUnit;
-import org.w3c.css.sac.Selector;
-import org.w3c.css.sac.SelectorList;
-import org.w3c.dom.css.CSSMediaRule;
-import org.w3c.dom.css.CSSPrimitiveValue;
-import org.w3c.dom.css.CSSRule;
-import org.w3c.dom.css.CSSRuleList;
-import org.w3c.dom.css.CSSStyleDeclaration;
-import org.w3c.dom.css.CSSStyleRule;
-import org.w3c.dom.css.CSSStyleSheet;
-
 import com.steadystate.css.ErrorHandler;
-import com.steadystate.css.dom.CSSMediaRuleImpl;
-import com.steadystate.css.dom.CSSStyleDeclarationImpl;
-import com.steadystate.css.dom.CSSStyleRuleImpl;
-import com.steadystate.css.dom.CSSStyleSheetImpl;
-import com.steadystate.css.dom.CSSValueImpl;
-import com.steadystate.css.dom.MediaListImpl;
-import com.steadystate.css.dom.Property;
+import com.steadystate.css.dom.*;
 import com.steadystate.css.format.CSSFormat;
 import com.steadystate.css.format.CSSFormatable;
 import com.steadystate.css.parser.media.MediaQuery;
-import com.steadystate.css.parser.selectors.ChildSelectorImpl;
-import com.steadystate.css.parser.selectors.ConditionalSelectorImpl;
-import com.steadystate.css.parser.selectors.LangConditionImpl;
-import com.steadystate.css.parser.selectors.PrefixAttributeConditionImpl;
-import com.steadystate.css.parser.selectors.PseudoClassConditionImpl;
-import com.steadystate.css.parser.selectors.SubstringAttributeConditionImpl;
-import com.steadystate.css.parser.selectors.SuffixAttributeConditionImpl;
+import com.steadystate.css.parser.selectors.*;
+import org.junit.Assert;
+import org.junit.Test;
+import org.w3c.css.sac.*;
+import org.w3c.dom.css.*;
+
+import java.io.*;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author Ahmed Ashour
@@ -350,67 +322,6 @@ public class SACParserCSS3Test  extends AbstractSACParserTest {
     public void whitespaceOnlyCSS() throws Exception {
         final CSSStyleSheet sheet = parse("  \t \r\n \n");
         Assert.assertEquals(0, sheet.getCssRules().getLength());
-    }
-
-    /**
-     * @throws Exception if the test fails
-     */
-    @Test
-    public void charset() throws Exception {
-        final String css = "@charset 'UTF-8';\n"
-            + "h1 { color: blue }\n";
-
-        final CSSStyleSheet sheet = parse(css);
-        final CSSRuleList rules = sheet.getCssRules();
-
-        Assert.assertEquals(2, rules.getLength());
-
-        CSSRule rule = rules.item(0);
-        Assert.assertEquals("@charset \"UTF-8\";", rule.getCssText());
-
-        rule = rules.item(1);
-        Assert.assertEquals("h1 { color: blue }", rule.getCssText());
-    }
-
-    /**
-     * @throws Exception if the test fails
-     */
-    @Test
-    public void charsetWhitespaceBefore() throws Exception {
-        final String css = "/* comment */ \n @charset 'UTF-8';\n"
-            + "h1 { color: blue }\n";
-
-        final CSSStyleSheet sheet = parse(css);
-        final CSSRuleList rules = sheet.getCssRules();
-
-        Assert.assertEquals(2, rules.getLength());
-
-        CSSRule rule = rules.item(0);
-        Assert.assertEquals("@charset \"UTF-8\";", rule.getCssText());
-
-        rule = rules.item(1);
-        Assert.assertEquals("h1 { color: blue }", rule.getCssText());
-    }
-
-    /**
-     * @throws Exception if the test fails
-     */
-    @Test
-    public void charsetWhitespaceAfter() throws Exception {
-        final String css = "@charset 'UTF-8';\n"
-            + " \t \n "
-            + "h1 { color: blue }\n";
-
-        final CSSStyleSheet sheet = parse(css);
-        final CSSRuleList rules = sheet.getCssRules();
-
-        Assert.assertEquals(2, rules.getLength());
-
-        CSSRule rule = rules.item(0);
-        Assert.assertEquals("@charset \"UTF-8\";", rule.getCssText());
-
-        rule = rules.item(1);
-        Assert.assertEquals("h1 { color: blue }", rule.getCssText());
     }
 
     /**

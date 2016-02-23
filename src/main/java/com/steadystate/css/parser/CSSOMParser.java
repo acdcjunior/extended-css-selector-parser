@@ -278,19 +278,7 @@ public class CSSOMParser {
             // empty default impl
         }
 
-        public void charset(final String characterEncoding, final Locator locator)
-            throws CSSException {
-            final CSSCharsetRuleImpl cr = new CSSCharsetRuleImpl(
-                    CSSOMParser.this.getParentStyleSheet(),
-                    getParentRule(),
-                    characterEncoding);
-            addLocator(locator, cr);
-            if (!nodeStack_.empty()) {
-                ((CSSRuleListImpl) nodeStack_.peek()).add(cr);
-            }
-            else {
-                root_ = cr;
-            }
+        public void charset(final String characterEncoding, final Locator locator) {
         }
 
         public void importStyle(
